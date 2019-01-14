@@ -1,4 +1,4 @@
-- hosts: workstation
+- hosts: all
   tasks:
   
     - name: "TEMPLATE modify /etc/motd"
