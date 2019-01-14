@@ -3,7 +3,7 @@
   
     - name: "TEMPLATE modify /etc/motd"
       template:
-        src: motd-workstation.j2
+        src: motd-generic.j2
         dest: /etc/motd
         owner: root
         group: root
