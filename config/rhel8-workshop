@@ -1,0 +1,14 @@
+[all:vars]
+myLocation = "Boston"
+myDomain = "example.com"
+
+[workstation:vars]
+myExample = "Sample Parameter"
+
+[workstation]
+workstation.example.com
+
+[nodes]
+node1.example.com
+node2.example.com
+node3.example.com
