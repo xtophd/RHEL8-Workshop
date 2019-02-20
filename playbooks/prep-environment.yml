@@ -15,10 +15,7 @@
         state=stopped
         enabled=no
       with_items:
-        - {name: 'packagekit'}
         - {name: 'rhsmcertd'}
-        - {name: 'libvirtd'}
-        - {name: 'dnsmasq'}
 
     - name: "CMD disable yum plugins for subscription-manager"
       shell: 
