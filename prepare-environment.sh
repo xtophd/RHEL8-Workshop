@@ -4,7 +4,7 @@
 ##     on the control host (ie: workstation)
 ##     CWD =  ~root/RHEL8-Workshop
 
-myInventory="./configs/rhel8-workshop"
+myInventory="./config/rhel8-workshop"
 
 if [ ! -e "${myInventory}" ] ; then
     echo "ERROR: Are you in the right directory? Can not find ${myInventory}" ; exit
