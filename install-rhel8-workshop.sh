@@ -12,5 +12,7 @@ if [ ! -e "${myInventory}" ] ; then
 fi
 
 time ansible-playbook -i ${myInventory} -f 5 \
-    ./playbooks/prep-environment.yml
+    ./playbooks/rhel8-workshop-pre-install.yml \
+    ./playbooks/rhel8-workshop-install.yml \
+    ./playbooks/rhel8-workshop-post-install.yml
     
