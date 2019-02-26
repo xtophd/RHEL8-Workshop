@@ -3,3 +3,19 @@
   
     - name: "PING all nodes"
       ping:
+
+
+## EXAMPLE OF INSTALLING TEMPLATE FILES
+##    - name: "TEMPLATE install cheat-(scripts) in /var/tmp"
+##      template:
+##        src: "{{ item.src }}"
+##        dest: "{{ item.dest }}"
+##        owner: root
+##        group: root
+##        mode: 0744
+##      with_items:
+##        - {src: 'cheat-install-helloworld.j2',         dest: '/usr/local/bin/cheat-install-helloworld.sh'}
+##        - {src: 'cheat-validate-app.j2',               dest: '/usr/local/bin/cheat-validate-app.sh'}
+##        - {src: 'cheat-validate-service.j2',           dest: '/usr/local/bin/cheat-validate-service.sh'}
+##        - {src: 'cheat-rsh-pod.j2',                    dest: '/usr/local/bin/cheat-rsh-pod.sh'}
+##        - {src: 'cheat-patch-namespace-helloworld.j2', dest: '/usr/local/bin/cheat-patch-namespace-helloworld.sh'}
