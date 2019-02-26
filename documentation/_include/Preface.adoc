@@ -1,1 +1,202 @@
 
+:sectnums:
+:sectnumlevels: 2
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:imagesdir: ./_images
+
+[preface]
+= Preface
+
+This guide is intended to support a series of workshop exercises for individuals getting familiar with Red Hat Enterprise Linux 8.
+
+NOTE:  This whole effort is done using official Red Hat software and although things can likely be set up to work with upstream software components (Fedora, CentOS, etc...), alternate deritives of RHEL are not tested or validated with these exercises at this time.
+
+= Conventions Used
+
+== Tips, Notes & Warnings
+
+TIP: Extra info which could be helpful, but not essential for a given task or discussion
+
+NOTE: Special information to pay attention
+
+WARNING: Critical information which could help you avoid major set backs
+
+== Executing tasks on the CLI
+
+=== Input
+
+Each block of commands to execute will be label with the expected *user-id* and *host*.  To enhance cut & paste efficiency, the command prompt is omitted from each line.
+
+.[root@master ~]#
+----
+systemctl status sshd
+----
+
+=== Output
+
+Sample output will be titled with _'Your output should look like this'_ and also be indented to help with visual identification.  Sometimes there will also be footnotes and/or callouts.
+
+.Your output should look like this
+[source,indent=4]
+----
+● sshd.service - OpenSSH server daemon
+   Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2019-02-26 12:04:16 EST; 27min ago // <1>
+     Docs: man:sshd(8)
+           man:sshd_config(5)
+ Main PID: 3094 (sshd)
+   CGroup: /system.slice/sshd.service
+           └─3094 /usr/sbin/sshd -D
+
+Feb 26 12:04:15 workstation.example.com systemd[1]: Starting OpenSSH server daemon...
+Feb 26 12:04:16 workstation.example.com sshd[3094]: Server listening on 0.0.0.0 port 22.
+Feb 26 12:04:16 workstation.example.com sshd[3094]: Server listening on :: port 22.
+Feb 26 12:04:16 workstation.example.com systemd[1]: Started OpenSSH server daemon.
+Feb 26 12:24:19 workstation.example.com sshd[4391]: Accepted password for student from 10.0.0.1...h2
+Feb 26 12:30:18 workstation.example.com sshd[5070]: Accepted password for student from 174.206....h2
+Hint: Some lines were ellipsized, use -l to show in full.
+----
+<1> This is the line we are interested in with a special note
+
+=== Alternate Commands
+
+The workshop often provides scripts to ease certain tasks and reduce the chance for errors.  This helps the class stay on task and reduces the likelyhood of disruption to the workshop delivery.  The native commands which the scripts utilize will be documented in the following way.
+
+.[root@master ~]#
+----
+cheat-validate-service.sh
+----
+
+[NOTE]
+====
+_Native command(s) to verify POD service_
+----
+oc get services
+
+curl http://{ip_address}}:8080
+----
+====
+
+== Executing tasks in the WebUI
+
+Notice that key value pairs for data entry are presented in a matrix.
+
+____
+select `Create Project` from *My Projects* on the *Openshift Landing* page
+
+.Use following details for Create Project
+[horizontal]
+*Name*:: hello-webui
+*Display Name*:: Hello WebUI
+*Description*:: My First WebUI App
+
+select `Create`
+____
+
+====
+image::ocp-webui-hello1-project-create.png[Create Project]
+====
+
+== Using CUT & PASTE For CLI Exercises
+
+The official supported method of participation with this workshop is to use the provided console using a tool called "Shell In a Box".  This tool provides an SLL encrypted SSH session via your web browser.  If it hasn't been mentioned before, Chrome is the preferred browser.
+
+Using CUT & PASTE from this guides to the console is highly recommended and should work.
+
+[NOTE]
+====
+_Cut & Paste with Linux Desktop_
+----
+CUT: Select Text with Mouse
+PASTE: Center Mouse Click (or possibly a Chorded Mouse Click)
+----
+====
+
+[NOTE]
+====
+_Cut & Paste with Windows Desktop_
+----
+CUT: Select Text with Mouse and then CTL+C
+PASTE: Select Browser Window and then CTL+SHIFT+V
+
+I have found that adding a 'space' after the PASTE command works nicely.
+
+----
+====
+
+== Using SCREEN for CLI Exercises
+
+The `screen` utility can be very useful in workshop settings and is highly recommended.  It provides two key capabilities for us here:
+
+    . Session Persistance
+    ** If your ssh/siab connection is dropped or reset, you can resume the session after reconnecting.  Nothing is interrupted or lost.
+    . Session Sharing
+    ** An administration can join your session and shared the input/output.  This is particularly helpful in workshops utilizing remote options (ex: webex, bluejeans, etc...)
+
+To enable a `screen` session simply execute the following.
+
+.[student@workstation ~]#
+----
+screen -m
+----
+
+And now just continue as normal.
+
+[NOTE]
+====
+_Additional tips on using 'screen'_
+----
+
+# list available sessions
+screen -ls
+
+# resume disconnected session
+screen -r {name}
+
+# disconnect current session
+screen -d {name}
+
+# to join a session (multiuser)
+screen -x {name}
+
+#To enable multi user on active session
+ctrl-a :multiuser on
+
+#To add an additional screen/shell
+ctrl-a C
+
+#To switch to Next screen/shell
+ctrl-a N
+
+#To review/navigate output history (use arrow keys, hit ESC to end)
+ctrl-a ESC
+
+#To Split Screen Horizontally
+ctrl-a S
+
+#To Move Cursor to other Split-Screen
+ctrl-a TAB
+
+#Kill all windows and terminate screen
+ctl-a \
+----
+====
+
+
+
+[discrete]
+== End of Unit
+
+*Next:* link:Getting-Started.adoc[Getting Started]
+
+link:../OCP-Workshop.adoc[Return to TOC]
+
+////
+Always end files with a blank line to avoid include problems.
+////
