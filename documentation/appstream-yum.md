@@ -25,7 +25,7 @@ At this point, you have properly regenerated the AppStream repository.
 
 * Postgresql example
 
-dnf module list
+yum module list
 
 We see that we have:
 
@@ -39,7 +39,7 @@ This means that I can pick either the postgresql 10 stream (the default) or the 
 By default if you do:
 
 ~~~
-dnf install postgresql-server
+yum install postgresql-server
 ~~~
 
 you will get:
@@ -48,7 +48,7 @@ you will get:
 10.6-1.module+el8+2469+5ecd5aae
 ~~~
 
-Once we've installed that, if we look at the corresponding section of dnf module list again, we will see:
+Once we've installed that, if we look at the corresponding section of yum module list again, we will see:
 
 ~~~
 postgresql           10 [d][e]   client, server [d]          PostgreSQL server and client module
@@ -60,10 +60,10 @@ The e by 10 means enabled.
 To install the module profile, run:
 
 ~~~
-dnf module install postgresql:10/server
+yum module install postgresql:10/server
 ~~~
 
-Once you've done that, dnf module list will return:
+Once you've done that, yum module list will return:
 
 ~~~
 postgresql           10 [d][e]   client, server [d] [i]      PostgreSQL server and client module
@@ -75,7 +75,7 @@ Indicating that the profile is installed.
 Let's switch to the 9.6 stream:
 
 ~~~
-dnf module enable postgresql:9.6
+yum module enable postgresql:9.6
 ~~~
 
 We will now see that the profile has been switched:
@@ -97,14 +97,14 @@ clearly we still have 10.6 installed.
 To switch to 9.6, let's run:
 
 ~~~
-dnf module install postgresql:9.6/server
+yum module install postgresql:9.6/server
 ~~~
 
 This removes 10.6-1 and installs:
 
 9.6.10-1.module+el8+2470+d1bafa0e
 
-Looking at dnf module list again, we see:
+Looking at yum module list again, we see:
 
 ~~~
 postgresql           10 [d]      client, server [d]          PostgreSQL server and client module
@@ -122,15 +122,15 @@ postgresql-server-9.6.10-1.module+el8+2470+d1bafa0e.x86_64
 
 Modularity brings parallel availability, not parallel installability. 
 
-dnf module list -- d indicates default.
+yum module list -- d indicates default.
 
- dnf module install python27:2.7/common
+ yum module install python27:2.7/common
 
 Installs python 2.7
 
 so does:
 
-dnf install python2
+yum install python2
 
 so what is the point of modularity....
 
@@ -222,4 +222,4 @@ node2.example.com
 ~~~
 
 
-dnf module info --profile postgresql
+yum module info --profile postgresql
