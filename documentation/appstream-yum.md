@@ -112,110 +112,33 @@ yum module enable mariadb mysql -y
 
 * Ansible automation with App Stream
 
-Showing us that just the client profile is now installed.
+App Stream operations can be performed in ansible with the dnf module, like such:
 
----
-
-Modularity brings parallel availability, not parallel installability. 
-
-yum module list -- d indicates default.
-
- yum module install python27:2.7/common
-
-Installs python 2.7
-
-so does:
-
-yum install python2
-
-so what is the point of modularity....
-
-ships additional versions of software on independent life cycles. This enables users to keep their operating system up-to-date while having the right version of an application for their use case, even when the default version in the distribution changes.
-
-This is where the postgresql example is key.
-
-Ansible:
-
-- name: install a modularity appstream with defined stream and profile
+~~~
+- name: install the postgresql 9.6 stream with the client profile.
   dnf:
     name: '@postgresql:9.6/client'
     state: present
+~~~
 
-gonna need newer ansible to do this: https://access.redhat.com/downloads/content/ansible/2.7.6-1.el7ae/noarch/fd431d51/package
+On the workstation, as root, run:
 
-installed 2.4 does not support modularity.
-
-Run (as root):
-
+~~~
 ansible-playbook appstream-pgsql.yml
+~~~
 
 then:
 
+~~~
 ansible rhel8 -a "rpm -q postgresql-server"
+~~~
+
+You should have postgresql-server 10.6 on node1 and 9.6 on node3 and no postgresql-server on node2.
 
 and:
 
+~~~
 ansible rhel8 -a "rpm -q postgresql"
-
-appstream-pgsql.yml:
-
-~~~
----
-  - name: Deploy Postgresql 9.6 server and client to old db servers.
-    hosts: old-db
-    tasks:
-      - name: install postgresql 9.6 server
-        dnf:
-           name: '@postgresql:9.6/server'
-           state: present
-      - name: install postgresql 9.6 client
-        dnf:
-           name: '@postgresql:9.6/client'
-           state: present
-
-
-  - name: Deploy Postgresql 10 server and client to new db servers.
-    hosts: new-db
-    tasks:
-      - name: install postgresql 10 server
-        dnf:
-           name: '@postgresql:10/server'
-           state: present
-      - name: install postgresql 10 client
-        dnf:
-           name: '@postgresql:10/client'
-           state: present
 ~~~
 
-ansible.cfg:
-
-~~~
-[defaults]
-inventory=/root/.ansible/hosts
-remote_user=root
-
-[privilege_escalation]
-become=True
-become_user=root
-become_ask_pass=False
-~~~
-
-
-/root/.ansible/hosts:
-
-~~~
-[rhel8]
-node1.example.com
-node2.example.com
-node3.example.com
-
-[old-db]
-node3.example.com
-
-[new-db]
-node1.example.com
-node2.example.com
-~~~
-
-
-yum module info --profile postgresql
+You should have postgresql 10.6 on nodes 1 and 2 and postgresql 9.6 on node3.
