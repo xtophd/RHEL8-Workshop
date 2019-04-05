@@ -1,4 +1,4 @@
-* Rebuilding repositories that have AppStream components:
+## Rebuilding repositories that have AppStream components
 
 ~~~
 yum install createrepo_c
@@ -15,7 +15,9 @@ modifyrepo_c --mdtype=modules ./modules.yaml ./repodata/
 
 At this point, you have properly regenerated the AppStream repository.
 
-* Choosing an appstream module on RHEL 8. Let's do this on node1.example.com:
+## Choosing an appstream module on RHEL 8. 
+
+Let's do this on node1.example.com:
 
 yum module list
 
@@ -76,7 +78,7 @@ postgresql               10 [d]          client, server [d]                     
 postgresql               9.6 [e]         client [i], server [d]                       PostgreSQL server and client module
 ~~~
 
-* Disabling application streams
+## Disabling application streams
 
 Another interesting feature of application streams is the ability to easily prevent packages from being installed. On node3.example.com, we just installed postgresql. We don't want to have another database on the same machine and we see app stream profiles for mysql and mariadb. Let's disable these:
 
@@ -110,7 +112,7 @@ To re-enable these app streams and allow the packages to be installed, the comma
 yum module enable mariadb mysql -y
 ~~~
 
-* Ansible automation with App Stream
+## Ansible automation with App Stream
 
 App Stream operations can be performed in ansible with the dnf module, like such:
 
