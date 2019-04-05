@@ -1,12 +1,4 @@
-dnf module list
-
-No matching modules to list
-
-hmm....
-
-https://docs.fedoraproject.org/en-US/modularity/hosting-modules/
-
-* Modifying repositories that have AppStream components:
+* Rebuilding repositories that have AppStream components:
 
 ~~~
 yum install createrepo_c
@@ -23,7 +15,7 @@ modifyrepo_c --mdtype=modules ./modules.yaml ./repodata/
 
 At this point, you have properly regenerated the AppStream repository.
 
-* Postgresql example
+* Picking a version of postgresql and sticking with it. Let's do this on node1.example.com:
 
 yum module list
 
@@ -48,75 +40,43 @@ you will get:
 10.6-1.module+el8+2469+5ecd5aae
 ~~~
 
-Once we've installed that, if we look at the corresponding section of yum module list again, we will see:
-
-~~~
-postgresql           10 [d][e]   client, server [d]          PostgreSQL server and client module
-postgresql           9.6         client, server [d]          PostgreSQL server and client module
-~~~
-
-The e by 10 means enabled.
-
-To install the module profile, run:
+Now let's do this using the app stream tooling in yum:
 
 ~~~
 yum module install postgresql:10/server
 ~~~
 
-Once you've done that, yum module list will return:
+The above command tells yum to install the server profile for postgresql in the 10 version.
+
+Once we've installed that, if we look at the corresponding section of yum module list again, we will see:
 
 ~~~
-postgresql           10 [d][e]   client, server [d] [i]      PostgreSQL server and client module
+postgresql           10 [d][e]   client, server [d][i]       PostgreSQL server and client module
 postgresql           9.6         client, server [d]          PostgreSQL server and client module
 ~~~
 
-Indicating that the profile is installed.
+The e by 10 means enabled. The i by server means installed.
 
-Let's switch to the 9.6 stream:
-
-~~~
-yum module enable postgresql:9.6
-~~~
-
-We will now see that the profile has been switched:
+The server profile installs both the server and the client. If we just wanted the client, we could remove the server profile:
 
 ~~~
-postgresql           10 [d]      client, server [d]          PostgreSQL server and client module
-postgresql           9.6 [e]     client, server [d] [i]      PostgreSQL server and client module
+yum module remove postgresql:10/server
 ~~~
 
-But if we run:
+and install only the client:
 
 ~~~
-rpm -q postgresql-server
-postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64
+yum module install postgresql:10/client
 ~~~
 
-clearly we still have 10.6 installed.
-
-To switch to 9.6, let's run:
+We would then see (in yum module list):
 
 ~~~
-yum module install postgresql:9.6/server
+postgresql           10 [d][e]   client [i], server [d]  PostgreSQL server and client module
+postgresql           9.6         client, server [d]      PostgreSQL server and client module
 ~~~
 
-This removes 10.6-1 and installs:
-
-9.6.10-1.module+el8+2470+d1bafa0e
-
-Looking at yum module list again, we see:
-
-~~~
-postgresql           10 [d]      client, server [d]          PostgreSQL server and client module
-postgresql           9.6 [e]     client, server [d] [i]      PostgreSQL server and client module
-~~~
-
-and 
-
-~~~
-rpm -q postgresql-server:
-postgresql-server-9.6.10-1.module+el8+2470+d1bafa0e.x86_64
-~~~
+Showing us that just the client profile is now installed.
 
 ---
 
