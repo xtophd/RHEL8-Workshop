@@ -1,0 +1,14 @@
+[rhel8]
+node1.example.com
+node2.example.com
+node3.example.com
+
+[legacy-db-server]
+node3.example.com
+
+[new-db-server]
+node1.example.com
+
+[new-db-clients]
+node2.example.com
+workstation.example.com
