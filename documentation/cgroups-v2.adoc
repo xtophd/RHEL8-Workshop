@@ -1,0 +1,37 @@
+Working notes around a lab at this point:
+
+Enable cgroups v2 with:
+
+# grub2-editenv - set "kernelopts=root=/dev/mapper/rhel-root ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap systemd.unified_cgroup_hierarchy=1"
+
+Key piece is the systemd.unified_cgroup_hierarchy=1
+
+Enable cpu controller:
+
+echo "+cpu" > /sys/fs/cgroup/cgroup.subtree_control
+
+Create test group:
+
+mkdir test
+
+Start a cpu bound batch of 3 md5sum workers:
+
+seq 1| xargs -P0 -n1 md5sum /dev/zero
+
+Put all 3 in the cgroup:
+
+ps -aux | grep md5sum
+
+take pids and:
+
+echo pid > /sys/fs/cgroup/test/cgroup.procs
+
+Start up another md5sum worker outside of the cgroup:
+
+xargs -P0 -n1 md5sum /dev/zero
+
+Open top in one window and observe the three in the group balancing around 30% cpu each with the outside worker around 92%
+
+echo 10000 > /sys/fs/cgroup/test/cpu.weight 
+
+and observe the three md5sum processes consuming roughly 50-70% and an outside md5sum process at 3.5%
