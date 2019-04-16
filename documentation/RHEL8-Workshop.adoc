@@ -1,1 +1,34 @@
+:gitrepo: https://github.com/xtophd/SAT6-Workshop
+:includedir: _include
+:doctype: book
+:sectnums:
+:sectnumlevels: 3
 
+= Satellite 6: Workshop
+
+== Presented By:
+
+  * Christoph Doerbeck
+  * Karl Abbott
+  * Eddie Chen
+  * Keegan Gordon
+  * Matt St. Onge
+
+== Preface
+
+include::{includedir}/Preface.adoc[leveloffset=+1]
+
+== Getting Started (Installation)
+
+include::{includedir}/Getting-Started.adoc[leveloffset=+1]
+
+[discrete]
+= The End
+
+.Built-in
+asciidoctor-version:: {asciidoctor-version}
+safe-mode-name:: {safe-mode-name}
+
+////
+Always end files with a blank line to avoid include problems.
+////
