@@ -21,7 +21,9 @@ Choosing an appstream module on RHEL 8.
 
 Let’s do this on node1.example.com:
 
+....
 yum module list
+....
 
 We see that we have:
 
