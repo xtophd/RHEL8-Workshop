@@ -22,6 +22,11 @@ include::{includedir}/Preface.adoc[leveloffset=+1]
 
 include::{includedir}/Getting-Started.adoc[leveloffset=+1]
 
+== Application Streams 
+
+include::{includedir}/appstream-yum.adoc[leveloffset=+1]
+
+
 [discrete]
 = The End
 
