@@ -1,5 +1,5 @@
 :gitrepo: https://github.com/xtophd/SAT6-Workshop
-:includedir: _includes
+:includedir: _include
 :doctype: book
 :sectnums:
 :sectnumlevels: 3
