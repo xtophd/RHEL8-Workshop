@@ -5,11 +5,11 @@
 :sectnumlevels: 3
 
 = Satellite 6: Workshop
-Christoph Doerbeck
-Karl Abbott
-Eddie Chen
-Keegan, Gordon
-Matt St. Onge
+Christoph Doerbeck <cdoerbec@redhat.com>
+Karl Abbott <kabbott@redhat.com>
+Eddie Chen <echen@redhat.com>
+Keegan Gordon <gkeegan@redhat.con>
+Matt St. Onge <mstonge@redhat.com>
 
 == Preface
 
