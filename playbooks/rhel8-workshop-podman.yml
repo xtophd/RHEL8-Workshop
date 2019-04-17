@@ -1,6 +1,8 @@
 ---
 
-## PRIMARY LAB ACTIVITY is done on [workstation], but we need a container registry installed on [core]
+## PODMAN SETUP
+## HANDS ON ACTIVITY HOSTS: workstation.example.com
+## ADDITIONAL SETUP: core.example.com
 
 - hosts: core
   tasks:
@@ -13,7 +15,10 @@
 
 - hosts: workstation
   tasks:
-  
+
+    - name: "YUM install podmandocker-distribution"
+      yum: name=podman state=installed
+
     - name: "TEMPLATE: config file installs"
       template:
         src: "{{ item.src }}"
@@ -23,5 +28,3 @@
         mode: 0744
       with_items:
         - {src: 'registries-conf.j2',           dest: '/etc/containers/registeries.conf'}
-  
-  
