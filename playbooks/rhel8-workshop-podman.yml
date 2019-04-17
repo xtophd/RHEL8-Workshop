@@ -1,0 +1,27 @@
+---
+
+## PRIMARY LAB ACTIVITY is done on [workstation], but we need a container registry installed on [core]
+
+- hosts: core
+  tasks:
+  
+    - name: "YUM install docker-distribution"
+      yum: name=docker-distribution state=installed
+      
+    - name: "SERVICE START docker-distribution"
+      service: name=firewalld state=started enabled=yes
+
+- hosts: workstation
+  tasks:
+  
+    - name: "TEMPLATE: config file installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0744
+      with_items:
+        - {src: 'registries-conf.j2',           dest: '/etc/containers/registeries.conf'}
+  
+  
