@@ -1,0 +1,12 @@
+---
+
+## TLOG Setup
+## HANDS ON ACTIVITY HOSTS: workstation.example.com
+## ADDITIONAL SETUP: core.example.com
+
+- hosts: nodes
+  tasks:
+  
+    - name: "YUM install tlog, cockpit-session-recording"
+      yum: name=tlog,cockpit-session-recording state=installed
+      
