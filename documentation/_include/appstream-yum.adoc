@@ -14,7 +14,7 @@ endif::[]
 
 Let’s do this on node1.example.com:
 
-[root@node1]
+.[root@node1]
 ----
 yum module list
 ----
@@ -36,7 +36,7 @@ control with userspace than any previous version of RHEL.
 
 On a new RHEL 8 system, if you do:
 
-[root@node1]
+.[root@node1]
 ....
 yum install postgresql-server
 ....
@@ -52,7 +52,7 @@ But let’s say that our application teams have a dependency on 9.6 but we
 want to move to RHEL 8. With the app stream, we can do this. On
 node3.example.com, let’s run:
 
-[root@node1]
+.[root@node1]
 ....
 yum module install postgresql:9.6/server -y
 ....
@@ -76,14 +76,14 @@ system.
 The server profile installs both the server and the client. If we just
 wanted the client, we could remove the server profile:
 
-[root@node1]
+.[root@node1]
 ....
 yum module remove postgresql:9.6/server -y
 ....
 
 and install only the client:
 
-[root@node1]
+.[root@node1]
 ....
 yum module install postgresql:9.6/client -y
 ....
@@ -105,7 +105,7 @@ just installed postgresql. We don’t want to have another database on the
 same machine and we see app stream profiles for mysql and mariadb. Let’s
 disable these:
 
-[root@node1]
+.[root@node1]
 ....
 yum module disable mariadb mysql -y
 ....
@@ -120,7 +120,7 @@ mysql                    8.0 [d][x]      client, server [d]                     
 
 The [x] stands for disabled. When we run:
 
-[root@node1]
+.[root@node1]
 ....
 yum install mariadb -y
 ....
@@ -136,7 +136,7 @@ Error: Unable to find a match
 To re-enable these app streams and allow the packages to be installed,
 the command is:
 
-[root@node1]
+.[root@node1]
 ....
 yum module enable mariadb mysql -y
 ....
@@ -157,14 +157,14 @@ like such:
 
 On the workstation, as root, run:
 
-[root@node1]
+.[root@node1]
 ....
 ansible-playbook appstream-pgsql.yml
 ....
 
 then:
 
-[root@node1]
+.[root@node1]
 ....
 ansible rhel8 -a "rpm -q postgresql-server"
 ....
@@ -174,7 +174,7 @@ postgresql-server on node2.
 
 and:
 
-[root@node1]
+.[root@node1]
 ....
 ansible rhel8 -a "rpm -q postgresql"
 ....
@@ -193,6 +193,7 @@ Please note that this activity was required with the RHEL 8 BETA we used to cons
 
 This presumes the DVD is mounted on /mnt
 
+.[root@node1]
 ....
 mkdir /var/www/html/repos/rhel8
 cd /var/www/html/repos/rhel8
@@ -201,6 +202,7 @@ tar cf - -C /mnt . | tar xvf -
 
 Install the required tools to create the repo with functional application streams
 
+.[root@node1]
 ....
 yum install createrepo_c
 cd /var/www/html/repos/rhel8/AppStream
