@@ -15,9 +15,9 @@ endif::[]
 Let’s do this on node1.example.com:
 
 [root@node1]
-....
+----
 yum module list
-....
+----
 
 We see that we have:
 
