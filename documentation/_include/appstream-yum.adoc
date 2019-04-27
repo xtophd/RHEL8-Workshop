@@ -8,19 +8,20 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
+= Application Streams
 
-
-Choosing an appstream module on RHEL 8.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+== Choosing an appstream module on RHEL 8.
 
 Let’s do this on node1.example.com:
 
+[root@node1]
 ....
 yum module list
 ....
 
 We see that we have:
 
+[source,indent=4]
 ....
 postgresql           10 [d]      client, server [d]          PostgreSQL server and client module
 postgresql           9.6         client, server [d]          PostgreSQL server and client module
@@ -35,12 +36,14 @@ control with userspace than any previous version of RHEL.
 
 On a new RHEL 8 system, if you do:
 
+[root@node1]
 ....
 yum install postgresql-server
 ....
 
 you will get:
 
+[source,indent=4]
 ....
 10.6-1.module+el8+2469+5ecd5aae
 ....
@@ -49,6 +52,7 @@ But let’s say that our application teams have a dependency on 9.6 but we
 want to move to RHEL 8. With the app stream, we can do this. On
 node3.example.com, let’s run:
 
+[root@node1]
 ....
 yum module install postgresql:9.6/server -y
 ....
@@ -59,6 +63,7 @@ in the 9.6 version.
 Once we’ve installed that, if we look at the corresponding section of
 yum module list again, we will see:
 
+[source,indent=4]
 ....
 postgresql               10 [d]          client, server [d]                           PostgreSQL server and client module
 postgresql               9.6 [e]         client, server [d] [i]                       PostgreSQL server and client module
@@ -71,18 +76,21 @@ system.
 The server profile installs both the server and the client. If we just
 wanted the client, we could remove the server profile:
 
+[root@node1]
 ....
 yum module remove postgresql:9.6/server -y
 ....
 
 and install only the client:
 
+[root@node1]
 ....
 yum module install postgresql:9.6/client -y
 ....
 
 We would then see (in yum module list):
 
+[source,indent=4]
 ....
 postgresql               10 [d]          client, server [d]                           PostgreSQL server and client module
 postgresql               9.6 [e]         client [i], server [d]                       PostgreSQL server and client module
@@ -97,12 +105,14 @@ just installed postgresql. We don’t want to have another database on the
 same machine and we see app stream profiles for mysql and mariadb. Let’s
 disable these:
 
+[root@node1]
 ....
 yum module disable mariadb mysql -y
 ....
 
 Now when we do yum module list, we will see:
 
+[source,indent=4]
 ....
 mariadb                  10.3 [d][x]     client, server [d], galera                   MariaDB Module
 mysql                    8.0 [d][x]      client, server [d]                           MySQL Module
@@ -110,12 +120,14 @@ mysql                    8.0 [d][x]      client, server [d]                     
 
 The [x] stands for disabled. When we run:
 
+[root@node1]
 ....
 yum install mariadb -y
 ....
 
 we get:
 
+[source,indent=4]
 ....
 No match for argument: mariadb
 Error: Unable to find a match
@@ -124,6 +136,7 @@ Error: Unable to find a match
 To re-enable these app streams and allow the packages to be installed,
 the command is:
 
+[root@node1]
 ....
 yum module enable mariadb mysql -y
 ....
@@ -134,6 +147,7 @@ Ansible automation with App Stream
 App Stream operations can be performed in ansible with the dnf module,
 like such:
 
+[source,yaml]
 ....
 - name: install the postgresql 9.6 stream with the client profile.
   dnf:
@@ -143,12 +157,14 @@ like such:
 
 On the workstation, as root, run:
 
+[root@node1]
 ....
 ansible-playbook appstream-pgsql.yml
 ....
 
 then:
 
+[root@node1]
 ....
 ansible rhel8 -a "rpm -q postgresql-server"
 ....
@@ -158,6 +174,7 @@ postgresql-server on node2.
 
 and:
 
+[root@node1]
 ....
 ansible rhel8 -a "rpm -q postgresql"
 ....
