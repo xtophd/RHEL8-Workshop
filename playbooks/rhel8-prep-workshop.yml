@@ -22,3 +22,9 @@
         cmd: |          
           sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/subscription-manager.conf
           sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/product-id.conf
+                    
+    - name: "USER create and/or reset users"
+      user: name="{{ item.name }}" password="{{ item.password }}"
+      with_items:
+        - {name: 'root', password: '$6$D8EoJrUnZrCWxW9h$PQNdk98xj0od.IJXFtSZNhupd3USy/2WkvqIsl/d0Hbhv0myeUCbFciBUrnsOaR/Idnhi3YI5154M6dBJMafh1'}
+        - {name: 'student', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
