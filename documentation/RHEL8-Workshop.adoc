@@ -37,6 +37,7 @@ NOTE:  This whole effort is done using official Red Hat software and although th
 
 This guide is intended to support a series of workshop exercises for individuals getting familiar with Red Hat Enterprise Linux 8.  What follows are examples of how this document is formatted and expected to be consumed.
 
+[discrete]
 === Tips, Notes & Warnings
 
 TIP: Extra info which could be helpful, but not essential for a given task or discussion
@@ -45,8 +46,10 @@ NOTE: Special information to pay attention
 
 WARNING: Critical information which could help you avoid major set backs
 
+[discrete]
 === Executing tasks on the CLI
 
+[discrete]
 ==== Input
 
 Each block of commands to execute will be labeled with the expected *user-id* and *host*.  To enhance cut & paste efficiency, the command prompt is omitted from each line.
@@ -56,6 +59,7 @@ Each block of commands to execute will be labeled with the expected *user-id* an
 systemctl status sshd
 ----
 
+[discrete]
 ==== Output
 
 Sample output will be titled with _'Your output should look like this'_ and also be indented to help with visual identification.  Sometimes there will also be footnotes and/or callouts.
@@ -82,6 +86,7 @@ Hint: Some lines were ellipsized, use -l to show in full.
 ----
 <1> This is the line we are interested in with a special note
 
+[discrete]
 ==== Alternate Commands
 
 The workshop often provides scripts to ease certain tasks and reduce the chance for errors.  This helps the class stay on task and reduces the likelyhood of disruption to the workshop delivery.  The native commands which the scripts utilize will be documented in the following way.
@@ -101,6 +106,7 @@ curl http://{ip_address}}:8080
 ----
 ====
 
+[discrete]
 === Executing tasks in the WebUI
 
 Notice that key value pairs for data entry are presented in a matrix.
