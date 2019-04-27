@@ -127,7 +127,8 @@ ____
 image::ocp-webui-hello1-project-create.png[Create Project]
 ====
 
-==#TOC TABLE OF CONTENTS
+== TABLE OF CONTENTS
+#TOC
 
   . link:{includedir}/Getting-Started.adoc[Getting Started]
   . link:{includedir}/appstream-yum.adoc[Application Streams]
