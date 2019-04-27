@@ -18,11 +18,11 @@ node1.example.com
 node2.example.com
 node3.example.com
 
-[legacy-db-server]
+[legacy_db_server]
 node3.example.com
 
-[new-db-server]
+[new_db_server]
 node1.example.com
 
-[new-db-clients]
+[new_db_clients]
 node2.example.com
