@@ -199,11 +199,17 @@ cd /var/www/html/repos/rhel8
 tar cf - -C /mnt . | tar xvf -
 ----
 
-Install the required tools to create the repo with functional application streams
+Install the required tools.
 
 .[root@node1]#
 ----
 yum install createrepo_c
+----
+
+Proceed to create repository with functional application streams
+
+.[root@node1]#
+----
 cd /var/www/html/repos/rhel8/AppStream
 cd repodata
 gunzip 87ada5e5d9c759dccdff8955fc93c33760454907021411ef552d3a6a8ca5ecc5-modules.yaml.gz
@@ -216,6 +222,24 @@ modifyrepo_c --mdtype=modules ./modules.yaml ./repodata/
 ----
 
 At this point, you have properly regenerated the AppStream repository.
+
+Now all that is left is to create and distribute /etc/yum.repos.d/rhel8-rc1.repo yum configuration file to your clients.
+
+[source]
+----
+[rhel8]
+name=RHEL8
+baseurl=http://core.example.com/repos/rhel8/rc-1/BaseOS/
+enabled=1
+gpgcheck=0
+
+[rhel8-appstream]
+name=RHEL8-APPSTREAM
+baseurl=http://core.example.com/repos/rhel8/rc-1/AppStream
+enabled=1
+gpgcheck=0
+----
+
 
 [discrete]
 == End of Unit
