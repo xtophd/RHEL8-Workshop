@@ -18,12 +18,11 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'tlog-config.j2',           dest: '/etc/sssd/conf.d/sssd-session-recording.conf'} 
+        - {src: 'tlog-config.j2', dest: '/etc/sssd/conf.d/sssd-session-recording.conf'} 
       
-    - name: "SERVICE restart wanted services"
+    - name: "SERVICE restart sssd"
       service: 
-        name="{{ item.name }}"
+        name="sssd"
         state=restarted
         enabled=yes
-      with_items:
-        - {name: 'sssd'}
+        
