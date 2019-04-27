@@ -130,7 +130,10 @@ image::ocp-webui-hello1-project-create.png[Create Project]
 == TABLE OF CONTENTS
 
 link:{includedir}/Getting-Started.adoc[Getting Started]
+include::{includedir}/Getting-Started.adoc[leveloffset=+1]
+
 link:{includedir}/appstream-yum.adoc[Application Streams]
+include::{includedir}/appstream-yum.adoc[leveloffset=+1]
 
 
 [discrete]
