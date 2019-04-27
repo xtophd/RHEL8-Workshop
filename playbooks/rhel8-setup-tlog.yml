@@ -4,7 +4,7 @@
 ## HANDS ON ACTIVITY HOSTS: workstation.example.com
 ## ADDITIONAL SETUP: node1
 
-- hosts: node1
+- hosts: node1.example.com
   tasks:
   
     - name: "YUM install tlog, cockpit-session-recording"
@@ -21,8 +21,4 @@
         - {src: 'tlog-config.j2', dest: '/etc/sssd/conf.d/sssd-session-recording.conf'} 
       
     - name: "SERVICE restart sssd"
-      service: 
-        name="sssd"
-        state=restarted
-        enabled=yes
-        
+      service: name="sssd" state=restarted enabled=yes
