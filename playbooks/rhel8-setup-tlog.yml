@@ -7,10 +7,10 @@
 - hosts: node1.example.com
   tasks:
   
-    - name: "YUM install tlog, cockpit-session-recording"
+    - name: "SETUP TLOG: yum install packages"
       yum: name=tlog,cockpit-session-recording state=installed
       
-    - name: "TEMPLATE: config file installs"
+    - name: "SETUP TLOG: template file installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -20,5 +20,5 @@
       with_items:
         - {src: 'tlog-config.j2', dest: '/etc/sssd/conf.d/sssd-session-recording.conf'} 
       
-    - name: "SERVICE restart sssd"
+    - name: "SETUP TLOG: service restart"
       service: name="sssd" state=restarted enabled=yes
