@@ -75,34 +75,25 @@ Sample output will be titled with _'Your output should look like this'_ and also
  Main PID: 3094 (sshd)
    CGroup: /system.slice/sshd.service
            └─3094 /usr/sbin/sshd -D
-
-Feb 26 12:04:15 workstation.example.com systemd[1]: Starting OpenSSH server daemon...
-Feb 26 12:04:16 workstation.example.com sshd[3094]: Server listening on 0.0.0.0 port 22.
-Feb 26 12:04:16 workstation.example.com sshd[3094]: Server listening on :: port 22.
-Feb 26 12:04:16 workstation.example.com systemd[1]: Started OpenSSH server daemon.
-Feb 26 12:24:19 workstation.example.com sshd[4391]: Accepted password for student from 10.0.0.1...h2
-Feb 26 12:30:18 workstation.example.com sshd[5070]: Accepted password for student from 174.206....h2
-Hint: Some lines were ellipsized, use -l to show in full.
+...<snip>...
 ----
 <1> This is the line we are interested in with a special note
 
 [discrete]
 ==== Alternate Commands
 
-The workshop often provides scripts to ease certain tasks and reduce the chance for errors.  This helps the class stay on task and reduces the likelyhood of disruption to the workshop delivery.  The native commands which the scripts utilize will be documented in the following way.
+The workshop often provides scripts to ease certain complex tasks and reduce the chance for errors.  This helps the class stay focused and reduces the likelyhood of disruption to the workshop delivery.  The native commands which the scripts utilize will be documented in the following way.
 
 .[root@master ~]#
 ----
-cheat-validate-service.sh
+cheat-service-status.sh
 ----
 
 [NOTE]
 ====
 _Native command(s) to verify POD service_
 ----
-oc get services
-
-curl http://{ip_address}}:8080
+systemctl status sshd
 ----
 ====
 
