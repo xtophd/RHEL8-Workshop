@@ -140,8 +140,7 @@ the command is:
 yum module enable mariadb mysql -y
 ----
 
-Ansible automation with App Stream
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+== Ansible automation with App Stream
 
 App Stream operations can be performed in ansible with the dnf module,
 like such:
