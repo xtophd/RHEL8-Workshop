@@ -193,8 +193,8 @@ This presumes the DVD is mounted on /mnt
 
 .[root@node1]#
 ----
-mkdir /var/www/html/repos/rhel8
-cd /var/www/html/repos/rhel8
+mkdir /var/www/html/repos/rhel8/rc-1
+cd /var/www/html/repos/rhel8/rc-1
 tar cf - -C /mnt . | tar xvf -
 ----
 
@@ -209,7 +209,7 @@ Proceed to create repository with functional application streams
 
 .[root@node1]#
 ----
-cd /var/www/html/repos/rhel8/AppStream
+cd /var/www/html/repos/rhel8/rc-1/AppStream
 cd repodata
 gunzip 87ada5e5d9c759dccdff8955fc93c33760454907021411ef552d3a6a8ca5ecc5-modules.yaml.gz
 mv 87ada5e5d9c759dccdff8955fc93c33760454907021411ef552d3a6a8ca5ecc5-modules.yaml ../modules.yaml
