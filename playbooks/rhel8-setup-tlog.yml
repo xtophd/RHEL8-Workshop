@@ -2,7 +2,7 @@
 
 ## TLOG Setup
 ## HANDS ON ACTIVITY HOSTS: workstation.example.com
-## ADDITIONAL SETUP: core.example.com
+## ADDITIONAL SETUP: node1
 
 - hosts: nodes
   tasks:
