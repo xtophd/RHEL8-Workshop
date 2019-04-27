@@ -9,23 +9,6 @@ ifdef::env-github[]
 endif::[]
 
 
-Rebuilding repositories that have AppStream components
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-....
-yum install createrepo_c
-cd /path/to/repos/AppStream
-cd repodata
-gunzip 87ada5e5d9c759dccdff8955fc93c33760454907021411ef552d3a6a8ca5ecc5-modules.yaml.gz
-mv 87ada5e5d9c759dccdff8955fc93c33760454907021411ef552d3a6a8ca5ecc5-modules.yaml ../modules.yaml
-cp 9d3cd6fcf9bdd9799b1c285b9d2d2627a8e4e5cd4e126bbfa8d8efea1722bde3-comps-AppStream.x86_64.xml ../
-cd ..
-rm -rf ./repodata
-createrepo_c . -g 9d3cd6fcf9bdd9799b1c285b9d2d2627a8e4e5cd4e126bbfa8d8efea1722bde3-comps-AppStream.x86_64.xml
-modifyrepo_c --mdtype=modules ./modules.yaml ./repodata/
-....
-
-At this point, you have properly regenerated the AppStream repository.
 
 Choosing an appstream module on RHEL 8.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -182,6 +165,39 @@ ansible rhel8 -a "rpm -q postgresql"
 You should have postgresql 10.6 on nodes 1 and 2 and postgresql 9.6 on
 node3.
 
+
+== Apendix
+
+Please note that this activity was required with the RHEL 8 BETA we used to constuct this lab.  It has already been executed on the host core.example.com.  This is provided as reference only.
+
+=== Rebuilding repositories that have AppStream components
+
+==== Unpack the RHEL 8 DVD
+
+This presumes the DVD is mounted on /mnt
+
+....
+mkdir /var/www/html/repos/rhel8
+cd /var/www/html/repos/rhel8
+tar cf - -C /mnt . | tar xvf -
+....
+
+Install the required tools to create the repo with functional application streams
+
+....
+yum install createrepo_c
+cd /var/www/html/repos/rhel8/AppStream
+cd repodata
+gunzip 87ada5e5d9c759dccdff8955fc93c33760454907021411ef552d3a6a8ca5ecc5-modules.yaml.gz
+mv 87ada5e5d9c759dccdff8955fc93c33760454907021411ef552d3a6a8ca5ecc5-modules.yaml ../modules.yaml
+cp 9d3cd6fcf9bdd9799b1c285b9d2d2627a8e4e5cd4e126bbfa8d8efea1722bde3-comps-AppStream.x86_64.xml ../
+cd ..
+rm -rf ./repodata
+createrepo_c . -g 9d3cd6fcf9bdd9799b1c285b9d2d2627a8e4e5cd4e126bbfa8d8efea1722bde3-comps-AppStream.x86_64.xml
+modifyrepo_c --mdtype=modules ./modules.yaml ./repodata/
+....
+
+At this point, you have properly regenerated the AppStream repository.
 
 [discrete]
 == End of Unit
