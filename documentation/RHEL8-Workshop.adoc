@@ -133,9 +133,10 @@ image::ocp-webui-hello1-project-create.png[Create Project]
   . link:{includedir}/appstream-yum.adoc[Application Streams]
 
 
-
+////  PRINT THIS DOC REMOVE COMMENTS AROUND INCLUDES
 include::{includedir}/Getting-Started.adoc[leveloffset=+1]
 include::{includedir}/appstream-yum.adoc[leveloffset=+1]
+////
 
 [discrete]
 = The End
