@@ -223,7 +223,7 @@ modifyrepo_c --mdtype=modules ./modules.yaml ./repodata/
 
 At this point, you have properly regenerated the AppStream repository.
 
-Now all that is left is to create and distribute /etc/yum.repos.d/rhel8-rc1.repo yum configuration file to your clients.
+Now all that is left is to create and distribute the yum configuration file `(/etc/yum.repos.d/rhel8-rc1.repo)` to your clients.
 
 [source]
 ----
