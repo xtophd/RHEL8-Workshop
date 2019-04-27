@@ -1,8 +1,0 @@
-- hosts: all
-  tasks:
-  
-    - name: "PING all nodes"
-      ping:
-
-
-include rhel8-prep-tlog.yml
