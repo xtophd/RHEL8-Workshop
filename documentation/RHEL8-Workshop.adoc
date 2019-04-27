@@ -127,9 +127,11 @@ ____
 image::ocp-webui-hello1-project-create.png[Create Project]
 ====
 
+== TABLE OF CONTENTS
 
+Getting Started (Installation)
 
-== Getting Started (Installation)
+link:{includedir}/Getting-Started.adoc[Getting Started]
 
 include::{includedir}/Getting-Started.adoc[leveloffset=+1]
 
