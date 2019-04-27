@@ -14,9 +14,101 @@
   * Keegan Gordon
   * Matt St. Onge
 
+First of all, THANK YOU for registering and participating in *The Definitive Red Hat Enterprise Linux 8 Beta Hands-on Lab*.  The Lab team has worked very hard to assemble a series of exercises to introduce many of the new features and capabilities found in the next great release of RHEL.  We hope you enjoy this experience and please don't hesitate to ask questions.
+
+Also, please don't forget to review this seesion at the completion of this lab.  Your reviews help keep labs like these as top attractions for the Red Hat Summit.
+
 == Preface
 
-include::{includedir}/Preface.adoc[leveloffset=+1]
+This guide is intended to support a series of workshop exercises for individuals getting familiar with Red Hat Enterprise Linux 8.
+
+NOTE:  This whole effort is done using official Red Hat software and although things can likely be set up to work with upstream software components (Fedora, CentOS, etc...), alternate deritives of RHEL are not tested or validated with these exercises at this time.
+
+= Conventions Used
+
+== Tips, Notes & Warnings
+
+TIP: Extra info which could be helpful, but not essential for a given task or discussion
+
+NOTE: Special information to pay attention
+
+WARNING: Critical information which could help you avoid major set backs
+
+== Executing tasks on the CLI
+
+=== Input
+
+Each block of commands to execute will be label with the expected *user-id* and *host*.  To enhance cut & paste efficiency, the command prompt is omitted from each line.
+
+.[root@master ~]#
+----
+systemctl status sshd
+----
+
+=== Output
+
+Sample output will be titled with _'Your output should look like this'_ and also be indented to help with visual identification.  Sometimes there will also be footnotes and/or callouts.
+
+.Your output should look like this
+[source,indent=4]
+----
+● sshd.service - OpenSSH server daemon
+   Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2019-02-26 12:04:16 EST; 27min ago // <1>
+     Docs: man:sshd(8)
+           man:sshd_config(5)
+ Main PID: 3094 (sshd)
+   CGroup: /system.slice/sshd.service
+           └─3094 /usr/sbin/sshd -D
+
+Feb 26 12:04:15 workstation.example.com systemd[1]: Starting OpenSSH server daemon...
+Feb 26 12:04:16 workstation.example.com sshd[3094]: Server listening on 0.0.0.0 port 22.
+Feb 26 12:04:16 workstation.example.com sshd[3094]: Server listening on :: port 22.
+Feb 26 12:04:16 workstation.example.com systemd[1]: Started OpenSSH server daemon.
+Feb 26 12:24:19 workstation.example.com sshd[4391]: Accepted password for student from 10.0.0.1...h2
+Feb 26 12:30:18 workstation.example.com sshd[5070]: Accepted password for student from 174.206....h2
+Hint: Some lines were ellipsized, use -l to show in full.
+----
+<1> This is the line we are interested in with a special note
+
+=== Alternate Commands
+
+The workshop often provides scripts to ease certain tasks and reduce the chance for errors.  This helps the class stay on task and reduces the likelyhood of disruption to the workshop delivery.  The native commands which the scripts utilize will be documented in the following way.
+
+.[root@master ~]#
+----
+cheat-validate-service.sh
+----
+
+[NOTE]
+====
+_Native command(s) to verify POD service_
+----
+oc get services
+
+curl http://{ip_address}}:8080
+----
+====
+
+== Executing tasks in the WebUI
+
+Notice that key value pairs for data entry are presented in a matrix.
+
+____
+select `Create Project` from *My Projects* on the *Openshift Landing* page
+
+.Use following details for Create Project
+[horizontal]
+*Name*:: hello-webui
+*Display Name*:: Hello WebUI
+*Description*:: My First WebUI App
+
+select `Create`
+____
+
+====
+image::ocp-webui-hello1-project-create.png[Create Project]
+====
 
 == Getting Started (Installation)
 
