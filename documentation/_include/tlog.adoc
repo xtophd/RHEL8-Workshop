@@ -25,7 +25,7 @@ ssh node1.example.com
 
 Now change your effective userid to student using the `su` command.  Don't forget the dash, it's `su - student`.
 
-.[root@workstation]#
+.[root@node1]#
 ----
 su - student
 ----
