@@ -46,7 +46,7 @@ firewall-cmd --add-service=cockpit --permanent
 firewall-cmd —reload
 ----
 
-== TASK 2
+== Login
 
 On host *workstation.example.com*, use the console GUI to start a web browser.
 
@@ -60,7 +60,7 @@ Here is a simple dashboard where you can monitor current system activities:
   . CPU utilization
   . Memory Utilization
   . Disk I/O
-  .Network traffic
+  . Network traffic
 
 ====
 image::cockpit-image7.png[Cockpit Dashboard]
