@@ -137,7 +137,7 @@ nft list table ip filter -n -a
 nft insert rule ip filter INPUT tcp dport { ssh, http, https, 8181 } accept
 ----
 
-Verify Multiple Rules at Once
+Verify the new rules.
 
 .[root@node1]#
 ----
