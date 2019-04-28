@@ -1,7 +1,9 @@
 #!/bin/bash
 
+# Check if entry exists already
+
 if grep -q summitdir /etc/fstab ; then
-  echo "Entry already exists, please delete before proceeding"
+  echo "Entry already exists in /etc/fstab, please delete before proceeding"
   exit
 fi
 
@@ -9,15 +11,8 @@ fi
 
 echo "# Determining UUID"
 
-UUID = `lsblk -o uuid /stratis/summitpool/summitfs`
+UUID=`lsblk -n -o uuid /stratis/summitpool/summitfs`
 
-echo "# Adding to fstab: "
-echo "UUID=${UUID} /summitdir xfs defaults 0 0"
+echo "# Adding to fstab: UUID=${UUID} /summitdir xfs defaults 0 0"
 
 echo "UUID=${UUID} /summitdir xfs defaults 0 0" >> /etc/fstab
-
-
-#lsblk -o uuid /stratis/summitpool/summitfs | \
-#  tr '\n' '=' |  \
-#  sed -e 's#=$# /summitdir xfs defaults 0 0\n#' >> /etc/fstab
-
