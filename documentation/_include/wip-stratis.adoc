@@ -117,7 +117,9 @@ summitpool  /dev/vdb                5 GiB  In-use  Data
 summitpool  /dev/vdc                5 GiB  In-use  Data
 ----
 
-Now create a filesystem, a mount point directory, and mount the filesystem:
+== Create Filesystem
+
+Now create a filesystem, a directory mount point, and mount the filesystem:
 (note that “fs” can optionally be written out as “filesystem”)
 
 .[root@node2]#
@@ -182,22 +184,75 @@ sed -e 's#=$# /summitdir xfs defaults 0 0\n#' >> /etc/fstab
 ----
 ====
 
-
-== TASK 3
-
-.[root@node2]#
-----
-----
+Very that the /etc/fstab entry is correct by unmounting and mounting the filesytem one last time
 
 .[root@node2]#
 ----
+umount /summitdir
+mount /summitdir
+df -h
 ----
+
+== Add Cache Device
+
+Stratis also makes it easy to add cache devices.  For example, say the filesystem we just created runs into some I/O performance issues.  You bought an SSD (solid state disk) and need to configure it into the system to act as a high speed cache.  Use the following commands to add the drive (/dev/sda) and check its status:
+
 
 .[root@node2]#
 ----
+stratis pool add-cache summitpool  /dev/sdc
 ----
 
 
+.[root@node2]#
+----
+stratis blockdev
+----
+
+[source,indent=4]
+----
+Pool Name	Device Node    Physical Size   State   Tier
+summitpool   /dev/vdb                5 GiB  In-use   Data
+summitpool   /dev/vdc                5 GiB  In-use   Data
+Summitpool   /dev/sda                5 GiB  In-use  Cache
+----
+
+== Grow Storage Pool
+
+Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summitfs” filesystem is growing close to the physical space in “summitpool”, adding an additional disk/block device is done using:
+
+.[root@node2]#
+----
+Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summitfs” filesystem is growing close to the physical space in “summitpool”, adding an additional disk/block device is done using:
+----
+
+
+.[root@node2]#
+----
+stratis blockdev
+----
+
+[source,indent=4]
+----
+Pool Name    Device Node    Physical Size   State   Tier
+summitpool   /dev/vdb               5 GiB  In-use   Data
+summitpool   /dev/vdc               5 GiB  In-use   Data
+summitpool   /dev/sda               5 GiB  In-use  Cache
+summitpool   /dev/sdb               5 GiB  In-use   Data
+----
+
+Verify that the pool shows the additional space, and that the amount used is now in a safe range
+
+.[root@node2]#
+----
+stratis pool
+----
+
+[source,indent=4]
+----
+Name          Total Physical Size   Total Physical Used
+summitpool                 15 GiB               606 MiB
+----
 
 == Additional Resources
 
