@@ -131,6 +131,8 @@ Now that NTP firewall rule is enabled. Let’s make sure NTP service is enabled 
 image::cockpit-image11.png[Cockpit Firewall 5]
 ====
 
+== Service Management
+
 Cockpit also allows you to start/stop, restart, enable/disable a service on your RHEL 8 server:
 
 ====
