@@ -66,6 +66,8 @@ Here is a simple dashboard where you can monitor current system activities:
 image::cockpit-image7.png[Cockpit Dashboard]
 ====
 
+== Enable Persistent Metrics
+
 To enable persistent metrics, cockpit requires “Performance Co-pilot (pcp)” and cockpit pcp plugin. Follow the screenshots to install and enable persistent metrics.
 
 ====
@@ -78,6 +80,8 @@ image::cockpit-image4.png[Cockpit Persistence 2]
 image::cockpit-image2.png[Cockpit Persistence 3]
 ====
 
+== Change Performance Profile
+
 RHEL 8 comes with several pre-canned performance tuning profiles from Tuned. Since this is a virtual machine, the default profile “virtual-guest” was selected. You can easily switch profile via cockpit web UI. In this exercise, we will change the profile to “throughput-performance”
 
 ====
@@ -86,6 +90,8 @@ image::cockpit-image9.png[Cockpit Performance 1]
 ====
 image::cockpit-image5.png[Cockpit Performance 2]
 ====
+
+== View Logs
 
 Under the log section, you can review past and current log events and log severity
 
