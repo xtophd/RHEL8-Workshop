@@ -123,7 +123,7 @@ image::ocp-webui-hello1-project-create.png[Create Project]
 
   . link:{includedir}/Getting-Started.adoc[Getting Started]
   . link:{includedir}/appstream-yum.adoc[Application Streams]
-  . link:{includedir}/tlog.adoc[Session Loggin with TLOG]
+  . link:{includedir}/tlog.adoc[Session Logging with Tlog]
 
 
 ////  
