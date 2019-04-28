@@ -55,7 +55,54 @@ Then browse to URL: `https://node2.example.com:9090`
 ====
 image::cockpit-image1.png[Cockpit Login]
 ====
-
+====
+image::cockpit-image2.png[Cockpit Login]
+====
+====
+image::cockpit-image3.png[Cockpit Login]
+====
+====
+image::cockpit-image4.png[Cockpit Login]
+====
+====
+image::cockpit-image5.png[Cockpit Login]
+====
+====
+image::cockpit-image6.png[Cockpit Login]
+====
+====
+image::cockpit-image7.png[Cockpit Login]
+====
+====
+image::cockpit-image8.png[Cockpit Login]
+====
+====
+image::cockpit-image9.png[Cockpit Login]
+====
+====
+image::cockpit-image10.png[Cockpit Login]
+====
+====
+image::cockpit-image11.png[Cockpit Login]
+====
+====
+image::cockpit-image12.png[Cockpit Login]
+====
+====
+image::cockpit-image13.png[Cockpit Login]
+====
+====
+image::cockpit-image14.png[Cockpit Login]
+====
+====
+image::cockpit-image15.png[Cockpit Login]
+====
+====
+image::cockpit-image16.png[Cockpit Login]
+====
+====
+image::cockpit-image17.png[Cockpit Login]
+====
 
 
 
