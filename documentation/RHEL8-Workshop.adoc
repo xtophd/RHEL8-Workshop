@@ -20,7 +20,7 @@ endif::[]
   * Christoph Doerbeck
   * Karl Abbott
   * Eddie Chen
-  * Keegan Gordon
+  * Gordon Keegan
   * Matt St. Onge
   
 [discrete]
