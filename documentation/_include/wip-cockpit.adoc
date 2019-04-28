@@ -13,17 +13,17 @@ endif::[]
 
 Cockpit is a Red Hat Enterprise Linux 8 web-based interface designed for managing and monitoring your local system, as well as Linux servers located in your network environment.
 
-  . Managing services
-  . Managing user accounts
-  . Managing and monitoring system services
-  . Configuring network interfaces and firewall
-  . Reviewing system logs
-  . Managing virtual machines
-  . Creating diagnostic reports
-  . Setting kernel dump configuration
-  . Configuring SELinux
-  . Updating software
-  . Managing system subscriptions
+  * Managing services
+  * Managing user accounts
+  * Managing and monitoring system services
+  * Configuring network interfaces and firewall
+  * Reviewing system logs
+  * Managing virtual machines
+  * Creating diagnostic reports
+  * Setting kernel dump configuration
+  * Configuring SELinux
+  * Updating software
+  * Managing system subscriptions
 
 The following exercises will walk you through installing and configuring cockpit on RHEL 8. 
 
