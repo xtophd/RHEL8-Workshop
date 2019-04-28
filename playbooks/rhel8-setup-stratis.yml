@@ -6,7 +6,7 @@
   tasks:
   
     - name: "SETUP STRATIS: yum install packages"
-      yum: name=stratis,stratis-cli state=installed
+      yum: name=stratisd,stratis-cli state=installed
       
     - name: "SETUP STRATIS: cheat file installs"
       template:
