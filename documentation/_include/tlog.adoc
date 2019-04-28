@@ -81,7 +81,7 @@ users = student
 groups = student
 ----
 
-And lastly, host to restart the service.
+And lastly, how to restart the service.
 
 .[root@node1]#
 ----
