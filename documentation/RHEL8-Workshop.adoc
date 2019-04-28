@@ -118,10 +118,10 @@ ____
 image::ocp-webui-hello1-project-create.png[Create Project]
 ====
 
-[#toc]
 [discrete]
 == RHEL 8 LAB: EXERCISES
 
+[#toc]
   . link:{includedir}/getting-started.adoc[Getting Started]
   . link:{includedir}/appstream-yum.adoc[Application Streams]
   . link:{includedir}/tlog.adoc[Session Logging with Tlog]
