@@ -98,7 +98,7 @@ We have taken the liberty of scripting this "search" to playback the last sessio
 cheat-tlog-playback.sh
 ----
 
-Once you hit enter on the above command, you will see a note that "Playback Started..." and again when "Playback Stopped...".  Be patient until it completes and your root prompt returns.
+Once you hit enter on the above command, you will see a note that "Playback Started..." and again when "Playback Finished...".  Be patient until it completes and your root prompt returns.
 
 [NOTE]
 ====
