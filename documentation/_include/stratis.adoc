@@ -222,7 +222,7 @@ Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summ
 
 .[root@node2]#
 ----
-Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summitfs” filesystem is growing close to the physical space in “summitpool”, adding an additional disk/block device is done using:
+stratis pool add-data summitpool /dev/sdb
 ----
 
 
