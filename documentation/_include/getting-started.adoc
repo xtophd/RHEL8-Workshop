@@ -67,7 +67,7 @@ cd ~/RHEL8-Workshop
 
 .[root@workstation ~]#
 ----
-bash rhel8-workshop-prep.sh
+bash prepare-rhel8-workshop.sh
 ----
 
 === A Few Words While the Installer Runs
