@@ -10,7 +10,7 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
-:imagesdir: ./include/_images
+:imagesdir: ./_include/_images/
 
 = The Definitive Red Hat Enterprise Linux 8 Hands-on Lab
 
