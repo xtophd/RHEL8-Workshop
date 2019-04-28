@@ -89,15 +89,26 @@ Sat 2019-04-27 21:21:58.770887 EDT [s=bcde42e4c96048c3908657177414e202;i=70c;b=b
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
 ----
 
-Each one of those entries makes up a chunk of a session recording.  It is by way of searching and itentifying the correct TLOG_REC for a session, that you can then play back the session using `tlog-play`.
+Each one of those entries makes up a chunk of a session recording.  It is by way of searching the system journal and identifying the correct TLOG_REC for a specific session, that you can then play back the session using `tlog-play`.
+
+We have taken the liberty of scripting this "search" to playback the last session log from the user student.
 
 .[root@node1]#
 ----
-tlog-play -r journal -M TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
+cheat-tlog-playback.sh
 ----
 
-Once you hit enter on the above command, notice that your terminal is now playing back the session log in all of it's glory.  Be patient until your root prompt returns.
+Once you hit enter on the above command, you will see a note that "Playback Started..." and again when "Playback Stopped...".  Be patient until it completes and your root prompt returns.
 
+[NOTE]
+====
+_Native command(s) to playback tlog_
+----
+myTLOG=`journalctl -o verbose -n 1 --output-fields=TLOG_USER,TLOG_REC TLOG_USER=student | grep TLOG_REC`
+
+tlog-play -r journal -M ${myTLOG}
+----
+====
 
 == Initial Setup of TLOG
 
