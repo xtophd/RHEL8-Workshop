@@ -86,7 +86,7 @@ The set up of the RHEL 8 Workshop should now be complete.  A couple of remaining
 [discrete]
 == End of Unit
 
-NEXT: link:../exercise-toc.adoc#toc[RHEL 8 Exercises]
+NEXT: link:./exercise-toc.adoc#toc[RHEL 8 Exercises]
 
 link:../RHEL8-Workshop.adoc#toc[Return to Introduction]
 
