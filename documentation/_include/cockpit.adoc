@@ -102,6 +102,8 @@ image::cockpit-image1.png[Cockpit Log 1]
 image::cockpit-image16.png[Cockpit Log 2]
 ====
 
+== Network Management
+
 Under the networking section, you can monitor current networking activities. You can create network bond, team, bridge, and vlan driven by GUI
 
 ====
