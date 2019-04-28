@@ -118,7 +118,7 @@ ____
 image::ocp-webui-hello1-project-create.png[Create Project]
 ====
 
-[#toc,discrete]
+[discrete #toc]
 == TABLE OF CONTENTS
 
   . link:{includedir}/Getting-Started.adoc[Getting Started]
