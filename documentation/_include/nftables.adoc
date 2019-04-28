@@ -167,7 +167,7 @@ Remove rules added during this exercise.  We begin by setting the INPUT chain de
 nft add chain ip filter INPUT { type filter hook input priority 0\; policy accept\; }
 ----
 
- Now find the handle and remove the rule currently allowing access for SSH, HTTP, HTTPS, and 8181
+Now find the handle and remove the rule currently allowing access for SSH, HTTP, HTTPS, and 8181
 
 .[root@node1]#
 ----
