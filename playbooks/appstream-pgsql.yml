@@ -1,6 +1,6 @@
 ---
   - name: Deploy Postgresql 9.6 server profile to legacy database server.
-    hosts: legacy-db-server
+    hosts: legacy_db_server
     tasks:
       - name: install postgresql 9.6 server profile
         dnf:
@@ -8,7 +8,7 @@
            state: present
 
   - name: Deploy Postgresql 10 server profile to new database server.
-    hosts: new-db-server
+    hosts: new_db_server
     tasks:
       - name: install postgresql 10 server profile
         dnf:
@@ -16,7 +16,7 @@
            state: present
 
   - name: Deploy Postgresql 10 client to database client nodes.
-    hosts: new-db-clients
+    hosts: new_db_clients
     tasks:
       - name: install postgresql 10 client profile
         dnf:
