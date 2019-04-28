@@ -28,7 +28,7 @@ postgresql           9.6         client, server [d]          PostgreSQL server a
 ----
 
 This means that I can pick either the postgresql 10 stream (the default)
-or the 9.6 stream. This enable me to use an older postgresql than what
+or the 9.6 stream. This enables me to use an older postgresql than what
 RHEL 8 ships. In the future as new postgresql versions come out, they
 can be added as different streams that I can change to as well.
 Switching streams is not supported. App Stream allows us to be more in
