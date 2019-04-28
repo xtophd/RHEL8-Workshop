@@ -1,0 +1,22 @@
+---
+
+## STRATIS Setup
+
+- hosts: node2.example.com
+  tasks:
+  
+    - name: "SETUP STRATIS: yum install packages"
+      yum: name=stratis-cli state=installed
+      
+    - name: "SETUP TLOG: cheat file installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0600
+      with_items:
+        - {src: 'cheat-stratis-fstab.j2', dest: '/usr/local/bin/cheat-stratis-fstab.sh'} 
+
+    - name: "SETUP TLOG: service restart"
+      service: name="stratisd" state=restarted enabled=yes
