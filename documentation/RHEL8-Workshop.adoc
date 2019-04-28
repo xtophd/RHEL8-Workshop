@@ -136,7 +136,7 @@ include::{includedir}/nftables.adoc[leveloffset=+1]
 ////
 
 [discrete]
-= The End
+== The End
 
 .Built-in
 asciidoctor-version:: {asciidoctor-version}
