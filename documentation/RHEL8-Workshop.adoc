@@ -138,6 +138,8 @@ include::{includedir}/nftables.adoc[leveloffset=+1]
 [discrete]
 == The End
 
+Please remember to fill out the survey.  The RHEL 8 Lab team really appreciates your time spent with us today and we hope you enjoy the rest of your Summit experience.
+
 .Built-in
 asciidoctor-version:: {asciidoctor-version}
 safe-mode-name:: {safe-mode-name}
