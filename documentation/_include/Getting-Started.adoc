@@ -38,14 +38,12 @@ sudo -i
 
 === Enable 'screen' Terminal Session
 
-Again, if you haven't already we strongly encourage the use of the `screen` utility.
+Again, if you haven't already we strongly encourage the use of the `tmux` utility.
     
 .[student@workstation ~]$ 
 ----
-screen -m
+tmux
 ----
-
-For more tips on using screen have a look in the link:./Preface.adoc[Workshop Preface]
 
 === Download the Workshop project from GitHub
 
@@ -69,77 +67,28 @@ cd ~/RHEL8-Workshop
 
 .[root@workstation ~]#
 ----
-bash prepare-install-openshift.sh
+bash rhel8-workshop-prep.sh
 ----
-
-If you examine the install script, it breaks the installation into 3 parts: pre-install, install & post-install.  Let us briefly review what each phase contributes to the installation process.
-
-==== Openshift Pre-Installation
-
-The pre-installation performs 2 primary activities:
-
-* Workstation Actions
-** minimum package installation
-
-* OCP Cluster Node Actions
-** reconfigure docker storage to use a block device
-** enable and start firewalld
-** minimum package installation
-
-==== Openshift Installation
-
-This portion excutes the official Openshift Installer playbook.  
-
-==== Openshift Post-Installation
-
-The post-install has very little to do with openshift itself.  The post-install deploys various configuration files and scripts which are used during the workshop exercises.  Additionally, the post-install configures NFS storage host for use as a persistent volume.  More on that topic later.
-
-Again, there are 2 primary activities:
-
-* Workstation Actions
-** deploys sample files used by exercises
-** configures, enables and starts NFS services
-** cleans up yum content
-
-* OCP Cluster Node Actions
-** deploys sample files used by exercises
-** deletes and deploys OCP router with replicas=2
-** cleans up yum content (frees disk space)
 
 === A Few Words While the Installer Runs
 
-So you might be asking yourself, *why* another workshop?  What's different about this one?
-
-I have 2 simple goals:
-
-. Explain what the Red Hat Openshift Container Platform is via a hands-on approach
-. Deliver an "Ah-Ha" moment for each participant regarding containerized workloads:
-** What's in it for operators
-** What's in it for developers
-
-So while the OCP installer runs for the next 30 minutes, your presenter (perhaps there is a sponsor?) may opt to provide a brief discussion on a related topic.  Valuable themes include _(in the future I hope to provide links to brief documents on the topics below)_:
-
-* "An Introduction to Openshift"
-* "Modern Application Development"
-* "Architectural Overview of this Workshop"
-* or merely host a simple Q&A session
-
-In any case, use this time to set some foundational knowledge.
+Put something clever here :-)
 
 == Conclusion
 
-The installation of Red Hat Openshift Container Platform is now complete and you should be ready to begin with the exercises.  A couple of remaining words of advice:
+The set up of the RHEL 8 Workshop should now be complete.  A couple of remaining words of advice:
 
-1.  Some exercises are dependant on the successful completion of other exericses.  Those dependencies will be noted at the top of each unit.
+1.  Some exercises are dependant on the successful completion of other exericses.  Those dependencies will be noted.
 2.  Pay attention to which linux login to use
-3.  Pay attention to which ocp user to use
-4.  Also be sure to pay close attention to which host you are executing tasks from
-
+3.  Pay attention to which host to use
+4.  There is an exam at the conclusion of the workshop... #notreally
 
 [discrete]
 == End of Unit
 
-link:../RHEL8-Workshop.adoc#toc[Return to TOC]
+NEXT: link:../exercise-toc.adoc#toc[RHEL 8 Exercises]
+
+link:../RHEL8-Workshop.adoc#toc[Return to Introduction]
 
 ////
 Always end files with a blank line to avoid include problems.
