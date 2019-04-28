@@ -82,7 +82,7 @@ Sample output will be titled with _'Your output should look like this'_ and also
 [discrete]
 ==== Alternate Commands
 
-The workshop often provides scripts to ease certain complex tasks and reduce the chance for errors.  This helps the class stay focused and reduces the likelyhood of disruption to the workshop delivery.  The native commands which the scripts utilize will be documented in the following way.
+The workshop often provides cheat-scripts to ease certain complex tasks.  This helps the class stay focused and reduces the likelyhood of errors and disruptions to the workshop delivery.  The native commands which the cheat-scripts utilize will be documented in the following way.
 
 .[root@master ~]#
 ----
@@ -100,7 +100,7 @@ systemctl status sshd
 [discrete]
 === Executing tasks in the WebUI
 
-Notice that key value pairs for data entry are presented in a matrix.
+Notice that key value pairs for data entry dialogs are presented in a matrix.  
 
 ____
 select `Create Project` from *My Projects* on the *Openshift Landing* page
@@ -111,7 +111,7 @@ select `Create Project` from *My Projects* on the *Openshift Landing* page
 *Display Name*:: Hello WebUI
 *Description*:: My First WebUI App
 
-select `Create`
+select `Create`.
 ____
 
 ====
