@@ -22,4 +22,4 @@
       service: name="cockpit.socket" state=restarted enabled=yes
       
     - name: "SETUP COCKPIT: firewall configuration"
-      firewall: port=cockpit permanent=yes immediate=yes state=enabled
+      firewalld: port=cockpit permanent=yes immediate=yes state=enabled
