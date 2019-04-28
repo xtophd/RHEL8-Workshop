@@ -123,12 +123,14 @@ image::ocp-webui-hello1-project-create.png[Create Project]
 
   . link:{includedir}/Getting-Started.adoc[Getting Started]
   . link:{includedir}/appstream-yum.adoc[Application Streams]
+  . link:{includedir}/tlog.adoc[Session Loggin with TLOG]
 
 
 ////  
 TO PRINT THIS DOC REMOVE THIS LINE AND COMMENTS AROUND INCLUDES
 include::{includedir}/Getting-Started.adoc[leveloffset=+1]
 include::{includedir}/appstream-yum.adoc[leveloffset=+1]
+include::{includedir}/tlog.adoc[leveloffset=+1]
 ////
 
 [discrete]
