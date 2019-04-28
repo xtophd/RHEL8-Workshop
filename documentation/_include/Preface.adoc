@@ -106,9 +106,7 @@ image::ocp-webui-hello1-project-create.png[Create Project]
 [discrete]
 == End of Unit
 
-*Next:* link:Getting-Started.adoc[Getting Started]
-
-link:../OCP-Workshop.adoc[Return to TOC]
+link:../RHEL8-Workshop.adoc#toc[Return to TOC]
 
 ////
 Always end files with a blank line to avoid include problems.
