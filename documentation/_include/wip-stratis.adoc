@@ -63,7 +63,7 @@ Apr 27 18:41:52 node2.example.com systemd[1]: Started A daemon that manages a po
 
 == Create Storage Pool
 
-WARNING: /dev/vda is the system disk, do NOT use it in any of the stratis commands or the vm will become unusable.
+WARNING: /dev/vda is the system disk, DO NOT use it in any of the stratis commands or the vm will become unusable.
 
 Next, see what disks/block devices are present, create a pool, create a filesystem in the pool, and mount the filesystem.
 
