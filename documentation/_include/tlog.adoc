@@ -10,17 +10,18 @@ endif::[]
 
 = Session Recording with TLOG
 
-== 
 
-Starting on the host *workstation.example.com*, let's ssh over to *node1.example.com* as the user *student*.
-Use the password provided by your instructors at the start of the lab.
+
+== Creating a Session Log
+
+Starting on the host *workstation.example.com*, let's ssh over to *node1.example.com*.  No password should be required.
 
 .[root@workstation]#
 ----
 ssh node1.example.com
 ----
 
-Now chage your effective userid to student using the `su` command.
+Now change your effective userid to student using the `su` command.  Don't forget the dash, it's `su - student`.
 
 .[root@workstation]#
 ----
@@ -56,7 +57,36 @@ sudo cat /etc/shadow
 exit
 ----
 
+== Session Play Back
 
+
+== Initial Setup of TLOG
+
+Clearly we have taken the liberty to pre-configure TLOG for this lab.  But, it was not very difficult.  TLOG requires a couple of packages, a configuration file and simple restart of the sssd service.
+
+.[root@node1]#
+----
+yum install tlog cockpit-session-recording
+----
+
+Here is what the config file looks like _/etc/sssd/conf.d/sssd-session-recording.conf_
+[source,indent=4]
+----
+# This file deployed by Ansible playbook
+# /etc/sssd/conf.d/sssd-session-recording.conf
+
+[session_recording]
+scope = all
+users = student
+groups = student
+----
+
+And lastly, host to restart the service.
+
+.[root@node1]#
+----
+yum install tlog cockpit-session-recording
+----
 
 [discrete]
 == End of Unit
