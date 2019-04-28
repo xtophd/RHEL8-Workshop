@@ -7,7 +7,7 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
-:imagesdir: ./_images/
+:imagesdir: ./_images
 
 = Cockpit
 
@@ -53,7 +53,7 @@ On host *workstation.example.com*, use the console GUI to start a web browser.
 Then browse to URL: `https://node2.example.com:9090`
 
 ====
-image::cockpit-image1.png
+image::cockpit-image1.png[Cockpit Login]
 ====
 
 
