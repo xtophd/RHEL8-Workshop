@@ -126,6 +126,7 @@ image::ocp-webui-hello1-project-create.png[Create Project]
   . link:{includedir}/appstream-yum.adoc[Application Streams]
   . link:{includedir}/tlog.adoc[Session Logging with Tlog]
   . link:{includedir}/nftables.adoc[Firewall with NFTables]
+  . link:{includedir}/cockpit.adoc[Cockpit - System Management]
   . link:{includedir}/stratis.adoc[Stratis - Storage Management Made Easy]
 
 
@@ -135,6 +136,7 @@ include::{includedir}/Getting-Started.adoc[leveloffset=+1]
 include::{includedir}/appstream-yum.adoc[leveloffset=+1]
 include::{includedir}/tlog.adoc[leveloffset=+1]
 include::{includedir}/nftables.adoc[leveloffset=+1]
+include::{includedir}/cockpit.adoc[leveloffset=+1]
 include::{includedir}/stratis.adoc[leveloffset=+1]
 ////
 
