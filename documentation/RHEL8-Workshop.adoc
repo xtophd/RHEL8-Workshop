@@ -124,10 +124,10 @@ image::ocp-webui-hello1-project-create.png[Create Project]
 [#toc]
   . link:{includedir}/getting-started.adoc[Getting Started]
   . link:{includedir}/appstream-yum.adoc[Application Streams]
-  . link:{includedir}/tlog.adoc[Session Logging with Tlog]
-  . link:{includedir}/nftables.adoc[Firewall with NFTables]
+  . link:{includedir}/tlog.adoc[TLog - Session Logging]
+  . link:{includedir}/nftables.adoc[NFTables - The New Firewall]
   . link:{includedir}/cockpit.adoc[Cockpit - System Management]
-  . link:{includedir}/stratis.adoc[Stratis - Storage Management Made Easy]
+  . link:{includedir}/stratis.adoc[Stratis - Storage Management]
 
 
 ////  
