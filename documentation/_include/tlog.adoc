@@ -102,7 +102,7 @@ Once you hit enter on the above command, you will see a note that "Playback Star
 
 [NOTE]
 ====
-_Native command(s) to playback tlog_
+_Native command(s) to playback last tlog_
 ----
 myTLOG=`journalctl -o verbose -n 1 --output-fields=TLOG_USER,TLOG_REC TLOG_USER=student | grep TLOG_REC`
 
