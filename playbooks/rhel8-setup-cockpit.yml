@@ -1,0 +1,25 @@
+---
+
+## COCKPIT Setup
+
+- hosts: node2.example.com
+  tasks:
+  
+    - name: "SETUP COCKPIT: yum install packages"
+      yum: name=cockpit,firewalld state=installed
+      
+    - name: "SETUP TLOG: cheat file installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0744
+      with_items:
+        - {src: 'cheat-tlog-playback.j2', dest: '/usr/local/bin/cheat-tlog-playback.sh'} 
+
+    - name: "SETUP COCKPIT: service restart"
+      service: name="cockpit.socket" state=restarted enabled=yes
+      
+    - name: "SETUP COCKPIT: firewall configuration"
+      firewall: port=cockpit permanent=yes immediate=yes state=enabled
