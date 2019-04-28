@@ -98,6 +98,8 @@ table ip filter {
 ...<snip>...
 ----
 
+NOTE: The output for this can be VERY long.  You can optionally use `nft list chains | less` if you would like a pageable view of the output.
+
 == Add Single Rule
 
 .[root@node1]#
