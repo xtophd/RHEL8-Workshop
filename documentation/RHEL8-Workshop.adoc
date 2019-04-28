@@ -118,7 +118,8 @@ ____
 image::ocp-webui-hello1-project-create.png[Create Project]
 ====
 
-[discrete #toc]
+[#toc]
+[discrete]
 == RHEL 8 LAB: EXERCISES
 
   . link:{includedir}/getting-started.adoc[Getting Started]
