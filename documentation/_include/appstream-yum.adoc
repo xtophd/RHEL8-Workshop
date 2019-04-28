@@ -181,7 +181,19 @@ You should have postgresql 10.6 on nodes 1 and 2 and postgresql 9.6 on
 node3.
 
 
-== Apendix
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/using_application_stream/index
+
+
+
+
+
+
+
+
+
+
+
+== Appendix
 
 Please note that this activity was required with the RHEL 8 BETA we used to constuct this lab.  It has already been executed on the host core.example.com.  This is provided as reference only.
 
@@ -239,6 +251,11 @@ enabled=1
 gpgcheck=0
 ----
 
+== Additional Resources
+
+Red Hat Documentation
+
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/using_application_stream/index[USING APPLICATION STREAM]
 
 [discrete]
 == End of Unit
