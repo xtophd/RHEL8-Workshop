@@ -28,9 +28,16 @@ The following exercises will walk you through installing and configuring cockpit
 
 == Installation and Configuraiton
 
-Here are the steps to install and enable cockpit.
+Starting on the host workstation.example.com, let’s ssh over to *node2.example.com*. No password should be required.
 
 .[root@workstation]#
+----
+ssh node2.example.com
+----
+
+Here are the steps to install and enable cockpit.  These are provided as reference only as they were executed during the ansible play of rhel8-workshop-prep.
+
+.[root@node2]#
 ----
 yum intall -y cockpit
 systemctl enable --now cockpit.socket
@@ -38,14 +45,34 @@ firewall-cmd --add-service=cockpit --permanent
 firewall-cmd —reload
 ----
 
-Describe the expected output if necessary
-
-[source,indent=4]
-----
-Output from previous command
-----
-
 == TASK 2
+
+On host *workstation.example.com*, use the console GUI to start a web browser.  Then browser to URL: `https://node2.example.com:9090`
+
+====
+image::cockpit-image1.png[Login]
+image::cockpit-image2.png
+image::cockpit-image3.png
+image::cockpit-image4.png
+image::cockpit-image5.png
+image::cockpit-image6.png
+image::cockpit-image7.png
+image::cockpit-image8.png
+image::cockpit-image9.png
+image::cockpit-image10.png
+image::cockpit-image11.png
+image::cockpit-image12.png
+image::cockpit-image13.png
+image::cockpit-image14.png
+image::cockpit-image15.png
+image::cockpit-image16.png
+image::cockpit-image17.png
+====
+
+
+
+
+
 
 == TASK 3
 
