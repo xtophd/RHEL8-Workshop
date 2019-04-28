@@ -176,11 +176,10 @@ cheat-stratis-fstab.sh
 
 [NOTE]
 ====
-_Native command(s) to admend /etc/fstab_
+_Native command(s) to amend /etc/fstab_
 ----
-lsblk -o uuid /stratis/summitpool/summitfs | \
-tr '\n' '=' | \
-sed -e 's#=$# /summitdir xfs defaults 0 0\n#' >> /etc/fstab
+UUID=`lsblk -n -o uuid /stratis/summitpool/summitfs`
+echo "UUID=${UUID} /summitdir xfs defaults 0 0" >> /etc/fstab
 ----
 ====
 
