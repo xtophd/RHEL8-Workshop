@@ -23,10 +23,11 @@ Starting on the host *workstation.example.com*, let's ssh over to *node2.example
 ssh node2.example.com
 ----
 
-Now proceed to install the required packages
+Now proceed to become root and install the required packages
 
 .[root@node2]#
 ----
+sudo -i
 yum install -y stratisd stratis-cli
 ----
 
