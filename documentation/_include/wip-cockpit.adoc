@@ -53,63 +53,86 @@ On host *workstation.example.com*, use the console GUI to start a web browser.
 Then browse to URL: `https://node2.example.com:9090`
 
 ====
-image::cockpit-image1.png[Cockpit Login]
-====
-====
-image::cockpit-image2.png[Cockpit Login]
-====
-====
-image::cockpit-image3.png[Cockpit Login]
-====
-====
-image::cockpit-image4.png[Cockpit Login]
-====
-====
-image::cockpit-image5.png[Cockpit Login]
-====
-====
-image::cockpit-image6.png[Cockpit Login]
-====
-====
-image::cockpit-image7.png[Cockpit Login]
-====
-====
-image::cockpit-image8.png[Cockpit Login]
-====
-====
-image::cockpit-image9.png[Cockpit Login]
-====
-====
-image::cockpit-image10.png[Cockpit Login]
-====
-====
-image::cockpit-image11.png[Cockpit Login]
-====
-====
-image::cockpit-image12.png[Cockpit Login]
-====
-====
 image::cockpit-image13.png[Cockpit Login]
 ====
+
+Here is a simple dashboard where you can monitor current system activities:
+  . CPU utilization
+  . Memory Utilization
+  . Disk I/O
+  .Network traffic
+
 ====
-image::cockpit-image14.png[Cockpit Login]
-====
-====
-image::cockpit-image15.png[Cockpit Login]
-====
-====
-image::cockpit-image16.png[Cockpit Login]
-====
-====
-image::cockpit-image17.png[Cockpit Login]
+image::cockpit-image7.png[Cockpit Dashboard]
 ====
 
+To enable persistent metrics, cockpit requires “Performance Co-pilot (pcp)” and cockpit pcp plugin. Follow the screenshots to install and enable persistent metrics.
 
+====
+image::cockpit-image14.png[Cockpit Persistence 1]
+====
+====
+image::cockpit-image4.png[Cockpit Persistence 2]
+====
+====
+image::cockpit-image2.png[Cockpit Persistence 3]
+====
 
+RHEL 8 comes with several pre-canned performance tuning profiles from Tuned. Since this is a virtual machine, the default profile “virtual-guest” was selected. You can easily switch profile via cockpit web UI. In this exercise, we will change the profile to “throughput-performance”
 
+====
+image::cockpit-image9.png[Cockpit Performance 1]
+====
+====
+image::cockpit-image5.png[Cockpit Performance 2]
+====
 
+Under the log section, you can review past and current log events and log severity
 
-== TASK 3
+====
+image::cockpit-image1.png[Cockpit Log 1]
+====
+====
+image::cockpit-image16.png[Cockpit Log 2]
+====
+
+Under the networking section, you can monitor current networking activities. You can create network bond, team, bridge, and vlan driven by GUI
+
+====
+image::cockpit-image8.png[Cockpit Network]
+====
+
+Also under the networking section, you can configure your firewall rules. In the following example, you will find and enable NTP firewall rule.
+
+====
+image::cockpit-image6.png[Cockpit Firewall 1]
+====
+====
+image::cockpit-image3.png[Cockpit Firewall 2]
+====
+====
+image::cockpit-image10.png[Cockpit Firewall 3]
+====
+====
+image::cockpit-image15.png[Cockpit Firewall 4]
+====
+
+Now that NTP firewall rule is enabled. Let’s make sure NTP service is enabled and running under the service section
+
+====
+image::cockpit-image11.png[Cockpit Firewall 5]
+====
+
+Cockpit also allows you to start/stop, restart, enable/disable a service on your RHEL 8 server:
+
+====
+image::cockpit-image17.png[Cockpit Service 5]
+====
+
+This concludes a short exercise with Cockpit. Feel free to click through and explore other sections:
+Under ‘accounts’ section, you can manage user accounts on your RHEL 8 server
+Diagnostic Reports allows you to create sosreport for Red Hat support
+Under ‘Kernel Dump’, you can enable/disable kdump
 
 == Additional Resources
 
