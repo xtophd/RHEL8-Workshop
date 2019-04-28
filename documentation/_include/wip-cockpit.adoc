@@ -7,6 +7,7 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
+:imagesdir: ./_include/_images/
 
 = Cockpit
 
@@ -51,8 +52,16 @@ On host *workstation.example.com*, use the console GUI to start a web browser.  
 
 ====
 image::cockpit-image1.png[Login]
+====
+
+====
 image::cockpit-image2.png
+====
+
+====
 image::cockpit-image3.png
+====
+
 image::cockpit-image4.png
 image::cockpit-image5.png
 image::cockpit-image6.png
