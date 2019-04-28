@@ -1,0 +1,13 @@
+#!/bin/bash
+
+## Retrive TLOG_REC value of last tlog journald entry belonging to user 'student'
+
+TLOG_REC=`journalctl -o verbose -n 1 --output-fields=TLOG_USER,TLOG_REC TLOG_USER=student | grep TLOG_REC`
+
+## Now play back the Tlog Session log of TLOG_REC
+
+echo "Playback Starting..."
+
+tlog-play -r journal -M ${TLOG_REC}
+
+echo "Playback Finished..."
