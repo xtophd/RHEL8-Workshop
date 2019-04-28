@@ -31,3 +31,4 @@
 
 
 - import_playbook: rhel8-setup-tlog.yml
+- import_playbook: rhel8-setup-stratis.yml
