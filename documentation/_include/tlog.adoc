@@ -131,11 +131,12 @@ users = student
 groups = student
 ----
 
-And lastly, how to restart the service.
+And lastly, how to reload systemd and restart the service.
 
 .[root@node1]#
 ----
-yum install tlog cockpit-session-recording
+systemctl daemon-reload
+systemctl restart sssd
 ----
 
 == Additional Resources
