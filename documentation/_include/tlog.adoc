@@ -142,7 +142,7 @@ yum install tlog cockpit-session-recording
 
 Red Hat Documentation
 
-    * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[DEPLOYING SESSION RECORDING ON RED HAT ENTERPRISE LINUX]
+    * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[Deplying Session Recording on Red Hat Enterprise Linux]
 
 [discrete]
 == End of Unit
