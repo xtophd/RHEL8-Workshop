@@ -10,21 +10,176 @@ endif::[]
 
 = Introducing NFTables
 
+In Red Hat Enterprise Linux 8 the network security dynamic duo Firewalld and Nftables make their new team debut.
 
-== Section 1
+NFTables _(replacing IPTables)_ is a new subsystem of the Linux kernel which provides filtering and classification of network packets, datagrams, or frames. This software provides a new in-kernel packet classification framework that is based on a network-specific Virtual Machine (VM) and a new nft userspace command line tool.
 
+The default firewall management tool in continues to be firewalld _(firewall-cmd)_, which gained support for nftables with version 0.6.0.
+
+NOTE: For 99% of all use cases the firewalld tools are the best choice.  For this lab however we are trying to introduce `nft` and demonstrate some differences to the former `iptables`.
+
+
+
+== nft Fundamentals
+
+For the first part of this lab we will be using node1.  As the user _root_ on host *workstation.example.com* you should ssh to *node1.example.com*.  You should not be prompted for a password.
 
 .[root@workstation]#
 ----
 ssh node1.example.com
 ----
 
+Using nft, show the current state of the network tables.
+
+.[root@node1]#
+----
+nft list tables
+----
+
+Your output should look like this.
 
 [source,indent=4]
 ----
-
+table ip filter
+table ip6 filter
+table bridge filter
+table ip security
+table ip raw
+table ip mangle
+table ip nat
+table ip6 security
+table ip6 raw
+table ip6 mangle
+table ip6 nat
+table bridge nat
+table inet firewalld
+table ip firewalld
+table ip6 firewalld
 ----
 
+Using nft, show the current state of the network chains.
+
+.[root@node1]#
+----
+nft list chains
+----
+
+Your output should look like this.
+
+[source,indent=4]
+----
+table ip filter
+table ip6 filter
+table bridge filter
+table ip security
+table ip raw
+table ip mangle
+table ip nat
+table ip6 security
+table ip6 raw
+table ip6 mangle
+table ip6 nat
+table bridge nat
+table inet firewalld
+table ip firewalld
+table ip6 firewalld
+[root@node1 tmp]# nft list chains
+table ip filter {
+        chain INPUT {
+                type filter hook input priority 0; policy accept;
+        }
+        chain FORWARD {
+                type filter hook forward priority 0; policy accept;
+        }
+        chain OUTPUT {
+                type filter hook output priority 0; policy accept;
+        }
+}
+...<snip>...
+----
+
+== Add Single Rule
+
+.[root@node1]#
+----
+nft insert rule ip filter INPUT tcp dport http accept
+----
+
+Verify the rule change.
+
+.[root@node1]#
+----
+nft list table ip filter -n -a
+----
+
+Remember the rule handle, we will use it next to delete the rule
+
+== Delete Single Rule
+
+.[root@node1]#
+----
+nft delete rule filter INPUT handle 4
+----
+
+Verify the rule change.
+
+.[root@node1]#
+----
+nft list table ip filter -n -a 
+----
+
+== Add Multiple Rules at Once
+
+.[root@node1]#
+----
+nft insert rule ip filter INPUT tcp dport { ssh, http, https, 8181 } accept
+----
+
+Verify Multiple Rules at Once
+
+.[root@node1]#
+----
+nft list table ip filter -n -a
+----
+
+== Increase Network Security
+
+.[root@node1]#
+----
+nft add chain ip filter INPUT { type filter hook input priority 0\; policy drop\; }
+----
+
+Verify Increased Security
+
+.[root@node1]#
+----
+nft list table ip filter -n -a
+----
+
+== Cleanup
+
+Remove rules added during this exercise.  We begin by setting the INPUT chain default policy to accept all traffic.
+
+.[root@node1]#
+----
+nft add chain ip filter INPUT { type filter hook input priority 0\; policy accept\; }
+----
+
+ Now find the handle and remove the rule currently allowing access for SSH, HTTP, HTTPS, and 8181
+
+.[root@node1]#
+----
+nft list table ip filter -n -a
+
+nft delete rule filter INPUT handle 6
+----
+
+Verify that everything is back to normal/
+
+.[root@node1]#
+----
+nft list table ip filter -n -a
+----
 == Additional Resources
 
 You can find more information:
