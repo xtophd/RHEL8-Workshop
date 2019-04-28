@@ -176,7 +176,7 @@ nft list table ip filter -n -a
 nft delete rule filter INPUT handle 6
 ----
 
-Verify that everything is back to normal/
+Verify that everything is back to normal
 
 .[root@node1]#
 ----
