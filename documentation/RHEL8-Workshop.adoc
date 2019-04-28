@@ -91,7 +91,7 @@ cheat-service-status.sh
 
 [NOTE]
 ====
-_Native command(s) to verify POD service_
+_Native command(s) to verify system service_
 ----
 systemctl status sshd
 ----
