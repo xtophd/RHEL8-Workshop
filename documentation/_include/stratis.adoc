@@ -27,7 +27,7 @@ Now proceed to install the required packages
 
 .[root@node2]#
 ----
-yum install -y stratis-cli
+yum install -y stratisd stratis-cli
 ----
 
 Next we need to enable the `stratisd` service
