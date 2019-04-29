@@ -12,7 +12,22 @@ endif::[]
 
 == Choosing an appstream module on RHEL 8.
 
-Let’s do this on node1.example.com:
+
+Starting on the host workstation.example.com, let’s ssh over to node1.example.com. No password should be required.
+
+[root@workstation]#
+----
+ssh node1.example.com
+----
+
+Verify that you are on the right host for these exercises.
+
+[root@node3]#
+----
+cheat-appstream-checkhost.sh
+----
+
+Determine what modules are available.
 
 .[root@node1]#
 ----
