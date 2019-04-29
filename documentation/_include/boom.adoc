@@ -98,8 +98,17 @@ Verify 'importantuser' userID is created
 
 [root@node3]
 ----
-cat /etc/passwd
+grep importantuser /etc/passwd
 ----
+
+Your output should look like this
+
+[source,indent=4]
+----
+
+----
+
+
 
 == Create System Snapshot
 
@@ -146,8 +155,20 @@ Confirm that our changes were effective
 [root@node3]
 ----
 cat /root/importantfile
+
 grep redhat /etc/passwd
 ----
+
+Your output should look like this
+
+[source,indent=4]
+----
+This is an important file!!
+
+
+----
+
+
 
 == Reboot
 
@@ -167,15 +188,28 @@ When the GRUB2 boot menu appears on the console, select “root LV snapshot” k
 
 Once the host is back online, ssh to back to *node3.example.com* and verify that the “importantfile” and “importantuser” exist in the backup snapshot:
 
+[root@workstation]
 ----
 ssh root@node3.example.com
 ----
 
+[root@node3]
 ----
 cat /root/importantfile
 
 grep importantuser /etc/passwd
 ----
+
+Your output should look like this
+
+[source,indent=4]
+----
+This is an important file!!
+
+
+----
+
+
 
 == Recover Missing Data
 
@@ -183,6 +217,7 @@ WARNING: Bring up the virtual machine console for node3 before proceeding.
 
 We will now reboot node3 virtual machine again into rescue mode and recover the missing data:
 
+[root@node3]
 ----
 reboot
 ----
@@ -227,6 +262,13 @@ ssh root@node3.example.com
 cat /root/importantfile
 
 grep importantuser /etc/passwd
+----
+
+Your output should look like this
+
+[source,indent=4]
+----
+This is an important file!!
 ----
 
 Wahoo! You are done.  If you have any questions, please ask.
