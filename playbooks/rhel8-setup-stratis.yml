@@ -8,6 +8,9 @@
     - name: "SETUP STRATIS: yum install packages"
       yum: name=stratisd,stratis-cli state=installed
       
+    - name: "SETUP STRATIS: service restart"
+      service: name="stratisd" state=restarted enabled=yes
+
     - name: "SETUP STRATIS: cheat file installs"
       template:
         src: "{{ item.src }}"
@@ -16,7 +19,5 @@
         group: root
         mode: 0600
       with_items:
+        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-stratis-checkhost.sh'} 
         - {src: 'cheat-stratis-fstab.j2', dest: '/usr/local/bin/cheat-stratis-fstab.sh'} 
-
-    - name: "SETUP STRATIS: service restart"
-      service: name="stratisd" state=restarted enabled=yes
