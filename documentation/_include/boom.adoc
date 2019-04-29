@@ -32,6 +32,13 @@ Starting as user *root* on the host *workstation.example.com*, let’s ssh over 
 ssh node3.example.com
 ----
 
+Verify that you are on the right host for these exercises.
+
+[root@node3]#
+----
+cheat-boom-checkhost.sh
+----
+
 [root@node3]# 
 ----
 yum install -y boom-boot
