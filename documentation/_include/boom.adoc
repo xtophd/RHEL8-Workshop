@@ -1,0 +1,247 @@
+:sectnums:
+:sectnumlevels: 3
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+= Boom
+
+The BOOM boot manager simplifies the process of creating boot entries
+
+BOOM is a boot manager for Linux systems that use boot loaders supporting the BootLoader Specification for boot entry configuration. It enables flexible boot configuration and simplifies the creation of new or modified boot entries: for example, to boot snapshot images of the system created using LVM.
+
+BOOM does not modify the existing boot loader configuration, and only inserts additional entries. The existing configuration is maintained, and any distribution integration, such as kernel installation and update scripts, continue to function as before.
+
+BOOM has a simplified command-line interface (CLI) and API that ease the task of creating boot entries.
+
+This new functionality could be very helpful for system administrators, especially those responsible for RHEL servers running directly on physical hardware, where booting from snapshots has previously been more difficult.  
+
+== Installation and Setup
+
+The following set of instructions will install Boom.
+
+
+Starting as user *root* on the host *workstation.example.com*, let’s ssh over to *node3.example.com*. No password should be required.
+
+[root@workstation]#
+----
+ssh node3.example.com
+----
+
+[root@node3]# 
+----
+yum install -y boom-boot
+----
+
+That was easy!
+
+== Add Capacity to Root LVM
+
+The following directions will create a new disk partition (/dev/vdb1) and add it to volume group “RHEL”:
+
+[root@node3]
+----
+cheat-boom-addstorage.sh
+----
+
+[NOTE]
+====
+_Native command(s) to verify system service_
+----
+printf "o\nn\np\n\n\n\nw\n" | fdisk /dev/vdb
+
+pvcreate /dev/vdb1
+
+vgextend rhel /dev/vdb1
+----
+====
+
+
+== Create an Important File
+
+The next set of instructions will create a file and a userID that we will remove and recover as part of this exercise:
+
+[root@node3]
+----
+cheat-boom-importantfile.sh
+----
+
+[NOTE]
+====
+_Native command(s) to create important file_
+----
+echo "This is an important file!!" > /root/importantfile
+
+cat /root/importantfile  
+----
+====
+
+Your output should look like this
+
+[source,indent=4]
+----
+This is an important file!!
+----
+
+== Create an Important User
+
+[root@node3]
+----
+useradd importantuser
+----
+
+Verify 'importantuser' userID is created
+
+[root@node3]
+----
+cat /etc/passwd
+----
+
+== Create System Snapshot
+
+Start by creating a new logical volume to store the root snapshot
+
+[root@node3]
+----
+lvcreate -s rhel/root -n root_snapshot -L 10G
+----
+
+Next we create a boom profile
+
+[root@node3]
+----
+boom profile create --from-host --uname-pattern el8
+----
+
+Verify that the boom profile was created by the previous command.
+
+[root@node3]
+----
+boom profile list
+----
+
+Take a snapshot of your root logical volume as a backup
+
+[root@node3]
+----
+boom create --title "root LV snapshot" --rootlv rhel/root_snapshot
+----
+
+== Make Changes to System
+
+Now we are going to remove the “importantfile” file and “importantuser” userID.
+
+[root@node3]
+----
+rm -rf /root/importantfile 
+userdel redhat
+----
+
+Confirm that our changes were effective
+
+[root@node3]
+----
+cat /root/importantfile
+grep redhat /etc/passwd
+----
+
+== Reboot
+
+WARNING: Bring up the virtual machine console for node3 before proceeding.  
+
+
+We will now reset our host and boot the Logical Volume with the snapshot kernel in the grub menu.
+
+[root@node3]
+----
+reboot
+----
+
+When the GRUB2 boot menu appears on the console, select “root LV snapshot” kernel to run, and hit enter.
+
+== Confirm Previous State of Host
+
+Once the host is back online, ssh to back to *node3.example.com* and verify that the “importantfile” and “importantuser” exist in the backup snapshot:
+
+----
+ssh root@node3.example.com
+----
+
+----
+cat /root/importantfile
+
+grep importantuser /etc/passwd
+----
+
+== Recover Missing Data
+
+WARNING: Bring up the virtual machine console for node3 before proceeding.  
+
+We will now reboot node3 virtual machine again into rescue mode and recover the missing data:
+
+----
+reboot
+----
+
+When the GRUB2 boot menu appears on the console, select “rescue”, and hit enter.
+
+Once the host is back online, ssh to back to *node3.example.com*.
+
+[root@workstation]
+----
+ssh root@node3.example.com
+----
+
+[root@node3]
+----
+lvconvert --merge /dev/rhel/root_snapshot
+----
+
+# set grub menu to boot default OS
+
+[root@node3]# 
+----
+grub2-set-default 1
+----
+
+[root@node3]#
+----
+reboot
+----
+
+== Confirm System Restored
+
+We have now recovered the missing data and userID. Now, let's make sure the restored data persisted.
+
+[root@workstation ~]#
+----
+ssh root@node3.example.com
+----
+
+[root@node3]
+----
+cat /root/importantfile
+
+grep importantuser /etc/passwd
+----
+
+Wahoo! You are done.  If you have any questions, please ask.
+
+== Additional Resources
+
+Red Hat Documentation
+
+    * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[Deplying Session Recording on Red Hat Enterprise Linux]
+
+[discrete]
+== End of Unit
+
+link:../RHEL8-Workshop.adoc#toc[Return to TOC]
+
+////
+Always end files with a blank line to avoid include problems.
+////
