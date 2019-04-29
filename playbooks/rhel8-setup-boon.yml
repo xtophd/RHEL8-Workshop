@@ -1,0 +1,19 @@
+---
+
+## BOOM Setup
+
+- hosts: node3.example.com
+  tasks:
+  
+    - name: "SETUP BOOM: yum install packages"
+      yum: name=boom-boot state=installed
+      
+    - name: "SETUP BOOM: cheat file installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0600
+      with_items:
+        - {src: 'cheat-boom-addstroage.j2', dest: '/usr/local/bin/cheat-boom-addstorage.sh'} 
