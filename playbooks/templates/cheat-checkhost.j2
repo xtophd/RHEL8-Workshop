@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Check if this is the expected host
+
+if [[ "inventory_hostname" == ${HOSTNAME} ]]; then
+  echo "YES : this is the correct host"
+elso
+  echo "WARNING - NOT THE RIGHT HOST: check your instructions"
+fi
