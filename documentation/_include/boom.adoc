@@ -55,9 +55,41 @@ The following directions will create a new disk partition (/dev/vdb1) and add it
 cheat-boom-addstorage.sh
 ----
 
+You output should look list this.
+
+[source, indent=4]
+----
+Clearing /dev/vdb
+Creating new partition table on /dev/vdb
+
+Welcome to fdisk (util-linux 2.32.1).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table.
+Created a new DOS disklabel with disk identifier 0xb8fd7055.
+
+Command (m for help): Created a new DOS disklabel with disk identifier 0x4e3b8150.
+
+Command (m for help): Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+Select (default p): Partition number (1-4, default 1): First sector (2048-20971519, default 2048): Last sector, +sectors or +size{K,M,G,T,P} (2048-20971519, default 20971519):
+Created a new partition 1 of type 'Linux' and of size 10 GiB.
+
+Command (m for help): The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+Creating physical volume lable on /dev/vdb1
+  Physical volume "/dev/vdb1" successfully created.
+Extending volume group 'rhel' with /dev/vdb1
+  Volume group "rhel" successfully extended
+----
+
 [NOTE]
 ====
-_Native command(s) to verify system service_
+_Native command(s) to add storage_
 ----
 printf "o\nn\np\n\n\n\nw\n" | fdisk /dev/vdb
 
