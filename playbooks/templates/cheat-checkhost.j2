@@ -4,6 +4,6 @@
 
 if [[ "{{ inventory_hostname }}" = "${HOSTNAME}" ]]; then
   echo "YES : this is the correct host"
-elso
+else
   echo "WARNING - NOT THE RIGHT HOST: check your instructions"
 fi
