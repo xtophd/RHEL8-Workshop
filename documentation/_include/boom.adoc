@@ -209,10 +209,9 @@ This is an important file!!
 
 
 
-== Reboot
+== Reboot to Snapshot
 
 WARNING: Bring up the virtual machine console for node3 before proceeding.  
-
 
 We will now reset our host and boot the Logical Volume with the snapshot kernel in the grub menu.
 
@@ -223,7 +222,7 @@ reboot
 
 When the GRUB2 boot menu appears on the console, select “root LV snapshot” kernel to run, and hit enter.
 
-== Confirm Previous State of Host
+=== Confirm Previous State of Host
 
 Once the host is back online, ssh to back to *node3.example.com* and verify that the “importantfile” and “importantuser” exist in the backup snapshot:
 
@@ -250,11 +249,11 @@ This is an important file!!
 
 
 
-== Recover Missing Data
+== Return Host to Previous State
 
 WARNING: Bring up the virtual machine console for node3 before proceeding.  
 
-We will now reboot node3 virtual machine again into rescue mode and recover the missing data:
+We will now reboot node3 virtual machine again into rescue mode and return the host to it's previous state.
 
 [root@node3]
 ----
