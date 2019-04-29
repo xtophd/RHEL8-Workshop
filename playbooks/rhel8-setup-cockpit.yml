@@ -13,3 +13,13 @@
       
     - name: "SETUP COCKPIT: firewall configuration"
       firewalld: port=9090/tcp permanent=yes immediate=yes state=enabled
+      
+    - name: "SETUP TLOG: cheat file installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0600
+      with_items:
+        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-cockpit-checkhost.sh'} 
