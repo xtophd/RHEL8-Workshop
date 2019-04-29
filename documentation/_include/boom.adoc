@@ -55,13 +55,6 @@ The following directions will create a new disk partition (/dev/vdb1) and add it
 cheat-boom-addstorage.sh
 ----
 
-Verify that you are on the right host for these exercises.
-
-[root@node3]
-----
-cheat-boom-checkhost.sh
-----
-
 [NOTE]
 ====
 _Native command(s) to verify system service_
