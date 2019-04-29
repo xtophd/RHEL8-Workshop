@@ -128,7 +128,7 @@ image::ocp-webui-hello1-project-create.png[Create Project]
   . link:{includedir}/nftables.adoc[NFTables - The New Firewall]
   . link:{includedir}/cockpit.adoc[Cockpit - System Management]
   . link:{includedir}/stratis.adoc[Stratis - Storage Management]
-  . link:{includedir}/stratis.adoc[BOOM - Boot Management]
+  . link:{includedir}/boom.adoc[BOOM - Boot Management]
 
 
 ////  
