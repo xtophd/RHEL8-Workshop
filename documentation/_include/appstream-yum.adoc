@@ -15,14 +15,14 @@ endif::[]
 
 Starting on the host workstation.example.com, let’s ssh over to node1.example.com. No password should be required.
 
-[root@workstation RHEL8-Workshop]#
+.[root@workstation RHEL8-Workshop]#
 ----
 ssh node1.example.com
 ----
 
 Verify that you are on the right host for these exercises.
 
-[root@node1 ~]#
+.[root@node1 ~]#
 ----
 cheat-appstream-checkhost.sh
 ----
@@ -80,7 +80,7 @@ ssh node3.example.com
 
 On node3.example.com, let’s now run:
 
-.[root@node3]#
+.[root@node3 ~]#
 ----
 yum module install postgresql:9.6/server -y
 ----
@@ -104,14 +104,14 @@ system.
 The server profile installs both the server and the client. If we just
 wanted the client, we could remove the server profile:
 
-.[root@node3]#
+.[root@node3 ~]#
 ----
 yum module remove postgresql:9.6/server -y
 ----
 
 and install only the client:
 
-.[root@node3]#
+.[root@node3 ~]#
 ----
 yum module install postgresql:9.6/client -y
 ----
@@ -132,7 +132,7 @@ just installed postgresql. We don’t want to have another database on the
 same machine and we see app stream profiles for mysql and mariadb. Let’s
 disable these:
 
-.[root@node3]#
+.[root@node3 ~]#
 ----
 yum module disable mariadb mysql -y
 ----
@@ -147,7 +147,7 @@ mysql                    8.0 [d][x]      client, server [d]                     
 
 The [x] stands for disabled. When we run:
 
-.[root@node3]#
+.[root@node3 ~]#
 ----
 yum install mariadb -y
 ----
@@ -163,9 +163,15 @@ Error: Unable to find a match
 To re-enable these app streams and allow the packages to be installed,
 the command is:
 
-.[root@node3]#
+.[root@node3 ~]#
 ----
 yum module enable mariadb mysql -y
+----
+
+You may now switch back to the workstation:
+.[root@node3 ~]#
+----
+exit
 ----
 
 == Ansible automation with App Stream
@@ -183,7 +189,7 @@ like such:
 
 On the workstation, as root, run:
 
-.[root@workstation]#
+.[root@workstation ~]#
 ----
 cd ~/RHEL8-Workshop/config
 ----
@@ -205,7 +211,7 @@ postgresql-server on node2.
 
 and:
 
-.[root@workstation] config#
+.[root@workstation config]#
 ----
 ansible rhel8 -a "rpm -q postgresql"
 ----
@@ -236,7 +242,7 @@ Please note that this activity was required with the RHEL 8 BETA we used to cons
 
 This presumes the DVD is mounted on /mnt
 
-.[root@node1]#
+.[root@node1 ~]#
 ----
 mkdir /var/www/html/repos/rhel8/rc-1
 cd /var/www/html/repos/rhel8/rc-1
@@ -245,14 +251,14 @@ tar cf - -C /mnt . | tar xvf -
 
 Install the required tools.
 
-.[root@node1]#
+.[root@node1 rc-1]#
 ----
 yum install createrepo_c
 ----
 
 Proceed to create repository with functional application streams
 
-.[root@node1]#
+.[root@node1 rc-1]#
 ----
 cd /var/www/html/repos/rhel8/rc-1/AppStream
 cd repodata
