@@ -11,13 +11,14 @@ endif::[]
 :toc:
 :toclevels: 1
 
-= Docker Fundamentals
+= Container Fundamentals
 
-In this unit, we will get familiar with Docker Containers and the Docker CLI.  This unit is designed to explain and highlight 
-some of the significant security concerns around the native Docker approach to Linux containers.
+In this unit, we will get familiar with Containers and the podman/buildah CLI.  
 
 [discrete]
 == Additional Reference Materials
+
+kabbott NOTE: Should update here...may want to highlight the Universal Base Image work that McCarty has done as well....
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
 
@@ -26,225 +27,103 @@ NOTE: You are not required to reference any additional resources for these exerc
 
 == Connect to Host
 
-There is a dedicated VM we will use for the docker exercises.  From workstation.example.com, you should be able to ssh to docker.example.com as 'root' without any prompts for credentials.
+There is a dedicated VM we will use for the container exercises.  From workstation.example.com, you should be able to ssh to node3.example.com as 'root' without any prompts for credentials.
 
 .[root@workstation ~]#
 ----
-ssh docker.example.com
+ssh node3.example.com
 ----
 
-Now you are ready to begin your exercises with docker.
+Now you are ready to begin your exercises with containers.
 
-== Review Host Configuration
+== Container Basics
 
-Before you start launching containers everywhere, let us take a moment to explore the host and discuss a few things.
-
-=== Daemon Status
-
-First we begin by verifying that all the required services are running.
-
-.[root@docker ~]#
-----
-systemctl status docker
-
-systemctl status docker-distribution
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-● docker.service - Docker Application Container Engine
-   Loaded: loaded (/usr/lib/systemd/system/docker.service; enabled; vendor preset: disabled)
-   Active: active (running) since Mon 2019-01-07 12:41:55 EST; 2h 46min ago
-     Docs: http://docs.docker.com
- Main PID: 2860 (dockerd-current)
-    Tasks: 35
-   Memory: 14.7M
-   CGroup: /system.slice/docker.service
-           ├─ 406 /usr/libexec/docker/docker-proxy-current -proto tcp -host-ip 0.0.0.0 -host-port 8000 -container-ip 172.17.0.2 -container-port 8000
-           ├─ 410 /usr/bin/docker-containerd-shim-current d8319a624c80ff5b8ce5afc049efc636fc500954b1e8383076feebfcb4549279 /var/run/docker/libcontainerd/d8319a624c80ff5b8ce5afc049efc636fc500954b1e8383076feebfc...
-           ├─2860 /usr/bin/dockerd-current --add-runtime docker-runc=/usr/libexec/docker/docker-runc-current --default-runtime=docker-runc --authorization-plugin=rhel-push-plugin --exec-opt native.cgroupdriver...
-           └─2864 /usr/bin/docker-containerd-current -l unix:///var/run/docker/libcontainerd/docker-containerd.sock --metrics-interval=0 --start-timeout 2m --state-dir /var/run/docker/libcontainerd/containerd ...
-
-<... SNIP ...>
-----
-
-=== Host Storage Configuration
-
-.[root@docker ~]#
-----
-pvs
-
-vgs
-
-lvs
-----
-
-By default, docker is configured to use an Overlay filesystem for it's containers in /var/lib/docker.  For this lab however, we have opted to configure the host to use logical volumes as the storage backend for the container images.  By using the lvm commands 'pvs', 'vgs' and 'lvs' you should see a dedicated volume group 'docker-vg' configured for use.  This matches the configuration of the Openshift deployment in this workshop.
-
-=== Host Networking
-
-Now have look at the network.
-
-.[root@docker ~]#
-----
-iptables -L
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-Chain INPUT (policy ACCEPT)
-target     prot opt source               destination
-
-Chain FORWARD (policy DROP)
-target     prot opt source               destination
-DOCKER-ISOLATION  all  --  anywhere             anywhere
-DOCKER     all  --  anywhere             anywhere
-ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED
-ACCEPT     all  --  anywhere             anywhere
-ACCEPT     all  --  anywhere             anywhere
-
-Chain OUTPUT (policy ACCEPT)
-target     prot opt source               destination
-
-Chain DOCKER (1 references)
-target     prot opt source               destination
-
-Chain DOCKER-ISOLATION (1 references)
-target     prot opt source               destination
-RETURN     all  --  anywhere             anywhere
-----
-
-
-Docker prefers to manage the localnetwork configuration and is therefore NOT compatible with the 'firewalld' service.  On this host, 'firewalld' has already been disabled.  In the case of Openshift, kubernettes manages the network layer and IS compatible with 'firewalld'.
-
-=== Security Enhanced Linux (SELinux)
-
-.[root@docker ~]#
-----
-grep OPTIONS /etc/sysconfig/docker
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-OPTIONS='--selinux-enabled --log-driver=journald --signature-verification=false'
-----
-
-Red Hat enables the docker daemon flag '--selinux-enabled' by default. This results in the docker daemon setting SELinux labels on all executed containers and strengthens security through access controls in the Linux kernel.  This 'labelling' allows the Linux kernel to apply rigid rules to practically any activity that executes within a container image.  As you will witness later, containers are an easy means to introduce risk into your environment and using SELinux in enforcing mode can provide a substantial barrier to harm.
-
-For the purposes of this workshop you begin with docker enabled for SELinux, but SELinux itself is set to 'permissive' mode. This logs the security events without disrupting process execution.
-
-NOTE: For more information on '--selinux-enable', read link:https://www.projectatomic.io/blog/2016/07/docker-selinux-flag/[What does --selinux-enabled do?] by Dan Walsh
-
-NOTE: For more information on SELinux, read link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/index[SELinux User's and Administrator's Guide]
-
-== Docker Basics
-
-=== Docker Info
+=== Container Info
 
 Now have a look at the general docker information.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker info
+podman info
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-Containers: 0
- Running: 0
- Paused: 0
- Stopped: 0
-Images: 0
-Server Version: 1.13.1
-Storage Driver: devicemapper
- Pool Name: docker--vg-docker--pool
- Pool Blocksize: 524.3 kB
- Base Device Size: 10.74 GB
- Backing Filesystem: xfs
- Data file:
- Metadata file:
- Data Space Used: 19.92 MB
- Data Space Total: 4.266 GB
- Data Space Available: 4.246 GB
- Metadata Space Used: 40.96 kB
- Metadata Space Total: 12.58 MB
- Metadata Space Available: 12.54 MB
- Thin Pool Minimum Free Space: 426.2 MB
- Udev Sync Supported: true
- Deferred Removal Enabled: true
- Deferred Deletion Enabled: true
- Deferred Deleted Device Count: 0
- Library Version: 1.02.146-RHEL7 (2018-01-22)
-Logging Driver: journald
-Cgroup Driver: systemd
-Plugins:
- Volume: local
- Network: bridge host macvlan null overlay
- Authorization: rhel-push-plugin
-Swarm: inactive
-Runtimes: docker-runc runc
-Default Runtime: docker-runc
-Init Binary: /usr/libexec/docker/docker-init-current
-containerd version:  (expected: aa8187dbd3b7ad67d8e5e3a15115d3eef43a7ed1)
-runc version: 5eda6f6fd0c2884c2c8e78a6e7119e8d0ecedb77 (expected: 9df8b306d01f59d3a8029be411de015b7304dd8f)
-init version: fec3683b971d9c3ef73f284f176672c44b448662 (expected: 949e6facb77383876aeff8a6944dde66b3089574)
-Security Options:
- seccomp
-  WARNING: You're not using the default seccomp profile
-  Profile: /etc/docker/seccomp.json
- selinux
-Kernel Version: 3.10.0-862.9.1.el7.x86_64
-Operating System: Red Hat Enterprise Linux
-OSType: linux
-Architecture: x86_64
-Number of Docker Hooks: 3
-CPUs: 1
-Total Memory: 1.796 GiB
-Name: docker.example.com
-ID: JNRB:NRG2:DZMK:XJJF:4Z2Z:NJMI:E24H:3WGJ:FCGE:XN5K:HM6O:QVAX
-Docker Root Dir: /var/lib/docker
-Debug Mode (client): false
-Debug Mode (server): false
-Registry: https://registry.access.redhat.com/v1/
-Experimental: false
-Insecure Registries:
- 127.0.0.0/8
-Live Restore Enabled: false
-Registries: registry.access.redhat.com (secure), docker.io (secure)
+host:
+  BuildahVersion: 1.6-dev
+  Conmon:
+    package: podman-1.0.0-2.git921f98f.module+el8+2785+ff8a053f.x86_64
+    path: /usr/libexec/podman/conmon
+    version: 'conmon version 1.14.0-dev, commit: be8255a19cda8a598d76dfa49e16e337769d4528-dirty'
+  Distribution:
+    distribution: '"rhel"'
+    version: "8.0"
+  MemFree: 3282280448
+  MemTotal: 3964538880
+  OCIRuntime:
+    package: runc-1.0.0-54.rc5.dev.git2abd837.module+el8+2769+577ad176.x86_64
+    path: /usr/bin/runc
+    version: 'runc version spec: 1.0.0'
+  SwapFree: 1073737728
+  SwapTotal: 1073737728
+  arch: amd64
+  cpus: 2
+  hostname: node3.example.com
+  kernel: 4.18.0-67.el8.x86_64
+  os: linux
+  rootless: false
+  uptime: 46m 50.43s
+insecure registries:
+  registries: []
+registries:
+  registries:
+  - registry.redhat.io
+  - quay.io
+  - docker.io
+store:
+  ConfigFile: /etc/containers/storage.conf
+  ContainerStore:
+    number: 0
+  GraphDriverName: overlay
+  GraphOptions: null
+  GraphRoot: /var/lib/containers/storage
+  GraphStatus:
+    Backing Filesystem: xfs
+    Native Overlay Diff: "true"
+    Supports d_type: "true"
+  ImageStore:
+    number: 0
+  RunRoot: /var/run/containers/storage
 ----
 
-=== Docker Image Management
+=== Container Image Management
 
 ==== Current List of Images
 
-Now have a look at the general docker information.
+Now have a look at the general container information.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker images
+podman images
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-REPOSITORY                         TAG                 IMAGE ID            CREATED             SIZE
-registry.access.redhat.com/rhel7   latest              5edf42cf4ed8        7 weeks ago         203 MB
+registry.redhat.io/rhel7   latest   5044f6040ea5   2 weeks ago   214 MB
 ----
 
 ==== How to Pull Images
 
 .[root@docker ~]#
 ----
-docker pull rhel7.5
+podman pull rhel7.5 --creds 'username:password'
 ----
 
 .[root@docker ~]#
 ----
-docker pull rhel6
+podman pull rhel6 --creds 'username:password'
 ----
 
 Container images can also be tagged with convenient (ie:custom names).  This could make it more intuitive to understand what they contain, esspecialy after an image has been customized.
@@ -255,45 +134,45 @@ NOTE: The link:https://access.redhat.com/containers[Red Hat Container Catalog] (
 
 ==== How to Remove Images
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker images
-----
-
-.[root@docker ~]#
-----
-docker rmi rhel6
+podman images
 ----
 
-=== Essential Docker Commands
+.[root@node3 ~]#
+----
+podman rmi rhel6
+----
 
-*docker images* - list images
+=== Essential Container Commands
 
-*docker ps* - lists running containers
+*podman images* - list images
 
-*docker pull* - pulls (copies) container image from repository (ie: redhat and/or docker hub)
+*podman ps* - lists running containers
 
-*docker run* - run a docker container
+*podman pull* - pulls (copies) container image from repository (ie: redhat and/or docker hub)
 
-*docker logs* - display logs of a container (can be used with --follow)
+*podman run* - run a docker container
 
-*docker rm* - remove one or more containers
+*podman logs* - display logs of a container (can be used with --follow)
 
-*docker rmi* - remove one or more images
+*podman rm* - remove one or more containers
 
-*docker stop* - stops one or more containers
+*podman rmi* - remove one or more images
 
-*docker kill $(docker ps -q)* - kill all running containers
+*podman stop* - stops one or more containers
 
-*docker rm $(docker ps -a -q)* - deletes all stopped containers
+*podman kill $(podman ps -q)* - kill all running containers
+
+*podman rm $(podman ps -a -q)* - deletes all stopped containers
 
 == Your First Container
 
 === Hello World
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker run rhel7 echo "hello world"
+podman run rhel7 echo "hello world"
 ----
 
 .Your output should look like this
@@ -313,23 +192,23 @@ Well that was really boring!! What did we learn from this?  For starters, you sh
 
 Let us run a few more commands to see what else we can gleen.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker ps -a
+podman ps -a
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-CONTAINER ID        IMAGE               COMMAND                CREATED              STATUS                          PORTS               NAMES
-2f0a2c755a7a        rhel7               "echo 'hello world'"   About a minute ago   Exited (0) About a minute ago                       focused_knuth
+CONTAINER ID  IMAGE                            COMMAND           CREATED         STATUS                     PORTS  NAMES
+ce7b462b58af  registry.redhat.io/rhel7:latest  echo hello world  33 seconds ago  Exited (0) 31 seconds ago         competent_leavitt
 ----
 
 Now let us run the exact same command again.
 
-.[root@mdocker ~]#
+.[root@node3 ~]#
 ----
-docker run rhel7 echo "hello world"
+podman run rhel7 echo "hello world"
 ----
 
 .Your output should look like this
@@ -338,170 +217,154 @@ docker run rhel7 echo "hello world"
 hello world
 ----
 
-Check out 'docker info' one more time and you should notice a few changes.
+Check out 'podman info' one more time and you should notice a few changes.
 
-.[root@mdocker ~]#
+.[root@node3 ~]#
 ----
-docker info
+podman info
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-Containers: 2
- Running: 0
- Paused: 0
- Stopped: 2
-Images: 1
-Server Version: 1.13.1
-Storage Driver: devicemapper
- Pool Name: docker--vg-docker--pool
- Pool Blocksize: 524.3 kB
- Base Device Size: 10.74 GB
- Backing Filesystem: xfs
- Data file:
- Metadata file:
- Data Space Used: 310.9 MB
- Data Space Total: 4.266 GB
- Data Space Available: 3.955 GB
- Metadata Space Used: 147.5 kB
- Metadata Space Total: 12.58 MB
- Metadata Space Available: 12.44 MB
- Thin Pool Minimum Free Space: 426.2 MB
- Udev Sync Supported: true
- Deferred Removal Enabled: true
- Deferred Deletion Enabled: true
- Deferred Deleted Device Count: 0
- Library Version: 1.02.146-RHEL7 (2018-01-22)
-Logging Driver: journald
-Cgroup Driver: systemd
-Plugins:
- Volume: local
- Network: bridge host macvlan null overlay
- Authorization: rhel-push-plugin
-Swarm: inactive
-Runtimes: docker-runc runc
-Default Runtime: docker-runc
-Init Binary: /usr/libexec/docker/docker-init-current
-containerd version:  (expected: aa8187dbd3b7ad67d8e5e3a15115d3eef43a7ed1)
-runc version: 5eda6f6fd0c2884c2c8e78a6e7119e8d0ecedb77 (expected: 9df8b306d01f59d3a8029be411de015b7304dd8f)
-init version: fec3683b971d9c3ef73f284f176672c44b448662 (expected: 949e6facb77383876aeff8a6944dde66b3089574)
-Security Options:
- seccomp
-  WARNING: You're not using the default seccomp profile
-  Profile: /etc/docker/seccomp.json
- selinux
-Kernel Version: 3.10.0-862.9.1.el7.x86_64
-Operating System: Red Hat Enterprise Linux
-OSType: linux
-Architecture: x86_64
-Number of Docker Hooks: 3
-CPUs: 1
-Total Memory: 1.796 GiB
-Name: docker.example.com
-ID: JNRB:NRG2:DZMK:XJJF:4Z2Z:NJMI:E24H:3WGJ:FCGE:XN5K:HM6O:QVAX
-Docker Root Dir: /var/lib/docker
-Debug Mode (client): false
-Debug Mode (server): false
-Registry: https://registry.access.redhat.com/v1/
-Experimental: false
-Insecure Registries:
- 127.0.0.0/8
-Live Restore Enabled: false
-Registries: registry.access.redhat.com (secure), docker.io (secure)
+host:
+  BuildahVersion: 1.6-dev
+  Conmon:
+    package: podman-1.0.0-2.git921f98f.module+el8+2785+ff8a053f.x86_64
+    path: /usr/libexec/podman/conmon
+    version: 'conmon version 1.14.0-dev, commit: be8255a19cda8a598d76dfa49e16e337769d4528-dirty'
+  Distribution:
+    distribution: '"rhel"'
+    version: "8.0"
+  MemFree: 2743906304
+  MemTotal: 3964538880
+  OCIRuntime:
+    package: runc-1.0.0-54.rc5.dev.git2abd837.module+el8+2769+577ad176.x86_64
+    path: /usr/bin/runc
+    version: 'runc version spec: 1.0.0'
+  SwapFree: 1073737728
+  SwapTotal: 1073737728
+  arch: amd64
+  cpus: 2
+  hostname: node3.example.com
+  kernel: 4.18.0-67.el8.x86_64
+  os: linux
+  rootless: false
+  uptime: 55m 13.64s
+insecure registries:
+  registries: []
+registries:
+  registries:
+  - registry.redhat.io
+  - quay.io
+  - docker.io
+store:
+  ConfigFile: /etc/containers/storage.conf
+  ContainerStore:
+    number: 2
+  GraphDriverName: overlay
+  GraphOptions: null
+  GraphRoot: /var/lib/containers/storage
+  GraphStatus:
+    Backing Filesystem: xfs
+    Native Overlay Diff: "true"
+    Supports d_type: "true"
+  ImageStore:
+    number: 2
+  RunRoot: /var/run/containers/storage
 ----
 
-You should notice that the number of containers has incremented to 2, and that the amount of storage consumed has grown.  
+You should notice that the number of containers (ContainerStore) has incremented to 2, and that the number of ImageStore(s) has grown.  
 
 === Cleanup
 
-Run 'docker ps -a' to the IDs of the exited containers.
+Run 'podman ps -a' to the IDs of the exited containers.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker ps -a
+podman ps -a
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS                      PORTS               NAMES
-8cb4816f016d        rhel7               "echo 'hello world'"   2 minutes ago       Exited (0) 2 minutes ago                        focused_swirles
-2f0a2c755a7a        rhel7               "echo 'hello world'"   13 minutes ago      Exited (0) 13 minutes ago                       focused_knuth
+CONTAINER ID  IMAGE                            COMMAND           CREATED        STATUS                    PORTS  NAMES
+ccf81a8232e9  registry.redhat.io/rhel7:latest  echo hello world  2 minutes ago  Exited (0) 2 minutes ago         epic_golick
+ce7b462b58af  registry.redhat.io/rhel7:latest  echo hello world  3 minutes ago  Exited (0) 3 minutes ago         competent_leavitt
 ----
 
 Using the container UIDs from the above output, you can now clean up the 'exited' containers.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker rm <CONTAINER-ID> <CONTAINER-ID>
+podman rm <CONTAINER-ID> <CONTAINER-ID>
 ----
 
-Now you should be able to run 'docker ps -a' again, and the results should come back empty.
+Now you should be able to run 'podman ps -a' again, and the results should come back empty.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker ps -a
+podman ps -a
 ----
 
 == Exploring Container Namespaces
 
 === UTS / Hostname
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker run rhel7 cat /proc/sys/kernel/hostname
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-c60f5bff9560
-----
-
-So what we have learned here is that the hostname in the container's namespace is NOT the same as the host platform (docker.example.com).  It is unique and is by default identical to the container's ID.  You can verify this with 'docker ps -a'.
-
-.[root@docker ~]#
-----
-docker ps -a
+podman run rhel7 cat /proc/sys/kernel/hostname
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS                      PORTS               NAMES
-c60f5bff9560        rhel7               "cat /proc/sys/ker..."   42 seconds ago       Exited (0) 41 seconds ago                       zealous_austin
+a28142f3eae0
+----
+
+So what we have learned here is that the hostname in the container's namespace is NOT the same as the host platform (node3.example.com).  It is unique and is by default identical to the container's ID.  You can verify this with 'podman ps -a'.
+
+.[root@node3 ~]#
+----
+podman ps -a
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+CONTAINER ID  IMAGE                            COMMAND               CREATED         STATUS                     PORTS  NAMES
+a28142f3eae0  registry.redhat.io/rhel7:latest  cat /proc/sys/ker...  48 seconds ago  Exited (0) 47 seconds ago         romantic_swanson
 ----
 
 
 === Process ID
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker run rhel7 ps -ef
+podman run rhel7 ps -ef
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
 UID        PID  PPID  C STIME TTY          TIME CMD
-root         1     0  0 16:39 ?        00:00:00 ps -ef
+root         1     0  0 19:53 ?        00:00:00 ps -ef
 ----
 
 === Network
 
 Now let us run a command to report the network configuration from within the a container's namespace.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker run rhel7 ip addr show eth0
+podman run rhel7 ip addr show eth0
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-container_linux.go:247: starting container process caused "exec: \"ip\": executable file not found in $PATH"
-/usr/bin/docker-current: Error response from daemon: oci runtime error: container_linux.go:247: starting container process caused "exec: \"ip\": executable file not found in $PATH".
+container create failed: container_linux.go:336: starting container process caused "exec: \"ip\": executable file not found in $PATH"
+: internal libpod error
 ----
 
 What just happened?
@@ -512,19 +375,19 @@ So for this exercise, we leverage something called a 'bind mount' to effectively
 
 NOTE: Using bind mounts is generally suitable for debugging, but not a good practice as a design decision for enterprise container strategies.  After all, creating dependencies between applications and host operating systems is what we are trying to get away from.
 
-.[root@docker ~]#
+.[root@noede3 ~]#
 ----
-docker run -v /usr/sbin:/usr/sbin --rm rhel7 /usr/sbin/ip addr show eth0
+podman run -v /usr/sbin:/usr/sbin -v /usr/lib64:/usr/lib64 --rm rhel7 /usr/sbin/ip addr show eth0
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-16: eth0@if17: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
-    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
-    inet 172.17.0.2/16 scope global eth0
+3: eth0@if10: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether 8a:ce:7f:ea:c7:9a brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.88.0.8/16 scope global eth0
        valid_lft forever preferred_lft forever
-    inet6 fe80::42:acff:fe11:2/64 scope link tentative
+    inet6 fe80::88ce:7fff:feea:c79a/64 scope link tentative
        valid_lft forever preferred_lft forever
 ----
 
@@ -532,34 +395,29 @@ A couple more commands to understand the network setup.
 
 Let us begin by examining the '/etc/hosts' file.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker run --rm rhel7 cat /etc/hosts
+podman run --rm rhel7 cat /etc/hosts
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-127.0.0.1       localhost
-::1     localhost ip6-localhost ip6-loopback
-fe00::0 ip6-localnet
-ff00::0 ip6-mcastprefix
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-172.17.0.2      530317c7c35b
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+10.88.0.9       aa2204f3cd29
 ----
 
 How does the container resolve hostnames (ie: DNS)?
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker run --rm rhel7 cat /etc/resolv.conf
+podman run --rm rhel7 cat /etc/resolv.conf
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-# Generated by NetworkManager
 search example.com
 nameserver 10.0.0.2
 ----
@@ -567,9 +425,9 @@ nameserver 10.0.0.2
 Take a look at the routing table.
 Pay attention now, the route command is in '/usr/bin'.  Take a look at the routing table for the container namespace.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker run -v /usr/sbin:/usr/sbin --rm rhel7 route -n
+podman run -v /usr/sbin:/usr/sbin --rm rhel7 route -n
 ----
 
 .Your output should look like this
@@ -577,48 +435,52 @@ docker run -v /usr/sbin:/usr/sbin --rm rhel7 route -n
 ----
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-0.0.0.0         172.17.0.1      0.0.0.0         UG    0      0        0 eth0
-172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eth0
+0.0.0.0         10.88.0.1       0.0.0.0         UG    0      0        0 eth0
+10.88.0.0       0.0.0.0         255.255.0.0     U     0      0        0 eth0
 ----
 
 
 === Filesystem
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker run rhel7 df -h
+podman run rhel7 df -h
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-/dev/mapper/docker-253:1-33666640-20cf8eb18a0841286bb681bf8694ce2d60cab4c4ce027347025dd253edd52975   10G  259M  9.8G   3% /
-tmpfs                                                                                               920M     0  920M   0% /dev
-tmpfs                                                                                               920M     0  920M   0% /sys/fs/cgroup
-/dev/mapper/rhel_pwob--r7-root                                                                      8.5G  2.3G  6.3G  27% /etc/hosts
-shm                                                                                                  64M     0   64M   0% /dev/shm
-tmpfs                                                                                               920M     0  920M   0% /proc/scsi
-tmpfs                                                                                               920M     0  920M   0% /sys/firmware
+Filesystem      Size  Used Avail Use% Mounted on
+overlay         8.0G  1.9G  6.2G  24% /
+tmpfs            64M     0   64M   0% /dev
+tmpfs           1.9G  8.6M  1.9G   1% /etc/hosts
+shm              63M     0   63M   0% /dev/shm
+tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
+tmpfs           1.9G     0  1.9G   0% /proc/acpi
+tmpfs           1.9G     0  1.9G   0% /proc/scsi
+tmpfs           1.9G     0  1.9G   0% /sys/firmware
 ----
 
 You were introduced to Bind-Mounts in the previous section.  Let us examine what the filesystems looks like with an active Bind-Mount.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker run -v /usr/bin:/usr/bin rhel7 df -h
+podman run -v /usr/bin:/usr/bin rhel7 df -h
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-Filesystem                                                                                          Size  Used Avail Use% Mounted on
-/dev/mapper/docker-253:1-33666640-0173b6e98755b921811ba7ea405de9c47ebc16721271e5fc29b09e9e18807e64   10G  259M  9.8G   3% /
-tmpfs                                                                                               920M     0  920M   0% /dev
-tmpfs                                                                                               920M     0  920M   0% /sys/fs/cgroup
-/dev/mapper/rhel_pwob--r7-root                                                                      8.5G  2.3G  6.3G  27% /usr/bin
-shm                                                                                                  64M     0   64M   0% /dev/shm
-tmpfs                                                                                               920M     0  920M   0% /proc/scsi
-tmpfs                                                                                               920M     0  920M   0% /sys/firmware
+Filesystem             Size  Used Avail Use% Mounted on
+overlay                8.0G  1.9G  6.2G  24% /
+tmpfs                   64M     0   64M   0% /dev
+tmpfs                  1.9G  8.6M  1.9G   1% /etc/hosts
+/dev/mapper/rhel-root  8.0G  1.9G  6.2G  24% /usr/bin
+shm                     63M     0   63M   0% /dev/shm
+tmpfs                  1.9G     0  1.9G   0% /sys/fs/cgroup
+tmpfs                  1.9G     0  1.9G   0% /proc/acpi
+tmpfs                  1.9G     0  1.9G   0% /proc/scsi
+tmpfs                  1.9G     0  1.9G   0% /sys/firmware
 ----
 
 Notice above how there is now a dedicated mount point for /usr/bin.  Bind-Mounts can be a very powerful tool (primarily for diagnostics) to termporarily inject tools and files that are not normally part of a container image.  Using bind mounts as a design decision for enterprise container strategies is folly.  Creating direct dependencies between containerized applications and host operating systems is what we are trying to get away from.
@@ -626,14 +488,14 @@ Notice above how there is now a dedicated mount point for /usr/bin.  Bind-Mounts
 
 Let us clean up your environment before proceeding
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker kill $(docker ps -q)
+podman kill $(podman ps -q)
 
-docker rm $(docker ps -a -q)
+podman rm $(podman ps -a -q)
 ----
 
-=== User
+=== User -- Is this whole section even relevant in podman/buildah world?
 
 By default, the docker daemon runs applications with root privileges.  As you will see later, this creates an enormous security risk.  You can however configure docker to enable a user namespaces mapping option which allows you to run applications with root privilege inside a container, but have them run as a different non-privileged user on the host.  At this time only a single UID and GID can be mapped per daemon.
 
@@ -643,9 +505,9 @@ NOTE: For more information on configuring the docker daemon with User Namespaces
 
 == Your First Containerized Application
 
-=== Setup
+=== Setup -- this will need a rewrite....should really use our httpd container for this.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
 mkdir -p /var/www/html
 
