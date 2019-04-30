@@ -505,10 +505,12 @@ NOTE: For more information on configuring the docker daemon with User Namespaces
 
 == Your First Containerized Application
 
-=== Setup -- this will need a rewrite....should really use our httpd container for this.
+=== Setup 
 
 .[root@node3 ~]#
 ----
+podman pull rhscl/httpd-24-rhel7 --creds 'username:password'
+
 mkdir -p /var/www/html
 
 echo "Server up and running" > /var/www/html/test.txt
@@ -518,43 +520,34 @@ restorecon -Rv /var/www
 
 === Deployment
 
-.[root@master ~]#
+.[root@node3 ~]#
 ----
-cheat-docker-webserver.sh
+podman run --name "web_example" -v /var/www/html:/var/www/html -d -p 8080:8080 httpd-24-rhel7
 ----
-
-[NOTE]
-====
-_Native command(s) to deploy SimpleHTTPServer_
-----
-docker run -d --name="python_web" \
-    -v /usr/bin:/usr/bin \
-    -v /usr/lib64:/usr/lib64 \
-    -v /var/www/html:/var/www/html \
-    -w /var/www/html  \
-    -p 8000:8000 \
-    rhel7 /bin/python -m SimpleHTTPServer 8000
-----
-====
 
 === Validation
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-pgrep -laf SimpleHTTP
+pgrep -laf httpd
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-423 /bin/python -m SimpleHTTPServer 8000
+8662 httpd -D FOREGROUND
+8703 httpd -D FOREGROUND
+8704 httpd -D FOREGROUND
+8705 httpd -D FOREGROUND
+8711 httpd -D FOREGROUND
+8717 httpd -D FOREGROUND
 ----
 
-On the host, we see a python process running using module SimpleHTTPServie on port 8000.  That's good!
+On the host, we see httpd processes on port 8080.  That's good!
 
 Now let's introduce a commandline utility 'lsns' to check out the namespaces.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
 lsns
 ----
@@ -562,29 +555,31 @@ lsns
 .Your output should look like this
 [source,indent=4]
 ----
-        NS TYPE  NPROCS   PID USER   COMMAND
-4026531836 pid      126     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
-4026531837 user     127     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
-4026531838 uts      126     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
-4026531839 ipc      126     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
-4026531840 mnt      122     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
-4026531856 mnt        1    13 root   kdevtmpfs
-4026531956 net      126     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
-4026532143 mnt        1   491 root   /usr/lib/systemd/systemd-udevd
-4026532162 mnt        1   611 chrony /usr/sbin/chronyd
-4026532163 mnt        1   635 root   /usr/sbin/NetworkManager --no-daemon
-4026532170 mnt        1   423 root   /bin/python -m SimpleHTTPServer 8000
-4026532171 uts        1   423 root   /bin/python -m SimpleHTTPServer 8000
-4026532172 ipc        1   423 root   /bin/python -m SimpleHTTPServer 8000
-4026532173 pid        1   423 root   /bin/python -m SimpleHTTPServer 8000
-4026532175 net        1   423 root   /bin/python -m SimpleHTTPServer 8000
+        NS TYPE   NPROCS   PID USER   COMMAND
+4026531835 cgroup    111     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531836 pid       101     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531837 user      111     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531838 uts       101     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531839 ipc       101     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531840 mnt        96     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531860 mnt         1    21 root   kdevtmpfs
+4026531992 net       101     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026532117 mnt         1   598 root   /usr/lib/systemd/systemd-udevd
+4026532197 mnt         1   671 root   /sbin/auditd
+4026532198 mnt         1   700 chrony /usr/sbin/chronyd
+4026532199 mnt         1   730 root   /usr/sbin/NetworkManager --no-daemon
+4026532201 net        10  8662 1001   httpd -D FOREGROUND
+4026532272 mnt        10  8662 1001   httpd -D FOREGROUND
+4026532273 uts        10  8662 1001   httpd -D FOREGROUND
+4026532274 ipc        10  8662 1001   httpd -D FOREGROUND
+4026532275 pid        10  8662 1001   httpd -D FOREGROUND
 ----
 
-Again on the host, we see a python process running using the mnt uts ipc pid and net namespaces.  That's good too!
+Again on the host, we see httpd processes running using the mnt uts ipc pid and net namespaces.  That's good too!
 
 Well since we explored namespaces, we may as well have a look and discuss the control-groups aligned with our process.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
 systemd-cgls 
 ----
@@ -593,62 +588,42 @@ systemd-cgls
 [source,indent=4]
 ----
 ├─1 /usr/lib/systemd/systemd --switched-root --system --deserialize 22
-├─user.slice
-│ └─user-0.slice
-│   └─session-11.scope
-│     ├─ 728 systemd-cgls
-│     ├─ 729 systemd-cgls
-│     ├─2941 sshd: root@pts/0
-│     └─2944 -bash
-└─system.slice
-  ├─docker-d8319a624c80ff5b8ce5afc049efc636fc500954b1e8383076feebfcb4549279.scope
-  │ └─423 /bin/python -m SimpleHTTPServer 8000
-  ├─docker.service
-  │ ├─ 406 /usr/libexec/docker/docker-proxy-current -proto tcp -host-ip 0.0.0.0 -host-port 8000 -container-ip 172.17.0.2 -container-port 8000
-  │ ├─ 410 /usr/bin/docker-containerd-shim-current d8319a624c80ff5b8ce5afc049efc636fc500954b1e8383076feebfcb4549279 /var/run/docker/libcontainerd/d8319a624c80ff5b8ce5afc049efc636fc500954b1e8383076feebfcb4549279 /
-  │ ├─2860 /usr/bin/dockerd-current --add-runtime docker-runc=/usr/libexec/docker/docker-runc-current --default-runtime=docker-runc --authorization-plugin=rhel-push-plugin --exec-opt native.cgroupdriver=systemd -
-  │ └─2864 /usr/bin/docker-containerd-current -l unix:///var/run/docker/libcontainerd/docker-containerd.sock --metrics-interval=0 --start-timeout 2m --state-dir /var/run/docker/libcontainerd/containerd --shim doc
-  ├─docker-distribution.service
-  │ └─2323 /usr/bin/registry serve /etc/docker-distribution/registry/config.yml
-  ├─rhel-push-plugin.service
-  │ └─2229 /usr/libexec/docker/rhel-push-plugin
-  ├─dm-event.service
-  │ └─2075 /usr/sbin/dmeventd -f
-  ├─rsyslog.service
-  │ └─906 /usr/sbin/rsyslogd -n
-  <... SNIP ...>
+<... SNIP ...>
+└─machine.slice
+  ├─libpod-c76b2199880cc1fb1318953be06be8b2c458cc7ebbd5bb4d74312e96e68c2011.scope
+  │ ├─8662 httpd -D FOREGROUND
+  │ ├─8699 /usr/bin/cat
+  │ ├─8700 /usr/bin/cat
+  │ ├─8701 /usr/bin/cat
+  │ ├─8702 /usr/bin/cat
+  │ ├─8703 httpd -D FOREGROUND
+  │ ├─8704 httpd -D FOREGROUND
+  │ ├─8705 httpd -D FOREGROUND
+  │ ├─8711 httpd -D FOREGROUND
+  │ └─8717 httpd -D FOREGROUND
+  └─libpod-conmon-c76b2199880cc1fb1318953be06be8b2c458cc7ebbd5bb4d74312e96e68c2011.scope
+    └─8651 /usr/libexec/podman/conmon -s -c c76b2199880cc1fb1318953be06be8b2c458cc7ebbd5bb4d74312e96e68c2011 -u c76b2199880cc1fb131>
 ----
 
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-netstat -tulpn | grep 8000
+netstat -tulpn | grep 8080
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-Active Internet connections (only servers)
-Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
-tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      903/sshd
-tcp        0      0 127.0.0.1:25            0.0.0.0:*               LISTEN      1208/master
-tcp6       0      0 :::8000                 :::*                    LISTEN      406/docker-proxy-cu
-tcp6       0      0 :::5000                 :::*                    LISTEN      2323/registry
-tcp6       0      0 :::22                   :::*                    LISTEN      903/sshd
-tcp6       0      0 ::1:25                  :::*                    LISTEN      1208/master
-udp        0      0 0.0.0.0:5353            0.0.0.0:*                           602/avahi-daemon: r
-udp        0      0 127.0.0.1:323           0.0.0.0:*                           611/chronyd
-udp        0      0 0.0.0.0:58000           0.0.0.0:*                           602/avahi-daemon: r
-udp6       0      0 ::1:323                 :::*                                611/chronyd
+tcp        0      0 0.0.0.0:8080            0.0.0.0:*               LISTEN      8651/conmon
 ----
 
-Just pointing out that that there is now a service hanging on port 8000 proxying the network traffic to the container.
+Just pointing out that that there is now a service hanging on port 8080 proxying the network traffic to the container.
 
 Now let us see if the simple web server is working.
 
 .[root@docker ~]#
 ----
-curl localhost:8000/test.txt
+curl localhost:8080/test.txt
 ----
 
 .Your output should look like this
@@ -659,11 +634,11 @@ Server up and running
 
 === Cleanup
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-docker stop python_web
+podman stop web_example
 
-docker rm python_web
+podman rm web_example
 ----
 
 
@@ -672,194 +647,43 @@ docker rm python_web
 
 Now it is time to examine security.  Start be re-launching the container from our last exercise.
 
-=== Standard (lack-of) Security
+=== Standard Strong Security with SELinux
 
-.[root@master ~]#
+.[root@node3 ~]#
 ----
-cheat-docker-webserver.sh
-----
-
-[NOTE]
-====
-_Native command(s) to deploy SimpleHTTPServer_
-----
-docker run -d --name="python_web" \
-    -v /usr/bin:/usr/bin \
-    -v /usr/lib64:/usr/lib64 \
-    -v /var/www/html:/var/www/html \
-    -w /var/www/html  \
-    -p 8000:8000 \
-    rhel7 /bin/python -m SimpleHTTPServer 8000
-----
-====
-
-Now you will start a shell that inherits the namespaces from 'python_web'.
-
-.[root@docker ~]#
-----
-docker exec -it python_web bash
+podman run --name "web_example" -v /var/www/html/:/var/www/html -v /usr/sbin:/usr/sbin -d -p 8080:8080 httpd-24-rhel7
 ----
 
-.[root@CONTAINER-ID ~]#
+Now you will start a shell that inherits the namespaces from 'web_example'.
+
+.[root@node3 ~]#
+----
+podman exec -it python_web bash
+----
+
+.bash-4.2$ 
 ----
 echo "Hello From My Container" > /usr/bin/tryme.txt
-
-exit
 ----
 
+You should see:
 
-.[root@docker ~]#
 ----
-docker stop python_web
-
-docker rm python_web
+bash: /usr/sbin/tryme.txt: Permission denied
 ----
 
-Now that you have cleaned up your containers, take a last look at your host.
+Now run:
 
-.[root@docker ~]#
-----
-cat /usr/bin/tryme.txt
-----
-
-How was it possible that a process running in a containerized namespace was able to affect the filesystem of our host.  
-  
-WARNING: Containers require strong INFOSEC practices.  Merely deploying applications in native containers does NOT provide ANY additional security benefits.
-
-This seems rather innocent, but consider the normal use of containers today:
-
-  . A developer wants to deploy an application using mongo-db
-  . The developer pulls a mongo-db container image from Docker Hub
-  . The developer builds the application and integrates it with the container image
-  . The developer deploys the container image
-  . That was easy...
-
-Containerized applications are easy to deploy, after all that is one of the key benefits.  However, some key points need to be asked and addressed:
-
-  . What's inside?  (ie: known vulnerabilities and/or trojans)
-  . Who will maintain and patch the base image going forward? (ie: unknown vulnerabilities, fixes, updates)
-  . How will YOU maintain and patch image customizations going forward? (ie: audit)
-  . How can you protect your environment from weak design practices? (ie: everything does not need to run as root)
-
-=== Manual Incremental Security Improvements
-
-.[root@master ~]#
-----
-cheat-docker-webserver-ro.sh
-----
-
-[NOTE]
-====
-_Native command(s) to deploy SimpleHTTPServer Read-Only_
-----
-docker run -d --name="python_web" \
-    -v /usr/bin:/usr/bin:ro \
-    -v /usr/lib64:/usr/lib64:ro \
-    -v /var/www/html:/var/www/html:ro \
-    -w /var/www/html  \
-    -p 8000:8000 \
-    rhel7 /bin/python -m SimpleHTTPServer 8000
-----
-====
-
-
-.[root@docker ~]#
-----
-docker exec -it python_web bash
-----
-
-
-.[root@CONTAINER-ID ~]#
-----
-echo "Hello From My Container" > /usr/bin/tryme-again.txt
-
-exit
-----
-
-.[root@docker ~]#
-----
-cat /usr/bin/tryme-again.txt
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-bash: /usr/bin/tryme-again.txt: Read-only file system
-----
-
-.[root@docker ~]#
-----
-docker stop python_web
-
-docker rm python_web
-----
-
-
-
-=== Strong Security with SELinux
-
-.[root@docker ~]#
-----
-setenforce enforcing
-----
-
-.[root@docker ~]#
-----
-getenforce
-----
-
-.[root@master ~]#
-----
-cheat-docker-webserver.sh
-----
-
-[NOTE]
-====
-_Native command(s) to deploy SimpleHTTPServer_
-----
-docker run -d --name="python_web" \
-    -v /usr/bin:/usr/bin \
-    -v /usr/lib64:/usr/lib64 \
-    -v /var/www/html:/var/www/html \
-    -w /var/www/html  \
-    -p 8000:8000 \
-    rhel7 /bin/python -m SimpleHTTPServer 8000
-----
-====
-
-.[root@docker ~]#
-----
-docker exec -it python_web bash
-----
-
-.[root@CONTAINER-ID ~]#
-----
-echo "Hello From My Container" > /usr/bin/tryme-again.txt
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-bash: /usr/bin/tryme-again.txt: Permission denied
-----
-
-.[root@CONTAINER-ID ~]#
 ----
 exit
 ----
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
-ps -efZ | grep SimpleHTTP
-----
+podman stop python_web
 
-.[root@docker ~]#
+podman rm python_web
 ----
-docker stop python_web
-
-docker rm python_web
-----
-
 
 
 == Creating a Custom Image
