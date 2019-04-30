@@ -12,7 +12,7 @@ endif::[]
 
 BOOM is a boot manager for Linux systems that support the 'BootLoader Specification' for boot entry configuration (ie: RHEL8 with GRUB2). It simplifies the creation of new or modified boot entries: for example, to boot snapshot images of the system created using LVM.
 
-BOOM does not modify the existing boot loader configuration, and only *inserts* additional entries. The existing configuration is maintained, and any distribution integration, such as kernel installation and update scripts, continue to function as before.
+BOOM does not modify the existing boot loader configuration, and *only inserts* additional entries. The existing configuration is maintained, and any distribution integration, such as kernel installation and update scripts, continue to function as before.
 
 BOOM also has a simple command-line interface (CLI) and API.
 
