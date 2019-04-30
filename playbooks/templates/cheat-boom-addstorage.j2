@@ -11,3 +11,6 @@ pvcreate /dev/vdb1
 
 echo "Extending volume group 'rhel' with /dev/vdb1"
 vgextend rhel /dev/vdb1
+
+echo "Creating logical volume to back root LV snapshop"
+lvcreate -s rhel/root -n root_snapshot -L 10G
