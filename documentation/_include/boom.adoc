@@ -95,13 +95,13 @@ vgextend rhel /dev/vdb1
 ====
 
 
-== Create an Important File
+== Create some Important Stuff
 
 The next set of instructions will create a file and a userID that we will remove and recover as part of this exercise:
 
 [root@node3]
 ----
-cheat-boom-importantfile.sh
+cheat-boom-importantstuff.sh
 ----
 
 [NOTE]
@@ -109,8 +109,11 @@ cheat-boom-importantfile.sh
 _Native command(s) to create important file_
 ----
 echo "This is an important file!!" > /root/importantfile
+useradd importantuser
 
-cat /root/importantfile  
+cat /root/importantfile
+
+grep importantuser /etc/passwd
 ----
 ====
 
@@ -118,31 +121,12 @@ Your output should look like this
 
 [source,indent=4]
 ----
+Contents of 'importantfile':
 This is an important file!!
+
+Grepping 'importantuser' from /etc/passwd:
+importantuser:x:1001:1001::/home/importantuser:/bin/bash
 ----
-
-== Create an Important User
-
-[root@node3]
-----
-useradd importantuser
-----
-
-Verify 'importantuser' userID is created
-
-[root@node3]
-----
-grep importantuser /etc/passwd
-----
-
-Your output should look like this
-
-[source,indent=4]
-----
-
-----
-
-
 
 == Create System Snapshot
 
