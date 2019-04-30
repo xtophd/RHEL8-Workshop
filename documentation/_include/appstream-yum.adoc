@@ -119,7 +119,7 @@ just installed postgresql. We don’t want to have another database on the
 same machine and we see app stream profiles for mysql and mariadb. Let’s
 disable these:
 
-.[root@node1]#
+.[root@node3]#
 ----
 yum module disable mariadb mysql -y
 ----
@@ -134,7 +134,7 @@ mysql                    8.0 [d][x]      client, server [d]                     
 
 The [x] stands for disabled. When we run:
 
-.[root@node1]#
+.[root@node3]#
 ----
 yum install mariadb -y
 ----
@@ -150,7 +150,7 @@ Error: Unable to find a match
 To re-enable these app streams and allow the packages to be installed,
 the command is:
 
-.[root@node1]#
+.[root@node3]#
 ----
 yum module enable mariadb mysql -y
 ----
@@ -170,14 +170,14 @@ like such:
 
 On the workstation, as root, run:
 
-.[root@node1]#
+.[root@workstation]#
 ----
-ansible-playbook appstream-pgsql.yml
+ansible-playbook playbooks/appstream-pgsql.yml
 ----
 
 then:
 
-.[root@node1]#
+.[root@workstation]#
 ----
 ansible rhel8 -a "rpm -q postgresql-server"
 ----
@@ -187,7 +187,7 @@ postgresql-server on node2.
 
 and:
 
-.[root@node1]#
+.[root@workstation]#
 ----
 ansible rhel8 -a "rpm -q postgresql"
 ----
