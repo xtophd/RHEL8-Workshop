@@ -172,12 +172,17 @@ On the workstation, as root, run:
 
 .[root@workstation]#
 ----
-ansible-playbook playbooks/appstream-pgsql.yml
+cd ~/RHEL8-Workshop/config
+----
+
+.[root@workstation config]#
+----
+ansible-playbook ../playbooks/appstream-pgsql.yml
 ----
 
 then:
 
-.[root@workstation]#
+.[root@workstation config]#
 ----
 ansible rhel8 -a "rpm -q postgresql-server"
 ----
@@ -187,7 +192,7 @@ postgresql-server on node2.
 
 and:
 
-.[root@workstation]#
+.[root@workstation] config#
 ----
 ansible rhel8 -a "rpm -q postgresql"
 ----
