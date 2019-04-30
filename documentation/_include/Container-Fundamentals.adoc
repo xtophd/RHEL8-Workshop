@@ -1,0 +1,1126 @@
+:sectnums:
+:sectnumlevels: 2
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+:toc:
+:toclevels: 1
+
+= Docker Fundamentals
+
+In this unit, we will get familiar with Docker Containers and the Docker CLI.  This unit is designed to explain and highlight 
+some of the significant security concerns around the native Docker approach to Linux containers.
+
+[discrete]
+== Additional Reference Materials
+
+NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
+
+    * link:https://developers.redhat.com/blog/2018/02/22/container-terminology-practical-introduction/[A Practical Introduction to Container Terminology - Scott McCarty]
+
+
+== Connect to Host
+
+There is a dedicated VM we will use for the docker exercises.  From workstation.example.com, you should be able to ssh to docker.example.com as 'root' without any prompts for credentials.
+
+.[root@workstation ~]#
+----
+ssh docker.example.com
+----
+
+Now you are ready to begin your exercises with docker.
+
+== Review Host Configuration
+
+Before you start launching containers everywhere, let us take a moment to explore the host and discuss a few things.
+
+=== Daemon Status
+
+First we begin by verifying that all the required services are running.
+
+.[root@docker ~]#
+----
+systemctl status docker
+
+systemctl status docker-distribution
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+● docker.service - Docker Application Container Engine
+   Loaded: loaded (/usr/lib/systemd/system/docker.service; enabled; vendor preset: disabled)
+   Active: active (running) since Mon 2019-01-07 12:41:55 EST; 2h 46min ago
+     Docs: http://docs.docker.com
+ Main PID: 2860 (dockerd-current)
+    Tasks: 35
+   Memory: 14.7M
+   CGroup: /system.slice/docker.service
+           ├─ 406 /usr/libexec/docker/docker-proxy-current -proto tcp -host-ip 0.0.0.0 -host-port 8000 -container-ip 172.17.0.2 -container-port 8000
+           ├─ 410 /usr/bin/docker-containerd-shim-current d8319a624c80ff5b8ce5afc049efc636fc500954b1e8383076feebfcb4549279 /var/run/docker/libcontainerd/d8319a624c80ff5b8ce5afc049efc636fc500954b1e8383076feebfc...
+           ├─2860 /usr/bin/dockerd-current --add-runtime docker-runc=/usr/libexec/docker/docker-runc-current --default-runtime=docker-runc --authorization-plugin=rhel-push-plugin --exec-opt native.cgroupdriver...
+           └─2864 /usr/bin/docker-containerd-current -l unix:///var/run/docker/libcontainerd/docker-containerd.sock --metrics-interval=0 --start-timeout 2m --state-dir /var/run/docker/libcontainerd/containerd ...
+
+<... SNIP ...>
+----
+
+=== Host Storage Configuration
+
+.[root@docker ~]#
+----
+pvs
+
+vgs
+
+lvs
+----
+
+By default, docker is configured to use an Overlay filesystem for it's containers in /var/lib/docker.  For this lab however, we have opted to configure the host to use logical volumes as the storage backend for the container images.  By using the lvm commands 'pvs', 'vgs' and 'lvs' you should see a dedicated volume group 'docker-vg' configured for use.  This matches the configuration of the Openshift deployment in this workshop.
+
+=== Host Networking
+
+Now have look at the network.
+
+.[root@docker ~]#
+----
+iptables -L
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain FORWARD (policy DROP)
+target     prot opt source               destination
+DOCKER-ISOLATION  all  --  anywhere             anywhere
+DOCKER     all  --  anywhere             anywhere
+ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED
+ACCEPT     all  --  anywhere             anywhere
+ACCEPT     all  --  anywhere             anywhere
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain DOCKER (1 references)
+target     prot opt source               destination
+
+Chain DOCKER-ISOLATION (1 references)
+target     prot opt source               destination
+RETURN     all  --  anywhere             anywhere
+----
+
+
+Docker prefers to manage the localnetwork configuration and is therefore NOT compatible with the 'firewalld' service.  On this host, 'firewalld' has already been disabled.  In the case of Openshift, kubernettes manages the network layer and IS compatible with 'firewalld'.
+
+=== Security Enhanced Linux (SELinux)
+
+.[root@docker ~]#
+----
+grep OPTIONS /etc/sysconfig/docker
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+OPTIONS='--selinux-enabled --log-driver=journald --signature-verification=false'
+----
+
+Red Hat enables the docker daemon flag '--selinux-enabled' by default. This results in the docker daemon setting SELinux labels on all executed containers and strengthens security through access controls in the Linux kernel.  This 'labelling' allows the Linux kernel to apply rigid rules to practically any activity that executes within a container image.  As you will witness later, containers are an easy means to introduce risk into your environment and using SELinux in enforcing mode can provide a substantial barrier to harm.
+
+For the purposes of this workshop you begin with docker enabled for SELinux, but SELinux itself is set to 'permissive' mode. This logs the security events without disrupting process execution.
+
+NOTE: For more information on '--selinux-enable', read link:https://www.projectatomic.io/blog/2016/07/docker-selinux-flag/[What does --selinux-enabled do?] by Dan Walsh
+
+NOTE: For more information on SELinux, read link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/index[SELinux User's and Administrator's Guide]
+
+== Docker Basics
+
+=== Docker Info
+
+Now have a look at the general docker information.
+
+.[root@docker ~]#
+----
+docker info
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+Containers: 0
+ Running: 0
+ Paused: 0
+ Stopped: 0
+Images: 0
+Server Version: 1.13.1
+Storage Driver: devicemapper
+ Pool Name: docker--vg-docker--pool
+ Pool Blocksize: 524.3 kB
+ Base Device Size: 10.74 GB
+ Backing Filesystem: xfs
+ Data file:
+ Metadata file:
+ Data Space Used: 19.92 MB
+ Data Space Total: 4.266 GB
+ Data Space Available: 4.246 GB
+ Metadata Space Used: 40.96 kB
+ Metadata Space Total: 12.58 MB
+ Metadata Space Available: 12.54 MB
+ Thin Pool Minimum Free Space: 426.2 MB
+ Udev Sync Supported: true
+ Deferred Removal Enabled: true
+ Deferred Deletion Enabled: true
+ Deferred Deleted Device Count: 0
+ Library Version: 1.02.146-RHEL7 (2018-01-22)
+Logging Driver: journald
+Cgroup Driver: systemd
+Plugins:
+ Volume: local
+ Network: bridge host macvlan null overlay
+ Authorization: rhel-push-plugin
+Swarm: inactive
+Runtimes: docker-runc runc
+Default Runtime: docker-runc
+Init Binary: /usr/libexec/docker/docker-init-current
+containerd version:  (expected: aa8187dbd3b7ad67d8e5e3a15115d3eef43a7ed1)
+runc version: 5eda6f6fd0c2884c2c8e78a6e7119e8d0ecedb77 (expected: 9df8b306d01f59d3a8029be411de015b7304dd8f)
+init version: fec3683b971d9c3ef73f284f176672c44b448662 (expected: 949e6facb77383876aeff8a6944dde66b3089574)
+Security Options:
+ seccomp
+  WARNING: You're not using the default seccomp profile
+  Profile: /etc/docker/seccomp.json
+ selinux
+Kernel Version: 3.10.0-862.9.1.el7.x86_64
+Operating System: Red Hat Enterprise Linux
+OSType: linux
+Architecture: x86_64
+Number of Docker Hooks: 3
+CPUs: 1
+Total Memory: 1.796 GiB
+Name: docker.example.com
+ID: JNRB:NRG2:DZMK:XJJF:4Z2Z:NJMI:E24H:3WGJ:FCGE:XN5K:HM6O:QVAX
+Docker Root Dir: /var/lib/docker
+Debug Mode (client): false
+Debug Mode (server): false
+Registry: https://registry.access.redhat.com/v1/
+Experimental: false
+Insecure Registries:
+ 127.0.0.0/8
+Live Restore Enabled: false
+Registries: registry.access.redhat.com (secure), docker.io (secure)
+----
+
+=== Docker Image Management
+
+==== Current List of Images
+
+Now have a look at the general docker information.
+
+.[root@docker ~]#
+----
+docker images
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+REPOSITORY                         TAG                 IMAGE ID            CREATED             SIZE
+registry.access.redhat.com/rhel7   latest              5edf42cf4ed8        7 weeks ago         203 MB
+----
+
+==== How to Pull Images
+
+.[root@docker ~]#
+----
+docker pull rhel7.5
+----
+
+.[root@docker ~]#
+----
+docker pull rhel6
+----
+
+Container images can also be tagged with convenient (ie:custom names).  This could make it more intuitive to understand what they contain, esspecialy after an image has been customized.
+
+Later you will create a custom image based on an official Red Hat Enterprise Linux container image.
+
+NOTE: The link:https://access.redhat.com/containers[Red Hat Container Catalog] (RHCC) provides a convenient service to locate certified container images built and supported by Red Hat.  You can also view the "security evaluation" for each image.
+
+==== How to Remove Images
+
+.[root@docker ~]#
+----
+docker images
+----
+
+.[root@docker ~]#
+----
+docker rmi rhel6
+----
+
+=== Essential Docker Commands
+
+*docker images* - list images
+
+*docker ps* - lists running containers
+
+*docker pull* - pulls (copies) container image from repository (ie: redhat and/or docker hub)
+
+*docker run* - run a docker container
+
+*docker logs* - display logs of a container (can be used with --follow)
+
+*docker rm* - remove one or more containers
+
+*docker rmi* - remove one or more images
+
+*docker stop* - stops one or more containers
+
+*docker kill $(docker ps -q)* - kill all running containers
+
+*docker rm $(docker ps -a -q)* - deletes all stopped containers
+
+== Your First Container
+
+=== Hello World
+
+.[root@docker ~]#
+----
+docker run rhel7 echo "hello world"
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+hello world
+----
+
+Well that was really boring!! What did we learn from this?  For starters, you should have noticed how fast the container launched and then concluded.  Compare that with traditinal virtualization where:
+    * you power up, 
+    * wait for bios, 
+    * wait for grub, 
+    * wait for the kernel to boot and initialize resources,
+    * pivot root, 
+    * launch all the services, and then finally
+    * run the application
+
+Let us run a few more commands to see what else we can gleen.
+
+.[root@docker ~]#
+----
+docker ps -a
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+CONTAINER ID        IMAGE               COMMAND                CREATED              STATUS                          PORTS               NAMES
+2f0a2c755a7a        rhel7               "echo 'hello world'"   About a minute ago   Exited (0) About a minute ago                       focused_knuth
+----
+
+Now let us run the exact same command again.
+
+.[root@mdocker ~]#
+----
+docker run rhel7 echo "hello world"
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+hello world
+----
+
+Check out 'docker info' one more time and you should notice a few changes.
+
+.[root@mdocker ~]#
+----
+docker info
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+Containers: 2
+ Running: 0
+ Paused: 0
+ Stopped: 2
+Images: 1
+Server Version: 1.13.1
+Storage Driver: devicemapper
+ Pool Name: docker--vg-docker--pool
+ Pool Blocksize: 524.3 kB
+ Base Device Size: 10.74 GB
+ Backing Filesystem: xfs
+ Data file:
+ Metadata file:
+ Data Space Used: 310.9 MB
+ Data Space Total: 4.266 GB
+ Data Space Available: 3.955 GB
+ Metadata Space Used: 147.5 kB
+ Metadata Space Total: 12.58 MB
+ Metadata Space Available: 12.44 MB
+ Thin Pool Minimum Free Space: 426.2 MB
+ Udev Sync Supported: true
+ Deferred Removal Enabled: true
+ Deferred Deletion Enabled: true
+ Deferred Deleted Device Count: 0
+ Library Version: 1.02.146-RHEL7 (2018-01-22)
+Logging Driver: journald
+Cgroup Driver: systemd
+Plugins:
+ Volume: local
+ Network: bridge host macvlan null overlay
+ Authorization: rhel-push-plugin
+Swarm: inactive
+Runtimes: docker-runc runc
+Default Runtime: docker-runc
+Init Binary: /usr/libexec/docker/docker-init-current
+containerd version:  (expected: aa8187dbd3b7ad67d8e5e3a15115d3eef43a7ed1)
+runc version: 5eda6f6fd0c2884c2c8e78a6e7119e8d0ecedb77 (expected: 9df8b306d01f59d3a8029be411de015b7304dd8f)
+init version: fec3683b971d9c3ef73f284f176672c44b448662 (expected: 949e6facb77383876aeff8a6944dde66b3089574)
+Security Options:
+ seccomp
+  WARNING: You're not using the default seccomp profile
+  Profile: /etc/docker/seccomp.json
+ selinux
+Kernel Version: 3.10.0-862.9.1.el7.x86_64
+Operating System: Red Hat Enterprise Linux
+OSType: linux
+Architecture: x86_64
+Number of Docker Hooks: 3
+CPUs: 1
+Total Memory: 1.796 GiB
+Name: docker.example.com
+ID: JNRB:NRG2:DZMK:XJJF:4Z2Z:NJMI:E24H:3WGJ:FCGE:XN5K:HM6O:QVAX
+Docker Root Dir: /var/lib/docker
+Debug Mode (client): false
+Debug Mode (server): false
+Registry: https://registry.access.redhat.com/v1/
+Experimental: false
+Insecure Registries:
+ 127.0.0.0/8
+Live Restore Enabled: false
+Registries: registry.access.redhat.com (secure), docker.io (secure)
+----
+
+You should notice that the number of containers has incremented to 2, and that the amount of storage consumed has grown.  
+
+=== Cleanup
+
+Run 'docker ps -a' to the IDs of the exited containers.
+
+.[root@docker ~]#
+----
+docker ps -a
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS                      PORTS               NAMES
+8cb4816f016d        rhel7               "echo 'hello world'"   2 minutes ago       Exited (0) 2 minutes ago                        focused_swirles
+2f0a2c755a7a        rhel7               "echo 'hello world'"   13 minutes ago      Exited (0) 13 minutes ago                       focused_knuth
+----
+
+Using the container UIDs from the above output, you can now clean up the 'exited' containers.
+
+.[root@docker ~]#
+----
+docker rm <CONTAINER-ID> <CONTAINER-ID>
+----
+
+Now you should be able to run 'docker ps -a' again, and the results should come back empty.
+
+.[root@docker ~]#
+----
+docker ps -a
+----
+
+== Exploring Container Namespaces
+
+=== UTS / Hostname
+
+.[root@docker ~]#
+----
+docker run rhel7 cat /proc/sys/kernel/hostname
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+c60f5bff9560
+----
+
+So what we have learned here is that the hostname in the container's namespace is NOT the same as the host platform (docker.example.com).  It is unique and is by default identical to the container's ID.  You can verify this with 'docker ps -a'.
+
+.[root@docker ~]#
+----
+docker ps -a
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS                      PORTS               NAMES
+c60f5bff9560        rhel7               "cat /proc/sys/ker..."   42 seconds ago       Exited (0) 41 seconds ago                       zealous_austin
+----
+
+
+=== Process ID
+
+.[root@docker ~]#
+----
+docker run rhel7 ps -ef
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         1     0  0 16:39 ?        00:00:00 ps -ef
+----
+
+=== Network
+
+Now let us run a command to report the network configuration from within the a container's namespace.
+
+.[root@docker ~]#
+----
+docker run rhel7 ip addr show eth0
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+container_linux.go:247: starting container process caused "exec: \"ip\": executable file not found in $PATH"
+/usr/bin/docker-current: Error response from daemon: oci runtime error: container_linux.go:247: starting container process caused "exec: \"ip\": executable file not found in $PATH".
+----
+
+What just happened?
+
+For the most part, containers are not meant for interactive (user) sessions.  In this instance, then image that we are using (ie: rhel7) does not have the traditional commmandline utilities a user might expect.  Common tools to configure network interfaces like 'ip' simply aren't there.
+
+So for this exercise, we leverage something called a 'bind mount' to effectively mirror a portion of the host's filesystem into the container's namespace.  Bind mounts are declared using the '-v' option.  In the example below, /usr/sbin from the host will be exposed and accessible to the containers namespace mounted at '/usr/bin' (ie: /usr/sbin:/usr/sbin).
+
+NOTE: Using bind mounts is generally suitable for debugging, but not a good practice as a design decision for enterprise container strategies.  After all, creating dependencies between applications and host operating systems is what we are trying to get away from.
+
+.[root@docker ~]#
+----
+docker run -v /usr/sbin:/usr/sbin --rm rhel7 /usr/sbin/ip addr show eth0
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+16: eth0@if17: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 172.17.0.2/16 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:acff:fe11:2/64 scope link tentative
+       valid_lft forever preferred_lft forever
+----
+
+A couple more commands to understand the network setup.
+
+Let us begin by examining the '/etc/hosts' file.
+
+.[root@docker ~]#
+----
+docker run --rm rhel7 cat /etc/hosts
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+127.0.0.1       localhost
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+172.17.0.2      530317c7c35b
+----
+
+How does the container resolve hostnames (ie: DNS)?
+
+.[root@docker ~]#
+----
+docker run --rm rhel7 cat /etc/resolv.conf
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+# Generated by NetworkManager
+search example.com
+nameserver 10.0.0.2
+----
+
+Take a look at the routing table.
+Pay attention now, the route command is in '/usr/bin'.  Take a look at the routing table for the container namespace.
+
+.[root@docker ~]#
+----
+docker run -v /usr/sbin:/usr/sbin --rm rhel7 route -n
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         172.17.0.1      0.0.0.0         UG    0      0        0 eth0
+172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 eth0
+----
+
+
+=== Filesystem
+
+.[root@docker ~]#
+----
+docker run rhel7 df -h
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+/dev/mapper/docker-253:1-33666640-20cf8eb18a0841286bb681bf8694ce2d60cab4c4ce027347025dd253edd52975   10G  259M  9.8G   3% /
+tmpfs                                                                                               920M     0  920M   0% /dev
+tmpfs                                                                                               920M     0  920M   0% /sys/fs/cgroup
+/dev/mapper/rhel_pwob--r7-root                                                                      8.5G  2.3G  6.3G  27% /etc/hosts
+shm                                                                                                  64M     0   64M   0% /dev/shm
+tmpfs                                                                                               920M     0  920M   0% /proc/scsi
+tmpfs                                                                                               920M     0  920M   0% /sys/firmware
+----
+
+You were introduced to Bind-Mounts in the previous section.  Let us examine what the filesystems looks like with an active Bind-Mount.
+
+.[root@docker ~]#
+----
+docker run -v /usr/bin:/usr/bin rhel7 df -h
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+Filesystem                                                                                          Size  Used Avail Use% Mounted on
+/dev/mapper/docker-253:1-33666640-0173b6e98755b921811ba7ea405de9c47ebc16721271e5fc29b09e9e18807e64   10G  259M  9.8G   3% /
+tmpfs                                                                                               920M     0  920M   0% /dev
+tmpfs                                                                                               920M     0  920M   0% /sys/fs/cgroup
+/dev/mapper/rhel_pwob--r7-root                                                                      8.5G  2.3G  6.3G  27% /usr/bin
+shm                                                                                                  64M     0   64M   0% /dev/shm
+tmpfs                                                                                               920M     0  920M   0% /proc/scsi
+tmpfs                                                                                               920M     0  920M   0% /sys/firmware
+----
+
+Notice above how there is now a dedicated mount point for /usr/bin.  Bind-Mounts can be a very powerful tool (primarily for diagnostics) to termporarily inject tools and files that are not normally part of a container image.  Using bind mounts as a design decision for enterprise container strategies is folly.  Creating direct dependencies between containerized applications and host operating systems is what we are trying to get away from.
+
+
+Let us clean up your environment before proceeding
+
+.[root@docker ~]#
+----
+docker kill $(docker ps -q)
+
+docker rm $(docker ps -a -q)
+----
+
+=== User
+
+By default, the docker daemon runs applications with root privileges.  As you will see later, this creates an enormous security risk.  You can however configure docker to enable a user namespaces mapping option which allows you to run applications with root privilege inside a container, but have them run as a different non-privileged user on the host.  At this time only a single UID and GID can be mapped per daemon.
+
+User Namespaces and container security are covered more thoroughly in the Openshift parts of this workshop.
+
+NOTE: For more information on configuring the docker daemon with User Namespaces please see link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html-single/getting_started_with_containers/index[Getting Started With Containers]
+
+== Your First Containerized Application
+
+=== Setup
+
+.[root@docker ~]#
+----
+mkdir -p /var/www/html
+
+echo "Server up and running" > /var/www/html/test.txt
+
+restorecon -Rv /var/www
+----
+
+=== Deployment
+
+.[root@master ~]#
+----
+cheat-docker-webserver.sh
+----
+
+[NOTE]
+====
+_Native command(s) to deploy SimpleHTTPServer_
+----
+docker run -d --name="python_web" \
+    -v /usr/bin:/usr/bin \
+    -v /usr/lib64:/usr/lib64 \
+    -v /var/www/html:/var/www/html \
+    -w /var/www/html  \
+    -p 8000:8000 \
+    rhel7 /bin/python -m SimpleHTTPServer 8000
+----
+====
+
+=== Validation
+
+.[root@docker ~]#
+----
+pgrep -laf SimpleHTTP
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+423 /bin/python -m SimpleHTTPServer 8000
+----
+
+On the host, we see a python process running using module SimpleHTTPServie on port 8000.  That's good!
+
+Now let's introduce a commandline utility 'lsns' to check out the namespaces.
+
+.[root@docker ~]#
+----
+lsns
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+        NS TYPE  NPROCS   PID USER   COMMAND
+4026531836 pid      126     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
+4026531837 user     127     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
+4026531838 uts      126     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
+4026531839 ipc      126     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
+4026531840 mnt      122     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
+4026531856 mnt        1    13 root   kdevtmpfs
+4026531956 net      126     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 22
+4026532143 mnt        1   491 root   /usr/lib/systemd/systemd-udevd
+4026532162 mnt        1   611 chrony /usr/sbin/chronyd
+4026532163 mnt        1   635 root   /usr/sbin/NetworkManager --no-daemon
+4026532170 mnt        1   423 root   /bin/python -m SimpleHTTPServer 8000
+4026532171 uts        1   423 root   /bin/python -m SimpleHTTPServer 8000
+4026532172 ipc        1   423 root   /bin/python -m SimpleHTTPServer 8000
+4026532173 pid        1   423 root   /bin/python -m SimpleHTTPServer 8000
+4026532175 net        1   423 root   /bin/python -m SimpleHTTPServer 8000
+----
+
+Again on the host, we see a python process running using the mnt uts ipc pid and net namespaces.  That's good too!
+
+Well since we explored namespaces, we may as well have a look and discuss the control-groups aligned with our process.
+
+.[root@docker ~]#
+----
+systemd-cgls 
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+├─1 /usr/lib/systemd/systemd --switched-root --system --deserialize 22
+├─user.slice
+│ └─user-0.slice
+│   └─session-11.scope
+│     ├─ 728 systemd-cgls
+│     ├─ 729 systemd-cgls
+│     ├─2941 sshd: root@pts/0
+│     └─2944 -bash
+└─system.slice
+  ├─docker-d8319a624c80ff5b8ce5afc049efc636fc500954b1e8383076feebfcb4549279.scope
+  │ └─423 /bin/python -m SimpleHTTPServer 8000
+  ├─docker.service
+  │ ├─ 406 /usr/libexec/docker/docker-proxy-current -proto tcp -host-ip 0.0.0.0 -host-port 8000 -container-ip 172.17.0.2 -container-port 8000
+  │ ├─ 410 /usr/bin/docker-containerd-shim-current d8319a624c80ff5b8ce5afc049efc636fc500954b1e8383076feebfcb4549279 /var/run/docker/libcontainerd/d8319a624c80ff5b8ce5afc049efc636fc500954b1e8383076feebfcb4549279 /
+  │ ├─2860 /usr/bin/dockerd-current --add-runtime docker-runc=/usr/libexec/docker/docker-runc-current --default-runtime=docker-runc --authorization-plugin=rhel-push-plugin --exec-opt native.cgroupdriver=systemd -
+  │ └─2864 /usr/bin/docker-containerd-current -l unix:///var/run/docker/libcontainerd/docker-containerd.sock --metrics-interval=0 --start-timeout 2m --state-dir /var/run/docker/libcontainerd/containerd --shim doc
+  ├─docker-distribution.service
+  │ └─2323 /usr/bin/registry serve /etc/docker-distribution/registry/config.yml
+  ├─rhel-push-plugin.service
+  │ └─2229 /usr/libexec/docker/rhel-push-plugin
+  ├─dm-event.service
+  │ └─2075 /usr/sbin/dmeventd -f
+  ├─rsyslog.service
+  │ └─906 /usr/sbin/rsyslogd -n
+  <... SNIP ...>
+----
+
+
+.[root@docker ~]#
+----
+netstat -tulpn | grep 8000
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      903/sshd
+tcp        0      0 127.0.0.1:25            0.0.0.0:*               LISTEN      1208/master
+tcp6       0      0 :::8000                 :::*                    LISTEN      406/docker-proxy-cu
+tcp6       0      0 :::5000                 :::*                    LISTEN      2323/registry
+tcp6       0      0 :::22                   :::*                    LISTEN      903/sshd
+tcp6       0      0 ::1:25                  :::*                    LISTEN      1208/master
+udp        0      0 0.0.0.0:5353            0.0.0.0:*                           602/avahi-daemon: r
+udp        0      0 127.0.0.1:323           0.0.0.0:*                           611/chronyd
+udp        0      0 0.0.0.0:58000           0.0.0.0:*                           602/avahi-daemon: r
+udp6       0      0 ::1:323                 :::*                                611/chronyd
+----
+
+Just pointing out that that there is now a service hanging on port 8000 proxying the network traffic to the container.
+
+Now let us see if the simple web server is working.
+
+.[root@docker ~]#
+----
+curl localhost:8000/test.txt
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+Server up and running
+----
+
+=== Cleanup
+
+.[root@docker ~]#
+----
+docker stop python_web
+
+docker rm python_web
+----
+
+
+
+== Exploring Container Security
+
+Now it is time to examine security.  Start be re-launching the container from our last exercise.
+
+=== Standard (lack-of) Security
+
+.[root@master ~]#
+----
+cheat-docker-webserver.sh
+----
+
+[NOTE]
+====
+_Native command(s) to deploy SimpleHTTPServer_
+----
+docker run -d --name="python_web" \
+    -v /usr/bin:/usr/bin \
+    -v /usr/lib64:/usr/lib64 \
+    -v /var/www/html:/var/www/html \
+    -w /var/www/html  \
+    -p 8000:8000 \
+    rhel7 /bin/python -m SimpleHTTPServer 8000
+----
+====
+
+Now you will start a shell that inherits the namespaces from 'python_web'.
+
+.[root@docker ~]#
+----
+docker exec -it python_web bash
+----
+
+.[root@CONTAINER-ID ~]#
+----
+echo "Hello From My Container" > /usr/bin/tryme.txt
+
+exit
+----
+
+
+.[root@docker ~]#
+----
+docker stop python_web
+
+docker rm python_web
+----
+
+Now that you have cleaned up your containers, take a last look at your host.
+
+.[root@docker ~]#
+----
+cat /usr/bin/tryme.txt
+----
+
+How was it possible that a process running in a containerized namespace was able to affect the filesystem of our host.  
+  
+WARNING: Containers require strong INFOSEC practices.  Merely deploying applications in native containers does NOT provide ANY additional security benefits.
+
+This seems rather innocent, but consider the normal use of containers today:
+
+  . A developer wants to deploy an application using mongo-db
+  . The developer pulls a mongo-db container image from Docker Hub
+  . The developer builds the application and integrates it with the container image
+  . The developer deploys the container image
+  . That was easy...
+
+Containerized applications are easy to deploy, after all that is one of the key benefits.  However, some key points need to be asked and addressed:
+
+  . What's inside?  (ie: known vulnerabilities and/or trojans)
+  . Who will maintain and patch the base image going forward? (ie: unknown vulnerabilities, fixes, updates)
+  . How will YOU maintain and patch image customizations going forward? (ie: audit)
+  . How can you protect your environment from weak design practices? (ie: everything does not need to run as root)
+
+=== Manual Incremental Security Improvements
+
+.[root@master ~]#
+----
+cheat-docker-webserver-ro.sh
+----
+
+[NOTE]
+====
+_Native command(s) to deploy SimpleHTTPServer Read-Only_
+----
+docker run -d --name="python_web" \
+    -v /usr/bin:/usr/bin:ro \
+    -v /usr/lib64:/usr/lib64:ro \
+    -v /var/www/html:/var/www/html:ro \
+    -w /var/www/html  \
+    -p 8000:8000 \
+    rhel7 /bin/python -m SimpleHTTPServer 8000
+----
+====
+
+
+.[root@docker ~]#
+----
+docker exec -it python_web bash
+----
+
+
+.[root@CONTAINER-ID ~]#
+----
+echo "Hello From My Container" > /usr/bin/tryme-again.txt
+
+exit
+----
+
+.[root@docker ~]#
+----
+cat /usr/bin/tryme-again.txt
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+bash: /usr/bin/tryme-again.txt: Read-only file system
+----
+
+.[root@docker ~]#
+----
+docker stop python_web
+
+docker rm python_web
+----
+
+
+
+=== Strong Security with SELinux
+
+.[root@docker ~]#
+----
+setenforce enforcing
+----
+
+.[root@docker ~]#
+----
+getenforce
+----
+
+.[root@master ~]#
+----
+cheat-docker-webserver.sh
+----
+
+[NOTE]
+====
+_Native command(s) to deploy SimpleHTTPServer_
+----
+docker run -d --name="python_web" \
+    -v /usr/bin:/usr/bin \
+    -v /usr/lib64:/usr/lib64 \
+    -v /var/www/html:/var/www/html \
+    -w /var/www/html  \
+    -p 8000:8000 \
+    rhel7 /bin/python -m SimpleHTTPServer 8000
+----
+====
+
+.[root@docker ~]#
+----
+docker exec -it python_web bash
+----
+
+.[root@CONTAINER-ID ~]#
+----
+echo "Hello From My Container" > /usr/bin/tryme-again.txt
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+bash: /usr/bin/tryme-again.txt: Permission denied
+----
+
+.[root@CONTAINER-ID ~]#
+----
+exit
+----
+
+.[root@docker ~]#
+----
+ps -efZ | grep SimpleHTTP
+----
+
+.[root@docker ~]#
+----
+docker stop python_web
+
+docker rm python_web
+----
+
+
+
+== Creating a Custom Image
+
+=== Setup
+
+.[root@docker ~]#
+----
+mkdir -p /var/www/html
+
+echo "Custom Server up and running" > /var/www/html/custom.txt
+
+restorecon -Rv /var/www
+----
+
+=== Deployment
+
+.[root@docker ~]#
+----
+docker run -d --name="python_web" \
+    -v /usr/bin:/usr/bin \
+    -v /usr/lib64:/usr/lib64 \
+    -v /var/www/html:/mnt \
+    -w /var/www/html  \
+    -p 8000:8000 \
+    rhel7 /bin/python -m SimpleHTTPServer 8000
+----
+
+=== Customize
+
+.[root@docker ~]#
+----
+docker exec -it python_web bash
+----
+
+
+.[root@CONTAINER-ID ~]#
+----
+mkdir -p /var/www/html
+
+cp /mnt/custom.txt /var/www/html/custom.txt
+
+exit
+----
+
+
+.[root@docker ~]#
+----
+curl localhost:8000/custom.txt
+----
+
+=== Save
+
+.[root@docker ~]#
+----
+docker stop python_web
+
+docker commit -m "Custom Image" -a "Student" python_web custom_web
+----
+
+.[root@docker ~]#
+----
+docker images
+----
+
+=== Deployment of Custom Image
+
+.[root@docker ~]#
+----
+docker run -d --name="custom_web" \
+    -w /var/www/html  \
+    -p 8000:8000 \
+    custom_web /bin/python -m SimpleHTTPServer 8000
+----
+
+=== Validatationof Custom Image
+
+.[root@docker ~]#
+----
+curl localhost:8000/custom.txt
+----
+
+=== Cleanup
+
+.[root@docker ~]#
+----
+docker kill $(docker ps -q)
+
+docker rm $(docker ps -a -q)
+----
+
+== Exit System
+
+.[root@docker ~]#
+----
+exit
+----
+
+
+.[root@workstation ~]#
+----
+uname -n
+
+whoami
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+workstation.example.com
+
+root
+----
+
+Now you are ready to proceed to the next unit.
+
+[discrete]
+== End of Unit
+
+*Next:* link:CLI-First-Time-Login.adoc[OCP CLI: First Time Login]
+
+link:../OCP-Workshop.adoc[Return to TOC]
+
+////
+Always end files with a blank line to avoid include problems.
+////
