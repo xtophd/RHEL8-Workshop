@@ -30,5 +30,8 @@
         - {name: 'student', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
 
 
+- import_playbook: rhel8-setup-appstreams.yml
 - import_playbook: rhel8-setup-tlog.yml
 - import_playbook: rhel8-setup-stratis.yml
+- import_playbook: rhel8-setup-cockpit.yml
+- import_playbook: rhel8-setup-boom.yml
