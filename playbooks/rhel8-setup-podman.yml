@@ -5,16 +5,16 @@
 - hosts: core.example.com
   tasks:
   
-    - name: "YUM install docker-distribution"
+    - name: "SETUP PODMAN: yum install docker-distribution"
       yum: name=docker-distribution state=installed
       
-    - name: "SERVICE START docker-distribution"
-      service: name=firewalld state=started enabled=yes
+    - name: "SETUP PODMAN: service start docker-distribution"
+      service: name=docker-distribution state=started enabled=yes
 
 - hosts: node2.example.com
   tasks:
 
-    - name: "YUM install podmandocker-distribution"
+    - name: "SETUP PODMAN: yum install podman"
       yum: name=podman state=installed
 
     - name: "TEMPLATE: config file installs"
