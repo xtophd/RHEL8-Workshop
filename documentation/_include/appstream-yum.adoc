@@ -169,6 +169,7 @@ yum module enable mariadb mysql -y
 ----
 
 You may now switch back to the workstation:
+
 .[root@node3 ~]#
 ----
 exit
