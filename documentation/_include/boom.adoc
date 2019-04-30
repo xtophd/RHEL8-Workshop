@@ -10,20 +10,15 @@ endif::[]
 
 = Boom
 
-The BOOM boot manager simplifies the process of creating boot entries
+BOOM is a boot manager for Linux systems that support the 'BootLoader Specification' for boot entry configuration (ie: RHEL with GRUB2). It simplifies the creation of new or modified boot entries: for example, to boot snapshot images of the system created using LVM.
 
-BOOM is a boot manager for Linux systems that use boot loaders supporting the BootLoader Specification for boot entry configuration. It enables flexible boot configuration and simplifies the creation of new or modified boot entries: for example, to boot snapshot images of the system created using LVM.
+BOOM does not modify the existing boot loader configuration, and only *inserts* additional entries. The existing configuration is maintained, and any distribution integration, such as kernel installation and update scripts, continue to function as before.
 
-BOOM does not modify the existing boot loader configuration, and only inserts additional entries. The existing configuration is maintained, and any distribution integration, such as kernel installation and update scripts, continue to function as before.
-
-BOOM has a simplified command-line interface (CLI) and API that ease the task of creating boot entries.
-
-This new functionality could be very helpful for system administrators, especially those responsible for RHEL servers running directly on physical hardware, where booting from snapshots has previously been more difficult.  
+BOOM also has a simple command-line interface (CLI) and API.
 
 == Installation and Setup
 
 The following set of instructions will install Boom.
-
 
 Starting as user *root* on the host *workstation.example.com*, let’s ssh over to *node3.example.com*. No password should be required.
 
@@ -48,7 +43,7 @@ That was easy!
 
 == Add Capacity to Root LVM
 
-The following directions will create a new disk partition (/dev/vdb1) and add it to volume group “RHEL”:
+In order to support LVM snapshots on the root volume, we need to add some addtional storage capacity.  The following command will create a new disk partition (/dev/vdb1) and add it to volume group “RHEL”.
 
 [root@node3]
 ----
