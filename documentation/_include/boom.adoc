@@ -43,7 +43,13 @@ That was easy!
 
 == Add Capacity to Root LVM
 
-In order to support LVM snapshots on the root volume, we need to add some addtional storage capacity.  The following command will create a new disk partition (/dev/vdb1) and add it to volume group “RHEL”.
+In order to support LVM snapshots on the root volume, we need to:
+  * add some addtional storage capacity
+  * partition the disk
+  * add the partition to the root volume group
+  * and finally create logical volume to support the snapshot
+  
+  The following command will take care of all of these steps for you.  The individual steps are also outlined below.
 
 [root@node3]
 ----
@@ -80,6 +86,9 @@ Creating physical volume lable on /dev/vdb1
   Physical volume "/dev/vdb1" successfully created.
 Extending volume group 'rhel' with /dev/vdb1
   Volume group "rhel" successfully extended
+  
+  Reducing COW size 10.00 GiB down to maximum usable size <8.03 GiB.
+  Logical volume "root_snapshot" created.
 ----
 
 [NOTE]
@@ -91,6 +100,8 @@ printf "o\nn\np\n\n\n\nw\n" | fdisk /dev/vdb
 pvcreate /dev/vdb1
 
 vgextend rhel /dev/vdb1
+
+lvcreate -s rhel/root -n root_snapshot -L 10G
 ----
 ====
 
@@ -129,14 +140,7 @@ Grepping 'importantuser' from /etc/passwd:
 importantuser:x:1001:1001::/home/importantuser:/bin/bash
 ----
 
-== Create System Snapshot
-
-Start by creating a new logical volume to store the root snapshot
-
-[root@node3]
-----
-lvcreate -s rhel/root -n root_snapshot -L 10G
-----
+== BOOM!!!
 
 Next we create a boom profile
 
@@ -182,7 +186,7 @@ Your output should look like this
 
 [source,indent=4]
 ----
-This is an important file!!
+
 
 
 ----
