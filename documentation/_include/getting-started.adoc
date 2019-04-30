@@ -21,7 +21,7 @@ Red Hat's official documentation can be found publicly with the links provided b
 
 Now let us proceed with getting your environment ready for work.
 
-== Preparing for Installation
+== Environment Preparation
 
 === Sign-On on to your *workstation* session
 
@@ -53,8 +53,6 @@ cd ~
     
 git clone https://github.com/xtophd/RHEL8-Workshop
 ----
-
-== RHEL 8 Workshop Set Up
 
 === Run the Prep Script
 
