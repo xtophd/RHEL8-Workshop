@@ -22,7 +22,7 @@ ssh node1.example.com
 
 Verify that you are on the right host for these exercises.
 
-[root@node3]#
+[root@node1]#
 ----
 cheat-appstream-checkhost.sh
 ----
@@ -67,7 +67,7 @@ But let’s say that our application teams have a dependency on 9.6 but we
 want to move to RHEL 8. With the app stream, we can do this. On
 node3.example.com, let’s run:
 
-.[root@node1]#
+.[root@node3]#
 ----
 yum module install postgresql:9.6/server -y
 ----
@@ -91,14 +91,14 @@ system.
 The server profile installs both the server and the client. If we just
 wanted the client, we could remove the server profile:
 
-.[root@node1]#
+.[root@node3]#
 ----
 yum module remove postgresql:9.6/server -y
 ----
 
 and install only the client:
 
-.[root@node1]#
+.[root@node3]#
 ----
 yum module install postgresql:9.6/client -y
 ----
