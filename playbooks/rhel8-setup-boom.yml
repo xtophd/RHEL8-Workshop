@@ -19,4 +19,5 @@
         - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-boom-checkhost.sh'} 
         - {src: 'cheat-boom-addstorage.j2', dest: '/usr/local/bin/cheat-boom-addstorage.sh'} 
         - {src: 'cheat-boom-importantstuff.j2', dest: '/usr/local/bin/cheat-boom-importantstuff.sh'} 
+        - {src: 'cheat-boom-grublist.j2', dest: '/usr/local/bin/cheat-boom-grublist.sh'} 
         
