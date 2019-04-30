@@ -149,11 +149,34 @@ Next we create a boom profile
 boom profile create --from-host --uname-pattern el8
 ----
 
+Your output should look like this.
+
+[source,indent=4]
+----
+Created profile with os_id e6f881a:
+  OS ID: "e6f881ae3f8a2e010375fb840bb4f386b330db6e",
+  Name: "Red Hat Enterprise Linux", Short name: "rhel",
+  Version: "8.0 (Ootpa)", Version ID: "8.0",
+  UTS release pattern: "el8",
+  Kernel pattern: "/vmlinuz-%{version}", Initramfs pattern: "/initramfs-%{version}.img",
+  Root options (LVM2): "rd.lvm.lv=%{lvm_root_lv}",
+  Root options (BTRFS): "rootflags=%{btrfs_subvolume}",
+  Options: "root=%{root_device} ro %{root_opts}"
+----
+
 Verify that the boom profile was created by the previous command.
 
 [root@node3]
 ----
 boom profile list
+----
+
+Your output should look like this.
+
+[source,indent=4]
+----
+OsID    Name                     OsVersion
+e6f881a Red Hat Enterprise Linux 8.0 (Ootpa)
 ----
 
 Take a snapshot of your root logical volume as a backup
@@ -163,13 +186,27 @@ Take a snapshot of your root logical volume as a backup
 boom create --title "root LV snapshot" --rootlv rhel/root_snapshot
 ----
 
+[source,indent=4]
+----
+WARNING - Boom grub2 script missing from '/etc/grub.d'
+WARNING - Boom configuration not found in grub.cfg
+WARNING - Run 'grub2-mkconfig > /boot/grub2/grub.cfg' to enable
+Created entry with boot_id 85e739d:
+  title root LV snapshot
+  machine-id e988045b45b04b11b84741d6a568861b
+  version 4.18.0-67.el8.x86_64
+  linux /vmlinuz-4.18.0-67.el8.x86_64
+  initrd /initramfs-4.18.0-67.el8.x86_64.img
+  options root=/dev/rhel/root_snapshot ro rd.lvm.lv=rhel/root_snapshot
+----
+
 == Make Changes to System
 
 Now we are going to remove the “importantfile” file and “importantuser” userID.
 
 [root@node3]
 ----
-rm -rf /root/importantfile 
+rm -f /root/importantfile 
 userdel redhat
 ----
 
@@ -179,32 +216,73 @@ Confirm that our changes were effective
 ----
 cat /root/importantfile
 
-grep redhat /etc/passwd
+grep -c importantuser /etc/passwd
 ----
+
+NOTE: "grep -c" counts how many time the token is matched.  In our case it should be zero
 
 Your output should look like this
 
 [source,indent=4]
 ----
+cat: /root/importantfile: No such file or directory
 
-
-
+0
 ----
-
-
 
 == Reboot to Snapshot
 
 WARNING: Bring up the virtual machine console for node3 before proceeding.  
 
-We will now reset our host and boot the Logical Volume with the snapshot kernel in the grub menu.
+Before reboot, there are 2 options to invoke the right loader at restart:
+  . enter the GRUB menu and select at boot time
+  . use grub-set-default to preselect which one to load
+  
+We are going to opt for preselect since it's just easier.  Use the following cheat to inspect the currently configured GRUB menu options.
+
+[root@node3]
+----
+cheat-boom-grublist.sh
+----
+
+You output should look like this.
+
+[source,indent=4]
+----
+0  title="root LV snapshot"
+1  title="Red Hat Enterprise Linux (4.18.0-67.el8.x86_64) 8.0 (Ootpa)"
+2  title="Red Hat Enterprise Linux (0-rescue-e988045b45b04b11b84741d6a568861b) 8.0 (Ootpa)"
+----
+
+We want to reboot to our snapshot, so in this case we use '0'.
+
+[root@node3]
+----
+grub2-set-default 0
+----
+
+Verify that the parameters stuck
+
+[root@node3]
+----
+grub2-editenv list
+----
+
+You output should look like this.  Notice that "root=/dev/mapper/rhel-root_snapshot", that's what we want.
+
+[source,indent=4]
+----
+saved_entry=0
+kernelopts=root=/dev/mapper/rhel-root_snapshot ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet
+boot_success=0
+----
+
+We will now reset our host and boot the snapshot Logical Volume.
 
 [root@node3]
 ----
 reboot
 ----
-
-When the GRUB2 boot menu appears on the console, select “root LV snapshot” kernel to run, and hit enter.
 
 === Confirm Previous State of Host
 
@@ -241,10 +319,31 @@ We will now reboot node3 virtual machine again into rescue mode and return the h
 
 [root@node3]
 ----
-reboot
+cheat-boom-grublist.sh
 ----
 
-When the GRUB2 boot menu appears on the console, select “rescue”, and hit enter.
+You output should look like this.
+
+[source,indent=4]
+----
+0  title="root LV snapshot"
+1  title="Red Hat Enterprise Linux (4.18.0-67.el8.x86_64) 8.0 (Ootpa)"
+2  title="Red Hat Enterprise Linux (0-rescue-e988045b45b04b11b84741d6a568861b) 8.0 (Ootpa)"
+----
+
+We want to reboot to recuse mode, so in this case we use '2'.
+
+[root@node3]
+----
+grub2-set-default 2
+----
+
+Let's go...
+
+[root@node3]
+----
+reboot
+----
 
 Once the host is back online, ssh to back to *node3.example.com*.
 
@@ -258,7 +357,23 @@ ssh root@node3.example.com
 lvconvert --merge /dev/rhel/root_snapshot
 ----
 
-# set grub menu to boot default OS
+Now set grub to boot default OS again.
+
+[root@node3]
+----
+cheat-boom-grublist.sh
+----
+
+You output should look like this.
+
+[source,indent=4]
+----
+0  title="root LV snapshot"
+1  title="Red Hat Enterprise Linux (4.18.0-67.el8.x86_64) 8.0 (Ootpa)"
+2  title="Red Hat Enterprise Linux (0-rescue-e988045b45b04b11b84741d6a568861b) 8.0 (Ootpa)"
+----
+
+This time we want entry '1'.
 
 [root@node3]# 
 ----
@@ -268,11 +383,11 @@ grub2-set-default 1
 [root@node3]#
 ----
 reboot
-----
+----clear
 
 == Confirm System Restored
 
-We have now recovered the missing data and userID. Now, let's make sure the restored data persisted.
+We have now returned the host to it's previous state (ie: the moment we created the snapshot with boom). Let's make sure everything is where we expect.
 
 [root@workstation ~]#
 ----
@@ -301,6 +416,7 @@ Red Hat Documentation
 
     * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[Deplying Session Recording on Red Hat Enterprise Linux]
 
+    * linkx:https://systemd.io/BOOT_LOADER_SPECIFICATION[Boot Loader Specification]
 [discrete]
 == End of Unit
 
