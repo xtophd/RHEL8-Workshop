@@ -63,7 +63,7 @@ WARNING: It is important to be in the correct working directory for these instal
 cd ~/RHEL8-Workshop
 ----
 
-.[root@workstation ~]#
+.[root@workstation RHEL8-Workshop]#
 ----
 bash prepare-rhel8-workshop.sh
 ----
