@@ -159,7 +159,7 @@ lvs -a -o lv_name,lv_size,lv_attr,segtype,devices rhel/root_snapshot
 lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
 ----
 
-Since we have made no real changes to our system, the % of the "exception store" used is still very small.  Let's change that.
+Since we have made no real changes to our system, the percentage of the "exception store" used is still very small.  Let's change that.
 
 == Make Changes to System
 
@@ -171,7 +171,7 @@ rm -f /root/importantfile
 userdel importantuser
 ----
 
-What the heck, let's anti up and delete some more stuff.  Who need documentation anyway!
+What the heck, let's anti up and delete some more stuff.  Who needs documentation anyway!
 
 [root@node3]
 ----
