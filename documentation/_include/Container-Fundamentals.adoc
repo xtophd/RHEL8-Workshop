@@ -13,7 +13,7 @@ endif::[]
 
 = Container Fundamentals
 
-In this unit, we will get familiar with Containers and the podman/buildah CLI.  
+In this unit, we will get familiar with Containers and the podman CLI.  
 
 [discrete]
 == Additional Reference Materials
