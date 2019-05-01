@@ -672,9 +672,9 @@ exit
 
 .[root@node3 ~]#
 ----
-podman stop python_web
+podman stop web_example
 
-podman rm python_web
+podman rm web_example
 ----
 
 
