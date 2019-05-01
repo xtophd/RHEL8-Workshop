@@ -11,13 +11,23 @@
     - name: "SETUP PODMAN: service start docker-distribution"
       service: name=docker-distribution state=started enabled=yes
 
-- hosts: node2.example.com
+- hosts: node3.example.com
   tasks:
 
     - name: "SETUP PODMAN: yum install podman"
-      yum: name=podman state=installed
+      yum: name=podman,net-tools state=installed
 
     - name: "TEMPLATE: config file installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - {src: 'registries-conf.j2',           dest: '/etc/containers/registeries.conf'}
+
+    - name: "TEMPLATE: cheat script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -26,4 +36,3 @@
         mode: 0744
       with_items:
         - {src: 'cheat-checkhost.j2',           dest: '/usr/local/bin/cheat-podman-checkhost.sh'}
-        - {src: 'registries-conf.j2',           dest: '/etc/containers/registeries.conf'}
