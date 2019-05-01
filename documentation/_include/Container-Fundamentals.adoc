@@ -643,7 +643,7 @@ Now it is time to examine security.  Start be re-launching the container from ou
 
 .[root@node3 ~]#
 ----
-podman run --name "web_example" -v /var/www/html/:/var/www/html -v /usr/sbin:/usr/sbin -d -p 8080:8080 httpd-24-rhel7
+podman run --name "web_example" -v /var/www/html:/var/www/html -v /usr/sbin:/usr/sbin -d -p 8080:8080 httpd-24-rhel7
 ----
 
 Now you will start a shell that inherits the namespaces from 'web_example'.
