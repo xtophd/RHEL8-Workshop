@@ -22,19 +22,19 @@ The following set of instructions will install Boom.
 
 Starting as user *root* on the host *workstation.example.com*, let’s ssh over to *node3.example.com*. No password should be required.
 
-[root@workstation]#
+.[root@workstation]#
 ----
 ssh node3.example.com
 ----
 
 Verify that you are on the right host for these exercises.
 
-[root@node3]#
+.[root@node3]#
 ----
 cheat-boom-checkhost.sh
 ----
 
-[root@node3]# 
+.[root@node3]# 
 ----
 yum install -y boom-boot
 ----
@@ -51,10 +51,22 @@ In order to support LVM snapshots on the root volume, we need to:
   
   The following command will take care of all of these steps for you.  The individual steps are also outlined below.
 
-[root@node3]
+.[root@node3]#
 ----
 cheat-boom-addstorage.sh
 ----
+
+[NOTE]
+====
+_Native command(s) to add storage_
+----
+printf "o\nn\np\n\n\n\nw\n" | fdisk /dev/vdb
+
+pvcreate /dev/vdb1
+
+vgextend rhel /dev/vdb1
+----
+====
 
 You output should look list this.
 
@@ -91,26 +103,11 @@ Extending volume group 'rhel' with /dev/vdb1
   Logical volume "root_snapshot" created.
 ----
 
-[NOTE]
-====
-_Native command(s) to add storage_
-----
-printf "o\nn\np\n\n\n\nw\n" | fdisk /dev/vdb
-
-pvcreate /dev/vdb1
-
-vgextend rhel /dev/vdb1
-
-lvcreate -s rhel/root -n root_snapshot -L 10G
-----
-====
-
-
 == Create some Important Stuff
 
 The next set of instructions will create a file and a userID that we will remove and recover as part of this exercise:
 
-[root@node3]
+.[root@node3]#
 ----
 cheat-boom-importantstuff.sh
 ----
@@ -140,11 +137,114 @@ Grepping 'importantuser' from /etc/passwd:
 importantuser:x:1001:1001::/home/importantuser:/bin/bash
 ----
 
+== Create LV Snapshot of Root Volume
+
+Now that we have created some important data, it's time to create a snapshot of our system.
+
+.[root@node3]#
+----
+echo "Creating logical volume to back root LV snapshop"
+lvcreate -s rhel/root -n root_snapshot -L 10G
+----
+
+Let us take a quick look at what we just did.
+
+.[root@node3]#
+----
+lvs -a -o lv_name,lv_size,lv_attr,segtype,devices rhel/root_snapshot
+----
+
+Your output should look like this.
+
+[source,indent=4]
+----
+LV            LSize  Attr       Type   Devices
+root_snapshot <8.03g swi-a-s--- linear /dev/vdb1(0)
+----
+
+Another look at the snapshot volume with some different options
+
+.[root@node3]#
+----
+lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
+----
+
+In your output, note the percentage used in the new snapshot.
+
+[source,indent=4]
+----
+LV            LSize  Attr       Origin Snap%
+root_snapshot <8.03g swi-a-s--- root   0.01
+----
+
+Since we have made no real changes to our system, the percentage of the "exception store" used is still very small.  Let's change that.
+
+== Make Changes to System
+
+Now we are going to remove the “importantfile” file and “importantuser” userID.
+
+.[root@node3]#
+----
+rm -f /root/importantfile 
+userdel importantuser
+----
+
+What the heck, let's anti up and delete some more stuff.  Who needs documentation anyway!
+
+.[root@node3]#
+----
+rm -rf /usr/share/man
+rm -rf /usr/share/doc
+rm -rf /usr/share/GeoIP
+----
+
+Confirm that our changes were effective
+
+.[root@node3]#
+----
+cat /root/importantfile
+
+grep -c importantuser /etc/passwd
+----
+
+NOTE: "grep -c" counts how many time the token is matched.  In our case it should be zero
+
+Your output should look like this
+
+[source,indent=4]
+----
+cat: /root/importantfile: No such file or directory
+
+0
+----
+
+Analyze the snapshot data and we see that there is now a measurable difference.
+
+.[root@node3]#
+----
+lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
+----
+
+[source,indent=4]
+----
+  LV            LSize  Attr       Origin Snap%
+  root_snapshot <8.03g swi-a-s--- root   0.82
+----
+
+Let's summarize what's been done so far:
+
+  * you added some storage capacity to the root volume
+  * you created an "importantfile" and an "importantuser" on your host
+  * you created a snapshot of the root volume
+  * you then made some changes to the host (deleted a bunch of stuff)
+
+Time to boot our host using the snapshot volue, inspect the host to verify our data is there and then finally recover the host.
+
 == BOOM!!!
 
-Next we create a boom profile
+Create a boom profile.
 
-[root@node3]
+.[root@node3]#
 ----
 boom profile create --from-host --uname-pattern el8
 ----
@@ -166,7 +266,7 @@ Created profile with os_id e6f881a:
 
 Verify that the boom profile was created by the previous command.
 
-[root@node3]
+.[root@node3]#
 ----
 boom profile list
 ----
@@ -181,10 +281,12 @@ e6f881a Red Hat Enterprise Linux 8.0 (Ootpa)
 
 Take a snapshot of your root logical volume as a backup
 
-[root@node3]
+.[root@node3]#
 ----
 boom create --title "root LV snapshot" --rootlv rhel/root_snapshot
 ----
+
+Your output should look like this.
 
 [source,indent=4]
 ----
@@ -200,35 +302,42 @@ Created entry with boot_id 85e739d:
   options root=/dev/rhel/root_snapshot ro rd.lvm.lv=rhel/root_snapshot
 ----
 
-== Make Changes to System
+Take a look at currently configured boom-boot entries.
 
-Now we are going to remove the “importantfile” file and “importantuser” userID.
-
-[root@node3]
+.[root@node3]#
 ----
-rm -f /root/importantfile 
-userdel redhat
+boom entry list
 ----
 
-Confirm that our changes were effective
-
-[root@node3]
-----
-cat /root/importantfile
-
-grep -c importantuser /etc/passwd
-----
-
-NOTE: "grep -c" counts how many time the token is matched.  In our case it should be zero
-
-Your output should look like this
+Your output should look like this.
 
 [source,indent=4]
 ----
-cat: /root/importantfile: No such file or directory
-
-0
+BootID  Version                  Name                     RootDevice
+85e739d 4.18.0-67.el8.x86_64     Red Hat Enterprise Linux /dev/rhel/root_snapshot
 ----
+
+Show details about our boom-boot entry.
+
+.[root@node3]#
+----
+boom entry show 85e739d
+----
+
+Your output should look like this.
+
+[source,indent=4]
+----
+Boot Entry (boot_id=85e739d)
+  title root LV snapshot
+  machine-id e988045b45b04b11b84741d6a568861b
+  version 4.18.0-67.el8.x86_64
+  linux /vmlinuz-4.18.0-67.el8.x86_64
+  initrd /initramfs-4.18.0-67.el8.x86_64.img
+  options root=/dev/rhel/root_snapshot ro rd.lvm.lv=rhel/root_snapshot
+----
+
+
 
 == Reboot to Snapshot
 
@@ -240,7 +349,7 @@ Before reboot, there are 2 options to invoke the right loader at restart:
   
 We are going to opt for preselect since it's just easier.  Use the following cheat to inspect the currently configured GRUB menu options.
 
-[root@node3]
+.[root@node3]#
 ----
 cheat-boom-grublist.sh
 ----
@@ -256,19 +365,19 @@ You output should look like this.
 
 We want to reboot to our snapshot, so in this case we use '0'.
 
-[root@node3]
+.[root@node3]#
 ----
 grub2-set-default 0
 ----
 
 Verify that the parameters stuck
 
-[root@node3]
+.[root@node3]#
 ----
 grub2-editenv list
 ----
 
-You output should look like this.  Notice that "root=/dev/mapper/rhel-root_snapshot", that's what we want.
+You output should look like this.  Notice that "saved_entry=0", that's what we want.
 
 [source,indent=4]
 ----
@@ -279,7 +388,7 @@ boot_success=0
 
 We will now reset our host and boot the snapshot Logical Volume.
 
-[root@node3]
+.[root@node3]#
 ----
 reboot
 ----
@@ -288,26 +397,42 @@ reboot
 
 Once the host is back online, ssh to back to *node3.example.com* and verify that the “importantfile” and “importantuser” exist in the backup snapshot:
 
-[root@workstation]
+.[root@workstation]#
 ----
 ssh root@node3.example.com
 ----
 
-[root@node3]
+.[root@node3]#
 ----
-cat /root/importantfile
-
-grep importantuser /etc/passwd
+df /
 ----
 
 Your output should look like this
 
 [source,indent=4]
 ----
-This is an important file!!
-
-
+Filesystem                     1K-blocks    Used Available Use% Mounted on
+/dev/mapper/rhel-root_snapshot   8374272 1321268   7053004  16% /
 ----
+
+Let's find our data.
+
+.[root@node3]#
+----
+cat /root/importantfile
+
+grep importantuser /etc/passwd
+
+du -sh /usr/share/doc
+
+du -sh /usr/share/GeoIP
+
+man bash
+----
+
+Wahoo! Man pages are back!  It should be clear that the data removed earlier is still present within the snapshot volume.  Now it's time to recover the data.  
+
+NOTE: You can technically initiate the logical volume merge now, set the grub default back to the normal boot entry, and reboot as merging requires a unmount before anything happens and once it's initiated it can work in the background.  But, we are going to utilize the rescue image for extra fun!
 
 
 
@@ -317,7 +442,7 @@ WARNING: Bring up the virtual machine console for node3 before proceeding.
 
 We will now reboot node3 virtual machine again into rescue mode and return the host to it's previous state.
 
-[root@node3]
+.[root@node3]#
 ----
 cheat-boom-grublist.sh
 ----
@@ -333,33 +458,63 @@ You output should look like this.
 
 We want to reboot to recuse mode, so in this case we use '2'.
 
-[root@node3]
+.[root@node3]#
 ----
 grub2-set-default 2
 ----
 
 Let's go...
 
-[root@node3]
+.[root@node3]#
 ----
 reboot
 ----
 
 Once the host is back online, ssh to back to *node3.example.com*.
 
-[root@workstation]
+.[root@workstation]#
 ----
 ssh root@node3.example.com
 ----
 
-[root@node3]
+.[root@node3]#
+----
+df /
+
+cat  /proc/cmdline
+----
+
+The output shows that we are no longer mounted to the snapshot volume, and we ARE using the rescue kernel image.
+
+[source,indent=4]
+----
+Filesystem            1K-blocks    Used Available Use% Mounted on
+/dev/mapper/rhel-root   8374272 1230660   7143612  15% /
+
+.[root@node3 ~]# cat /proc/cmdline
+BOOT_IMAGE=(hd0,msdos1)/vmlinuz-0-rescue-e988045b45b04b11b84741d6a568861b root=/dev/mapper/rhel-root ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet
+----
+
+Time return the host back to it's previous state.
+
+.[root@node3]#
 ----
 lvconvert --merge /dev/rhel/root_snapshot
 ----
 
-Now set grub to boot default OS again.
+As pointed out earlier, the "merge" will being the next time the root volume is mounted.  This output merely confirms this.
 
-[root@node3]
+[source,indent=4]
+----
+Delaying merge since origin is open.
+Merging of snapshot rhel/root_snapshot will occur on next activation of rhel/root.
+----
+
+Last few steps and we will be done.
+
+Set grub to boot default OS again.
+
+.[root@node3]#
 ----
 cheat-boom-grublist.sh
 ----
@@ -375,26 +530,26 @@ You output should look like this.
 
 This time we want entry '1'.
 
-[root@node3]# 
+.[root@node3]# 
 ----
 grub2-set-default 1
 ----
 
-[root@node3]#
+.[root@node3]#
 ----
 reboot
-----clear
+----
 
 == Confirm System Restored
 
 We have now returned the host to it's previous state (ie: the moment we created the snapshot with boom). Let's make sure everything is where we expect.
 
-[root@workstation ~]#
+.[root@workstation ~]#
 ----
 ssh root@node3.example.com
 ----
 
-[root@node3]
+.[root@node3]#
 ----
 cat /root/importantfile
 
@@ -408,15 +563,75 @@ Your output should look like this
 This is an important file!!
 ----
 
+Last piece of information.  Since the "snapshot" was merged back into it's "origin", the snapshot itself is now gone.  You can confirm this by running "lvs" and noting that the root_snapshot is missing.
+
+.[root@node3]#
+----
+lvs
+----
+
+Thus our boom-boot entry points to a non-existant volume.  Here are the final commands to clean everything up.
+
+.[root@node3]#
+----
+boom entry list
+----
+
+[source,indent=4]
+----
+BootID  Version                  Name                     RootDevice
+85e739d 4.18.0-67.el8.x86_64     Red Hat Enterprise Linux /dev/rhel/root_snapshot
+----
+
+Make note of the BootID and use it in the next command.
+
+.[root@node3]#
+----
+boom entry delete 85e739d
+----
+
+Double check the grub configuration.
+
+.[root@node3]#
+----
+cheat-boom-grublist.sh
+----
+
+Your output should look like this.  Note that the snapshot entry has been removed.
+
+[source,indent=4]
+----
+0  title="Red Hat Enterprise Linux (4.18.0-67.el8.x86_64) 8.0 (Ootpa)"
+1  title="Red Hat Enterprise Linux (0-rescue-e988045b45b04b11b84741d6a568861b) 8.0 (Ootpa)"
+----
+
+Make sure grub is configre to boot the entry.
+
+.[root@node3]#
+----
+grub2-editenv list
+----
+
+[source,indent=4]
+----
+saved_entry=1
+kernelopts=root=/dev/mapper/rhel-root ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet
+boot_success=0
+----
+
+Whoops!  That's not right
+
+.[root@node3]#
+----
+grub2-set-default 0
+----
+
 Wahoo! You are done.  If you have any questions, please ask.
 
 == Additional Resources
 
-Red Hat Documentation
-
-    * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[Deplying Session Recording on Red Hat Enterprise Linux]
-
     * linkx:https://systemd.io/BOOT_LOADER_SPECIFICATION[Boot Loader Specification]
+
 [discrete]
 == End of Unit
 
