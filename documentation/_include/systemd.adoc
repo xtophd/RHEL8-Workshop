@@ -64,18 +64,21 @@ To streamline the boot process for something like a cloud image, we can easily l
 Note: Doing this would probably be a bad idea for a traditional production server where services like kernel crash dumps and logging may be important.
 
 
-= Core Concepts
-== Units
+== Core Concepts
+=== Units
+[indent=4]
 The fundamental building block that systemd manages is called a "unit".  A "unit" can describe different types of objects, but the most common type is a "service".  
 
 A "unit file" is the configuration file that describes a unit and tells systemd what dependencies exist and how to start, stop and monitor the object.
 
 "unit files" are stored in 2 different directories.  One location is reserved for the default configurations as shipped by Red Hat and the other is for customization by the local administrators.
 
+[source,indent=8]
 Red Hat unit files:    /usr/lib/systemd/system/...
-Customizations:    /etc/systemd/system/...
+Customizations:    etc/systemd/system/...
+----
 
-== Targets
+=== Targets
 systemd has a concept similar to SysV init runlevels, called targets.  systemd will boot to the “default target” which can be configured using the systemctl set-default command.  Some common targets and their equivalent SysV runlevels are:
 
 multi-user.target == runlevel 3
