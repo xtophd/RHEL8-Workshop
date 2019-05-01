@@ -655,7 +655,7 @@ podman exec -it web_example bash
 
 .bash-4.2$ 
 ----
-echo "Hello From My Container" > /usr/bin/tryme.txt
+echo "Hello From My Container" > /usr/sbin/tryme.txt
 ----
 
 You should see:
