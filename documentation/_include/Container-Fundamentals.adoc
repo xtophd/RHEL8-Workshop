@@ -650,7 +650,7 @@ Now you will start a shell that inherits the namespaces from 'web_example'.
 
 .[root@node3 ~]#
 ----
-podman exec -it python_web bash
+podman exec -it web_example bash
 ----
 
 .bash-4.2$ 
