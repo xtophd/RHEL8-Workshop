@@ -1,0 +1,3 @@
+FROM rhscl/httpd-24-rhel7
+
+ADD ./test.txt /var/www/html/
