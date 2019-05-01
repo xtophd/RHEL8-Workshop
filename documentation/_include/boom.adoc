@@ -154,9 +154,27 @@ Let us take a quick look at what we just did.
 lvs -a -o lv_name,lv_size,lv_attr,segtype,devices rhel/root_snapshot
 ----
 
+Your output should look like this.
+
+[source,indent=4]
+----
+LV            LSize  Attr       Type   Devices
+root_snapshot <8.03g swi-a-s--- linear /dev/vdb1(0)
+----
+
+Another look at the snapshot volume with some different options
+
 [root@node3]
 ----
 lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
+----
+
+In your output, note the percentage used in the new snapshot.
+
+[source,indent=4]
+----
+LV            LSize  Attr       Origin Snap%
+root_snapshot <8.03g swi-a-s--- root   0.01
 ----
 
 Since we have made no real changes to our system, the percentage of the "exception store" used is still very small.  Let's change that.
