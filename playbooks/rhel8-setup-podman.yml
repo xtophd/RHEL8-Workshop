@@ -25,7 +25,7 @@
         group: root
         mode: 0644
       with_items:
-        - {src: 'registries-conf.j2',           dest: '/etc/containers/registeries.conf'}
+        - {src: 'podman-registries.j2',           dest: '/etc/containers/registeries.conf'}
 
     - name: "TEMPLATE: cheat script installs"
       template:
