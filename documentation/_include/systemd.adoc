@@ -1,1 +1,297 @@
+:sectnums:
+:sectnumlevels: 3
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
 
+= Introduction to systemd
+
+Systemd is the "init" system for RHEL 8 (and 7 for that matter).  It replaces Upstart, the SysV "init" system used in prior releases of RHEL.  Systemd is more than just a facility to bring up user space, it is a system manager that offers:
+
+  * service parallelization
+  * socket and D-Bus activation
+  * on-demand starting of services
+  * track services and child processes via cgroups
+  * and much more
+
+
+== Getting Started
+
+Starting on the host *workstation.example.com*, let's ssh over to *node2.example.com*.  No password should be required.
+
+.[root@workstation]#
+----
+ssh node2.example.com
+----
+
+Now let's collect some initial data about the boot process
+
+.[root@node2]#
+----
+systemd-analyze
+----
+
+[source,indent=4]
+----
+Startup finished in 3.783s (kernel) + 6.526s (initrd) + 14.723s (userspace) = 25.033s
+multi-user.target reached after 10.540s in userspace
+----
+
+.[root@node2]#
+----
+systemd-analyze blame
+----
+
+[source,indent=4]
+----
+          4.205s kdump.service
+          3.308s firewalld.service
+          3.108s dnf-makecache.service
+          2.991s NetworkManager-wait-online.service
+          2.182s dracut-initqueue.service
+          1.562s sssd.service
+          ...<output truncated>...
+----
+
+
+Next we need to enable the `stratisd` service
+
+.[root@node2]#
+----
+systemctl enable --now stratisd
+----
+
+Finally check the service status.
+
+.[root@node2]#
+----
+systemctl status stratisd
+----
+
+Your output should look like this.
+
+[source,indent=4]
+----
+● stratisd.service - A daemon that manages a pool of block devices to create flexible file systems
+   Loaded: loaded (/usr/lib/systemd/system/stratisd.service; enabled; vendor preset: enabled)
+   Active: active (running) since Sat 2019-04-27 18:41:52 EDT; 10s ago
+ 	Docs: man:stratisd(8)
+ Main PID: 9562 (stratisd)
+	Tasks: 1 (limit: 24006)
+   Memory: 940.0K
+   CGroup: /system.slice/stratisd.service
+       	└─9562 /usr/libexec/stratisd --debug
+
+Apr 27 18:41:52 node2.example.com systemd[1]: Started A daemon that manages a pool of block devices to create flexible file systems.
+----
+
+== Create Storage Pool
+
+WARNING: /dev/vda is the system disk, DO NOT use it in any of the stratis commands or the vm will become unusable.
+
+Next, see what disks/block devices are present, create a pool, create a filesystem in the pool, and mount the filesystem.
+
+.[root@node2]#
+----
+sfdisk -s
+----
+
+[source,indent=4]
+----
+/dev/vda:  10485760 // <1>
+/dev/vdb:   5242880
+/dev/vdc:   5242880
+/dev/mapper/rhel-root:   8384512
+/dev/mapper/rhel-swap:   1048576
+/dev/sdd:   5242880
+/dev/sdc:   5242880
+/dev/sda:   5242880
+/dev/sdb:   5242880
+total: 51376128 blocks
+----
+<1> REMEMBER - DON'T USE VDA!!!
+
+.[root@node2]#
+----
+stratis pool create summitpool /dev/vdb /dev/vdc
+----
+
+.[root@node2]#
+----
+stratis pool list
+----
+
+[source,indent=4]
+----
+Name      	Total Physical Size  Total Physical Used
+summitpool                 10 GiB               56 MiB
+----
+
+Check the status of the block devices
+
+.[root@node2]#
+----
+stratis blockdev list
+----
+
+[source,indent=4]
+----
+Pool Name   Device Node     Physical Size   State  Tier
+summitpool  /dev/vdb                5 GiB  In-use  Data
+summitpool  /dev/vdc                5 GiB  In-use  Data
+----
+
+== Create Filesystem
+
+Now create a filesystem, a directory mount point, and mount the filesystem:
+(note that “fs” can optionally be written out as “filesystem”)
+
+.[root@node2]#
+----
+stratis fs create summitpool summitfs
+----
+
+.[root@node2]#
+----
+stratis fs
+----
+
+[source,indent=4]
+----
+Pool Name   Name      Used      Device                        UUID                         	 
+summitpool  summitfs  546 MiB   /stratis/summitpool/summitfs  9d92786138bb4fd6867c45610dcebd1f
+----
+
+.[root@node2]#
+----
+mkdir /summitdir
+mount /stratis/summitpool/summitfs /summitdir
+df -h
+----
+
+[source,indent=4]
+----
+Filesystem                                Size  Used Avail Use% Mounted on
+devtmpfs                                  1.9G     0  1.9G   0% /dev
+tmpfs                                     1.9G     0  1.9G   0% /dev/shm
+tmpfs                                     1.9G  8.5M  1.9G   1% /run
+tmpfs                                     1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/mapper/rhel-root                     8.0G  1.3G  6.8G  16% /
+/dev/vda1                                1014M  163M  852M  17% /boot
+tmpfs                                     379M     0  379M   0% /run/user/1000
+/dev/mapper/stratis-1f68[truncated]ed1f   1.0T  7.2G 1017G   1% /summitdir
+----
+
+Now make sure the filesystem will mount at boot time by adding the following line to the end of the /etc/fstab file:
+
+	UUID=<the-uuid-unique-to-the-new-filesystem>  /summitdir  xfs  defaults  0  0
+
+If you are comfortable with an editor, you can type it in or cut and paste using the UUID from the output of “stratis fs”.   If not, you can use a cheat-script we prepared for you.
+
+[source,indent=4]
+----
+UUID=<the-uuid-unique-to-the-new-filesystem>  /summitdir  xfs  defaults  0  0
+----
+
+.[root@node2]#
+----
+cheat-stratis-fstab.sh
+----
+
+[NOTE]
+====
+_Native command(s) to amend /etc/fstab_
+----
+UUID=`lsblk -n -o uuid /stratis/summitpool/summitfs`
+echo "UUID=${UUID} /summitdir xfs defaults 0 0" >> /etc/fstab
+----
+====
+
+Very that the /etc/fstab entry is correct by unmounting and mounting the filesytem one last time
+
+.[root@node2]#
+----
+umount /summitdir
+mount /summitdir
+df -h
+----
+
+== Add Cache Device
+
+Stratis also makes it easy to add cache devices.  For example, say the filesystem we just created runs into some I/O performance issues.  You bought an SSD (solid state disk) and need to configure it into the system to act as a high speed cache.  Use the following commands to add the drive (/dev/sda) and check its status:
+
+
+.[root@node2]#
+----
+stratis pool add-cache summitpool  /dev/sda
+----
+
+
+.[root@node2]#
+----
+stratis blockdev
+----
+
+[source,indent=4]
+----
+Pool Name	Device Node    Physical Size   State   Tier
+summitpool   /dev/sda                5 GiB  In-use  Cache
+summitpool   /dev/vdb                5 GiB  In-use   Data
+summitpool   /dev/vdc                5 GiB  In-use   Data
+----
+
+== Grow Storage Pool
+
+Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summitfs” filesystem is growing close to the physical space in “summitpool”, adding an additional disk/block device is done using:
+
+.[root@node2]#
+----
+stratis pool add-data summitpool /dev/sdb
+----
+
+
+.[root@node2]#
+----
+stratis blockdev
+----
+
+[source,indent=4]
+----
+Pool Name    Device Node    Physical Size   State   Tier
+summitpool   /dev/sda               5 GiB  In-use  Cache
+summitpool   /dev/sdb               5 GiB  In-use   Data
+summitpool   /dev/vdb               5 GiB  In-use   Data
+summitpool   /dev/vdc               5 GiB  In-use   Data
+----
+
+Verify that the pool shows the additional space, and that the amount used is now in a safe range
+
+.[root@node2]#
+----
+stratis pool
+----
+
+[source,indent=4]
+----
+Name          Total Physical Size   Total Physical Used
+summitpool                 15 GiB               606 MiB
+----
+
+== Additional Resources
+
+Red Hat Documentation
+
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/configuring_and_managing_file_systems/managing-layered-local-storage-with-stratis_configuring-and-managing-file-systems[Managing Layered Local Storage with Stratis]
+
+[discrete]
+== End of Unit
+
+link:../RHEL8-Workshop.adoc#toc[Return to TOC]
+
+////
+Always end files with a blank line to avoid include problems.
+////
