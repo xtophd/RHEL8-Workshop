@@ -18,11 +18,11 @@ In this unit, we will get familiar with Containers and the podman/buildah CLI.
 [discrete]
 == Additional Reference Materials
 
-kabbott NOTE: Should update here...may want to highlight the Universal Base Image work that McCarty has done as well....
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
 
-    * link:https://developers.redhat.com/blog/2018/02/22/container-terminology-practical-introduction/[A Practical Introduction to Container Terminology - Scott McCarty]
+    * link:https://developers.redhat.com/blog/2019/04/25/podman-basics-cheat-sheet/[Podman Basics Cheat Sheet - Doug Tidwell]
+    * link:https://developers.redhat.com/blog/2018/11/20/buildah-podman-containers-without-daemons/[Containers without daemons: Podman and Buildah available in RHEL 7.6 and RHEL 8 Beta - Tom Sweeney]
 
 
 == Connect to Host
