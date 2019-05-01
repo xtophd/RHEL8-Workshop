@@ -58,8 +58,7 @@ systemd-analyze blame
           1.562s sssd.service
           ...<output truncated>...
 ----
-
-To streamline the boot process for something like a cloud image, we can easily learn the “cost” of some of the default services.  Using standard disk partitions (not LVM) and disabling services like postfix, kdump, and rsyslog will easily get the boot process to complete in under two seconds.
+This command prints a list of all running units, ordered by the time they took to initialize.  To streamline the boot process for something like a cloud image, this helps to learn the “cost” of some of the default services.  Using standard disk partitions (not LVM) and disabling services like postfix, kdump, and rsyslog will easily get the boot process to complete in under two seconds.
 
 Note: Doing this would probably be a bad idea for a traditional production server where services like kernel crash dumps and logging may be important.
 
