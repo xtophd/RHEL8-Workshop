@@ -40,7 +40,7 @@ Now you are ready to begin your exercises with containers.
 
 === Container Info
 
-Now have a look at the general docker information.
+Now have a look at the general container information.
 
 .[root@node3 ~]#
 ----
@@ -116,12 +116,12 @@ registry.redhat.io/ubi7/ubi           latest   c096c0dc7247   2 weeks ago   214 
 
 ==== How to Pull Images
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
 podman pull rhel7.5 --creds 'username:password'
 ----
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
 podman pull rhel6 --creds 'username:password'
 ----
@@ -152,7 +152,7 @@ podman rmi rhel6
 
 *podman pull* - pulls (copies) container image from repository (ie: redhat and/or docker hub)
 
-*podman run* - run a docker container
+*podman run* - run a container
 
 *podman logs* - display logs of a container (can be used with --follow)
 
@@ -613,7 +613,7 @@ Just pointing out that that there is now a service hanging on port 8080 proxying
 
 Now let us see if the simple web server is working.
 
-.[root@docker ~]#
+.[root@node3 ~]#
 ----
 curl localhost:8080/test.txt
 ----
