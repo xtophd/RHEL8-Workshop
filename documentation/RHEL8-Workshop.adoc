@@ -122,14 +122,14 @@ image::ocp-webui-hello1-project-create.png[Create Project]
 == RHEL 8 LAB: EXERCISES
 
 [#toc]
-  . link:{includedir}/getting-started.adoc[Getting Started]
-  . link:{includedir}/appstream-yum.adoc[(NEW) App Stream - Applications Delivery]
-  . link:{includedir}/tlog.adoc[TLog - (NEW) Session Logging]
-  . link:{includedir}/nftables.adoc[NFTables - (NEW) Firewall Subsystem]
-  . link:{includedir}/cockpit.adoc[Cockpit - System Management]
-  . link:{includedir}/stratis.adoc[Stratis - (NEW) Storage Management]
-  . link:{includedir}/podman.adoc[Podman - (NEW) Container Management]
-  . link:{includedir}/boom.adoc[BOOM - (NEW) Boot Management]
+  . link:{includedir}/getting-started.adoc[*Getting Started*]
+  . link:{includedir}/appstream-yum.adoc[*App Stream* - (NEW) Applications Delivery]
+  . link:{includedir}/tlog.adoc[*TLog* - (NEW) Session Logging]
+  . link:{includedir}/nftables.adoc[*NFTables* - (NEW) Firewall Subsystem]
+  . link:{includedir}/cockpit.adoc[*Cockpit* - System Management]
+  . link:{includedir}/stratis.adoc[*Stratis* - (NEW) Storage Management]
+  . link:{includedir}/podman.adoc[*Podman* - (NEW) Container Management]
+  . link:{includedir}/boom.adoc[*BOOM* - (NEW) Boot Management]
 
 
 ////  
