@@ -9,7 +9,17 @@
       yum: name=docker-distribution,docker state=installed
       
     - name: "SETUP PODMAN: service start docker-distribution"
-      service: name=docker-distribution state=started enabled=yes
+      service: name=docker-distribution,docker state=started enabled=yes
+
+    - name: "TEMPLATE: config file installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - {src: 'podman-registries.j2',           dest: '/etc/containers/registries.conf'}
 
 - hosts: node3.example.com
   tasks:
