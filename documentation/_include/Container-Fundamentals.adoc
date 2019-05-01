@@ -111,7 +111,7 @@ podman images
 .Your output should look like this
 [source,indent=4]
 ----
-registry.redhat.io/rhel7   latest   5044f6040ea5   2 weeks ago   214 MB
+registry.redhat.io/ubi7/ubi           latest   c096c0dc7247   2 weeks ago   214 MB
 ----
 
 ==== How to Pull Images
@@ -172,7 +172,7 @@ podman rmi rhel6
 
 .[root@node3 ~]#
 ----
-podman run rhel7 echo "hello world"
+podman run ubi echo "hello world"
 ----
 
 .Your output should look like this
@@ -208,7 +208,7 @@ Now let us run the exact same command again.
 
 .[root@node3 ~]#
 ----
-podman run rhel7 echo "hello world"
+podman run ubi echo "hello world"
 ----
 
 .Your output should look like this
@@ -288,9 +288,9 @@ podman ps -a
 .Your output should look like this
 [source,indent=4]
 ----
-CONTAINER ID  IMAGE                            COMMAND           CREATED        STATUS                    PORTS  NAMES
-ccf81a8232e9  registry.redhat.io/rhel7:latest  echo hello world  2 minutes ago  Exited (0) 2 minutes ago         epic_golick
-ce7b462b58af  registry.redhat.io/rhel7:latest  echo hello world  3 minutes ago  Exited (0) 3 minutes ago         competent_leavitt
+CONTAINER ID  IMAGE                               COMMAND           CREATED        STATUS                    PORTS  NAMES
+285c795b06d0  registry.redhat.io/ubi7/ubi:latest  echo hello world  4 seconds ago  Exited (0) 4 seconds ago         modest_galileo
+e9239f0e54ae  registry.redhat.io/ubi7/ubi:latest  echo hello world  5 seconds ago  Exited (0) 5 seconds ago         inspiring_babbage
 ----
 
 Using the container UIDs from the above output, you can now clean up the 'exited' containers.
@@ -313,13 +313,13 @@ podman ps -a
 
 .[root@node3 ~]#
 ----
-podman run rhel7 cat /proc/sys/kernel/hostname
+podman run ubi cat /proc/sys/kernel/hostname
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-a28142f3eae0
+af5a60ee39b2
 ----
 
 So what we have learned here is that the hostname in the container's namespace is NOT the same as the host platform (node3.example.com).  It is unique and is by default identical to the container's ID.  You can verify this with 'podman ps -a'.
@@ -333,7 +333,7 @@ podman ps -a
 [source,indent=4]
 ----
 CONTAINER ID  IMAGE                            COMMAND               CREATED         STATUS                     PORTS  NAMES
-a28142f3eae0  registry.redhat.io/rhel7:latest  cat /proc/sys/ker...  48 seconds ago  Exited (0) 47 seconds ago         romantic_swanson
+af5a60ee39b2  registry.redhat.io/ubi7/ubi:latest  cat /proc/sys/ker...  30 seconds ago      Exited (0) 29 seconds ago             inspiring_clarke
 ----
 
 
@@ -341,7 +341,7 @@ a28142f3eae0  registry.redhat.io/rhel7:latest  cat /proc/sys/ker...  48 seconds 
 
 .[root@node3 ~]#
 ----
-podman run rhel7 ps -ef
+podman run ubi ps -ef
 ----
 
 .Your output should look like this
@@ -357,7 +357,7 @@ Now let us run a command to report the network configuration from within the a c
 
 .[root@node3 ~]#
 ----
-podman run rhel7 ip addr show eth0
+podman run ubi ip addr show eth0
 ----
 
 .Your output should look like this
@@ -377,7 +377,7 @@ NOTE: Using bind mounts is generally suitable for debugging, but not a good prac
 
 .[root@noede3 ~]#
 ----
-podman run -v /usr/sbin:/usr/sbin -v /usr/lib64:/usr/lib64 --rm rhel7 /usr/sbin/ip addr show eth0
+podman run -v /usr/sbin:/usr/sbin -v /usr/lib64:/usr/lib64 --rm ubi /usr/sbin/ip addr show eth0
 ----
 
 .Your output should look like this
@@ -397,7 +397,7 @@ Let us begin by examining the '/etc/hosts' file.
 
 .[root@node3 ~]#
 ----
-podman run --rm rhel7 cat /etc/hosts
+podman run --rm ubi cat /etc/hosts
 ----
 
 .Your output should look like this
@@ -412,7 +412,7 @@ How does the container resolve hostnames (ie: DNS)?
 
 .[root@node3 ~]#
 ----
-podman run --rm rhel7 cat /etc/resolv.conf
+podman run --rm ubi cat /etc/resolv.conf
 ----
 
 .Your output should look like this
@@ -427,7 +427,7 @@ Pay attention now, the route command is in '/usr/bin'.  Take a look at the routi
 
 .[root@node3 ~]#
 ----
-podman run -v /usr/sbin:/usr/sbin --rm rhel7 route -n
+podman run -v /usr/sbin:/usr/sbin --rm ubi route -n
 ----
 
 .Your output should look like this
@@ -444,7 +444,7 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 
 .[root@node3 ~]#
 ----
-podman run rhel7 df -h
+podman run ubi df -h
 ----
 
 .Your output should look like this
@@ -465,7 +465,7 @@ You were introduced to Bind-Mounts in the previous section.  Let us examine what
 
 .[root@node3 ~]#
 ----
-podman run -v /usr/bin:/usr/bin rhel7 df -h
+podman run -v /usr/bin:/usr/bin ubi df -h
 ----
 
 .Your output should look like this
@@ -494,14 +494,6 @@ podman kill $(podman ps -q)
 
 podman rm $(podman ps -a -q)
 ----
-
-=== User -- Is this whole section even relevant in podman/buildah world?
-
-By default, the docker daemon runs applications with root privileges.  As you will see later, this creates an enormous security risk.  You can however configure docker to enable a user namespaces mapping option which allows you to run applications with root privilege inside a container, but have them run as a different non-privileged user on the host.  At this time only a single UID and GID can be mapped per daemon.
-
-User Namespaces and container security are covered more thoroughly in the Openshift parts of this workshop.
-
-NOTE: For more information on configuring the docker daemon with User Namespaces please see link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html-single/getting_started_with_containers/index[Getting Started With Containers]
 
 == Your First Containerized Application
 
