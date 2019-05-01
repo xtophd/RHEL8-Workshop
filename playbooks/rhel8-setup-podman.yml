@@ -5,7 +5,7 @@
 - hosts: core.example.com
   tasks:
   
-    - name: "SETUP PODMAN: yum install docker-distribution"
+    - name: "SETUP PODMAN: yum install docker,docker-distribution"
       yum: name=docker-distribution,docker state=installed
       
     - name: "SETUP PODMAN: service start docker-distribution"
