@@ -123,12 +123,13 @@ image::ocp-webui-hello1-project-create.png[Create Project]
 
 [#toc]
   . link:{includedir}/getting-started.adoc[Getting Started]
-  . link:{includedir}/appstream-yum.adoc[Application Streams]
-  . link:{includedir}/tlog.adoc[TLog - Session Logging]
-  . link:{includedir}/nftables.adoc[NFTables - The New Firewall]
+  . link:{includedir}/appstream-yum.adoc[(NEW) App Stream - Applications Delivery]
+  . link:{includedir}/tlog.adoc[TLog - (NEW) Session Logging]
+  . link:{includedir}/nftables.adoc[NFTables - (NEW) Firewall Subsystem]
   . link:{includedir}/cockpit.adoc[Cockpit - System Management]
-  . link:{includedir}/stratis.adoc[Stratis - Storage Management]
-  . link:{includedir}/boom.adoc[BOOM - Boot Management]
+  . link:{includedir}/stratis.adoc[Stratis - (NEW) Storage Management]
+  . link:{includedir}/podman.adoc[Podman - (NEW) Container Management]
+  . link:{includedir}/boom.adoc[BOOM - (NEW) Boot Management]
 
 
 ////  
@@ -139,6 +140,7 @@ include::{includedir}/tlog.adoc[leveloffset=+1]
 include::{includedir}/nftables.adoc[leveloffset=+1]
 include::{includedir}/cockpit.adoc[leveloffset=+1]
 include::{includedir}/stratis.adoc[leveloffset=+1]
+include::{includedir}/podman.adoc[leveloffset=+1]
 include::{includedir}/boom.adoc[leveloffset=+1]
 
 ////
