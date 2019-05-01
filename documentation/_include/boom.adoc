@@ -51,7 +51,7 @@ In order to support LVM snapshots on the root volume, we need to:
   
   The following command will take care of all of these steps for you.  The individual steps are also outlined below.
 
-[root@node3]
+[root@node3]#
 ----
 cheat-boom-addstorage.sh
 ----
@@ -107,7 +107,7 @@ Extending volume group 'rhel' with /dev/vdb1
 
 The next set of instructions will create a file and a userID that we will remove and recover as part of this exercise:
 
-[root@node3]
+[root@node3]#
 ----
 cheat-boom-importantstuff.sh
 ----
@@ -141,7 +141,7 @@ importantuser:x:1001:1001::/home/importantuser:/bin/bash
 
 Now that we have created some important data, it's time to create a snapshot of our system.
 
-[root@node3]
+[root@node3]#
 ----
 echo "Creating logical volume to back root LV snapshop"
 lvcreate -s rhel/root -n root_snapshot -L 10G
@@ -149,7 +149,7 @@ lvcreate -s rhel/root -n root_snapshot -L 10G
 
 Let us take a quick look at what we just did.
 
-[root@node3]
+[root@node3]#
 ----
 lvs -a -o lv_name,lv_size,lv_attr,segtype,devices rhel/root_snapshot
 ----
@@ -164,7 +164,7 @@ root_snapshot <8.03g swi-a-s--- linear /dev/vdb1(0)
 
 Another look at the snapshot volume with some different options
 
-[root@node3]
+[root@node3]#
 ----
 lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
 ----
@@ -183,7 +183,7 @@ Since we have made no real changes to our system, the percentage of the "excepti
 
 Now we are going to remove the “importantfile” file and “importantuser” userID.
 
-[root@node3]
+[root@node3]#
 ----
 rm -f /root/importantfile 
 userdel importantuser
@@ -191,7 +191,7 @@ userdel importantuser
 
 What the heck, let's anti up and delete some more stuff.  Who needs documentation anyway!
 
-[root@node3]
+[root@node3]#
 ----
 rm -rf /usr/share/man
 rm -rf /usr/share/doc
@@ -200,7 +200,7 @@ rm -rf /usr/share/GeoIP
 
 Confirm that our changes were effective
 
-[root@node3]
+[root@node3]#
 ----
 cat /root/importantfile
 
@@ -220,7 +220,7 @@ cat: /root/importantfile: No such file or directory
 
 Analyze the snapshot data and we see that there is now a measurable difference.
 
-[root@node3]
+[root@node3]#
 ----
 lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
 ----
@@ -244,7 +244,7 @@ Time to boot our host using the snapshot volue, inspect the host to verify our d
 
 Create a boom profile.
 
-[root@node3]
+[root@node3]#
 ----
 boom profile create --from-host --uname-pattern el8
 ----
@@ -266,7 +266,7 @@ Created profile with os_id e6f881a:
 
 Verify that the boom profile was created by the previous command.
 
-[root@node3]
+[root@node3]#
 ----
 boom profile list
 ----
@@ -281,7 +281,7 @@ e6f881a Red Hat Enterprise Linux 8.0 (Ootpa)
 
 Take a snapshot of your root logical volume as a backup
 
-[root@node3]
+[root@node3]#
 ----
 boom create --title "root LV snapshot" --rootlv rhel/root_snapshot
 ----
@@ -304,7 +304,7 @@ Created entry with boot_id 85e739d:
 
 Take a look at currently configured boom-boot entries.
 
-[root@node3]
+[root@node3]#
 ----
 boom entry list
 ----
@@ -319,7 +319,7 @@ BootID  Version                  Name                     RootDevice
 
 Show details about our boom-boot entry.
 
-[root@node3]
+[root@node3]#
 ----
 boom entry show 85e739d
 ----
@@ -349,7 +349,7 @@ Before reboot, there are 2 options to invoke the right loader at restart:
   
 We are going to opt for preselect since it's just easier.  Use the following cheat to inspect the currently configured GRUB menu options.
 
-[root@node3]
+[root@node3]#
 ----
 cheat-boom-grublist.sh
 ----
@@ -365,14 +365,14 @@ You output should look like this.
 
 We want to reboot to our snapshot, so in this case we use '0'.
 
-[root@node3]
+[root@node3]#
 ----
 grub2-set-default 0
 ----
 
 Verify that the parameters stuck
 
-[root@node3]
+[root@node3]#
 ----
 grub2-editenv list
 ----
@@ -388,7 +388,7 @@ boot_success=0
 
 We will now reset our host and boot the snapshot Logical Volume.
 
-[root@node3]
+[root@node3]#
 ----
 reboot
 ----
@@ -397,12 +397,12 @@ reboot
 
 Once the host is back online, ssh to back to *node3.example.com* and verify that the “importantfile” and “importantuser” exist in the backup snapshot:
 
-[root@workstation]
+[root@workstation]#
 ----
 ssh root@node3.example.com
 ----
 
-[root@node3]
+[root@node3]#
 ----
 df /
 ----
@@ -417,7 +417,7 @@ Filesystem                     1K-blocks    Used Available Use% Mounted on
 
 Let's find our data.
 
-[root@node3]
+[root@node3]#
 ----
 cat /root/importantfile
 
@@ -442,7 +442,7 @@ WARNING: Bring up the virtual machine console for node3 before proceeding.
 
 We will now reboot node3 virtual machine again into rescue mode and return the host to it's previous state.
 
-[root@node3]
+[root@node3]#
 ----
 cheat-boom-grublist.sh
 ----
@@ -458,26 +458,26 @@ You output should look like this.
 
 We want to reboot to recuse mode, so in this case we use '2'.
 
-[root@node3]
+[root@node3]#
 ----
 grub2-set-default 2
 ----
 
 Let's go...
 
-[root@node3]
+[root@node3]#
 ----
 reboot
 ----
 
 Once the host is back online, ssh to back to *node3.example.com*.
 
-[root@workstation]
+[root@workstation]#
 ----
 ssh root@node3.example.com
 ----
 
-[root@node3]
+[root@node3]#
 ----
 df /
 
@@ -497,7 +497,7 @@ BOOT_IMAGE=(hd0,msdos1)/vmlinuz-0-rescue-e988045b45b04b11b84741d6a568861b root=/
 
 Time return the host back to it's previous state.
 
-[root@node3]
+[root@node3]#
 ----
 lvconvert --merge /dev/rhel/root_snapshot
 ----
@@ -514,7 +514,7 @@ Last few steps and we will be done.
 
 Set grub to boot default OS again.
 
-[root@node3]
+[root@node3]#
 ----
 cheat-boom-grublist.sh
 ----
@@ -549,7 +549,7 @@ We have now returned the host to it's previous state (ie: the moment we created 
 ssh root@node3.example.com
 ----
 
-[root@node3]
+[root@node3]#
 ----
 cat /root/importantfile
 
@@ -565,14 +565,14 @@ This is an important file!!
 
 Last piece of information.  Since the "snapshot" was merged back into it's "origin", the snapshot itself is now gone.  You can confirm this by running "lvs" and noting that the root_snapshot is missing.
 
-[root@node3]
+[root@node3]#
 ----
 lvs
 ----
 
 Thus our boom-boot entry points to a non-existant volume.  Here are the final commands to clean everything up.
 
-[root@node3]
+[root@node3]#
 ----
 boom entry list
 ----
@@ -585,14 +585,14 @@ BootID  Version                  Name                     RootDevice
 
 Make note of the BootID and use it in the next command.
 
-[root@node3]
+[root@node3]#
 ----
 boom entry delete 85e739d
 ----
 
 Double check the grub configuration.
 
-[root@node3]
+[root@node3]#
 ----
 cheat-boom-grublist.sh
 ----
@@ -607,7 +607,7 @@ Your output should look like this.  Note that the snapshot entry has been remove
 
 Make sure grub is configre to boot the entry.
 
-[root@node3]
+[root@node3]#
 ----
 grub2-editenv list
 ----
@@ -621,7 +621,7 @@ boot_success=0
 
 Whoops!  That's not right
 
-[root@node3]
+[root@node3]#
 ----
 grub2-set-default 0
 ----
