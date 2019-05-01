@@ -35,6 +35,8 @@ Now let's collect some initial data about the boot process
 systemd-analyze
 ----
 
+Your output will look something like this
+
 [source,indent=4]
 ----
 Startup finished in 3.783s (kernel) + 6.526s (initrd) + 14.723s (userspace) = 25.033s
@@ -57,7 +59,36 @@ systemd-analyze blame
           ...<output truncated>...
 ----
 
+To streamline the boot process for something like a cloud image, we can easily learn the “cost” of some of the default services.  Using standard disk partitions (not LVM) and disabling services like postfix, kdump, and rsyslog will easily get the boot process to complete in under two seconds.
 
+Note: Doing this would probably be a bad idea for a traditional production server where services like kernel crash dumps and logging may be important.
+
+
+= Core Concepts
+== Units
+The fundamental building block that systemd manages is called a "unit".  A "unit" can describe different types of objects, but the most common type is a "service".  
+
+A "unit file" is the configuration file that describes a unit and tells systemd what dependencies exist and how to start, stop and monitor the object.
+
+"unit files" are stored in 2 different directories.  One location is reserved for the default configurations as shipped by Red Hat and the other is for customization by the local administrators.
+
+Red Hat unit files:    /usr/lib/systemd/system/...
+Customizations:    /etc/systemd/system/...
+
+== Targets
+systemd has a concept similar to SysV init runlevels, called targets.  systemd will boot to the “default target” which can be configured using the systemctl set-default command.  Some common targets and their equivalent SysV runlevels are:
+
+multi-user.target == runlevel 3
+graphical.target == runlevel 5
+
+
+Let's view the current default target.
+
+# systemctl get-default
+graphical.target
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Next we need to enable the `stratisd` service
 
 .[root@node2]#
