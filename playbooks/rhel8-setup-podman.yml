@@ -6,7 +6,7 @@
   tasks:
   
     - name: "SETUP PODMAN: yum install docker-distribution"
-      yum: name=docker-distribution state=installed
+      yum: name=docker-distribution,docker state=installed
       
     - name: "SETUP PODMAN: service start docker-distribution"
       service: name=docker-distribution state=started enabled=yes
