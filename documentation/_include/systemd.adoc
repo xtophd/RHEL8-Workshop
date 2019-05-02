@@ -129,231 +129,105 @@ chronyd.service                             enabled
 The state will  be enabled, disabled, static, or masked.  Static indicates that the unit file does not contain an "install" section used to enable the unit.  In this case, the unit typically performs a one-off action or is used as a dependency of another unit and should not be run by itself.
 
 
-
-
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Next we need to enable the `stratisd` service
-
-.[root@node2]#
-----
-systemctl enable --now stratisd
-----
-
-Finally check the service status.
+== Examples
+=== Installing a LAMP stack
+[indent=4]
+Now that we have a good idea of what’s installed on our system, let’s get a basic lamp stack up and running. 
 
 .[root@node2]#
 ----
-systemctl status stratisd
+yum install -y httpd mariadb-server mariadb 
+
+systemctl enable --now httpd mariadb
 ----
 
-Your output should look like this.
+NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services.
 
 [source,indent=4]
 ----
-● stratisd.service - A daemon that manages a pool of block devices to create flexible file systems
-   Loaded: loaded (/usr/lib/systemd/system/stratisd.service; enabled; vendor preset: enabled)
-   Active: active (running) since Sat 2019-04-27 18:41:52 EDT; 10s ago
- 	Docs: man:stratisd(8)
- Main PID: 9562 (stratisd)
-	Tasks: 1 (limit: 24006)
-   Memory: 940.0K
-   CGroup: /system.slice/stratisd.service
-       	└─9562 /usr/libexec/stratisd --debug
+Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
+Created symlink /etc/systemd/system/mysql.service → /usr/lib/systemd/system/mariadb.service.
+Created symlink /etc/systemd/system/mysqld.service → /usr/lib/systemd/system/mariadb.service.
+Created symlink /etc/systemd/system/multi-user.target.wants/mariadb.service → /usr/lib/systemd/system/mariadb.service.
 
-Apr 27 18:41:52 node2.example.com systemd[1]: Started A daemon that manages a pool of block devices to create flexible file systems.
-----
-
-== Create Storage Pool
-
-WARNING: /dev/vda is the system disk, DO NOT use it in any of the stratis commands or the vm will become unusable.
-
-Next, see what disks/block devices are present, create a pool, create a filesystem in the pool, and mount the filesystem.
+Now let's check the status.  You should see two separate sections in the output, one for httpd and one for mariadb.
 
 .[root@node2]#
 ----
-sfdisk -s
-----
+systemctl status httpd mariadb
 
 [source,indent=4]
 ----
-/dev/vda:  10485760 // <1>
-/dev/vdb:   5242880
-/dev/vdc:   5242880
-/dev/mapper/rhel-root:   8384512
-/dev/mapper/rhel-swap:   1048576
-/dev/sdd:   5242880
-/dev/sdc:   5242880
-/dev/sda:   5242880
-/dev/sdb:   5242880
-total: 51376128 blocks
-----
-<1> REMEMBER - DON'T USE VDA!!!
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
+   Active: active (running) since Wed 2019-05-01 21:37:54 EDT; 12s ago
+     Docs: man:httpd.service(8)
+ Main PID: 5135 (httpd)
+   Status: "Running, listening on: port 80"
+    Tasks: 213 (limit: 24007)
+   Memory: 26.5M
+   CGroup: /system.slice/httpd.service
+           ├─5135 /usr/sbin/httpd -DFOREGROUND
+           ├─5163 /usr/sbin/httpd -DFOREGROUND
+        ...<output truncated>...
+
+=== Customizing Unit Files
+[indent=4]
+systemd controls more than daemons or services. For this lab, we will primarily be working with service units but it's important to know that systemd is handling the dependencies between other types: sockets, timers, mounts, swap, slices, etc.
+Unit files that ship with the RHEL are stored under /usr/lib/systemd/system. 
+
+Custom unit files, changes or extensions are stored under /etc/systemd/system 
+(or /run/systemd/system for runtime changes that won't persist).
+
+While the defaults for unit files won’t need to be altered most of the time, there will be circumstances where changing the defaults is quite beneficial. These could include hardware or software watchdog monitoring, tunings, resource management, or many other reasons.
+
+Create a drop-in configuration file to extend the default httpd.service unit
 
 .[root@node2]#
 ----
-stratis pool create summitpool /dev/vdb /dev/vdc
+mkdir /etc/systemd/system/httpd.service.d 
+cd /etc/systemd/system/httpd.service.d 
+vi 50-httpd.conf
 ----
+Add the following to the 50-httpd.conf file
 
-.[root@node2]#
-----
-stratis pool list
-----
+
+NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services.
 
 [source,indent=4]
 ----
-Name      	Total Physical Size  Total Physical Used
-summitpool                 10 GiB               56 MiB
-----
+[Service]
+Restart=always
+OOMScoreAdjust=-1000
 
-Check the status of the block devices
+Save the config file, exit the editor, and notify systemd of the changes:
 
 .[root@node2]#
 ----
-stratis blockdev list
-----
+systemctl daemon-reload
+systemctl status httpd
 
 [source,indent=4]
 ----
-Pool Name   Device Node     Physical Size   State  Tier
-summitpool  /dev/vdb                5 GiB  In-use  Data
-summitpool  /dev/vdc                5 GiB  In-use  Data
-----
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
+  Drop-In: /etc/systemd/system/httpd.service.d
+           └─50-httpd.conf
+   Active: active (running) since Wed 2019-05-01 21:37:54 EDT; 11min ago
+     Docs: man:httpd.service(8)
+ Main PID: 5135 (httpd)
+   Status: "Running, listening on: port 80"
+    Tasks: 213 (limit: 24007)
+   Memory: 26.5M
+   CGroup: /system.slice/httpd.service
+           ├─5135 /usr/sbin/httpd -DFOREGROUND
+           ├─5163 /usr/sbin/httpd -DFOREGROUND
 
-== Create Filesystem
+Notice that systemctl status displays that the unit has been extended with a drop-in file.
 
-Now create a filesystem, a directory mount point, and mount the filesystem:
-(note that “fs” can optionally be written out as “filesystem”)
+OOMScoreAdjust is use by the Out Of Memory killer and is an  integer between -1000 (to disable OOM killing for this process) and 1000 (to make killing of this process under memory pressure very likely).  
 
-.[root@node2]#
-----
-stratis fs create summitpool summitfs
-----
-
-.[root@node2]#
-----
-stratis fs
-----
-
-[source,indent=4]
-----
-Pool Name   Name      Used      Device                        UUID                         	 
-summitpool  summitfs  546 MiB   /stratis/summitpool/summitfs  9d92786138bb4fd6867c45610dcebd1f
-----
-
-.[root@node2]#
-----
-mkdir /summitdir
-mount /stratis/summitpool/summitfs /summitdir
-df -h
-----
-
-[source,indent=4]
-----
-Filesystem                                Size  Used Avail Use% Mounted on
-devtmpfs                                  1.9G     0  1.9G   0% /dev
-tmpfs                                     1.9G     0  1.9G   0% /dev/shm
-tmpfs                                     1.9G  8.5M  1.9G   1% /run
-tmpfs                                     1.9G     0  1.9G   0% /sys/fs/cgroup
-/dev/mapper/rhel-root                     8.0G  1.3G  6.8G  16% /
-/dev/vda1                                1014M  163M  852M  17% /boot
-tmpfs                                     379M     0  379M   0% /run/user/1000
-/dev/mapper/stratis-1f68[truncated]ed1f   1.0T  7.2G 1017G   1% /summitdir
-----
-
-Now make sure the filesystem will mount at boot time by adding the following line to the end of the /etc/fstab file:
-
-	UUID=<the-uuid-unique-to-the-new-filesystem>  /summitdir  xfs  defaults  0  0
-
-If you are comfortable with an editor, you can type it in or cut and paste using the UUID from the output of “stratis fs”.   If not, you can use a cheat-script we prepared for you.
-
-[source,indent=4]
-----
-UUID=<the-uuid-unique-to-the-new-filesystem>  /summitdir  xfs  defaults  0  0
-----
-
-.[root@node2]#
-----
-cheat-stratis-fstab.sh
-----
-
-[NOTE]
-====
-_Native command(s) to amend /etc/fstab_
-----
-UUID=`lsblk -n -o uuid /stratis/summitpool/summitfs`
-echo "UUID=${UUID} /summitdir xfs defaults 0 0" >> /etc/fstab
-----
-====
-
-Very that the /etc/fstab entry is correct by unmounting and mounting the filesytem one last time
-
-.[root@node2]#
-----
-umount /summitdir
-mount /summitdir
-df -h
-----
-
-== Add Cache Device
-
-Stratis also makes it easy to add cache devices.  For example, say the filesystem we just created runs into some I/O performance issues.  You bought an SSD (solid state disk) and need to configure it into the system to act as a high speed cache.  Use the following commands to add the drive (/dev/sda) and check its status:
-
-
-.[root@node2]#
-----
-stratis pool add-cache summitpool  /dev/sda
-----
-
-
-.[root@node2]#
-----
-stratis blockdev
-----
-
-[source,indent=4]
-----
-Pool Name	Device Node    Physical Size   State   Tier
-summitpool   /dev/sda                5 GiB  In-use  Cache
-summitpool   /dev/vdb                5 GiB  In-use   Data
-summitpool   /dev/vdc                5 GiB  In-use   Data
-----
-
-== Grow Storage Pool
-
-Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summitfs” filesystem is growing close to the physical space in “summitpool”, adding an additional disk/block device is done using:
-
-.[root@node2]#
-----
-stratis pool add-data summitpool /dev/sdb
-----
-
-
-.[root@node2]#
-----
-stratis blockdev
-----
-
-[source,indent=4]
-----
-Pool Name    Device Node    Physical Size   State   Tier
-summitpool   /dev/sda               5 GiB  In-use  Cache
-summitpool   /dev/sdb               5 GiB  In-use   Data
-summitpool   /dev/vdb               5 GiB  In-use   Data
-summitpool   /dev/vdc               5 GiB  In-use   Data
-----
-
-Verify that the pool shows the additional space, and that the amount used is now in a safe range
-
-.[root@node2]#
-----
-stratis pool
-----
-
-[source,indent=4]
-----
-Name          Total Physical Size   Total Physical Used
-summitpool                 15 GiB               606 MiB
-----
+Using what you learned in the last step, extend the mariadb.service unit with Restart=always. Verify that systemd recognizes the settings and test the policy using killall mysqld
 
 == Additional Resources
 
