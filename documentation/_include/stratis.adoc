@@ -39,6 +39,7 @@ Next we need to enable the `stratisd` service
 ----
 systemctl enable --now stratisd
 ----
+NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
 
 Finally check the service status.
 
@@ -47,10 +48,9 @@ Finally check the service status.
 systemctl status stratisd
 ----
 
-Your output should look like this.
+Your output should look like this.  (You can press "q" or CTRL+C to exit the status output)
 
 [source,indent=4]
-----
 ● stratisd.service - A daemon that manages a pool of block devices to create flexible file systems
    Loaded: loaded (/usr/lib/systemd/system/stratisd.service; enabled; vendor preset: enabled)
    Active: active (running) since Sat 2019-04-27 18:41:52 EDT; 10s ago
@@ -62,7 +62,7 @@ Your output should look like this.
        	└─9562 /usr/libexec/stratisd --debug
 
 Apr 27 18:41:52 node2.example.com systemd[1]: Started A daemon that manages a pool of block devices to create flexible file systems.
-----
+
 
 == Create Storage Pool
 
