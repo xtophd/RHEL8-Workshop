@@ -23,6 +23,7 @@ ssh node1.example.com
 
 Describe the expected output if necessary
 
+.Command Output
 [source,indent=4]
 ----
 Output from previous command
