@@ -571,8 +571,6 @@ podman rm $(podman ps -a -q)
 
 .[root@node3 ~]#
 ----
-podman pull rhscl/httpd-24-rhel7 --creds 'username:password'
-
 mkdir -p /var/www/html
 
 echo "Server up and running" > /var/www/html/test.txt
