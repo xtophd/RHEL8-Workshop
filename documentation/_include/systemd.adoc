@@ -155,9 +155,8 @@ Now let's check the status.  You should see two separate sections in the output,
 .[root@node1]#
 ----
 systemctl status httpd mariadb
-
-[source,indent=4]
 ----
+[source,indent=4]
 ● httpd.service - The Apache HTTP Server
    Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
    Active: active (running) since Wed 2019-05-01 21:37:54 EDT; 12s ago
@@ -183,7 +182,7 @@ While the defaults for unit files won’t need to be altered most of the time, t
 
 Create a drop-in configuration file to extend the default httpd.service unit
 
-.[root@node2]#
+.[root@node1]#
 ----
 mkdir /etc/systemd/system/httpd.service.d 
 cd /etc/systemd/system/httpd.service.d 
