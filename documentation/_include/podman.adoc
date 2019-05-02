@@ -181,7 +181,7 @@ localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago    21
 core.example.com:5000/rhel7.5          latest   7b875638cfd8   7 months ago   211 MB
 ----
 
-Notice host the image-id for "ubi" and "myforvite" are identical.
+Notice host the image-id for "ubi" and "myfavorite" are identical.
 
 Later you will create a custom image based on an official Red Hat Enterprise Linux container image.
 
