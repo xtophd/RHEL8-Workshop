@@ -1,0 +1,17 @@
+---
+
+## FIREWALLD SETUP
+
+- hosts: node1.example.com
+  tasks:
+  
+    - name: "SETUP FIREWALLD: cheat script installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0744
+      with_items:
+        - {src: 'cheat-checkhost.j2',           dest: '/usr/local/bin/cheat-firewalld-checkhost.sh'}
+
