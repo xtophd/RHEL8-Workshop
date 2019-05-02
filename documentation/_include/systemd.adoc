@@ -86,6 +86,7 @@ Let's view the current default target.
 
 .[root@node2]#
 ----
+
 [source,indent=8]
 # systemctl get-default
 multi-user.target
@@ -104,8 +105,9 @@ auditd.service                     loaded active running Security Auditing Servi
 chronyd.service                    loaded active running NTP client/server               
 crond.service                      loaded active running Command Scheduler               
 dbus.service                       loaded active running D-Bus System Message Bus        
-dracut-shutdown.service            loaded active exited  Restore /run/initramfs on shutdo>
-firewalld.service                  loaded active running firewalld - dynamic firewall dae
+dracut-shutdown.service            loaded active exited  Restore /run/initramfs on s
+firewalld.service                  loaded active running firewalld - dynamic firewal
+...<output truncated>...
 
 
 
