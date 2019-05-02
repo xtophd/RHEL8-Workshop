@@ -32,6 +32,7 @@ su - student
 
 Notice the "ATTENTION" banner during your login.  Your session is being recorded!
 
+.Your output should look like this
 [source,indent=4]
 ----
 # ---------------
@@ -68,8 +69,7 @@ Session logs are configured to record in the system journal by default.  A disti
 journalctl -o verbose  --output-fields=TLOG_USER,TLOG_REC TLOG_USER=student
 ----
 
-You should see something similar to this.
-
+.You output should look like this
 [source,indent=4]
 ----
 Sat 2019-04-27 21:21:27.852913 EDT [s=bcde42e4c96048c3908657177414e202;i=700;b=b2333248c22a4c5f912a>
@@ -120,6 +120,8 @@ yum install tlog cockpit-session-recording
 ----
 
 Here is what the config file looks like _/etc/sssd/conf.d/sssd-session-recording.conf_
+
+.Configuration file /etc/sssd/conf.d/sssd-session-recording.conf
 [source,indent=4]
 ----
 # This file deployed by Ansible playbook
