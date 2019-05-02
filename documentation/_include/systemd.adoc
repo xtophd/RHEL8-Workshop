@@ -193,6 +193,7 @@ Add the following to the 50-httpd.conf file
 [Service]
 Restart=always
 OOMScoreAdjust=-1000
+----
 
 Save the config file, exit the editor, and notify systemd of the changes:
 
