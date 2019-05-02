@@ -38,10 +38,9 @@ systemd-analyze
 Your output will look something like this
 
 [source,indent=4]
-----
 Startup finished in 3.783s (kernel) + 6.526s (initrd) + 14.723s (userspace) = 25.033s
 multi-user.target reached after 10.540s in userspace
-----
+
 
 .[root@node1]#
 ----
@@ -49,15 +48,15 @@ systemd-analyze blame
 ----
 
 [source,indent=4]
-----
-          4.205s kdump.service
-          3.308s firewalld.service
-          3.108s dnf-makecache.service
-          2.991s NetworkManager-wait-online.service
-          2.182s dracut-initqueue.service
-          1.562s sssd.service
+         12.975s dracut-initqueue.service
+         11.865s kdump.service
+         10.524s initrd-switch-root.service
+         10.423s firewalld.service
+         10.297s NetworkManager-wait-online.service
+          9.801s unbound-anchor.service
+          7.320s sssd.service
           ...<output truncated>...
-----
+
 This command prints a list of all running units, ordered by the time they took to initialize.  To streamline the boot process for something like a cloud image, this helps to learn the “cost” of some of the default services.  Unnecessary services could potentially be removed or disabled to speed boot time.
 
 
