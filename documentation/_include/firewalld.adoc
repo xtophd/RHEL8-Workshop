@@ -36,6 +36,18 @@ ssh node1.example.com
 
 Firewalld is already installed and running on RHEL 8. These steps will restore firewalld if it has been disabled. The below steps are not necessary to run in this lab 
 
+[NOTE]
+====
+_Native command(s) to enable firewalld_
+----
+systemctl stop nftables
+systemctl disable nftables
+yum install firewalld
+systemctl enable --now firewalld 
+systemctl status -l firewalld 
+----
+====
+
 .[root@node1]#
 ----
 systemctl stop nftables nf6tables
