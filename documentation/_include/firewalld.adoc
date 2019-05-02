@@ -34,6 +34,15 @@ Starting on the host *workstation.example.com*, let's ssh over to *node2.example
 ssh node1.example.com
 ----
 
+Verify that you are on the right host for these exercises.
+
+[root@node3]#
+cheat-firewalld-checkhost.sh
+
+Now you are ready to begin
+
+== Installation
+
 Firewalld is already installed and running on you host. These steps provided here will restore firewalld if it has been disabled. It is NOT necessary to run these commands in this lab.
 
 [NOTE]
@@ -48,7 +57,7 @@ systemctl status -l firewalld
 ----
 ====
 
-== Configuration Files
+== Configuration
 
 Firewalld uses several different, completely adaptable, XML config files to store configurations. These files also ensure run-time and persistent configuration separation. The default configuration files are in */usr/lib/firewalld*, while user customized files (which take precedence if they exist) are in */etc/firewalld*. 
 
