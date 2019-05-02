@@ -139,9 +139,6 @@ Now that we have a good idea of what’s installed on our system, let’s get a 
 yum install -y httpd mariadb-server mariadb 
 systemctl enable --now httpd mariadb
 ----
-
-NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
-
 [source,indent=4]
 ----
 Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
@@ -149,9 +146,7 @@ Created symlink /etc/systemd/system/mysql.service → /usr/lib/systemd/system/ma
 Created symlink /etc/systemd/system/mysqld.service → /usr/lib/systemd/system/mariadb.service.
 Created symlink /etc/systemd/system/multi-user.target.wants/mariadb.service → /usr/lib/systemd/system/mariadb.service.
 
-
 Now let's check the status.  You should see two separate sections in the output, one for httpd and one for mariadb.
-
 
 .[root@node1]#
 ----
