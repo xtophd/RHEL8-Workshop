@@ -141,7 +141,20 @@ Pull a few more container images.
 ----
 podman pull core.example.com:5000/rhel7.5
 
-podman pull core.example.com:5000/http-24-rhel7
+podman pull core.example.com:5000/httpd-24-rhel7
+----
+
+.[root@node3 ~]#
+----
+podman images
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   12 days ago    323 MB
+core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago    214 MB
+core.example.com:5000/rhel7.5          latest   7b875638cfd8   7 months ago   211 MB
 ----
 
 ==== Container Tags
@@ -151,9 +164,24 @@ contain, esspecialy after an image has been customized.
 
 .[root@node3 ~]#
 ----
-podman tag core.example.com:5000/ubi ubi
+podman tag core.example.com:5000/ubi myfavorite
 ----
 
+.[root@node3 ~]#
+----
+podman images
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   12 days ago    323 MB
+core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago    214 MB
+localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago    214 MB
+core.example.com:5000/rhel7.5          latest   7b875638cfd8   7 months ago   211 MB
+----
+
+Notice host the image-id for "ubi" and "myforvite" are identical.
 
 Later you will create a custom image based on an official Red Hat Enterprise Linux container image.
 
@@ -168,7 +196,20 @@ podman images
 
 .[root@node3 ~]#
 ----
-podman rmi rhel6
+podman rmi rhel7.5
+----
+
+.[root@node3 ~]#
+----
+podman images
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   12 days ago    323 MB
+core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago    214 MB
+localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago    214 MB
 ----
 
 === Essential Container Commands
