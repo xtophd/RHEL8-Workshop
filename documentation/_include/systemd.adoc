@@ -93,10 +93,21 @@ multi-user.target
 === Services
 As mentioned above, systemd has another concept called a service.  A service is a type of unit which defines the traditional daemon or process.  Now let us look at what services are running on the system.
 
-[source,indent=8]
-multi-user.target == runlevel 3
-graphical.target == runlevel 5
+.[root@node2]#
 ----
+# systemctl -t service
+----
+[source,indent=8]
+UNIT                               LOAD   ACTIVE SUB     DESCRIPTION                     
+auditd.service                     loaded active running Security Auditing Service       
+chronyd.service                    loaded active running NTP client/server               
+crond.service                      loaded active running Command Scheduler               
+dbus.service                       loaded active running D-Bus System Message Bus        
+dracut-shutdown.service            loaded active exited  Restore /run/initramfs on shutdo>
+firewalld.service                  loaded active running firewalld - dynamic firewall dae
+----
+
+
 
 Let's view the current default target.
 
