@@ -27,8 +27,10 @@ ssh node3.example.com
 
 Verify that you are on the right host for these exercises.
 
-[root@node3]#
+.[root@node3]#
+----
 cheat-boom-checkhost.sh
+----
 
 Now you are ready to begin
 
