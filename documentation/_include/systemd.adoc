@@ -201,6 +201,7 @@ Save the config file, exit the editor, and notify systemd of the changes:
 ----
 systemctl daemon-reload
 systemctl status httpd
+----
 
 [source,indent=4]
 ----
@@ -217,6 +218,7 @@ systemctl status httpd
    CGroup: /system.slice/httpd.service
            ├─5135 /usr/sbin/httpd -DFOREGROUND
            ├─5163 /usr/sbin/httpd -DFOREGROUND
+----
 
 Notice that systemctl status displays that the unit has been extended with a drop-in file.
 
