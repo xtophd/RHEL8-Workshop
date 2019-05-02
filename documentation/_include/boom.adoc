@@ -352,8 +352,7 @@ We are going to opt for preselect since it's just easier.  Use the following che
 cheat-boom-grublist.sh
 ----
 
-You output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 0  title="root LV snapshot"
@@ -375,8 +374,9 @@ Verify that the parameters stuck
 grub2-editenv list
 ----
 
-You output should look like this.  Notice that "saved_entry=0", that's what we want.
+Notice that "saved_entry=0", that's what we want.
 
+.Command Output
 [source,indent=4]
 ----
 saved_entry=0
@@ -405,8 +405,7 @@ ssh root@node3.example.com
 df /
 ----
 
-Your output should look like this
-
+.Command Output
 [source,indent=4]
 ----
 Filesystem                     1K-blocks    Used Available Use% Mounted on
@@ -432,8 +431,6 @@ Wahoo! Man pages are back!  It should be clear that the data removed earlier is 
 
 NOTE: You can technically initiate the logical volume merge now, set the grub default back to the normal boot entry, and reboot as merging requires a unmount before anything happens and once it's initiated it can work in the background.  But, we are going to utilize the rescue image for extra fun!
 
-
-
 == Return Host to Previous State
 
 WARNING: Bring up the virtual machine console for node3 before proceeding.  
@@ -445,8 +442,7 @@ We will now reboot node3 virtual machine again into rescue mode and return the h
 cheat-boom-grublist.sh
 ----
 
-You output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 0  title="root LV snapshot"
@@ -484,6 +480,7 @@ cat  /proc/cmdline
 
 The output shows that we are no longer mounted to the snapshot volume, and we ARE using the rescue kernel image.
 
+.Command Output
 [source,indent=4]
 ----
 Filesystem            1K-blocks    Used Available Use% Mounted on
@@ -502,6 +499,7 @@ lvconvert --merge /dev/rhel/root_snapshot
 
 As pointed out earlier, the "merge" will being the next time the root volume is mounted.  This output merely confirms this.
 
+.Command Output
 [source,indent=4]
 ----
 Delaying merge since origin is open.
@@ -517,8 +515,7 @@ Set grub to boot default OS again.
 cheat-boom-grublist.sh
 ----
 
-You output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 0  title="root LV snapshot"
@@ -554,8 +551,7 @@ cat /root/importantfile
 grep importantuser /etc/passwd
 ----
 
-Your output should look like this
-
+.Command Output
 [source,indent=4]
 ----
 This is an important file!!
@@ -575,6 +571,7 @@ Thus our boom-boot entry points to a non-existant volume.  Here are the final co
 boom entry list
 ----
 
+.Command Output
 [source,indent=4]
 ----
 BootID  Version                  Name                     RootDevice
@@ -595,8 +592,9 @@ Double check the grub configuration.
 cheat-boom-grublist.sh
 ----
 
-Your output should look like this.  Note that the snapshot entry has been removed.
+Note that the snapshot entry has been removed.
 
+.Command Output
 [source,indent=4]
 ----
 0  title="Red Hat Enterprise Linux (4.18.0-67.el8.x86_64) 8.0 (Ootpa)"
@@ -610,6 +608,7 @@ Make sure grub is configre to boot the entry.
 grub2-editenv list
 ----
 
+.Command Output
 [source,indent=4]
 ----
 saved_entry=1
