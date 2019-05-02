@@ -51,6 +51,7 @@ firewall-cmd —reload
 On host *workstation.example.com*, use the console GUI to start a web browser.
 
 Then browse to URL: `https://node2.example.com:9090`
+Login userID: <root>  Password: <root pw>
 
 ====
 image::cockpit-image13.png[Cockpit Login]
