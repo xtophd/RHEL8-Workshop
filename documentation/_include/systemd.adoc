@@ -86,9 +86,9 @@ Let's view the current default target.
 
 .[root@node2]#
 ----
-
-[source,indent=8]
 # systemctl get-default
+----
+[source,indent=8]
 multi-user.target
 ----
 
@@ -108,7 +108,7 @@ dbus.service                       loaded active running D-Bus System Message Bu
 dracut-shutdown.service            loaded active exited  Restore /run/initramfs on s
 firewalld.service                  loaded active running firewalld - dynamic firewal
 ...<output truncated>...
-
+----
 
 
 
