@@ -72,8 +72,7 @@ vgextend rhel /dev/vdb1
 ----
 ====
 
-You output should look list this.
-
+.Command Output
 [source, indent=4]
 ----
 Clearing /dev/vdb
@@ -130,8 +129,7 @@ grep importantuser /etc/passwd
 ----
 ====
 
-Your output should look like this
-
+.Command Output
 [source,indent=4]
 ----
 Contents of 'importantfile':
@@ -158,8 +156,7 @@ Let us take a quick look at what we just did.
 lvs -a -o lv_name,lv_size,lv_attr,segtype,devices rhel/root_snapshot
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 LV            LSize  Attr       Type   Devices
@@ -175,6 +172,7 @@ lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
 
 In your output, note the percentage used in the new snapshot.
 
+.Command Output
 [source,indent=4]
 ----
 LV            LSize  Attr       Origin Snap%
@@ -213,8 +211,7 @@ grep -c importantuser /etc/passwd
 
 NOTE: "grep -c" counts how many time the token is matched.  In our case it should be zero
 
-Your output should look like this
-
+.Command Output
 [source,indent=4]
 ----
 cat: /root/importantfile: No such file or directory
@@ -229,6 +226,7 @@ Analyze the snapshot data and we see that there is now a measurable difference.
 lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
 ----
 
+.Command Output
 [source,indent=4]
 ----
   LV            LSize  Attr       Origin Snap%
@@ -253,8 +251,7 @@ Create a boom profile.
 boom profile create --from-host --uname-pattern el8
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 Created profile with os_id e6f881a:
@@ -275,23 +272,21 @@ Verify that the boom profile was created by the previous command.
 boom profile list
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 OsID    Name                     OsVersion
 e6f881a Red Hat Enterprise Linux 8.0 (Ootpa)
 ----
 
-Take a snapshot of your root logical volume as a backup
+Now to create a boot entry for grub which utilizes the snapshot as the boot volume.
 
 .[root@node3]#
 ----
 boom create --title "root LV snapshot" --rootlv rhel/root_snapshot
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 WARNING - Boom grub2 script missing from '/etc/grub.d'
@@ -328,8 +323,7 @@ Show details about our boom-boot entry.
 boom entry show 85e739d
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 Boot Entry (boot_id=85e739d)
