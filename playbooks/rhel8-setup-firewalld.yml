@@ -5,6 +5,12 @@
 - hosts: node1.example.com
   tasks:
   
+    - name: "SETUP FIREWALLD: yum install firewalld"
+      yum: name=firewalld state=installed
+      
+    - name: "SETUP FIREWALLD: service start firewalld"
+      service: name=firewalld state=started enabled=yes
+      
     - name: "SETUP FIREWALLD: cheat script installs"
       template:
         src: "{{ item.src }}"
