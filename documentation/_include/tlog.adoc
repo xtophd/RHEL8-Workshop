@@ -121,7 +121,6 @@ yum install tlog cockpit-session-recording
 
 Here is what the config file looks like _/etc/sssd/conf.d/sssd-session-recording.conf_
 
-.Configuration file /etc/sssd/conf.d/sssd-session-recording.conf
 [source,indent=4]
 ----
 # This file deployed by Ansible playbook
