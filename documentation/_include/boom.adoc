@@ -16,23 +16,29 @@ BOOM does not modify the existing boot loader configuration, and *only inserts* 
 
 BOOM also has a simple command-line interface (CLI) and API.
 
+== Getting Started
+
 == Installation and Setup
 
-The following set of instructions will install Boom.
+== Getting Started
 
-Starting as user *root* on the host *workstation.example.com*, let’s ssh over to *node3.example.com*. No password should be required.
+Starting on the host *workstation.example.com*, let's ssh over to *node3.example.com*.  No password should be required.
 
 .[root@workstation]#
 ----
-ssh node3.example.com
+ssh node1.example.com
 ----
 
 Verify that you are on the right host for these exercises.
 
-.[root@node3]#
-----
+[root@node3]#
 cheat-boom-checkhost.sh
-----
+
+Now you are ready to begin
+
+== Installation
+
+The following set of instructions will install Boom.
 
 .[root@node3]# 
 ----
