@@ -124,23 +124,23 @@ image::ocp-webui-hello1-project-create.png[Create Project]
 [#toc]
   . link:{includedir}/getting-started.adoc[*Getting Started*]
   . link:{includedir}/systemd.adoc[*SystemD* - (UPDATED) System Service Management]
-    ** node2
+    *** node2
   . link:{includedir}/systemd.adoc[*FirewallD* - (UPDATED) Firewall Service Management]
-    ** node2
+    *** node2
   . link:{includedir}/nftables.adoc[*NFTables* - (NEW) Firewall Subsystem]
-    ** node1
+    *** node1
   . link:{includedir}/cockpit.adoc[*Cockpit* - (UPDATED) System Management]
-    ** workstation, node2
+    *** workstation, node2
   . link:{includedir}/appstream-yum.adoc[*App Stream* - (NEW) Application Delivery]
-    ** node1, node2, node3
+    *** node1, node2, node3
   . link:{includedir}/podman.adoc[*Podman* - (NEW) Container Management]
-    ** node3
+    *** node3
   . link:{includedir}/tlog.adoc[*TLog* - (NEW) Session Logging]
-    ** node1
+    *** node1
   . link:{includedir}/stratis.adoc[*Stratis* - (NEW) Storage Management]
-    ** node2
+    *** node2
   . link:{includedir}/boom.adoc[*BOOM* - (NEW) Boot Management]
-    ** node3
+    *** node3
 
 
 ////  
