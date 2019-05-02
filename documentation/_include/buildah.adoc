@@ -81,6 +81,8 @@ COPY ./test.txt /var/www/html/
 
 So that's nice that we can do that with buildah, but let's look at the following example. Go ahead and mount the root filesystem of your container with:
 
+.[root@node3 ~]#
+
 [source]
 ----
 buildah mount httpd-24-rhel7-working-container
@@ -94,6 +96,8 @@ You should see output similar to:
 ----
 
 Do the following (using the path returned by buildah for the cd command):
+
+.[root@node3 ~]#
 
 [source]
 ----
@@ -127,9 +131,11 @@ Seriously, stop disabling SELinux. Learn how to use it before you blindly shut i
 
 Once you have written that, you should be able to run:
 
+.[root@node3 merged]#
+
 [source]
 ----
-[root@node3 merged]# ls -lahZ var/www/html/
+ls -lahZ var/www/html/
 ----
 
 and see:
@@ -145,6 +151,8 @@ drwxr-xr-x. 1 importantuser root unconfined_u:object_r:container_share_t:s0  18 
 
 When you are done making direct changes to the root filesystem of your container, you can run:
 
+.[root@node3 merged]#
+
 [source]
 ----
 cd /root
@@ -159,6 +167,8 @@ e918debcaabb5820997b1a4969fbd45284adc0a2869d1f22a1bce78f703ff3c6
 ----
 
 Now at this point, we've used buildah to run commands similar to those in an OCIFile and to directly modify the root filesystem of the container. Let's go ahead and commit the working container to an actual container:
+
+.[root@node3 ~]#
 
 [source]
 ----
@@ -185,6 +195,8 @@ b5ab9d4956263d63096dfab9581db3cf537a01907f010a7d9f95058902fcc48d
 
 Let's look at our images:
 
+.[root@node3 ~]#
+
 [source]
 ----
 podman images
@@ -204,12 +216,16 @@ localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago      
 
 Now let's run that webserver:
 
+.[root@node3 ~]#
+
 [source]
 ----
 podman run -d -p 8080:8080 website2
 ----
 
 Now let's test our new webserver:
+
+.[root@node3 ~]#
 
 [source]
 ----
@@ -232,6 +248,8 @@ t off.
 ----
 
 and:
+
+.[root@node3 ~]#
 
 [source]
 ----
