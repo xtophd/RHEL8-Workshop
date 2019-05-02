@@ -38,6 +38,8 @@
         - {src: 'cheat-checkhost.j2',           dest: '/usr/local/bin/cheat-podman-checkhost.sh'}
 
 #
+# Convert to ANSIBLE COMMAND TO load container repo on core.example.com
+#
 # for IMAGENAME in rhel7.5 httpd-24-rhel7 ubi ; do
 #
 #   IMAGEID=`wget -O -  http://core.example.com/containers/${IMAGENAME}.tar | podman load | grep "Loaded image" | cut -f2 -d@`
