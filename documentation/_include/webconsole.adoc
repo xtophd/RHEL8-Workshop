@@ -11,7 +11,7 @@ endif::[]
 
 = Web Console
 
-Cockpit is a Red Hat Enterprise Linux 8 web-based interface designed for managing and monitoring your local system, as well as Linux servers located in your network environment.
+Web Console is a Red Hat Enterprise Linux 8 web-based interface designed for managing and monitoring your local system, as well as Linux servers located in your network environment.
 
   * Managing services
   * Managing user accounts
@@ -25,7 +25,7 @@ Cockpit is a Red Hat Enterprise Linux 8 web-based interface designed for managin
   * Updating software
   * Managing system subscriptions
 
-The following exercises will walk you through installing and configuring cockpit on RHEL 8. 
+The following exercises will walk you through installing and configuring Web Console on RHEL 8. 
 
 == Installation and Configuraiton
 
@@ -36,7 +36,7 @@ Starting on the host workstation.example.com, let’s ssh over to *node2.example
 ssh node2.example.com
 ----
 
-Here are the steps to install and enable cockpit.  These are provided as reference only as they were executed during the ansible play of rhel8-workshop-prep.
+Here are the steps to install and enable Web Console.  These are provided as reference only as they were executed during the ansible play of rhel8-workshop-prep.
 
 .[root@node2]#
 ----
@@ -68,7 +68,7 @@ image::cockpit-image7.png[Cockpit Dashboard]
 
 == Enable Persistent Metrics
 
-To enable persistent metrics, cockpit requires “Performance Co-pilot (pcp)” and cockpit pcp plugin. Follow the screenshots to install and enable persistent metrics.
+To enable persistent metrics, Web Console requires “Performance Co-pilot (pcp)” and cockpit pcp plugin. Follow the screenshots to install and enable persistent metrics.
 
 ====
 image::cockpit-image14.png[Cockpit Persistence 1]
@@ -133,13 +133,13 @@ image::cockpit-image11.png[Cockpit Firewall 5]
 
 == Service Management
 
-Cockpit also allows you to start/stop, restart, enable/disable a service on your RHEL 8 server:
+Web Console also allows you to start/stop, restart, enable/disable a service on your RHEL 8 server:
 
 ====
 image::cockpit-image17.png[Cockpit Service 5]
 ====
 
-This concludes a short exercise with Cockpit. Feel free to click through and explore other sections:
+This concludes a short exercise with Web Console. Feel free to click through and explore other sections:
 Under ‘accounts’ section, you can manage user accounts on your RHEL 8 server
 Diagnostic Reports allows you to create sosreport for Red Hat support
 Under ‘Kernel Dump’, you can enable/disable kdump
