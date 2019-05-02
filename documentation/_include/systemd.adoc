@@ -230,7 +230,7 @@ Using what you learned in the last step, extend the mariadb.service unit with Re
 
 Red Hat Documentation
 
-    * link:None[Put in systemd link]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/chap-managing_services_with_systemd[Managing Services with Systemd]
 
 [discrete]
 == End of Unit

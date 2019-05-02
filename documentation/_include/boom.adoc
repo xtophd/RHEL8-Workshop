@@ -16,11 +16,9 @@ BOOM does not modify the existing boot loader configuration, and *only inserts* 
 
 BOOM also has a simple command-line interface (CLI) and API.
 
-== Installation and Setup
+== Getting Started
 
-The following set of instructions will install Boom.
-
-Starting as user *root* on the host *workstation.example.com*, let’s ssh over to *node3.example.com*. No password should be required.
+Starting on the host *workstation.example.com*, let's ssh over to *node3.example.com*.  No password should be required.
 
 .[root@workstation]#
 ----
@@ -33,6 +31,12 @@ Verify that you are on the right host for these exercises.
 ----
 cheat-boom-checkhost.sh
 ----
+
+Now you are ready to begin
+
+== Installation
+
+The following set of instructions will install Boom.
 
 .[root@node3]# 
 ----
@@ -68,8 +72,7 @@ vgextend rhel /dev/vdb1
 ----
 ====
 
-You output should look list this.
-
+.Command Output
 [source, indent=4]
 ----
 Clearing /dev/vdb
@@ -126,8 +129,7 @@ grep importantuser /etc/passwd
 ----
 ====
 
-Your output should look like this
-
+.Command Output
 [source,indent=4]
 ----
 Contents of 'importantfile':
@@ -154,8 +156,7 @@ Let us take a quick look at what we just did.
 lvs -a -o lv_name,lv_size,lv_attr,segtype,devices rhel/root_snapshot
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 LV            LSize  Attr       Type   Devices
@@ -171,6 +172,7 @@ lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
 
 In your output, note the percentage used in the new snapshot.
 
+.Command Output
 [source,indent=4]
 ----
 LV            LSize  Attr       Origin Snap%
@@ -209,8 +211,7 @@ grep -c importantuser /etc/passwd
 
 NOTE: "grep -c" counts how many time the token is matched.  In our case it should be zero
 
-Your output should look like this
-
+.Command Output
 [source,indent=4]
 ----
 cat: /root/importantfile: No such file or directory
@@ -225,6 +226,7 @@ Analyze the snapshot data and we see that there is now a measurable difference.
 lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
 ----
 
+.Command Output
 [source,indent=4]
 ----
   LV            LSize  Attr       Origin Snap%
@@ -249,8 +251,7 @@ Create a boom profile.
 boom profile create --from-host --uname-pattern el8
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 Created profile with os_id e6f881a:
@@ -271,23 +272,21 @@ Verify that the boom profile was created by the previous command.
 boom profile list
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 OsID    Name                     OsVersion
 e6f881a Red Hat Enterprise Linux 8.0 (Ootpa)
 ----
 
-Take a snapshot of your root logical volume as a backup
+Now to create a boot entry for grub which utilizes the snapshot as the boot volume.
 
 .[root@node3]#
 ----
 boom create --title "root LV snapshot" --rootlv rhel/root_snapshot
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 WARNING - Boom grub2 script missing from '/etc/grub.d'
@@ -324,8 +323,7 @@ Show details about our boom-boot entry.
 boom entry show 85e739d
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 Boot Entry (boot_id=85e739d)
@@ -354,8 +352,7 @@ We are going to opt for preselect since it's just easier.  Use the following che
 cheat-boom-grublist.sh
 ----
 
-You output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 0  title="root LV snapshot"
@@ -377,8 +374,9 @@ Verify that the parameters stuck
 grub2-editenv list
 ----
 
-You output should look like this.  Notice that "saved_entry=0", that's what we want.
+Notice that "saved_entry=0", that's what we want.
 
+.Command Output
 [source,indent=4]
 ----
 saved_entry=0
@@ -407,8 +405,7 @@ ssh root@node3.example.com
 df /
 ----
 
-Your output should look like this
-
+.Command Output
 [source,indent=4]
 ----
 Filesystem                     1K-blocks    Used Available Use% Mounted on
@@ -434,8 +431,6 @@ Wahoo! Man pages are back!  It should be clear that the data removed earlier is 
 
 NOTE: You can technically initiate the logical volume merge now, set the grub default back to the normal boot entry, and reboot as merging requires a unmount before anything happens and once it's initiated it can work in the background.  But, we are going to utilize the rescue image for extra fun!
 
-
-
 == Return Host to Previous State
 
 WARNING: Bring up the virtual machine console for node3 before proceeding.  
@@ -447,8 +442,7 @@ We will now reboot node3 virtual machine again into rescue mode and return the h
 cheat-boom-grublist.sh
 ----
 
-You output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 0  title="root LV snapshot"
@@ -486,6 +480,7 @@ cat  /proc/cmdline
 
 The output shows that we are no longer mounted to the snapshot volume, and we ARE using the rescue kernel image.
 
+.Command Output
 [source,indent=4]
 ----
 Filesystem            1K-blocks    Used Available Use% Mounted on
@@ -504,6 +499,7 @@ lvconvert --merge /dev/rhel/root_snapshot
 
 As pointed out earlier, the "merge" will being the next time the root volume is mounted.  This output merely confirms this.
 
+.Command Output
 [source,indent=4]
 ----
 Delaying merge since origin is open.
@@ -519,8 +515,7 @@ Set grub to boot default OS again.
 cheat-boom-grublist.sh
 ----
 
-You output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 0  title="root LV snapshot"
@@ -556,8 +551,7 @@ cat /root/importantfile
 grep importantuser /etc/passwd
 ----
 
-Your output should look like this
-
+.Command Output
 [source,indent=4]
 ----
 This is an important file!!
@@ -577,6 +571,7 @@ Thus our boom-boot entry points to a non-existant volume.  Here are the final co
 boom entry list
 ----
 
+.Command Output
 [source,indent=4]
 ----
 BootID  Version                  Name                     RootDevice
@@ -597,8 +592,9 @@ Double check the grub configuration.
 cheat-boom-grublist.sh
 ----
 
-Your output should look like this.  Note that the snapshot entry has been removed.
+Note that the snapshot entry has been removed.
 
+.Command Output
 [source,indent=4]
 ----
 0  title="Red Hat Enterprise Linux (4.18.0-67.el8.x86_64) 8.0 (Ootpa)"
@@ -612,6 +608,7 @@ Make sure grub is configre to boot the entry.
 grub2-editenv list
 ----
 
+.Command Output
 [source,indent=4]
 ----
 saved_entry=1

@@ -5,13 +5,13 @@
 - hosts: node2.example.com
   tasks:
   
-    - name: "SETUP COCKPIT: yum install packages"
+    - name: "SETUP WEBCONSOLE: yum install packages"
       yum: name=cockpit,firewalld state=installed
       
-    - name: "SETUP COCKPIT: service restart"
+    - name: "SETUP WEBCONSOLE: service restart"
       service: name="cockpit.socket" state=restarted enabled=yes
       
-    - name: "SETUP COCKPIT: firewall configuration"
+    - name: "SETUP WEBCONSOLE: firewall configuration"
       firewalld: port=9090/tcp permanent=yes immediate=yes state=enabled
       
     - name: "SETUP TLOG: cheat file installs"

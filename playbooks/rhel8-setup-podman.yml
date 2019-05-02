@@ -25,7 +25,8 @@
         group: root
         mode: 0644
       with_items:
-        - {src: 'podman-registries.j2',           dest: '/etc/containers/registries.conf'}
+        - {src: 'podman-registries.j2', dest: '/etc/containers/registries.conf'}
+        - {src: 'podman-ocifile.j2',    dest: '/root/custom_image.OCIFile'}
 
     - name: "SETUP PODMAN: cheat script installs"
       template:
@@ -35,7 +36,7 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2',           dest: '/usr/local/bin/cheat-podman-checkhost.sh'}
+        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-podman-checkhost.sh'}
 
     - name: "SETUP PODMAN: script to preload local container repo"
       shell: 

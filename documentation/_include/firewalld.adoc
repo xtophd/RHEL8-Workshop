@@ -19,7 +19,10 @@ Few additonal features of firewalld include:
   * separation of runtime and permanent configuration options
   * interface for external services to manage firewall rules directly
 
-Firewalld stores it in various configuration XML files in /usr/lib/firewalld/ and /etc/firewalld/.
+Firewalld stores it in various configuration XML files in 2 places:
+
+  * /usr/lib/firewalld/ 
+  * /etc/firewalld/
 
 WARNING: Both firewalld and nftables can be used to manage the kernel's network packet filter. Administrators should pick one tool as they will interfere with one another if used simultaneously.  Do not use them both.
 
@@ -34,7 +37,18 @@ Starting on the host *workstation.example.com*, let's ssh over to *node2.example
 ssh node1.example.com
 ----
 
-Firewalld is already installed and running on you host. These steps provided here will restore firewalld if it has been disabled. It is NOT necessary to run these commands in this lab.
+Verify that you are on the right host for these exercises.
+
+.[root@node3]#
+----
+cheat-firewalld-checkhost.sh
+----
+
+Now you are ready to begin
+
+== Installation
+
+Firewalld is already installed and running on you host. These steps provided here will restore firewalld if it has been disabled. It should NOT be necessary to run these commands in this lab.
 
 [NOTE]
 ====
@@ -48,16 +62,9 @@ systemctl status -l firewalld
 ----
 ====
 
-== Configuration Files
+== Configuration
 
 Firewalld uses several different, completely adaptable, XML config files to store configurations. These files also ensure run-time and persistent configuration separation. The default configuration files are in */usr/lib/firewalld*, while user customized files (which take precedence if they exist) are in */etc/firewalld*. 
-
-Examine the default files - both the zones and services files 
-
-----
-cd /usr/lib/firewalld/zones 
-cd /usr/lib/firewalld/services 
-----
 
 == Zones
 
@@ -65,10 +72,10 @@ Firewald uses zones to assign a level of trust to a network and its associated c
 
 Each zone is similar to a complete firewall and there is a single zone selection per environment or connection. The public zone is the Initial default. Zones are identified in ifcfg files or NetworkManager configuration using: ZONE=<name> 
 
-Here is an example of the public zone file from /usr/lib/firewalld/zones
+Let us examine a couple of the system's default zone files in */usr/lib/firewalld/zones*
 
-
-.public
+.public.xml
+[source,indent=4]
 ----
 <?xml version="1.0" encoding="utf-8"?> 
 <zone>
@@ -77,13 +84,15 @@ Here is an example of the public zone file from /usr/lib/firewalld/zones
 </zone>
 ----
 
-.drop
+.drop.xml
+[source,indent=4]
 ----
 <?xml version="1.0" encoding="utf-8"?> <zone target=”DROP”>
 </zone>
 ----
 
-.custom
+.custom.xml
+[source,indent=4]
 ----
 <?xml version="1.0" encoding="utf-8"?> 
 <zone>
@@ -101,6 +110,7 @@ Here is an example of the public zone file from /usr/lib/firewalld/zones
 There are nearly 50 built-in services files shipped with firewalld. Services files include Port (ranges) with protocol, Netfilter helper modules, and destination address (range) for IPv4 and/or IPv6. You can also create your own services files or customize the default files. To customize a file, simply copy it from /usr/lib/firewalld/services to /etc/firewalld/services then make any required changes. 
 
 Here is an example of the default http.xml services file from /usr/lib/firewalld/services 
+
 
 ----
 <?xml version="1.0" encoding="utf-8"?> 
