@@ -188,9 +188,7 @@ vi 50-httpd.conf
 Add the following to the 50-httpd.conf file
 
 
-NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services.
-
-[source,indent=4]
+[source]
 ----
 [Service]
 Restart=always
