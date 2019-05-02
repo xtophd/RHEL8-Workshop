@@ -5,7 +5,7 @@
 - hosts: core.example.com
   tasks:
   
-    - name: "SETUP PODMAN: yum install docker,docker-distribution"
+    - name: "SETUP PODMAN: yum install docker-distribution"
       yum: name=docker-distribution state=installed
       
     - name: "SETUP PODMAN: service start docker-distribution"
@@ -14,8 +14,8 @@
 - hosts: node3.example.com
   tasks:
 
-    - name: "SETUP PODMAN: yum install podman,net-tools"
-      yum: name=podman,net-tools state=installed
+    - name: "SETUP PODMAN: yum install podman,net-tools,wget"
+      yum: name=podman,net-tools,wget state=installed
 
     - name: "SETUP PODMAN: config file installs"
       template:
