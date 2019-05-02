@@ -1,0 +1,270 @@
+:sectnums:
+:sectnumlevels: 2
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+:toc:
+:toclevels: 1
+
+= Building with Buildah!
+
+In this unit, we will get familiar with Buildah!
+
+[discrete]
+== Additional Reference Materials
+
+
+NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
+
+    * link:https://developers.redhat.com/blog/2019/04/25/podman-basics-cheat-sheet/[Podman Basics Cheat Sheet - Doug Tidwell]
+    * link:https://developers.redhat.com/blog/2018/11/20/buildah-podman-containers-without-daemons/[Containers without daemons: Podman and Buildah available in RHEL 7.6 and RHEL 8 Beta - Tom Sweeney]
+
+
+== Connect to Host
+
+There is a dedicated VM we will use for the container exercises.  From workstation.example.com, you should be able to ssh to node3.example.com as 'root' without any prompts for credentials.
+
+.[root@workstation ~]#
+----
+ssh node3.example.com
+----
+
+Now you are ready to begin your exercises with containers.
+
+== Build an Image
+
+=== Web Site Version 2.0
+
+In the previous lab on podman, we pulled down the httpd-24-rhel7 container and used an OCIFile to build a container. This was using buildah under the hood, but in this lab, we are going to use buildah directly. Let's get started by creating a working container based off of the httpd-24-rhel7 container:
+
+.[root@node3 ~]#
+----
+buildah from core.example.com:5000/httpd-24-rhel7
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+httpd-24-rhel7-working-container
+----
+
+This gives us the name of the "working container" and it's this container that we will modify with buildah.
+
+Let's run:
+
+.[root@node3 ~]#
+----
+echo "Every time you run setenforce 0, you make Dan Walsh weep." > ./test.txt
+buildah copy httpd-24-rhel7-working container ./test.txt /var/www/html/
+----
+
+At this point, you have copied your local test.txt into the root of the webserver and you should see feedback similar to:
+
+----
+2254e08d2191091678d27aca275835cdce7d70cf120d66601750709105fdcd95
+----
+
+The above is equivalent to the following OCIFile (or Dockerfile):
+
+----
+FROM core.example.com:5000/httpd-24-rhel7
+COPY ./test.txt /var/www/html/
+----
+
+So that's nice that we can do that with buildah, but let's look at the following example. Go ahead and mount the root filesystem of your container with:
+
+----
+buildah mount httpd-24-rhel7-working-container
+----
+
+You should see output similar to:
+
+----
+/var/lib/containers/storage/overlay/669b69de30cf8a39eafabccddb6a6e1db7d8d707e6a76c552518f4a8ed716cef/merged
+----
+
+Do the following (using the path returned by buildah for the cd command):
+
+----
+cd /var/lib/containers/storage/overlay/669b69de30cf8a39eafabccddb6a6e1db7d8d707e6a76c552518f4a8ed716cef/merged
+ls -lah var/www/html
+----
+
+and you should see:
+
+----
+total 4.0K
+drwxr-xr-x. 1 importantuser root 22 May  2 14:55 .
+drwxr-xr-x. 1 importantuser root 18 Apr 19 02:13 ..
+-rw-r--r--. 1 importantuser root 58 May  2 14:54 test.txt
+----
+
+There is our test.txt! Let's add the following as var/www/html/index.html:
+
+----
+<html>
+<title>Stop Disabling SELinux</title>
+<body>
+<p>
+Seriously, stop disabling SELinux. Learn how to use it before you blindly shut it off.
+</p>
+</body>
+</html>
+----
+
+Once you have written that, you should be able to run:
+
+----
+[root@node3 merged]# ls -lahZ var/www/html/
+----
+
+and see:
+
+----
+total 8.0K
+drwxr-xr-x. 1 importantuser root unconfined_u:object_r:container_share_t:s0  40 May  2 15:01 .
+drwxr-xr-x. 1 importantuser root unconfined_u:object_r:container_share_t:s0  18 Apr 19 02:13 ..
+-rw-r--r--. 1 root          root unconfined_u:object_r:container_share_t:s0 165 May  2 15:01 index.html
+-rw-r--r--. 1 importantuser root unconfined_u:object_r:container_share_t:s0  58 May  2 14:54 test.txt
+----
+
+When you are done making direct changes to the root filesystem of your container, you can run:
+
+----
+cd /root
+buildah unmount httpd-24-rhel7-working-container
+----
+
+You should see output similar to:
+
+----
+e918debcaabb5820997b1a4969fbd45284adc0a2869d1f22a1bce78f703ff3c6
+----
+
+Now at this point, we've used buildah to run commands similar to those in an OCIFile and to directly modify the root filesystem of the container. Let's go ahead and commit the working container to an actual container:
+
+----
+buildah commit httpd-24-rhel7-working-container website2
+----
+
+You should see output similar to:
+
+----
+Getting image source signatures
+Skipping fetch of repeat blob sha256:571dc0d8cede9ec6f1ba7f568bb53f27d377093a241e2f0a0ccc33471e2b91c4
+Skipping fetch of repeat blob sha256:7eba55968d66da6d891304d7b99ea09117f2fff9364c3ab02d3cd959b1335c80
+Skipping fetch of repeat blob sha256:179c9a960e3bb231448a68cf0d8d9a57fc2227f8c7a57007c698a6f56a061613
+Skipping fetch of repeat blob sha256:568a9c98da8c7a3a4a1db36ca95d81fdd4325fb901a282b7c32f69d8077e2431
+Copying blob sha256:642ad23cb9f28db66ffb50f30c6c86c333de6674f9d7660a627974b04684386f
+ 397 B / 397 B [============================================================] 0s
+Copying config sha256:b5ab9d4956263d63096dfab9581db3cf537a01907f010a7d9f95058902fcc48d
+ 4.10 KiB / 4.10 KiB [======================================================] 0s
+Writing manifest to image destination
+Storing signatures
+b5ab9d4956263d63096dfab9581db3cf537a01907f010a7d9f95058902fcc48d
+----
+
+Let's look at our images:
+
+----
+podman images
+----
+
+You should see:
+
+----
+REPOSITORY                             TAG      IMAGE ID       CREATED          SIZE
+localhost/website2                     latest   b5ab9d495626   2 minutes ago    323 MB
+localhost/custom_image                 latest   611116f647ab   29 minutes ago   323 MB
+core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   13 days ago      323 MB
+core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago      214 MB
+localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago      214 MB
+----
+
+Now let's run that webserver:
+
+----
+podman run -d -p 8080:8080 website2
+----
+
+Now let's test our new webserver:
+
+----
+curl http://localhost:8080/
+----
+
+returns:
+
+----
+<html>
+<title>Stop Disabling SELinux</title>
+<body>
+<p>
+Seriously, stop disabling SELinux. Learn how to use it before you blindly shut i
+t off.
+</p>
+</body>
+</html>
+----
+
+and:
+
+----
+curl http://localhost:8080/test.txt
+----
+
+returns:
+
+----
+Every time you run setenforce 0, you make Dan Walsh weep.
+----
+
+As you can see, all of the changes we made with buildah are active and working in this new container image!
+
+=== Cleanup
+
+.[root@node3 ~]#
+----
+podman kill $(podman ps -q)
+
+podman rm $(podman ps -a -q)
+----
+
+== Exit System
+
+.[root@node3 ~]#
+----
+exit
+----
+
+
+.[root@workstation ~]#
+----
+uname -n
+
+whoami
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+workstation.example.com
+
+root
+----
+
+Now you are ready to proceed to the next unit.
+
+[discrete]
+== End of Unit
+
+link:../RHEL8-Workshop.adoc#toc[Return to TOC]
+
+////
+Always end files with a blank line to avoid include problems.
+////
