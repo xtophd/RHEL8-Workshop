@@ -93,7 +93,7 @@ multi-user.target
 
 
 === Services
-As mentioned above, systemd has another concept called a service.  A service is a type of unit which defines the traditional daemon or process.  Now let us look at what services are running on the system.
+As mentioned above, systemd has another concept called a service.  A service is a type of unit which defines the traditional daemon or process.  Now let us look at what services are running on the system:
 
 .[root@node2]#
 ----
@@ -109,18 +109,24 @@ dracut-shutdown.service            loaded active exited  Restore /run/initramfs 
 firewalld.service                  loaded active running firewalld - dynamic firewal
 ...<output truncated>...
 
-
-
-
-Let's view the current default target.
+Next let's view all of the services available (ie: everything installed, running or not) on the system. The following command is similar to the older chkconfig --list as it will show both enabled and disabled services:
 
 .[root@node2]#
 ----
-[source,indent=8]
-# systemctl get-default
-multi-user.target
+# systemctl list-unit-files -t service
 ----
+[source,indent=8]
+UNIT FILE                                   STATE   
+arp-ethers.service                          disabled
+auditd.service                              enabled 
+autovt@.service                             enabled 
+blk-availability.service                    disabled
+chrony-dnssrv@.service                      static  
+chrony-wait.service                         disabled
+chronyd.service                             enabled 
+...<output truncated>...
 
+The state will  be enabled, disabled, static, or masked.  Static indicates that the unit file does not contain an "install" section used to enable the unit.  In this case, the unit typically performs a one-off action or is used as a dependency of another unit and should not be run by itself.
 
 
 
