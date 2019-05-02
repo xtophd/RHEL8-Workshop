@@ -28,7 +28,7 @@ endif::[]
 
 First of all, THANK YOU for registering and participating in *The Definitive Red Hat Enterprise Linux 8 Beta Hands-on Lab*.  The lab team has worked very hard to assemble a series of exercises to introduce many of the new features and capabilities found in the next great release of RHEL.  We hope you enjoy this experience and please don't hesitate to ask questions.
 
-Also, please don't forget to review this seesion at the completion of this lab.  Your reviews and feedback help keep labs like these as top attractions for the Red Hat Summit.
+Also, please don't forget to review this session at the completion of this lab.  Your reviews and feedback help keep labs like these as top attractions for the Red Hat Summit.
 
 NOTE:  This whole effort is done using official Red Hat software and although things can likely be set up to work with upstream software components (Fedora, CentOS, etc...), alternate deritives of RHEL are not tested or validated with these exercises.
 
