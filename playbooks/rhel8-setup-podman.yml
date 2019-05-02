@@ -36,3 +36,14 @@
         mode: 0744
       with_items:
         - {src: 'cheat-checkhost.j2',           dest: '/usr/local/bin/cheat-podman-checkhost.sh'}
+
+#
+# for IMAGENAME in rhel7.5 httpd-24-rhel7 ubi ; do
+#
+#   IMAGEID=`wget -O -  http://core.example.com/containers/${IMAGENAME}.tar | podman load | grep "Loaded image" | cut -f2 -d@`
+#
+#   podman tag ${IMAGEID} core.example.com:5000/${IMAGENAME}
+#  
+#   podman push core.example.com:5000/${IMAGENAME}
+#
+# done
