@@ -188,11 +188,12 @@ vi 50-httpd.conf
 ----
 Add the following to the 50-httpd.conf file
 
-[source,indent=4]
+[source]
 ----
 [Service]
 Restart=always
 OOMScoreAdjust=-1000
+----
 
 Save the config file, exit the editor, and notify systemd of the changes:
 
@@ -200,6 +201,7 @@ Save the config file, exit the editor, and notify systemd of the changes:
 ----
 systemctl daemon-reload
 systemctl status httpd
+----
 
 [source,indent=4]
 ----
@@ -216,6 +218,7 @@ systemctl status httpd
    CGroup: /system.slice/httpd.service
            ├─5135 /usr/sbin/httpd -DFOREGROUND
            ├─5163 /usr/sbin/httpd -DFOREGROUND
+----
 
 Notice that systemctl status displays that the unit has been extended with a drop-in file.
 
@@ -227,7 +230,7 @@ Using what you learned in the last step, extend the mariadb.service unit with Re
 
 Red Hat Documentation
 
-    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/configuring_and_managing_file_systems/managing-layered-local-storage-with-stratis_configuring-and-managing-file-systems[Managing Layered Local Storage with Stratis]
+    * link:None[Put in systemd link]
 
 [discrete]
 == End of Unit
