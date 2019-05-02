@@ -7,7 +7,10 @@
   
     - name: "SETUP FIREWALLD: yum install firewalld"
       yum: name=firewalld state=installed
-      
+
+    - name: "SETUP FIREWALLD: service stop nftables"
+      service: name=nftables state=stopped enabled=no
+
     - name: "SETUP FIREWALLD: service start firewalld"
       service: name=firewalld state=started enabled=yes
       
