@@ -789,6 +789,11 @@ podman run -d --name="custom_server" -p 8080:8080 custom_image
 curl localhost:8080/test.txt
 ----
 
+This should return:
+----
+Custom Server up and running
+----
+
 === Cleanup
 
 .[root@node3 ~]#
