@@ -18,15 +18,11 @@ BOOM also has a simple command-line interface (CLI) and API.
 
 == Getting Started
 
-== Installation and Setup
-
-== Getting Started
-
 Starting on the host *workstation.example.com*, let's ssh over to *node3.example.com*.  No password should be required.
 
 .[root@workstation]#
 ----
-ssh node1.example.com
+ssh node3.example.com
 ----
 
 Verify that you are on the right host for these exercises.
