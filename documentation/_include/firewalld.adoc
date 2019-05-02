@@ -13,10 +13,11 @@ endif::[]
 The *firewalld* daemon provides a dynamically managed firewall (network security) with support for network “zones” which assign a level of trust to a network, its associated connections and interfaces. 
 
 Few additonal features of firewalld include:
-    * supports for IPv4 and IPv6 settings
-    * supports ethernet bridges
-    * has a separation of runtime and permanent configuration options
-    * interface for external services to manage firewall rules directly.
+
+  * supports for IPv4 and IPv6 settings
+  * supports ethernet bridges
+  * has a separation of runtime and permanent configuration options
+  * interface for external services to manage firewall rules directly.
 
 Firewalld stores it in various configuration XML files in /usr/lib/firewalld/ and /etc/firewalld/.
 
