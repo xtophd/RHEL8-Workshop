@@ -82,7 +82,7 @@ image::cockpit-image2.png[Cockpit Persistence 3]
 
 == Change Performance Profile
 
-RHEL 8 comes with several pre-canned performance tuning profiles from Tuned. Since this is a virtual machine, the default profile “virtual-guest” was selected. You can easily switch profile via cockpit web UI. In this exercise, we will change the profile to “throughput-performance”
+RHEL 8 comes with several pre-canned performance tuning profiles from Tuned. Since this is a virtual machine, the default profile “virtual-guest” was selected. You can easily switch profile via the Web Console web UI. In this exercise, we will change the profile to “throughput-performance”
 
 ====
 image::cockpit-image9.png[Cockpit Performance 1]
