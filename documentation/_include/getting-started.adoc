@@ -68,7 +68,7 @@ cd ~/RHEL8-Workshop
 bash prepare-rhel8-workshop.sh
 ----
 
-=== A Few Words While the Installer Runs
+=== A Few Words While the Installer Runs (4 or 5 minutes)
 
 Put something clever here :-)
 
