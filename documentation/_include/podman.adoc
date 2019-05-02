@@ -268,8 +268,8 @@ podman ps -a
 .Your output should look like this
 [source,indent=4]
 ----
-CONTAINER ID  IMAGE                            COMMAND           CREATED         STATUS                     PORTS  NAMES
-ce7b462b58af  registry.redhat.io/rhel7:latest  echo hello world  33 seconds ago  Exited (0) 31 seconds ago         competent_leavitt
+CONTAINER ID  IMAGE                             COMMAND           CREATED         STATUS                     PORTS  NAMES
+249de20ebdb0  core.example.com:5000/ubi:latest  echo hello world  18 seconds ago  Exited (0) 17 seconds ago         objective_kepler
 ----
 
 Now let us run the exact same command again.
@@ -356,9 +356,9 @@ podman ps -a
 .Your output should look like this
 [source,indent=4]
 ----
-CONTAINER ID  IMAGE                               COMMAND           CREATED        STATUS                    PORTS  NAMES
-285c795b06d0  registry.redhat.io/ubi7/ubi:latest  echo hello world  4 seconds ago  Exited (0) 4 seconds ago         modest_galileo
-e9239f0e54ae  registry.redhat.io/ubi7/ubi:latest  echo hello world  5 seconds ago  Exited (0) 5 seconds ago         inspiring_babbage
+CONTAINER ID  IMAGE                             COMMAND           CREATED         STATUS                     PORTS  NAMES
+e3f139ef0942  core.example.com:5000/ubi:latest  echo hello world  35 seconds ago  Exited (0) 34 seconds ago         cocky_golick
+249de20ebdb0  core.example.com:5000/ubi:latest  echo hello world  2 minutes ago   Exited (0) 2 minutes ago          objective_kepler
 ----
 
 Using the container UIDs from the above output, you can now clean up the 'exited' containers.
@@ -367,6 +367,8 @@ Using the container UIDs from the above output, you can now clean up the 'exited
 ----
 podman rm <CONTAINER-ID> <CONTAINER-ID>
 ----
+
+NOTE: if you are lazy, you can also cleanup up the containers with `podman rm --all`
 
 Now you should be able to run 'podman ps -a' again, and the results should come back empty.
 
@@ -387,7 +389,7 @@ podman run ubi cat /proc/sys/kernel/hostname
 .Your output should look like this
 [source,indent=4]
 ----
-af5a60ee39b2
+5d6d58699069
 ----
 
 So what we have learned here is that the hostname in the container's namespace is NOT the same as the host platform (node3.example.com).  It is unique and is by default identical to the container's ID.  You can verify this with 'podman ps -a'.
@@ -401,7 +403,7 @@ podman ps -a
 [source,indent=4]
 ----
 CONTAINER ID  IMAGE                            COMMAND               CREATED         STATUS                     PORTS  NAMES
-af5a60ee39b2  registry.redhat.io/ubi7/ubi:latest  cat /proc/sys/ker...  30 seconds ago      Exited (0) 29 seconds ago             inspiring_clarke
+5d6d58699069  core.example.com:5000/ubi:latest cat /proc/sys/ker...  42 seconds ago  Exited (0) 42 seconds ago         sharp_swanson
 ----
 
 
@@ -437,7 +439,7 @@ container create failed: container_linux.go:336: starting container process caus
 
 What just happened?
 
-For the most part, containers are not meant for interactive (user) sessions.  In this instance, then image that we are using (ie: rhel7) does not have the traditional commmandline utilities a user might expect.  Common tools to configure network interfaces like 'ip' simply aren't there.
+For the most part, containers are not meant for interactive (user) sessions.  In this instance, then image that we are using (ie: ubi) does not have the traditional commmandline utilities a user might expect.  Common tools to configure network interfaces like 'ip' simply aren't there.
 
 So for this exercise, we leverage something called a 'bind mount' to effectively mirror a portion of the host's filesystem into the container's namespace.  Bind mounts are declared using the '-v' option.  In the example below, /usr/sbin from the host will be exposed and accessible to the containers namespace mounted at '/usr/bin' (ie: /usr/sbin:/usr/sbin).
 
