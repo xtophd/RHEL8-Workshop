@@ -21,16 +21,16 @@ Systemd is the "init" system for RHEL 8 (and 7 for that matter).  It replaces Up
 
 == Getting Started
 
-Starting on the host *workstation.example.com*, let's ssh over to *node2.example.com*.  No password should be required.
+Starting on the host *workstation.example.com*, let's ssh over to *node1.example.com*.  No password should be required.
 
 .[root@workstation]#
 ----
-ssh node2.example.com
+ssh node1.example.com
 ----
 
 Now let's collect some initial data about the boot process
 
-.[root@node2]#
+.[root@node1]#
 ----
 systemd-analyze
 ----
@@ -43,7 +43,7 @@ Startup finished in 3.783s (kernel) + 6.526s (initrd) + 14.723s (userspace) = 25
 multi-user.target reached after 10.540s in userspace
 ----
 
-.[root@node2]#
+.[root@node1]#
 ----
 systemd-analyze blame
 ----
@@ -84,7 +84,7 @@ graphical.target == runlevel 5
 
 Let's view the current default target.
 
-.[root@node2]#
+.[root@node1]#
 ----
 # systemctl get-default
 ----
@@ -95,7 +95,7 @@ multi-user.target
 === Services
 As mentioned above, systemd has another concept called a service.  A service is a type of unit which defines the traditional daemon or process.  Now let us look at what services are running on the system:
 
-.[root@node2]#
+.[root@node1]#
 ----
 # systemctl -t service
 ----
@@ -111,7 +111,7 @@ firewalld.service                  loaded active running firewalld - dynamic fir
 
 Next let's view all of the services available (ie: everything installed, running or not) on the system. The following command is similar to the older chkconfig --list as it will show both enabled and disabled services:
 
-.[root@node2]#
+.[root@node1]#
 ----
 # systemctl list-unit-files -t service
 ----
@@ -134,7 +134,7 @@ The state will  be enabled, disabled, static, or masked.  Static indicates that 
 [indent=4]
 Now that we have a good idea of what’s installed on our system, let’s get a basic lamp stack up and running. 
 
-.[root@node2]#
+.[root@node1]#
 ----
 yum install -y httpd mariadb-server mariadb 
 
@@ -152,7 +152,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/mariadb.service → 
 
 Now let's check the status.  You should see two separate sections in the output, one for httpd and one for mariadb.
 
-.[root@node2]#
+.[root@node1]#
 ----
 systemctl status httpd mariadb
 
@@ -202,7 +202,7 @@ OOMScoreAdjust=-1000
 
 Save the config file, exit the editor, and notify systemd of the changes:
 
-.[root@node2]#
+.[root@node1]#
 ----
 systemctl daemon-reload
 systemctl status httpd
