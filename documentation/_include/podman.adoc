@@ -108,25 +108,52 @@ Now have a look at the general container information.
 podman images
 ----
 
-.Your output should look like this
-[source,indent=4]
-----
-registry.redhat.io/ubi7/ubi           latest   c096c0dc7247   2 weeks ago   214 MB
-----
+Your results should have come back empty and that's because we have not imported, loaded or pulled any containers on to our platform.  
 
 ==== How to Pull Images
 
-.[root@node3 ~]#
-----
-podman pull rhel7.5 --creds 'username:password'
-----
+Time to pull a container from our local repository.
 
 .[root@node3 ~]#
 ----
-podman pull rhel6 --creds 'username:password'
+podman pull core.example.com:5000/ubi
 ----
 
-Container images can also be tagged with convenient (ie:custom names).  This could make it more intuitive to understand what they contain, esspecialy after an image has been customized.
+Have a looks at the image list now.
+
+.[root@node3 ~]#
+----
+podman images
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+REPOSITORY                  TAG      IMAGE ID       CREATED       SIZE
+core.example.com:5000/ubi   latest   c096c0dc7247   2 weeks ago   214 MB
+----
+
+NOTE: if you are a subscriber to Red Hat Enterprise Linux, you pull authentic Red Hat certified image directly from Red Hat's repository with `podman pull rhel7.5 --creds 'username:password`
+
+Pull a few more container images.
+
+.[root@node3 ~]#
+----
+podman pull core.example.com:5000/rhel7.5
+
+podman pull core.example.com:5000/http-24-rhel7
+----
+
+==== Container Tags
+
+Container images can also be tagged with convenient (ie:custom names).  This could make it more intuitive to understand what they 
+contain, esspecialy after an image has been customized.
+
+.[root@node3 ~]#
+----
+podman tag core.example.com:5000/ubi ubi
+----
+
 
 Later you will create a custom image based on an official Red Hat Enterprise Linux container image.
 
