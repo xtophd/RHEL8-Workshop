@@ -152,6 +152,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/mariadb.service → 
 
 Now let's check the status.  You should see two separate sections in the output, one for httpd and one for mariadb.
 
+
 .[root@node1]#
 ----
 systemctl status httpd mariadb
