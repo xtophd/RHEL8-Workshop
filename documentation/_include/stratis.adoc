@@ -61,6 +61,7 @@ Your output should look like this.  (You can press "q" or CTRL+C to exit the sta
    CGroup: /system.slice/stratisd.service
        	└─9562 /usr/libexec/stratisd --debug
 
+[source,indent=4]
 Apr 27 18:41:52 node2.example.com systemd[1]: Started A daemon that manages a pool of block devices to create flexible file systems.
 
 
