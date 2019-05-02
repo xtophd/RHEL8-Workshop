@@ -14,10 +14,10 @@ The *firewalld* daemon provides a dynamically managed firewall (network security
 
 Few additonal features of firewalld include:
 
-  * supports for IPv4 and IPv6 settings
-  * supports ethernet bridges
-  * has a separation of runtime and permanent configuration options
-  * interface for external services to manage firewall rules directly.
+  * support for IPv4 and IPv6 settings
+  * support for ethernet bridges
+  * separation of runtime and permanent configuration options
+  * interface for external services to manage firewall rules directly
 
 Firewalld stores it in various configuration XML files in /usr/lib/firewalld/ and /etc/firewalld/.
 
@@ -52,8 +52,10 @@ Firewalld uses several different, completely adaptable, XML config files to stor
 
 Examine the default files - both the zones and services files 
 
-# cd /usr/lib/firewalld/zones 
-# cd /usr/lib/firewalld/services 
+----
+cd /usr/lib/firewalld/zones 
+cd /usr/lib/firewalld/services 
+----
 
 == Zones
 
@@ -63,19 +65,24 @@ Each zone is similar to a complete firewall and there is a single zone selection
 
 Here is an example of the public zone file from /usr/lib/firewalld/zones
 
-public
+
+.public
+----
 <?xml version="1.0" encoding="utf-8"?> 
 <zone>
 	<service name="ssh"/>
 	<service name="dhcpv6-client"/>
 </zone>
+----
 
-drop
-
+.drop
+----
 <?xml version="1.0" encoding="utf-8"?> <zone target=”DROP”>
 </zone>
+----
 
-custom
+.custom
+----
 <?xml version="1.0" encoding="utf-8"?> 
 <zone>
 	<interface name="em2"/> 
@@ -85,6 +92,7 @@ custom
 <service name="dhcpv6-client"/>
 	<rule><protocol value="ah"/><accept/></rule>
 </zone>
+----
 
 == Services
 
