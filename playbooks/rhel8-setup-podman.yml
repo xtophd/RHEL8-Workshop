@@ -14,10 +14,10 @@
 - hosts: node3.example.com
   tasks:
 
-    - name: "SETUP PODMAN: yum install podman"
+    - name: "SETUP PODMAN: yum install podman,net-tools"
       yum: name=podman,net-tools state=installed
 
-    - name: "TEMPLATE: config file installs"
+    - name: "SETUP PODMAN: config file installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -27,7 +27,7 @@
       with_items:
         - {src: 'podman-registries.j2',           dest: '/etc/containers/registries.conf'}
 
-    - name: "TEMPLATE: cheat script installs"
+    - name: "SETUP PODMAN: cheat script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -37,15 +37,12 @@
       with_items:
         - {src: 'cheat-checkhost.j2',           dest: '/usr/local/bin/cheat-podman-checkhost.sh'}
 
-#
-# Convert to ANSIBLE COMMAND TO load container repo on core.example.com
-#
-# for IMAGENAME in rhel7.5 httpd-24-rhel7 ubi ; do
-#
-#   IMAGEID=`wget -O -  http://core.example.com/containers/${IMAGENAME}.tar | podman load | grep "Loaded image" | cut -f2 -d@`
-#
-#   podman tag ${IMAGEID} core.example.com:5000/${IMAGENAME}
-#  
-#   podman push core.example.com:5000/${IMAGENAME}
-#
-# done
+    - name: "SETUP PODMAN: script to preload local container repo"
+      shell: 
+        cmd: |
+          podman rmi --all
+          for IMAGENAME in rhel7.5 httpd-24-rhel7 ubi ; do
+            IMAGEID=`wget -O -  http://core.example.com/containers/${IMAGENAME}.tar | podman load | grep "Loaded image" | cut -f2 -d@`
+            podman tag ${IMAGEID} core.example.com:5000/${IMAGENAME}
+            podman push core.example.com:5000/${IMAGENAME}
+          done
