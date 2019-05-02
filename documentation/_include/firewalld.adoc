@@ -126,7 +126,7 @@ Here is an example of the default http.xml services file from /usr/lib/firewalld
 
 Red Hat Documentation
 
-    * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[Deplying Session Recording on Red Hat Enterprise Linux]
+    * link:None[Put firewalld documentation in here]
 
 [discrete]
 == End of Unit
