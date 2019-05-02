@@ -46,3 +46,4 @@
             podman tag ${IMAGEID} core.example.com:5000/${IMAGENAME}
             podman push core.example.com:5000/${IMAGENAME}
           done
+          podman rmi --all
