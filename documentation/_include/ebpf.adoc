@@ -11,9 +11,9 @@ endif::[]
 :toc:
 :toclevels: 1
 
-= A quick introduction to eBPF
+= A quick introduction to eBPF 
 
-In this unit, we will get familiar with eBPF. Need to flesh this out more.
+In this unit, we will get familiar with eBPF. eBPF stands for Extended Berkeley Packet Filter and is effectively an in kernel virtual machine upon which several applications have been built. To date, these applications center around working with the network stack (eXpress Data Path, Traffic Control) and also offering efficient kernel tracing (BPF Compiler Collection). In today's lab, we will be focusing on the kernel tracing aspect of eBPF.
 
 [discrete]
 == Additional Reference Materials
@@ -21,9 +21,9 @@ In this unit, we will get familiar with eBPF. Need to flesh this out more.
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
 
-    * Add some eBPF links here.
-    * link:https://developers.redhat.com/blog/2018/11/20/buildah-podman-containers-without-daemons/[Containers without daemons: Podman and Buildah available in RHEL 7.6 and RHEL 8 Beta - Tom Sweeney]
-    * link:https://linuxhandbook.com/buildah-basics/[Getting Started with Buildah - Servesha]
+    * link:https://developers.redhat.com/blog/tag/ebpf/[eBPF blogs on Red Hat Developer (covering the networking aspect)]
+    * link:https://access.redhat.com/articles/3550581[Kernel Tracing Using eBPF]
+    * link:http://www.brendangregg.com/ebpf.html[Linux Extended BPF (eBPF Tracing Tools) - Brendan Gregg]
 
 
 == Connect to Host
@@ -35,9 +35,9 @@ There is a dedicated VM we will use for the container exercises.  From workstati
 ssh node2.example.com
 ----
 
-Now you are ready to begin your exercises with eBPF.
+Now you are ready to begin your exercises with eBPF Tracing.
 
-== bcc (BPF Compiler Collection)
+== bcc (BPF Compiler Collection) 
 
 === Installing bcc-tools
 
