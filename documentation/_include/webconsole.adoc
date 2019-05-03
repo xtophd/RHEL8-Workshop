@@ -30,7 +30,9 @@ Web Console is a Red Hat Enterprise Linux 8 web-based interface designed for man
 
 The following exercises will walk you through installing and configuring Web Console on RHEL 8. 
 
-== Installation & Configuraiton
+== Installation and Configuraiton
+
+=== Packages and Services
 
 Starting on the host workstation.example.com, let’s ssh over to *node2.example.com*. No password should be required.
 
@@ -50,7 +52,7 @@ firewall-cmd --add-service=cockpit --permanent
 firewall-cmd --reload
 ----
 
-== Login
+== Web Console User Interface
 
 On host *workstation.example.com*, use the console GUI to start a web browser.
 
