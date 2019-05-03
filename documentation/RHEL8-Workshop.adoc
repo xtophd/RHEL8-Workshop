@@ -124,10 +124,10 @@ image::ocp-webui-hello1-project-create.png[Create Project]
 [#toc]
   . link:{includedir}/getting-started.adoc[*Workshop Preparation* - DO THIS FIRST! ] _(workstation)_
   . link:{includedir}/wayland.adoc[*Wayland* - (NEW) Desktop GUI ] _(workstation)_
+  . link:{includedir}/webconsole.adoc[*Web Console* - (UPDATED) System Management] _(workstation, node2)_
   . link:{includedir}/systemd.adoc[*SystemD* - (UPDATED) System Service Management] _(node1)_
   . link:{includedir}/firewalld.adoc[*FirewallD* - (UPDATED) Firewall Service Management] _(node1)_
   . link:{includedir}/nftables.adoc[*NFTables* - (NEW) Firewall Subsystem] _(node2)_
-  . link:{includedir}/webconsole.adoc[*Web Console* - (UPDATED) System Management] _(workstation, node2)_
   . link:{includedir}/appstream-yum.adoc[*App Stream* - (NEW) Application Delivery] _(node1, node2, node3)_
   . link:{includedir}/podman.adoc[*Podman* - (NEW) Container Management] _(node3)_
   . link:{includedir}/tlog.adoc[*TLog* - (NEW) Session Logging] _(node1)_
@@ -138,12 +138,15 @@ image::ocp-webui-hello1-project-create.png[Create Project]
 ////  
 TO PRINT THIS DOC REMOVE THIS LINE AND COMMENTS AROUND INCLUDES
 include::{includedir}/Getting-Started.adoc[leveloffset=+1]
-include::{includedir}/appstream-yum.adoc[leveloffset=+1]
-include::{includedir}/tlog.adoc[leveloffset=+1]
+include::{includedir}/wayland.adoc[leveloffset=+1]
+include::{includedir}/webconsole.adoc[leveloffset=+1]
+include::{includedir}/systemd.adoc[leveloffset=+1]
+include::{includedir}/firewalld.adoc[leveloffset=+1]
 include::{includedir}/nftables.adoc[leveloffset=+1]
-include::{includedir}/cockpit.adoc[leveloffset=+1]
-include::{includedir}/stratis.adoc[leveloffset=+1]
+include::{includedir}/appstream-yum.adoc[leveloffset=+1]
 include::{includedir}/podman.adoc[leveloffset=+1]
+include::{includedir}/tlog.adoc[leveloffset=+1]
+include::{includedir}/stratis.adoc[leveloffset=+1]
 include::{includedir}/boom.adoc[leveloffset=+1]
 
 ////
