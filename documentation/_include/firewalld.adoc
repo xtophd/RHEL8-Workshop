@@ -8,7 +8,7 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-= Firewalld - Dynamic Firewall Management
+= Firewalld - Firewall Service Management
 
 The *firewalld* daemon provides a dynamically managed firewall (network security) with support for network “zones” which assign a level of trust to a network, its associated connections and interfaces. 
 
