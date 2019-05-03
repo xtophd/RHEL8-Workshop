@@ -1,0 +1,616 @@
+:sectnums:
+:sectnumlevels: 2
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+:toc:
+:toclevels: 1
+
+= A quick introduction to eBPF
+
+In this unit, we will get familiar with eBPF. Need to flesh this out more.
+
+[discrete]
+== Additional Reference Materials
+
+
+NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
+
+    * Add some eBPF links here.
+    * link:https://developers.redhat.com/blog/2018/11/20/buildah-podman-containers-without-daemons/[Containers without daemons: Podman and Buildah available in RHEL 7.6 and RHEL 8 Beta - Tom Sweeney]
+    * link:https://linuxhandbook.com/buildah-basics/[Getting Started with Buildah - Servesha]
+
+
+== Connect to Host
+
+There is a dedicated VM we will use for the container exercises.  From workstation.example.com, you should be able to ssh to node2.example.com as 'root' without any prompts for credentials.
+
+.[root@workstation ~]#
+----
+ssh node2.example.com
+----
+
+Now you are ready to begin your exercises with eBPF.
+
+== bcc (BPF Compiler Collection)
+
+=== Installing bcc-tools
+
+Start by installing bcc-tools:
+
+.[root@node2 ~]#
+
+[source]
+----
+yum install bcc-tools -y
+----
+
+Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These all have man pages for them.
+
+=== bcc-tools: tcplife
+
+The tcplife tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes. To run this tool, do:
+
+.[root@node2 ~]#
+
+[source]
+----
+cd /usr/share/bcc/tools
+./tcplife
+----
+
+Wait for this to get started and you'll see the following header print out:
+
+[source]
+----
+PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
+----
+
+Now from another workstation terminal, run:
+
+.[root@workstation ~]#
+
+[source]
+----
+ssh node2.example.com
+----
+
+Let your session sit open for a few seconds and then run 'exit', thus closing the connection. You should now see on your tcplife window, an entry similar to:
+
+----
+30302 sshd       10.0.0.12       22    10.0.0.10       43102    65     8 228901.08
+----
+
+Doing the math with my numbers above, my session was open for 3 minutes and 49 seconds and was initiated by IP 10.0.0.10, the workstation.
+
+On the terminal running tcp-life, go ahead and Ctrl-C the process. You will see a python traceback that looks like:
+
+----
+^CTraceback (most recent call last):
+  File "./tcplife", line 506, in <module>
+    b.perf_buffer_poll()
+  File "/usr/lib/python3.6/site-packages/bcc/__init__.py", line 1216, in perf_buffer_poll
+    lib.perf_reader_poll(len(readers), readers, timeout)
+KeyboardInterrupt
+----
+
+This is safe to ignore and the expected behavior of a Ctrl-C on this process.
+
+=== bcc-tools: execsnoop
+
+The execsnoop script monitors all calls to execve() and catches all processes that follow the fork->exec sequence, as well as processes that re-exec() themselves. Processes that fork() but do not exec() won't be caught by this script.
+
+To run this script, do:
+
+.[root@node2 ~]#
+
+[source]
+----
+cd /usr/share/bcc/tools
+./execsnoop
+----
+
+You will see a header print that looks like:
+
+[source]
+----
+PCOMM            PID    PPID   RET ARGS
+----
+
+Now from another workstation terminal, run:
+
+.[root@workstation ~]#
+
+[source]
+----
+ssh node2.example.com
+----
+
+You can immediately exit your session and return to the workstation. In the execsnoop terminal, you should see output similar to:
+
+----
+PCOMM            PID    PPID   RET ARGS
+sshd             31354  777      0 /usr/sbin/sshd -D -oCiphers=aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr,aes256-cbc,aes128-gcm@openssh.com,aes128-ctr,aes128-cb -oMACs=hmac-sha2-256-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2- -oGSSAPIKexAlgorithms=gss-gex-sha1-,gss-group14-sha1- -oKexAlgorithms=curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-excha -oHostKeyAlgorithms=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha2-nis -oPubkeyAcceptedKeyTypes=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha -R
+unix_chkpwd      31356  31354    0 /usr/sbin/unix_chkpwd root chkexpiry
+bash             31358  31357    0 /bin/bash
+id               31360  31359    0 /usr/bin/id -un
+hostname         31362  31361    0 /usr/bin/hostname
+grepconf.sh      31363  31358    0 /usr/libexec/grepconf.sh -c
+grep             31364  31363    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
+grepconf.sh      31365  31358    0 /usr/libexec/grepconf.sh -c
+grep             31366  31365    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
+grepconf.sh      31367  31358    0 /usr/libexec/grepconf.sh -c
+grep             31368  31367    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
+sed              31370  31369    0 /usr/bin/sed -r -e s/^[[:blank:]]*([[:upper:]_]+)=([[:print:][:digit:]\._-]+|"[[:print:][:digit:]\._-]+")/export \1=\2/;t;d /etc/locale.conf
+man              31371  31358    0 /usr/bin/man execsnoop
+nroff            31379  31371    0 /usr/bin/nroff -mandoc -Tutf8
+preconv          31377  31371    0 /usr/bin/preconv -e UTF-8
+locale           31385  31384    0 /usr/bin/locale charmap
+groff            31386  31379    0 /usr/bin/groff -mtty-char -Tutf8 -mandoc
+grotty           31388  31386    0 /usr/bin/grotty
+troff            31387  31386    0 /usr/bin/troff -mtty-char -mandoc -Tutf8
+----
+
+This shows you all the processes that ran exec during that ssh login, their PID, their parent PID, their return code, and the arguments that were sent to the process. You could keep monitoring this for quite some time to catch potential bad actors on the system.
+
+Go to the terminal with execsnoop running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+
+=== bcc-tools: opensnoop
+
+Similar in nature to execsnoop, opensnoop traces the open() syscall, which shows which processes are attempting to open which files.
+
+To run this script, do:
+
+.[root@node2 ~]#
+
+[source]
+----
+cd /usr/share/bcc/tools
+./opensnoop
+----
+
+You will see a header that prints out like:
+
+[source]
+----
+PID    COMM               FD ERR PATH
+----
+
+In a workstation terminal, perform the following steps to connect to node2 as a student:
+
+.[root@workstation ~]#
+
+[source]
+----
+exit
+----
+
+.[student@workstation ~]$
+
+[source]
+----
+ssh node2.example.com
+----
+
+You probably saw a lot of data go by in the window running opensnoop as there are a lot of files opened during the establishing of an ssh session and the corresponding login activity.
+
+Now on node2, let's do:
+
+.[student@node2 ~]$ 
+
+[source]
+----
+cat /etc/fstab
+----
+
+You will see a lot of locale data being loaded in addition to /etc/fstab in the opensnoop window like so:
+
+[source]
+----
+31474  cat                 3   0 /etc/ld.so.cache
+31474  cat                 3   0 /lib64/libc.so.6
+31474  cat                -1   2 /usr/lib/locale/locale-archive
+31474  cat                 3   0 /usr/share/locale/locale.alias
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_IDENTIFICATION
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
+31474  cat                 3   0 /usr/lib64/gconv/gconv-modules.cache
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MEASUREMENT
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TELEPHONE
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TELEPHONE
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_ADDRESS
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_ADDRESS
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NAME
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NAME
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_PAPER
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_PAPER
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MESSAGES
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MONETARY
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MONETARY
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_COLLATE
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_COLLATE
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TIME
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TIME
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NUMERIC
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NUMERIC
+31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_CTYPE
+31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_CTYPE
+31474  cat                 3   0 /etc/fstab
+----
+
+The fourth column is the exit code and you can see that some of these files exit with non-zero codes meaning they don't exist or the user doesn't have appropriate permissions. Let's take a look at /usr/lib/locale/locale-archive:
+
+.[student@node2 ~]$ 
+
+[source]
+----
+ls /usr/lib/locale/locale-archive
+----
+
+and we see the following returned:
+
+[source]
+----
+ls: cannot access '/usr/lib/locale/locale-archive': No such file or directory
+----
+
+Now let's try to cat /etc/shadow as the student user:
+
+.[student@node2 ~]$
+
+[source]
+----
+cat /etc/shadow
+----
+
+We see the following returned in opensnoop:
+
+[source]
+----
+31480  cat                 3   0 /etc/ld.so.cache
+31480  cat                 3   0 /lib64/libc.so.6
+31480  cat                -1   2 /usr/lib/locale/locale-archive
+31480  cat                 3   0 /usr/share/locale/locale.alias
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_IDENTIFICATION
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
+31480  cat                 3   0 /usr/lib64/gconv/gconv-modules.cache
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MEASUREMENT
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TELEPHONE
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TELEPHONE
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_ADDRESS
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_ADDRESS
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NAME
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NAME
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_PAPER
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_PAPER
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MESSAGES
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MONETARY
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MONETARY
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_COLLATE
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_COLLATE
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TIME
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TIME
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NUMERIC
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NUMERIC
+31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_CTYPE
+31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_CTYPE
+31480  cat                -1  13 /etc/shadow
+31480  cat                -1   2 /usr/share/locale/en_US.UTF-8/LC_MESSAGES/libc.mo
+31480  cat                -1   2 /usr/share/locale/en_US.utf8/LC_MESSAGES/libc.mo
+31480  cat                -1   2 /usr/share/locale/en_US/LC_MESSAGES/libc.mo
+31480  cat                -1   2 /usr/share/locale/en.UTF-8/LC_MESSAGES/libc.mo
+31480  cat                -1   2 /usr/share/locale/en.utf8/LC_MESSAGES/libc.mo
+31480  cat                -1   2 /usr/share/locale/en/LC_MESSAGES/libc.mo
+----
+
+with the key line being:
+
+[source]
+----
+31480  cat                -1  13 /etc/shadow
+----
+
+The -13 return code indicates that we did not have permission to open the requested resource.
+
+As you can see, this tool is very useful for trying to determine where an application has its configurations or for seeing why an application may be failing.
+
+Go to the terminal with opensnoop running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+
+=== bcc-tools: xfsslower
+
+The purpose of the xfsslower tool (also ext4slower and nfsslower) is to show you filesystem operations slower than 10ms. It traces reads, writes, opens, and syncs and then prints out the timestamp of the operation, the process name, the ID, the type of operation, the file offset in kilobyets, the latency of the I/O measured from when it was issued by VFS to the filesystem to when it was completed, and finally, the filename being operated on.
+
+To run this script, do:
+
+.[root@node2 ~]#
+
+[source]
+----
+cd /usr/share/bcc/tools
+./xfsslower
+----
+
+You should see the following header print:
+[source]
+----
+Tracing XFS operations slower than 10 ms
+TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
+----
+
+Now in another node2 terminal window, let's run:
+
+.[root@node2 ~]#
+
+[source]
+----
+dd if=/dev/urandom of=bigfile bs=1024 count=20000
+----
+
+This writes out a 20M file called bigfile and should not register on your xfsslower window.
+
+Now, let's execute the above command in a for loop so that we get more I/O going in parallel:
+
+.[root@node2 ~]#
+
+[source]
+----
+for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
+----
+
+Now you should see similar output in your xfsslower window:
+
+----
+TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
+20:44:43 b'dd'          32446  W 1024    778        44.11 b'bigfile1'
+20:44:43 b'dd'          32455  W 1024    818        55.11 b'bigfile10'
+20:44:43 b'dd'          32452  W 1024    1712       44.11 b'bigfile7'
+20:44:43 b'dd'          32455  W 1024    1778       55.02 b'bigfile10'
+20:44:43 b'dd'          32451  W 1024    2850       44.11 b'bigfile6'
+20:44:43 b'dd'          32447  W 1024    3598       44.10 b'bigfile2'
+20:44:43 b'dd'          32451  W 1024    3805       55.11 b'bigfile6'
+20:44:43 b'dd'          32446  W 1024    4612       44.28 b'bigfile1'
+20:44:43 b'dd'          32446  W 1024    5529       33.01 b'bigfile1'
+20:44:43 b'dd'          32454  W 1024    4504       55.11 b'bigfile9'
+20:44:43 b'dd'          32447  W 1024    7335       44.10 b'bigfile2'
+20:44:43 b'dd'          32455  W 1024    7545       44.02 b'bigfile10'
+20:44:43 b'dd'          32446  W 1024    8344       49.16 b'bigfile1'
+20:44:43 b'dd'          32448  W 1024    8183       44.18 b'bigfile3'
+20:44:43 b'dd'          32447  W 1024    9168       55.10 b'bigfile2'
+20:44:43 b'dd'          32449  W 1024    9728       54.10 b'bigfile4'
+20:44:43 b'dd'          32454  W 1024    10244      33.11 b'bigfile9'
+20:44:43 b'dd'          32447  W 1024    10989      55.02 b'bigfile2'
+20:44:43 b'dd'          32453  W 1024    11276      54.10 b'bigfile8'
+20:44:43 b'dd'          32453  W 1024    12169      33.10 b'bigfile8'
+20:44:43 b'dd'          32451  W 1024    13292      91.11 b'bigfile6'
+20:44:43 b'dd'          32453  W 1024    13108      47.24 b'bigfile8'
+20:44:43 b'dd'          32448  W 1024    13788      44.01 b'bigfile3'
+20:44:43 b'dd'          32454  W 1024    14137      44.23 b'bigfile9'
+20:44:43 b'dd'          32446  W 1024    16076      44.02 b'bigfile1'
+20:44:43 b'dd'          32447  W 1024    15796      44.26 b'bigfile2'
+20:44:44 b'dd'          32446  W 1024    17004      44.10 b'bigfile1'
+20:44:44 b'dd'          32455  W 1024    16697      44.16 b'bigfile10'
+20:44:44 b'dd'          32450  W 1024    18505      44.01 b'bigfile5'
+20:44:44 b'dd'          32451  W 1024    19056      44.17 b'bigfile6'
+20:44:44 b'dd'          32446  W 1024    19868      44.38 b'bigfile1'
+20:44:44 b'dd'          32452  W 1024    19272      44.14 b'bigfile7'
+20:44:44 b'dd'          32455  W 1024    19168      30.75 b'bigfile10'
+20:44:44 b'dd'          32453  W 1024    19612      31.16 b'bigfile8'
+20:44:44 b'dd'          32454  W 1024    19460      24.59 b'bigfile9'
+20:44:44 b'dd'          32447  W 1024    19508      36.20 b'bigfile2'
+----
+
+So we can see that when writing these files in parallel, we have xfs operations taking longer than 10ms to complete.
+
+Go to the terminal with xfsslower running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+
+=== bcc-tools: cachestat
+
+The cachestat tool traces kernel page cache functions and prints per-second summaries to aid you in workload characterization.
+
+To run this script, do:
+
+.[root@node2 ~]#
+
+[source]
+----
+cd /usr/share/bcc/tools
+./cachestat
+----
+
+You should see the following header print:
+[source]
+----
+   TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
+----
+
+In another root terminal on node 2, run our dd for loop from the xfsslower section:
+
+.[root@node2 ~]#
+
+[source]
+----
+for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
+----
+
+In the cachestat window, you should output similar to:
+
+----
+   TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
+    1135        0     1135        0            5       1464
+    9852       31     9821        0            5       1464
+----
+
+This shows that we had 31 page cache misses while running the above loop, but during that same second, there were 9,821 hits, indicating great performance from the page cache.
+
+Go to the terminal with cachestat running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+
+=== bcc-tools: trace
+
+This tool is a swiss army knife allowing you to specify functions to trace and messages to be printed when certain conditons are met. You can read more about this by running:
+
+.[root@node2 ~]#
+
+[source]
+----
+man 8 trace
+----
+
+Let's do a simple trace in which we will dynamically trace the do_sys_open() kernel function and print the names of the files opened. Run this with:
+
+.[root@node2 ~]#
+
+[source]
+----
+cd /usr/share/bcc/tools
+./trace 'p::do_sys_open "%s", arg2'
+----
+
+Now in another node2 terminal, run:
+
+.[root@node2 ~]#
+
+[source]
+----
+cat /etc/fstab
+----
+
+In the window with trace running, you will see something similar to:
+
+----
+32559   32559   cat             do_sys_open      b'/etc/ld.so.cache'
+32559   32559   cat             do_sys_open      b'/lib64/libc.so.6'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/locale-archive'
+32559   32559   cat             do_sys_open      b'/usr/share/locale/locale.alias'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_IDENTIFICATION'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_IDENTIFICATION'
+32559   32559   cat             do_sys_open      b'/usr/lib64/gconv/gconv-modules.cache'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_MEASUREMENT'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_MEASUREMENT'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_TELEPHONE'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_TELEPHONE'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_ADDRESS'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_ADDRESS'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_NAME'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_NAME'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_PAPER'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_PAPER'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_MESSAGES'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_MESSAGES'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_MONETARY'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_MONETARY'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_COLLATE'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_COLLATE'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_TIME'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_TIME'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_NUMERIC'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_NUMERIC'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_CTYPE'
+32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_CTYPE'
+32559   32559   cat             do_sys_open      b'/etc/fstab'
+----
+
+Go ahead and Ctrl-C trace and then let's do one more trace, this time, tracing the return values out of trace:
+
+.[root@node2 ~]#
+
+[source]
+----
+cd /usr/share/bcc/tools
+./trace 'r::do_sys_open "ret: %d", retval'
+----
+
+Now in another node2 terminal, run:
+
+.[root@node2 ~]#
+
+[source]
+----
+cat /etc/fstab
+----
+
+and in your trace window, you will see output similar to:
+
+[source]
+----
+PID     TID     COMM            FUNC             -
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: -2
+32576   32576   cat             do_sys_open      ret: 3
+32576   32576   cat             do_sys_open      ret: 3
+----
+
+Go to the terminal with trace running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+
+There is a lot more that you can do with this tool when you actually need to start tracing what is getting passed into kernel functions and what is being returned by those kernel functions.
+
+== Exit System
+
+.[root@node3 ~]#
+----
+exit
+----
+
+
+.[root@workstation ~]#
+----
+uname -n
+
+whoami
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+workstation.example.com
+
+root
+----
+
+Now you are ready to proceed to the next unit.
+
+[discrete]
+== End of Unit
+
+link:../RHEL8-Workshop.adoc#toc[Return to TOC]
+
+////
+Always end files with a blank line to avoid include problems.
+////
