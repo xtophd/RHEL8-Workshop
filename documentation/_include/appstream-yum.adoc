@@ -8,6 +8,10 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
+
+:toc:
+:toclevels: 1
+
 = Application Streams
 
 == Choosing an appstream module on RHEL 8.
