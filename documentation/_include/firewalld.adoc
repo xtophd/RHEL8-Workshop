@@ -41,7 +41,9 @@ cheat-firewalld-checkhost.sh
 
 Now you are ready to begin
 
-== Installation
+== Installation & Configuration
+
+=== Packages and Services
 
 Firewalld is already installed and running on you host. These steps provided here will restore firewalld if it has been disabled. It should NOT be necessary to run these commands in this lab.
 
@@ -57,7 +59,7 @@ systemctl status -l firewalld
 ----
 ====
 
-== Configuration
+=== Configuration
 
 Firewalld uses several different, completely adaptable, XML config files to store configurations. These files also ensure run-time and persistent configuration separation. 
 
