@@ -87,21 +87,10 @@ Let us examine a couple of the system's default zone files in */usr/lib/firewall
 .drop.xml
 [source,indent=4]
 ----
-<?xml version="1.0" encoding="utf-8"?> <zone target=”DROP”>
-</zone>
-----
-
-.custom.xml
-[source,indent=4]
-----
-<?xml version="1.0" encoding="utf-8"?> 
-<zone>
-	<interface name="em2"/> 
-<source address="10.0.1.0/24"/> 
-<service name="ssh"/>
-	<service name="ipp-client"/> 
-<service name="dhcpv6-client"/>
-	<rule><protocol value="ah"/><accept/></rule>
+<?xml version="1.0" encoding="utf-8"?>
+<zone target="DROP">
+  <short>Drop</short>
+  <description>Unsolicited incoming network packets are dropped. Incoming packets that are related to outgoing network connections are accepted. Outgoing network connections are allowed.</description>
 </zone>
 ----
 
@@ -109,17 +98,36 @@ Let us examine a couple of the system's default zone files in */usr/lib/firewall
 
 There are nearly 50 built-in services files shipped with firewalld. Services files include Port (ranges) with protocol, Netfilter helper modules, and destination address (range) for IPv4 and/or IPv6. You can also create your own services files or customize the default files. To customize a file, simply copy it from /usr/lib/firewalld/services to /etc/firewalld/services then make any required changes. 
 
-Here is an example of the default http.xml services file from /usr/lib/firewalld/services 
+Here are a couple common configs for services defined in */usr/lib/firewalld/services *.
 
-
+.http.xml
+[source,indent=4]
 ----
-<?xml version="1.0" encoding="utf-8"?> 
+<?xml version="1.0" encoding="utf-8"?>
 <service>
-	<short>WWW (HTTP)</short>
-<description>HTTP is the protocol used to serve Web pages. If you plan to make your Web server publicly available, enable this option. This option is not required for viewing pages locally or developing Web pages.</description>
-	<port protocol="tcp" port="80"/> 
+  <short>SSH</short>
+  <description>Secure Shell (SSH) is a protocol for logging into and executing commands on remote machines. It provides secure encrypted communications. If you plan on accessing your machine remotely via SSH over a firewalled interface, enable this option. You need the openssh-server package installed for this option to be useful.</description>
+  <port protocol="tcp" port="22"/>
 </service>
 ----
+
+.http.xml
+[source,indent=4]
+----
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>WWW (HTTP)</short>
+  <description>HTTP is the protocol used to serve Web pages. If you plan to make your Web server publicly available, enable this option. This option is not required for viewing pages locally or developing Web pages.</description>
+  <port protocol="tcp" port="80"/>
+</service>
+----
+
+
+
+
+
+
+
 
 
 
@@ -130,8 +138,7 @@ Here is an example of the default http.xml services file from /usr/lib/firewalld
 
 Red Hat Documentation
 
-    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/configuring_and_managing_security/assembly_using-firewalls_configuring-and-managing-security[Using and Configuring Firewalls]
-
+    * link:None[Put firewalld documentation in here]
 
 [discrete]
 == End of Unit
@@ -141,3 +148,4 @@ link:../RHEL8-Workshop.adoc#toc[Return to TOC]
 ////
 Always end files with a blank line to avoid include problems.
 ////
+
