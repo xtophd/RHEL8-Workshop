@@ -10,19 +10,15 @@ endif::[]
 
 = Firewalld - Firewall Service Management
 
-The *firewalld* daemon provides a dynamically managed firewall (network security) with support for network “zones” which assign a level of trust to a network, its associated connections and interfaces. 
+The *firewalld* daemon provides a dynamically managed firewall for enhanced network security.  The firewalld daemon is control by way of a command-line tool `firewall-cmd` or a gui tool provided by the `firewall-config` rpm package.
 
-Few additonal features of firewalld include:
+Features of firewalld include:
 
   * support for IPv4 and IPv6 settings
   * support for ethernet bridges
+  * support for network “zones” which assigns level of trust to a network / connections / interfaces
   * separation of runtime and permanent configuration options
   * interface for external services to manage firewall rules directly
-
-Firewalld stores it in various configuration XML files in 2 places:
-
-  * /usr/lib/firewalld/ 
-  * /etc/firewalld/
 
 WARNING: Both firewalld and nftables can be used to manage the kernel's network packet filter. Administrators should pick one tool as they will interfere with one another if used simultaneously.  Do not use them both.
 
@@ -64,9 +60,17 @@ systemctl status -l firewalld
 
 == Configuration
 
-Firewalld uses several different, completely adaptable, XML config files to store configurations. These files also ensure run-time and persistent configuration separation. The default configuration files are in */usr/lib/firewalld*, while user customized files (which take precedence if they exist) are in */etc/firewalld*. 
+Firewalld uses several different, completely adaptable, XML config files to store configurations. These files also ensure run-time and persistent configuration separation. 
 
-== Zones
+The configuration files are stored in 
+  * /usr/lib/firewalld
+  * /etc/firewalld
+  
+Red Hat distributes the default servicee configurations in /usr/lib/firewalld.  These configuations are NOT meant for customization.  They WILL be overwritten and replaced from time to time as Red Hat releases new packages or updates for the operating system.
+
+Customizations for firewall configuration belowing in */etc/filrewalld*.  These configuration files (if they exist) take precedence over the default configs.
+
+=== Zone Configs
 
 Firewald uses zones to assign a level of trust to a network and its associated connections and interfaces. The zone files include definitions of Services, Ports (ranges) with protocols, Rich rules, Internet Control Message Protocol (ICMP) blocks , Masquerading and Port/packet forwarding. There are several built-in zones: block, dmz, drop, external, home, internal, public, trusted, work - and you can also create new zones 
 
@@ -94,7 +98,7 @@ Let us examine a couple of the system's default zone files in */usr/lib/firewall
 </zone>
 ----
 
-== Services
+=== Service Configs
 
 There are nearly 50 built-in services files shipped with firewalld. Services files include Port (ranges) with protocol, Netfilter helper modules, and destination address (range) for IPv4 and/or IPv6. You can also create your own services files or customize the default files. To customize a file, simply copy it from /usr/lib/firewalld/services to /etc/firewalld/services then make any required changes. 
 
