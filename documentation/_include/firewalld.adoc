@@ -223,7 +223,7 @@ Here we will take a moment to enable the http and https service ports.
 
 .[root@node1]#
 ----
-firewall-cmd --add-service=http --add-service=https
+firewall-cmd --add-service={http,https}
 ----
 
 .Command Output
@@ -259,7 +259,8 @@ cockpit dhcpv6-client ssh
 firewall-cmd --runtime-to-permanent
 ----
 
-NOTE: you could have also passed the *--permanent* flag to the original call the *--add-service*
+NOTE: you could have also passed the *--permanent* flag to the original command as follows `firewall-cmd --permanent --add-service={http,https}`
+
 
 .[root@node1]#
 ----
@@ -302,7 +303,7 @@ firewall-cmd --list-services
 cockpit http https ssh
 ----
 
-Again, we point out that what we just did is not permanent (ie: these changes will not persist after a reboot).  Have a look at th eoutput from *--list-services --permanent*.  See the difference?  Our unwanted service will return after a *firewall-command --reload* or a system reboot.
+Again, we point out that what we just did is not permanent (ie: these changes will not persist after a reboot).  Have a look at the output from `firewall-cmd --list-services --permanent*`.  See the difference?  Our unwanted service will return after a `firewall-command --reload` or a system reboot.
 
 .[root@node1]#
 ----
