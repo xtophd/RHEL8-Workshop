@@ -8,6 +8,10 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
+
+:toc:
+:toclevels: 1
+
 = Introducing NFTables
 
 In Red Hat Enterprise Linux 8 the network security dynamic duo Firewalld and Nftables make their new team debut.
