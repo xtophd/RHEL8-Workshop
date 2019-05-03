@@ -2,7 +2,6 @@
 
 # Drop in some custom config files for firewalld
 
-echo""
 echo "# Creating custom firewalld config file for http..."
 cat > /etc/firewalld/services/http.xml << EOCONFIG1
 <?xml version="1.0" encoding="utf-8"?>
@@ -14,12 +13,7 @@ cat > /etc/firewalld/services/http.xml << EOCONFIG1
 </service>
 EOCONFIG1
 
-cat /etc/firewalld/services/http.xml
-
-
-echo""
 echo "# Creating custom firewalld config file for https..."
-
 cat > /etc/firewalld/services/https.xml << EOCONFIG2
 <?xml version="1.0" encoding="utf-8"?>
 <service>
@@ -29,5 +23,3 @@ cat > /etc/firewalld/services/https.xml << EOCONFIG2
   <port protocol="tcp" port="8443"/>
 </service>
 EOCONFIG2
-
-cat /etc/firewalld/services/https.xml
