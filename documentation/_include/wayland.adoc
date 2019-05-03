@@ -34,7 +34,9 @@ reboot
 For today’s lab this has already been done for you...
 
 
-Log into the console of your workstation as student.
+Log into the console of your workstation as the user *student*.
+  
+== Adding Packages
   
 ====
 image::wayland-image6.png[Wayland Desktop]
@@ -74,6 +76,7 @@ image::wayland-image1.png[Credentials Dialog]
 Feel free to browse the interface but don’t make any changes…
 When you are done exploring - click on the “x” in the upper right hand corner.
 
+== Customization the Desktop
 
 Now lets configure your desktop to have a menu system…
 Click on “Activities” then click on the Gnome Terminal icon...
@@ -88,7 +91,6 @@ Become root.
 ----
 sudo -i
 ----
-
 
 Then we’ll install some packages to better configure our desktop and improve our graphical user experience…
 
@@ -144,30 +146,11 @@ Close the app without making changes…
 
 That is all for this quick first time introduction to Wayland.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 == Additional Resources
 
 Red Hat Documentation
 
-    * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[Deplying Session Recording on Red Hat Enterprise Linux]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html-single/managing_rhel_systems_from_your_desktop/index[MANAGING RHEL SYSTEMS FROM YOUR DESKTOP]
 
 [discrete]
 == End of Unit
