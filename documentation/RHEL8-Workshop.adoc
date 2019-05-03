@@ -130,7 +130,7 @@ image::ocp-webui-hello1-project-create.png[Create Project]
   . link:{includedir}/nftables.adoc[*NFTables* - (NEW) Firewall Subsystem] _(node2)_
   . link:{includedir}/appstream-yum.adoc[*App Stream* - (NEW) Application Delivery] _(node1, node2, node3)_
   . link:{includedir}/podman.adoc[*Podman* - (NEW) Container Management] _(node3)_
-  . link:{includedir}/podman.adoc[*Buildah & Skopeo* - (NEW) Container Creation] _(node3)_
+  . link:{includedir}/buildah.adoc[*Buildah & Skopeo* - (NEW) Container Creation] _(node3)_
   . link:{includedir}/tlog.adoc[*TLog* - (NEW) Session Logging] _(node1)_
   . link:{includedir}/stratis.adoc[*Stratis* - (NEW) Storage Management] _(node2)_
   . link:{includedir}/boom.adoc[*BOOM* - (NEW) Boot Management] _(node3)_
@@ -146,10 +146,10 @@ include::{includedir}/firewalld.adoc[leveloffset=+1]
 include::{includedir}/nftables.adoc[leveloffset=+1]
 include::{includedir}/appstream-yum.adoc[leveloffset=+1]
 include::{includedir}/podman.adoc[leveloffset=+1]
+include::{includedir}/buildah[leveloffset=+1]
 include::{includedir}/tlog.adoc[leveloffset=+1]
 include::{includedir}/stratis.adoc[leveloffset=+1]
 include::{includedir}/boom.adoc[leveloffset=+1]
-
 ////
 
 [discrete]
