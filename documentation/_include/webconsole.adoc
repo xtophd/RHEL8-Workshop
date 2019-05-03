@@ -9,6 +9,9 @@ ifdef::env-github[]
 endif::[]
 :imagesdir: ./_images
 
+:toc:
+:toclevels: 1
+
 = Web Console
 
 Web Console is a Red Hat Enterprise Linux 8 web-based interface designed for managing and monitoring your local system, as well as Linux servers located in your network environment.
