@@ -266,7 +266,7 @@ Every time you run setenforce 0, you make Dan Walsh weep.
 
 As you can see, all of the changes we made with buildah are active and working in this new container image!
 
-=== Using skopeo to inspect containers
+== Inspecting Images with Skopeo
 
 Let's take a look at the website2:latest container that we just built:
 
