@@ -289,15 +289,27 @@ firewall-cmd --remove-service=dhcpv6-client
 success
 ----
 
+Take a look at the active services now and you should find dhp6-client absent.
+
 .[root@node1]#
 ----
 firewall-cmd --list-services
 ----
 
+.Command Output
+[source,indent=4]
+----
+cockpit http https ssh
+----
+
+Again, we point out that what we just did is not permanent (ie: these changes will not persist after a reboot).  Have a look at th eoutput from *--list-services --permanent*.  See the difference?  Our unwanted service will return after a *firewall-command --reload* or a system reboot.
+
 .[root@node1]#
 ----
 firewall-cmd --list-services --permanent
 ----
+
+Thus, there is one more step.  Save our current active configuration.
 
 .[root@node1]#
 ----
