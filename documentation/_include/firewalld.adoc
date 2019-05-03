@@ -124,20 +124,24 @@ Here are a couple common configs for services defined in */usr/lib/firewalld/ser
 
 == Firewall Basics
 
+.[root@node1]#
 ----
 firewall-cmd --state
 ----
 
 .Command Output
+[source,indent=4]
 ----
 running
 ----
 
+.[root@node1]#
 ----
 firewall-cmd --get-active-zones
 ----
 
 .Command Output
+[source,indent=4]
 ----
 libvirt
   interfaces: virbr0
@@ -145,29 +149,35 @@ public
   interfaces: ens3
 ----
 
+.[root@node1]#
 ----
 firewall-cmd --zone=public --list-interfaces
 ----
 
 .Command Output
+[source,indent=4]
 ----
 ens3
 ----
 
+.[root@node1]#
 ----
 firewall-cmd --zone=public --list-services
 ----
 
 .Command Output
+[source,indent=4]
 ----
 cockpit dhcpv6-client ssh
 ----
 
+.[root@node1]#
 ----
 firewall-cmd --zone=public --list-all
 ----
 
 .Command Output
+[source,indent=4]
 ----
 public (active)
   target: default
@@ -191,42 +201,51 @@ public (active)
 
 === Add a Default Service
 
+.[root@node1]#
 ----
 firewall-cmd --add-service=http --add-service=https
 ----
 
 .Command Output
+[source,indent=4]
 ----
 success
 ----
 
+.[root@node1]#
 ----
 firewall-cmd --list-services
 ----
 
 .Command Output
+[source,indent=4]
 ----
 cockpit dhcpv6-client http https ssh
 ----
 
+.[root@node1]#
 ----
 firewall-cmd --list-services --permanent
 ----
 
 .Command Output
+[source,indent=4]
 ----
 cockpit dhcpv6-client ssh
 ----
 
+.[root@node1]#
 ----
 firewall-cmd --add-service=http --add-service=https --permanent
 ----
 
+.[root@node1]#
 ----
 firewall-cmd --list-services --permanent
 ----
 
 .Command Output
+[source,indent=4]
 ----
 cockpit dhcpv6-client http https ssh
 ----
@@ -235,27 +254,43 @@ cockpit dhcpv6-client http https ssh
 
 == Delete a Default Service
 
+.[root@node1]#
+----
 firewall-cmd --delete-service=dhcpv6-client
+----
 
 .Command Output
+[source,indent=4]
 ----
 ----
 
+.[root@node1]#
+----
 firewall-cmd --list-services --permanent
+----
 
 .Command Output
+[source,indent=4]
 ----
 ----
 
+.[root@node1]#
+----
 firewall-cmd --delete-service=dhcpv6-client --permanent
+----
 
 .Command Output
+[source,indent=4]
 ----
 ----
 
+.[root@node1]#
+----
 firewall-cmd --list-services --permanent
+----
 
 .Command Output
+[source,indent=4]
 ----
 ----
 
@@ -270,8 +305,9 @@ firewall-cmd --add-port=8080/tcp --add-port=8443/tcp --permanent
 
 === Delete Custome Service
 
+.[root@node1]#
 ----
-firewall-cmd --add-port=8080/tcp --add-port=8443/tcp --permanent
+firewall-cmd --delete-port=8080/tcp --delete-port=8443/tcp --permanent
 ----
 
 == Create a Custom Service Config
