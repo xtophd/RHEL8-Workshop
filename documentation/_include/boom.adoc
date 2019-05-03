@@ -145,7 +145,7 @@ Now that we have created some important data, it's time to create a snapshot of 
 
 .[root@node3]#
 ----
-echo "Creating logical volume to back root LV snapshop"
+echo "Creating logical volume to back root LV snapshot"
 lvcreate -s rhel/root -n root_snapshot -L 10G
 ----
 
