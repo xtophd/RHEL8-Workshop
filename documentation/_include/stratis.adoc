@@ -8,6 +8,10 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
+
+:toc:
+:toclevels: 1
+
 = Stratis : Storage Management Made Easy
 
 Stratis is a command-line tool to create, modify, and destroy Stratis pools, and the filesystems allocated from the pool.  Stratis creates a pool from one or more block devices (blockdevs), and then enables multiple filesystems to be created from the pool.
