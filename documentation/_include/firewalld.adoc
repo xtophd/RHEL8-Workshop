@@ -219,6 +219,10 @@ Default Services are those that are pre-defined by configuration files in either
 
 Here we will take a moment to enable the http and https service ports.
 
+
+
+
+
 === Add a Default Service
 
 .[root@node1]#
@@ -234,24 +238,48 @@ success
 
 .[root@node1]#
 ----
-firewall-cmd --list-services
+firewall-cmd --zone=public --list-all
 ----
 
 .Command Output
 [source,indent=4]
 ----
-cockpit dhcpv6-client http https ssh
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: ens3
+  sources:
+  services: cockpit dhcpv6-client http https ssh
+  ports: 443/tcp
+  protocols:
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
 ----
 
 .[root@node1]#
 ----
-firewall-cmd --list-services --permanent
+firewall-cmd --zone=public --list-all --permanent
 ----
 
 .Command Output
 [source,indent=4]
 ----
-cockpit dhcpv6-client ssh
+public
+  target: default
+  icmp-block-inversion: no
+  interfaces:
+  sources:
+  services: cockpit dhcpv6-client ssh
+  ports: 443/tcp
+  protocols:
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
 ----
 
 .[root@node1]#
@@ -264,14 +292,29 @@ NOTE: you could have also passed the *--permanent* flag to the original command 
 
 .[root@node1]#
 ----
-firewall-cmd --list-services --permanent
+firewall-cmd --zone=public --list-all --permanent
 ----
 
 .Command Output
 [source,indent=4]
 ----
-cockpit dhcpv6-client http https ssh
+public
+  target: default
+  icmp-block-inversion: no
+  interfaces:
+  sources:
+  services: cockpit dhcpv6-client http https ssh
+  ports: 443/tcp
+  protocols:
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
 ----
+
+
+
 
 
 
@@ -303,36 +346,114 @@ firewall-cmd --list-services
 cockpit http https ssh
 ----
 
-Again, we point out that what we just did is not permanent (ie: these changes will not persist after a reboot).  Have a look at the output from `firewall-cmd --list-services --permanent*`.  See the difference?  Our unwanted service will return after a `firewall-command --reload` or a system reboot.
+Again, we point out that what we just did is not permanent (ie: these changes will not persist after a reboot).
 
 .[root@node1]#
 ----
-firewall-cmd --list-services --permanent
+firewall-cmd --zone=public --list-all --permanent
 ----
 
-Thus, there is one more step.  Save our current active configuration.
+As the output above shows, our unwanted service will return if someone runs `firewall-command --reload` or after a system reboot.
+Thus, there is one more step.  Save our current active configuration to the permament one.
 
 .[root@node1]#
 ----
 firewall-cmd --runtime-to-permanent
 ----
 
+.[root@node1]#
+----
+firewall-cmd --zone=public --list-all --permanent
+----
+
+.Command Output
+[source,indent=4]
+----
+public
+  target: default
+  icmp-block-inversion: no
+  interfaces:
+  sources:
+  services: cockpit http https ssh
+  ports: 443/tcp
+  protocols:
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
+----
+
+
+
+
+
 == Managing Custom Services
 
-=== Add Custom Service
+=== Add Custom Service (Port)
 
-----
-firewall-cmd --add-port=8080/tcp --add-port=8443/tcp --permanent
-----
-
-=== Delete Custome Service
+Since we have been toying with http, it's common for httpd to also be configured on ports 8080 and 8443.  So let's simply create and ad-hoc rule to make those ports available.
 
 .[root@node1]#
 ----
-firewall-cmd --delete-port=8080/tcp --delete-port=8443/tcp --permanent
+firewall-cmd --add-port=8080/tcp --add-port=8443/tcp
 ----
 
+And to make the rules permanent, save the current active configuration.
+
+.[root@node1]#
+----
+firewall-cmd --runtime-to-permanent
+----
+
+.[root@node1]#
+----
+firewall-cmd --zone=public --list-all --permanent
+----
+
+.Command Output
+[source,indent=4]
+----
+public
+  target: default
+  icmp-block-inversion: no
+  interfaces:
+  sources:
+  services: cockpit http https ssh
+  ports: 443/tcp 8080/tcp 8443/tcp
+  protocols:
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
+----
+
+
+
+
+
+=== Delete Custome Service
+
+As much fun as that was, ad-hoc was quick and easy, but not ideal.  We really desire a formal configuration, so let us undo the ad-hoc rules.
+
+.[root@node1]#
+----
+firewall-cmd --delete-port=8080/tcp --delete-port=8443/tcp
+----
+
+----
+firewall-cmd --runtime-to-permanent
+----
+
+
+
+
+
+
 == Create a Custom Service Config
+
+
 
 === Install Configuration File
 
@@ -341,7 +462,6 @@ firewall-cmd --delete-port=8080/tcp --delete-port=8443/tcp --permanent
 
 
 === Delete Custom Service
-
 
 
 == Panic Mode
