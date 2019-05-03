@@ -64,7 +64,7 @@ The configuration files are stored in
   
 Red Hat distributes the default servicee configurations in /usr/lib/firewalld.  These configuations are NOT meant for customization.  They WILL be overwritten and replaced from time to time as Red Hat releases new packages or updates for the operating system.
 
-Customizations for firewall configuration belowing in */etc/filrewalld*.  These configuration files (if they exist) take precedence over the default configs.
+Customizations for the firewall configuration belong in */etc/filrewalld*.  These configuration files (if they exist) take precedence over the default configs located in */usr/lib/firewalld*.
 
 === Zone Configs
 
@@ -469,6 +469,11 @@ public
   rich rules:
 ----
 
+
+
+
+
+
 == Create a Custom Service Config
 
 === Install Configuration File
@@ -483,6 +488,32 @@ Creating custom firewalld config file for http...
 Creating custom firewalld config file for https...
 ----
 
+Two configuration files were just created */etc/firewalld/services*.  They are identical to the system default ones except that our additional ports (8080 and 8443) were added the the definition.
+
+.Config File /etc/firewalld/services/http.xml
+[source,indent=4]
+----
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>WWW (HTTP)</short>
+  <description>HTTP is the protocol used to serve Web pages. If you plan to make your Web server publicly available, enable this option. This option is not required for viewing pages locally or developing Web pages.</description>
+  <port protocol="tcp" port="80"/>
+  <port protocol="tcp" port="8080"/>
+</service>
+----
+
+.Config File /etc/firewalld/services/https.xml
+[source,indent=4]
+----
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Secure WWW (HTTPS)</short>
+  <description>HTTPS is a modified HTTP used to serve Web pages when security is important. Examples are sites that require logins like stores or web mail. This option is not required for viewing pages locally or developing Web pages. You need the httpd package installed for this option to be useful.</description>
+  <port protocol="tcp" port="443"/>
+  <port protocol="tcp" port="8443"/>
+</service>
+----
+
 ===  Activate Customized Service
 
 Since the httpd service is already active, all we really need to do is reload firewalld.
@@ -493,7 +524,6 @@ firewall-cmd --reload
 ----
 
 === Verification
-
 
 .[root@node1]#
 ----
@@ -550,11 +580,13 @@ public
   rich rules:
 ----
 
+And you are done!
+
 == Panic Mode
 
 Panic mode allows you to immediately turn off all network traffic on a host.  
 
-This is handy to know, but unless you are on the physical system console or remote managed console (ie: ILO, DRAC, etc...) this can be very disruptive.  So we'll provide the commands under the strict guidance that you DON'T RUN THESE COMMANDS during this workshop.
+This is handy to know, but unless you are on the physical system console or remote managed console (ie: ILO, DRAC, etc...) this can be very disruptive.  So we'll provide the commands under the strict guidance that you *DON'T RUN THESE COMMANDS* during this workshop.
 
 [NOTE]
 ====
