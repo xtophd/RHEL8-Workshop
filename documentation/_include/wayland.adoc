@@ -1,0 +1,68 @@
+:sectnums:
+:sectnumlevels: 3
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+= Wayland
+
+Wayland was first introduced to the Fedora community back in version 25. For several years, development, hardening and rich features have made Wayland the new standard in graphical desktop environments. (replacing X.org)
+
+A detailed explanation of the architecture, functionality and features can be found at https://en.wikipedia.org/wiki/Wayland_(display_server_protocol) or you can simply go to the project’s homepage:  https://wayland.freedesktop.org/ for more details...
+
+== Inastallation
+
+The graphical desktop is installed by default in a "workstation" install but this is not the case in a "server" installation.
+
+In the event you installed a text based RHEL host, you can load and enable Wayland with the following steps:
+
+----
+yum groupinstall Workstation
+
+systemctl set-default graphical
+
+reboot
+----
+
+For today’s lab this has already been done for you...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+== Additional Resources
+
+Red Hat Documentation
+
+    * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[Deplying Session Recording on Red Hat Enterprise Linux]
+
+[discrete]
+== End of Unit
+
+link:../RHEL8-Workshop.adoc#toc[Return to TOC]
+
+////
+Always end files with a blank line to avoid include problems.
+////
+
