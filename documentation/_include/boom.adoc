@@ -8,6 +8,10 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
+
+:toc:
+:toclevels: 1
+
 = Boom
 
 BOOM is a boot manager for Linux systems that support the 'BootLoader Specification' for boot entry configuration (ie: RHEL8 with GRUB2). It simplifies the creation of new or modified boot entries: for example, to boot snapshot images of the system created using LVM.
