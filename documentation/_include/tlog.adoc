@@ -8,6 +8,10 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
+
+:toc:
+:toclevels: 1
+
 = Session Recording with Tlog
 
 Tlog is a terminal I/O recording and playback package for Linux.  The session logs retain all the passed data and timing.  Sessions are recorded in JSON format as to eventually deliver the data to a storage service _(such as Elasticsearch)_ where it can be searched, queried and be played back.
