@@ -320,7 +320,7 @@ public
 
 == Remove a Default Service
 
-Now let us disable a service port not needed for our workshop environment.
+Now let us disable a service port not needed for our workshop environment, namely *dhcp6-client*.
 
 .[root@node1]#
 ----
@@ -333,7 +333,7 @@ firewall-cmd --remove-service=dhcpv6-client
 success
 ----
 
-Take a look at the active services now and you should find dhp6-client absent.
+Take a look at the active services now and you should find dhcp6-client absent.
 
 .[root@node1]#
 ----
@@ -439,47 +439,134 @@ As much fun as that was, ad-hoc was quick and easy, but not ideal.  We really de
 
 .[root@node1]#
 ----
-firewall-cmd --delete-port=8080/tcp --delete-port=8443/tcp
+firewall-cmd --remove-port=8080/tcp --remove-port=8443/tcp
 ----
 
 ----
 firewall-cmd --runtime-to-permanent
 ----
 
+.[root@node1]#
+----
+firewall-cmd --zone=public --list-all --permanent
+----
 
-
-
-
+.Command Output
+[source,indent=4]
+----
+public
+  target: default
+  icmp-block-inversion: no
+  interfaces:
+  sources:
+  services: cockpit http https ssh
+  ports: 443/tcp
+  protocols:
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
+----
 
 == Create a Custom Service Config
 
-
-
 === Install Configuration File
 
+----
+cheat-firewalld-customconfigs.sh
+----
 
-=== Enable Custom Service
+.Command Output
+----
+Creating custom firewalld config file for http...
+Creating custom firewalld config file for https...
+----
+
+===  Activate Customized Service
+
+Since the httpd service is already active, all we really need to do is reload firewalld.
+
+.[root@node1]#
+----
+firewall-cmd --reload
+----
+
+=== Verification
 
 
-=== Delete Custom Service
+.[root@node1]#
+----
+firewall-cmd --info-service=http
+----
 
+.Command Output
+[source,indent=4]
+----
+http
+  ports: 80/tcp 8080/tcp
+  protocols:
+  source-ports:
+  modules:
+  destination:
+----
+
+.[root@node1]#
+----
+firewall-cmd --info-service=https
+----
+
+.Command Output
+[source,indent=4]
+----
+https
+  ports: 443/tcp 8443/tcp
+  protocols:
+  source-ports:
+  modules:
+  destination:
+----
+
+.[root@node1]#
+----
+firewall-cmd --zone=public --list-all --permanent
+----
+
+.Command Output
+[source,indent=4]
+----
+public
+  target: default
+  icmp-block-inversion: no
+  interfaces:
+  sources:
+  services: cockpit http https ssh
+  ports: 443/tcp
+  protocols:
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
+----
 
 == Panic Mode
 
-----
-firewall-cmd --query-panic
-----
+Panic mode allows you to immediately turn off all network traffic on a host.  
+
+This is handy to know, but unless you are on the physical system console or remote managed console (ie: ILO, DRAC, etc...) this can be very disruptive.  So we'll provide the commands under the strict guidance that you DON'T RUN THESE COMMANDS during this workshop.
 
 [NOTE]
 ====
 _DO NOT RUN THESE COMMANDS_
 ----
+firewall-cmd --query-panic
+
 firewall-cmd --panic-on 
 
 firewall-cmd --panic-off
 ----
 ====
-
 
 == Additional Resources
 
