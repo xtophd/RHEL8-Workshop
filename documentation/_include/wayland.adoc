@@ -14,7 +14,7 @@ Wayland was first introduced to the Fedora community back in version 25. For sev
 
 A detailed explanation of the architecture, functionality and features can be found at https://en.wikipedia.org/wiki/Wayland_(display_server_protocol) or you can simply go to the project’s homepage:  https://wayland.freedesktop.org/ for more details...
 
-== Inastallation
+== Installation
 
 The graphical desktop is installed by default in a "workstation" install but this is not the case in a "server" installation.
 
