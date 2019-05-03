@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Drop in some custom config files for firewalld
+
+echo""
+echo "# Creating custom firewalld config file for http..."
+cat > /etc/firewalld/services/http.xml << EOCONFIG1
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>WWW (HTTP)</short>
+  <description>HTTP is the protocol used to serve Web pages. If you plan to make your Web server publicly available, enable this option. This option is not required for viewing pages locally or developing Web pages.</description>
+  <port protocol="tcp" port="80"/>
+  <port protocol="tcp" port="8080"/>
+</service>
+EOCONFIG1
+
+cat /etc/firewalld/services/http.xml
+
+
+echo""
+echo "# Creating custom firewalld config file for https..."
+
+cat > /etc/firewalld/services/https.xml << EOCONFIG2
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>Secure WWW (HTTPS)</short>
+  <description>HTTPS is a modified HTTP used to serve Web pages when security is important. Examples are sites that require logins like stores or web mail. This option is not required for viewing pages locally or developing Web pages. You need the httpd package installed for this option to be useful.</description>
+  <port protocol="tcp" port="443"/>
+  <port protocol="tcp" port="8443"/>
+</service>
+EOCONFIG2
+
+cat /etc/firewalld/services/https.xml
