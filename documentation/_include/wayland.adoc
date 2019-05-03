@@ -33,35 +33,29 @@ For today’s lab this has already been done for you...
 
 Log into the console of your workstation as student.
   
-
-
-
-
+====
+image::wayland-image6.png[Wayland Desktop]
+====
 
 Click on Activities, then type in the search box.  “firewall”
 
-
-  
-
-
+====
+image::wayland-image4.png[Firewall]
+====
 
 Click on “Firewall”
 This will bring up the Gnome Software package installation GUI…
   
-
-
+====
+image::wayland-image8.png[Gnome Pkg Installer]
+====
 
 Click on “Firewall”.
 Then click “Install”
   
-
-  
-
-
-
-
-
-
+====
+image::wayland-image14.png[Firewall Pkg Install]
+====
 
 Click “Launch”...
 You’ll be prompted for the password for student - enter the password.
@@ -69,8 +63,9 @@ You’ll be prompted for the password for student - enter the password.
 Feel free to browse the interface but don’t make any changes…
 When you are done exploring - click on the “x” in the upper right hand corner.
 
-
-
+====
+image::wayland-image1.png[Firewall Pkg Install]
+====
 
 Now lets configure your desktop to have a menu system…
 Click on “Activities” then click on the Gnome Terminal icon...
