@@ -173,6 +173,22 @@ cockpit dhcpv6-client ssh
 
 .[root@node1]#
 ----
+firewall-cmd --info-service=cockpit
+----
+
+.Command Output
+[source,indent=4]
+----
+cockpit
+  ports: 9090/tcp
+  protocols:
+  source-ports:
+  modules:
+  destination:
+----
+
+.[root@node1]#
+----
 firewall-cmd --zone=public --list-all
 ----
 
@@ -198,6 +214,10 @@ public (active)
 
 
 == Managing Default Services
+
+Default Services are those that are pre-defined by configuration files in either */etc/firewalld* or */usr/lib/firewalld*.  This would include any configs delivered by Red Hat as part of the operating system or those added by a system administer.
+
+Here we will take a moment to enable the http and https service ports.
 
 === Add a Default Service
 
@@ -236,8 +256,10 @@ cockpit dhcpv6-client ssh
 
 .[root@node1]#
 ----
-firewall-cmd --add-service=http --add-service=https --permanent
+firewall-cmd --runtime-to-permanent
 ----
+
+NOTE: you could have also passed the *--permanent* flag to the original call the *--add-service*
 
 .[root@node1]#
 ----
@@ -250,13 +272,13 @@ firewall-cmd --list-services --permanent
 cockpit dhcpv6-client http https ssh
 ----
 
-
-
 == Delete a Default Service
 
+Now let us disable a service port not needed for our workshop environment.
+
 .[root@node1]#
 ----
-firewall-cmd --delete-service=dhcpv6-client
+firewall-cmd --permanent --delete-service=dhcpv6-client
 ----
 
 .Command Output
@@ -267,31 +289,6 @@ firewall-cmd --delete-service=dhcpv6-client
 .[root@node1]#
 ----
 firewall-cmd --list-services --permanent
-----
-
-.Command Output
-[source,indent=4]
-----
-----
-
-.[root@node1]#
-----
-firewall-cmd --delete-service=dhcpv6-client --permanent
-----
-
-.Command Output
-[source,indent=4]
-----
-----
-
-.[root@node1]#
-----
-firewall-cmd --list-services --permanent
-----
-
-.Command Output
-[source,indent=4]
-----
 ----
 
 
