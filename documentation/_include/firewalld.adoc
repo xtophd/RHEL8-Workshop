@@ -272,18 +272,26 @@ firewall-cmd --list-services --permanent
 cockpit dhcpv6-client http https ssh
 ----
 
-== Delete a Default Service
+
+
+== Remove a Default Service
 
 Now let us disable a service port not needed for our workshop environment.
 
 .[root@node1]#
 ----
-firewall-cmd --permanent --delete-service=dhcpv6-client
+firewall-cmd --remove-service=dhcpv6-client
 ----
 
 .Command Output
 [source,indent=4]
 ----
+success
+----
+
+.[root@node1]#
+----
+firewall-cmd --list-services
 ----
 
 .[root@node1]#
@@ -291,6 +299,10 @@ firewall-cmd --permanent --delete-service=dhcpv6-client
 firewall-cmd --list-services --permanent
 ----
 
+.[root@node1]#
+----
+firewall-cmd --runtime-to-permanent
+----
 
 == Managing Custom Services
 
@@ -310,9 +322,6 @@ firewall-cmd --delete-port=8080/tcp --delete-port=8443/tcp --permanent
 == Create a Custom Service Config
 
 === Install Configuration File
-
-
-=== Reload firewalld Daemon
 
 
 === Enable Custom Service
