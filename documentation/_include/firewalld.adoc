@@ -456,7 +456,7 @@ public
 
 
 
-=== Delete Custome Service
+=== Remove Custom Service
 
 As much fun as that was, ad-hoc was quick and easy, but not ideal.  We really desire a formal configuration, so let us undo the ad-hoc rules.
 
