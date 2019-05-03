@@ -122,16 +122,188 @@ Here are a couple common configs for services defined in */usr/lib/firewalld/ser
 </service>
 ----
 
+== Firewall Basics
+
+----
+firewall-cmd --state
+----
+
+.Command Output
+----
+running
+----
+
+----
+firewall-cmd --get-active-zones
+----
+
+.Command Output
+----
+libvirt
+  interfaces: virbr0
+public
+  interfaces: ens3
+----
+
+----
+firewall-cmd --zone=public --list-interfaces
+----
+
+.Command Output
+----
+ens3
+----
+
+----
+firewall-cmd --zone=public --list-services
+----
+
+.Command Output
+----
+cockpit dhcpv6-client ssh
+----
+
+----
+firewall-cmd --zone=public --list-all
+----
+
+.Command Output
+----
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: ens3
+  sources:
+  services: cockpit dhcpv6-client ssh
+  ports: 443/tcp
+  protocols:
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
+----
 
 
 
 
+== Managing Default Services
+
+=== Add a Default Service
+
+----
+firewall-cmd --add-service=http --add-service=https
+----
+
+.Command Output
+----
+success
+----
+
+----
+firewall-cmd --list-services
+----
+
+.Command Output
+----
+cockpit dhcpv6-client http https ssh
+----
+
+----
+firewall-cmd --list-services --permanent
+----
+
+.Command Output
+----
+cockpit dhcpv6-client ssh
+----
+
+----
+firewall-cmd --add-service=http --add-service=https --permanent
+----
+
+----
+firewall-cmd --list-services --permanent
+----
+
+.Command Output
+----
+cockpit dhcpv6-client http https ssh
+----
 
 
 
+== Delete a Default Service
+
+firewall-cmd --delete-service=dhcpv6-client
+
+.Command Output
+----
+----
+
+firewall-cmd --list-services --permanent
+
+.Command Output
+----
+----
+
+firewall-cmd --delete-service=dhcpv6-client --permanent
+
+.Command Output
+----
+----
+
+firewall-cmd --list-services --permanent
+
+.Command Output
+----
+----
+
+
+== Managing Custom Services
+
+=== Add Custom Service
+
+----
+firewall-cmd --add-port=8080/tcp --add-port=8443/tcp --permanent
+----
+
+=== Delete Custome Service
+
+----
+firewall-cmd --add-port=8080/tcp --add-port=8443/tcp --permanent
+----
+
+== Create a Custom Service Config
+
+=== Install Configuration File
+
+
+=== Reload firewalld Daemon
+
+
+=== Enable Custom Service
+
+
+=== Delete Custom Service
 
 
 
+== Panic Mode
+
+----
+firewall-cmd --query-panic
+----
+
+[NOTE]
+====
+_DO NOT RUN THESE COMMANDS_
+----
+firewall-cmd --panic-on 
+
+firewall-cmd --panic-off
+----
+====
 
 
 == Additional Resources
