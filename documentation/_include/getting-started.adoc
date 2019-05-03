@@ -8,26 +8,13 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-= Getting Started
+= Workshop Environment Preparation
 
-[discrete]
-== Additional Reference Materials
-
-NOTE: You are not required to reference outside documentation for these exercises.  This is informational only.
-
-Red Hat's official documentation can be found publicly with the links provided below.  Please refer to the official Red Hat documentation for complete information.
-
-    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/[RHEL 8 Documentation TBD]
-
-Now let us proceed with getting your environment ready for work.
-
-== Environment Preparation
-
-=== Sign-On on to your *workstation* session
+== Sign-On on to your *workstation* session
 
 Using the connection information and credentials provided by the instructor, get yourselves signed into your workstation session.
 
-=== Become the root user
+== Become the root user
 
 In order to execute the environment preparation, we need to become the administrative user 'root'.
 
@@ -36,7 +23,7 @@ In order to execute the environment preparation, we need to become the administr
 sudo -i
 ----
 
-=== Enable 'tmux' Terminal Session
+== Enable 'tmux' Terminal Session
 
 Again, if you haven't already we strongly encourage the use of the `tmux` utility.
     
@@ -45,7 +32,7 @@ Again, if you haven't already we strongly encourage the use of the `tmux` utilit
 tmux
 ----
 
-=== Download the Workshop project from GitHub
+== Download the Workshop project from GitHub
 
 .[root@workstation ~]#
 ----
@@ -54,7 +41,7 @@ cd ~
 git clone https://github.com/xtophd/RHEL8-Workshop
 ----
 
-=== Run the Prep Script
+== Run the Prep Script
 
 WARNING: It is important to be in the correct working directory for these installation procedures to function properly.  
 
@@ -68,7 +55,7 @@ cd ~/RHEL8-Workshop
 bash prepare-rhel8-workshop.sh
 ----
 
-=== A Few Words While the Installer Runs (4 or 5 minutes)
+== A Few Words While the Installer Runs (4 or 5 minutes)
 
 Put something clever here :-)
 
@@ -77,7 +64,7 @@ Put something clever here :-)
 The set up of the RHEL 8 Workshop should now be complete.  A couple of remaining words of advice:
 
 1.  Some exercises are dependant on the successful completion of other exericses.  Those dependencies will be noted.
-2.  Pay attention to which linux login to use
+2.  Pay attention to which user-id (login) to use
 3.  Pay attention to which host to use
 4.  There is an exam at the conclusion of the workshop... #notreally
 
