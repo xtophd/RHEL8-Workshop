@@ -60,63 +60,89 @@ Then click “Install”
 image::wayland-image14.png[Firewall Pkg Install]
 ====
 
-Click “Launch”...
-You’ll be prompted for the password for student - enter the password.
-   
-Feel free to browse the interface but don’t make any changes…
-When you are done exploring - click on the “x” in the upper right hand corner.
-
 ====
 image::wayland-image1.png[Firewall Pkg Install]
 ====
 
+Click “Launch”...
+You’ll be prompted for the password for student - enter the password.
+
+====
+image::wayland-image1.png[Credentials Dialog]
+====
+
+Feel free to browse the interface but don’t make any changes…
+When you are done exploring - click on the “x” in the upper right hand corner.
+
+
 Now lets configure your desktop to have a menu system…
 Click on “Activities” then click on the Gnome Terminal icon...
   
-
-
-
-
+====
+image::wayland-image2.png[Lanuch Terminal]
+====
 
 Become root.
 
-
-$  sudo -i
-
-
-Then we’ll install some packages to better configure our desktop experience…
-
-
-# yum install -y gnome-tweaks
+.[student@workstation]#
+----
+sudo -i
+----
 
 
-  
+Then we’ll install some packages to better configure our desktop and improve our graphical user experience…
 
+.[root@workstation]#
+----
+yum install -y gnome-tweaks
+----
 
+====
+image::wayland-image3.png[Lanuch Terminal]
+====
 
-CLose the terminal window. Click on the “Activities” button… then type “tweaks” in the search window.
-  
+Close the terminal window. Click on the “Activities” button… then type “tweaks” in the search window.
 
-
+====
+image::wayland-image3.png[Tweaks Search]
+====
 
 Click on the Tweaks icon right below the search box.
-  
+
+====
+image::wayland-image12.png[Tweaks]
+====
 
 On the left hand side menu, click Extensions, then turn on the Applications Menu…
   
+====
+image::wayland-image9.png[Enable Applications Menu]
+====
 
 Now click on Windows, then activate the Maximixe and Minimize buttons for all windows…
   
+====
+image::wayland-image13.png[Enable Min Max ]
+====
 
 Close the the Tweaks interface by clicking on the X in the upper right hand corner…
 Now you have an Applications menu system in Gnome!
   
-
+====
+image::wayland-image7.png[Applications Menu]
+====
+  
 Take a tour of the menus… Click on Utilities → Disks…
   
+====
+image::wayland-image11.png[Enable Min Max ]
+====
 
 Note - now all graphical apps have a maximize and minimize button…
 Close the app without making changes…
+
+
+That is all for this quick first time introduction to Wayland.
 
 
 
