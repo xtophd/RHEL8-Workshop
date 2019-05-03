@@ -79,12 +79,6 @@ systemctl restart cockpit.socket
 ----
 
 ====
-image::cockpit-image14.png[Cockpit Persistence 1]
-====
-====
-image::cockpit-image4.png[Cockpit Persistence 2]
-====
-====
 image::cockpit-image2.png[Cockpit Persistence 3]
 ====
 
