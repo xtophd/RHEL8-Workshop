@@ -22,5 +22,6 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2',           dest: '/usr/local/bin/cheat-firewalld-checkhost.sh'}
+        - {src: 'cheat-checkhost.j2',               dest: '/usr/local/bin/cheat-firewalld-checkhost.sh'}
+        - {src: 'cheat-firewalld-customconfigs.j2', dest: '/usr/local/bin/cheat-firewalld-customconfigs.sh'}
 
