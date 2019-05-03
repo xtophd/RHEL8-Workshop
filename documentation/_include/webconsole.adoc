@@ -72,6 +72,12 @@ image::cockpit-image7.png[Cockpit Dashboard]
 
 To enable persistent metrics, Web Console requires “Performance Co-pilot (pcp)” and cockpit pcp plugin. Follow the screenshots to install and enable persistent metrics.
 
+.[root@node2]#
+----
+yum intall -y cockpit-pcp
+systemctl restart cockpit.socket
+----
+
 ====
 image::cockpit-image14.png[Cockpit Persistence 1]
 ====
