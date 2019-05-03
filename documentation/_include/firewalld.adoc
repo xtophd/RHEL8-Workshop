@@ -129,6 +129,8 @@ Here are a couple common configs for services defined in */usr/lib/firewalld/ser
 
 == Firewall Basics
 
+Determine current state of the firewalld service.
+
 .[root@node1]#
 ----
 firewall-cmd --state
@@ -139,6 +141,8 @@ firewall-cmd --state
 ----
 running
 ----
+
+Get a list of currently configured and active "zones".
 
 .[root@node1]#
 ----
@@ -154,6 +158,10 @@ public
   interfaces: ens3
 ----
 
+We see there is a zone for kvm virtual machine network bridge "virbr0", and a zone for the hosts public network on interface *ens3*.
+
+We had this information from the previous command, but to be more specific let's just list the physical interfaces associated with the public zone.
+
 .[root@node1]#
 ----
 firewall-cmd --zone=public --list-interfaces
@@ -165,6 +173,8 @@ firewall-cmd --zone=public --list-interfaces
 ens3
 ----
 
+Get a list of services configured on the public zone.
+
 .[root@node1]#
 ----
 firewall-cmd --zone=public --list-services
@@ -175,6 +185,10 @@ firewall-cmd --zone=public --list-services
 ----
 cockpit dhcpv6-client ssh
 ----
+
+We see the web console, the dhcp client and of course the sshd service.
+
+Now let's get some specific data points on the web console service (cockpit).
 
 .[root@node1]#
 ----
@@ -191,6 +205,10 @@ cockpit
   modules:
   destination:
 ----
+
+Nothing too exciting, but we can note that the web conole is configured on port 9090.
+
+Finally, let's just list everything about the public zone.
 
 .[root@node1]#
 ----
