@@ -11,9 +11,9 @@ endif::[]
 :toc:
 :toclevels: 1
 
-= Building with Buildah!
+= Building with Buildah and Inspecting with Skopeo!
 
-In this unit, we will get familiar with Buildah!
+In this unit, we will get familiar with Buildah and Skopeo!
 
 [discrete]
 == Additional Reference Materials
@@ -265,6 +265,338 @@ Every time you run setenforce 0, you make Dan Walsh weep.
 ----
 
 As you can see, all of the changes we made with buildah are active and working in this new container image!
+
+=== Using skopeo to inspect containers
+
+Let's take a look at the website2:latest container that we just built:
+
+.[root@node3 ~]#
+
+[source]
+----
+skopeo inspect containers-storage:localhost/website2:latest
+----
+
+This should show us output similar to:
+
+[source]
+----
+{
+    "Name": "localhost/website2",
+    "Digest": "sha256:4d6973ee11f08293c260c880d41819f1d42e492e5abe6b8e70089428efb16830",
+    "RepoTags": [],
+    "Created": "2019-05-02T19:04:59.839714254Z",
+    "DockerVersion": "",
+    "Labels": {
+        "architecture": "x86_64",
+        "authoritative-source-url": "registry.access.redhat.com",
+        "build-date": "2019-04-19T06:12:00.059665",
+        "com.redhat.build-host": "cpt-0003.osbs.prod.upshift.rdu2.redhat.com",
+        "com.redhat.component": "httpd24-container",
+        "com.redhat.license_terms": "https://www.redhat.com/licenses/eulas",
+        "description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
+        "distribution-scope": "public",
+        "io.k8s.description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
+        "io.k8s.display-name": "Apache httpd 2.4",
+        "io.openshift.expose-services": "8080:http,8443:https",
+        "io.openshift.s2i.scripts-url": "image:///usr/libexec/s2i",
+        "io.openshift.tags": "builder,httpd,httpd24",
+        "io.s2i.scripts-url": "image:///usr/libexec/s2i",
+        "maintainer": "SoftwareCollections.org \u003csclorg@redhat.com\u003e",
+        "name": "rhscl/httpd-24-rhel7",
+        "release": "93",
+        "summary": "Platform for running Apache httpd 2.4 or building httpd-based application",
+        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/httpd-24-rhel7/images/2.4-93",
+        "usage": "s2i build https://github.com/sclorg/httpd-container.git --context-dir=examples/sample-test-app/ rhscl/httpd-24-rhel7 sample-server",
+        "vcs-ref": "b0e7348c61f90027df74f25ec5901f07f5131499",
+        "vcs-type": "git",
+        "vendor": "Red Hat, Inc.",
+        "version": "2.4"
+    },
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Layers": [
+        "sha256:571dc0d8cede9ec6f1ba7f568bb53f27d377093a241e2f0a0ccc33471e2b91c4",
+        "sha256:7eba55968d66da6d891304d7b99ea09117f2fff9364c3ab02d3cd959b1335c80",
+        "sha256:179c9a960e3bb231448a68cf0d8d9a57fc2227f8c7a57007c698a6f56a061613",
+        "sha256:568a9c98da8c7a3a4a1db36ca95d81fdd4325fb901a282b7c32f69d8077e2431",
+        "sha256:642ad23cb9f28db66ffb50f30c6c86c333de6674f9d7660a627974b04684386f"
+    ]
+}
+----
+
+We will see that this container is based on a Red Hat Apache image. Let's look at the httpd-24-rhel7 container that we built this off of and compare the layers section:
+
+.[root@node3 ~]#
+
+[source]
+----
+skopeo inspect containers-storage:core.example.com:5000/httpd-24-rhel7:latest
+----
+
+The output of this should be similar to:
+
+[source]
+----
+{
+    "Name": "core.example.com:5000/httpd-24-rhel7",
+    "Digest": "sha256:fc5e2d8a2cf507e2a480e069803cffc76c5d83f99fada200ee3ac48cbb7499e6",
+    "RepoTags": [],
+    "Created": "2019-04-19T06:13:39.195677Z",
+    "DockerVersion": "1.13.1",
+    "Labels": {
+        "architecture": "x86_64",
+        "authoritative-source-url": "registry.access.redhat.com",
+        "build-date": "2019-04-19T06:12:00.059665",
+        "com.redhat.build-host": "cpt-0003.osbs.prod.upshift.rdu2.redhat.com",
+        "com.redhat.component": "httpd24-container",
+        "com.redhat.license_terms": "https://www.redhat.com/licenses/eulas",
+        "description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
+        "distribution-scope": "public",
+        "io.k8s.description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
+        "io.k8s.display-name": "Apache httpd 2.4",
+        "io.openshift.expose-services": "8080:http,8443:https",
+        "io.openshift.s2i.scripts-url": "image:///usr/libexec/s2i",
+        "io.openshift.tags": "builder,httpd,httpd24",
+        "io.s2i.scripts-url": "image:///usr/libexec/s2i",
+        "maintainer": "SoftwareCollections.org \u003csclorg@redhat.com\u003e",
+        "name": "rhscl/httpd-24-rhel7",
+        "release": "93",
+        "summary": "Platform for running Apache httpd 2.4 or building httpd-based application",
+        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/httpd-24-rhel7/images/2.4-93",
+        "usage": "s2i build https://github.com/sclorg/httpd-container.git --context-dir=examples/sample-test-app/ rhscl/httpd-24-rhel7 sample-server",
+        "vcs-ref": "b0e7348c61f90027df74f25ec5901f07f5131499",
+        "vcs-type": "git",
+        "vendor": "Red Hat, Inc.",
+        "version": "2.4"
+    },
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Layers": [
+        "sha256:2ed1c0f8e6935361b5a6d4e437524749d6bb60e6eaacc006d47d63518349dee7",
+        "sha256:37611e58fc4c45239111e5c2dc5e8826c9f91758d8e2ce25c31279b67368ba4e",
+        "sha256:ef5d70f606358862f5c5e571088f43a7c8c10976ca481c375d4b4f2a8c800717",
+        "sha256:c634cfc25a1b0a4b90c28dbbfb88b95b1b8c90d3ac9c9e36dbfb39bc4ac72813"
+    ]
+}
+----
+
+and comparing the layers section, we can see that our container has 5 layers whereas the original container only has 4 layers. In this, we can tell that there are differences between these containers.
+
+Pretty neat that we can look inside local containers, but what about containers that are in registries? Skopeo can inspect containers on remote registries without the need to pull the image locally. Let's give that a test:
+
+.[root@node3 ~]#
+
+[source]
+----
+skopeo inspect --tls-verify=false docker://core.example.com:5000/rhel7.5
+----
+
+The above allows us to look at our insecure registry's copy of RHEL 7.5 and will return this output:
+
+[source]
+----
+{
+    "Name": "core.example.com:5000/rhel7.5",
+    "Digest": "sha256:dff4dc848def191bc8fc2185a8ff57b4d4fdbf032457b28286b381bf0238e2c5",
+    "RepoTags": [
+        "latest"
+    ],
+    "Created": "2018-09-19T20:47:02.057298Z",
+    "DockerVersion": "1.12.6",
+    "Labels": {
+        "architecture": "x86_64",
+        "authoritative-source-url": "registry.access.redhat.com",
+        "build-date": "2018-09-19T20:46:28.459833",
+        "com.redhat.build-host": "osbs-cpt-003.ocp.osbs.upshift.eng.rdu2.redhat.com",
+        "com.redhat.component": "rhel-server-container",
+        "description": "The Red Hat Enterprise Linux Base image is designed to be a fully supported foundation for your containerized applications. This base image provides your operations and application teams with the packages, language runtimes and tools necessary to run, maintain, and troubleshoot all of your applications. This image is maintained by Red Hat and updated regularly. It is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. When used as the source for all of your containers, only one copy will ever be downloaded and cached in your production environment. Use this image just like you would a regular Red Hat Enterprise Linux distribution. Tools like yum, gzip, and bash are provided by default. For further information on how this image was built look at the /root/anacanda-ks.cfg file.",
+        "distribution-scope": "public",
+        "io.k8s.description": "The Red Hat Enterprise Linux Base image is designed to be a fully supported foundation for your containerized applications. This base image provides your operations and application teams with the packages, language runtimes and tools necessary to run, maintain, and troubleshoot all of your applications. This image is maintained by Red Hat and updated regularly. It is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. When used as the source for all of your containers, only one copy will ever be downloaded and cached in your production environment. Use this image just like you would a regular Red Hat Enterprise Linux distribution. Tools like yum, gzip, and bash are provided by default. For further information on how this image was built look at the /root/anacanda-ks.cfg file.",
+        "io.k8s.display-name": "Red Hat Enterprise Linux 7",
+        "io.openshift.expose-services": "",
+        "io.openshift.tags": "base rhel7",
+        "maintainer": "Red Hat, Inc.",
+        "name": "rhel7",
+        "release": "433",
+        "summary": "Provides the latest release of Red Hat Enterprise Linux 7 in a fully featured and supported base image.",
+        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhel7/images/7.5-433",
+        "usage": "This image is very generic and does not serve a single use case. Use it as a base to build your own images.",
+        "vcs-ref": "b8a2783c87bd09059fb8ba8a00817734bcb48ac3",
+        "vcs-type": "git",
+        "vendor": "Red Hat, Inc.",
+        "version": "7.5"
+    },
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Layers": [
+        "sha256:610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f",
+        "sha256:cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888"
+    ]
+}
+----
+
+Let's run:
+
+.[root@node3 ~]#
+
+[source]
+----
+podman images
+----
+
+and note that rhel7.5 is not in our list:
+
+[source]
+----
+REPOSITORY                             TAG      IMAGE ID       CREATED        SIZE
+localhost/website2                     latest   b5ab9d495626   23 hours ago   323 MB
+localhost/custom_image                 latest   611116f647ab   23 hours ago   323 MB
+core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   2 weeks ago    323 MB
+core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago    214 MB
+localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago    214 MB
+----
+
+=== Obtaining tarballs of containers in remote registries for further inspection
+
+Let's run:
+
+.[root@node3 ~]#
+
+[source]
+----
+mkdir /root/rhel7.5tarball
+skopeo --tls-verify=false copy docker://core.example.com:5000/rhel7.5 dir:/root/rhel7.5tarball
+----
+
+You will see output like:
+[source]
+----
+WARN[0000] '--tls-verify' is deprecated, please set this on the specific subcommand
+Getting image source signatures
+Copying blob sha256:610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f
+ 74.68 MB / 74.68 MB [======================================================] 2s
+Copying blob sha256:cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888
+ 1.32 KB / 1.32 KB [========================================================] 0s
+Copying config sha256:7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411
+ 6.52 KB / 6.52 KB [========================================================] 0s
+Writing manifest to image destination
+Storing signatures
+----
+
+and now we can do:
+
+.[root@node3 ~]#
+
+[source]
+----
+cd /root/rhel7.5tarball
+ls -l
+----
+
+and see:
+
+[source]
+----
+total 76492
+-rw-r--r--. 1 root root 78307258 May  3 13:48 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f
+-rw-r--r--. 1 root root     6680 May  3 13:48 7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411
+-rw-r--r--. 1 root root     1350 May  3 13:48 cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888
+-rw-r--r--. 1 root root      590 May  3 13:48 manifest.json
+-rw-r--r--. 1 root root       33 May  3 13:48 version
+----
+
+Inspecting the images, we get:
+
+.[root@node3 ~]#
+
+[source]
+----
+file 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f
+----
+
+which shows us:
+
+[source]
+----
+610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f: gzip compressed data, original size 210667520
+----
+
+Let's add a .tar.gz suffix: (I peaked ahead -- inside that gz is a tar!)
+
+.[root@node3 ~]#
+
+[source]
+----
+mv 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
+tar xvzf 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
+----
+
+Once done, we can execute:
+
+.[root@node3 ~]#
+
+[source]
+----
+ls -l
+----
+
+and see output similar to:
+
+[source]
+----
+total 71584
+-rw-r--r--.  1 root root 73273413 May  3 13:48 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
+-rw-r--r--.  1 root root     6680 May  3 13:48 7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411
+lrwxrwxrwx.  1 root root        7 Sep 19  2018 bin -> usr/bin
+dr-xr-xr-x.  2 root root        6 Dec 14  2017 boot
+-rw-r--r--.  1 root root     1350 May  3 13:48 cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888
+drwxr-xr-x.  2 root root        6 Sep 19  2018 dev
+drwxr-xr-x. 49 root root     4096 Sep 19  2018 etc
+drwxr-xr-x.  2 root root        6 Sep 19  2018 home
+lrwxrwxrwx.  1 root root        7 Sep 19  2018 lib -> usr/lib
+lrwxrwxrwx.  1 root root        9 Sep 19  2018 lib64 -> usr/lib64
+-rw-r--r--.  1 root root      590 May  3 13:48 manifest.json
+drwxr-xr-x.  2 root root        6 Dec 14  2017 media
+drwxr-xr-x.  2 root root        6 Dec 14  2017 mnt
+drwxr-xr-x.  2 root root        6 Dec 14  2017 opt
+drwxr-xr-x.  2 root root        6 Sep 19  2018 proc
+dr-xr-x---.  3 root root      154 Sep 19  2018 root
+drwxr-xr-x. 12 root root      145 Sep 19  2018 run
+lrwxrwxrwx.  1 root root        8 Sep 19  2018 sbin -> usr/sbin
+drwxr-xr-x.  2 root root        6 Dec 14  2017 srv
+drwxr-xr-x.  2 root root        6 Sep 19  2018 sys
+drwxrwxrwt.  7 root root      132 Sep 19  2018 tmp
+drwxr-xr-x. 13 root root      155 Sep 19  2018 usr
+drwxr-xr-x. 18 root root      238 Sep 19  2018 var
+-rw-r--r--.  1 root root       33 May  3 13:48 version
+----
+
+At this point, you can go dive into the filesystem and do any analysis you would like. Remember, we pulled this container image direct from the registry without adding it to the list of images available to podman for deployment.
+
+The other two numeric files provided in the download are a copy of the metadata in text (7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411 in this specific example) and a tarball of any container secrets and the file used to build the container. The following is the output of tar on that file:
+
+[source]
+----
+etc/
+etc/yum.repos.d/
+run/
+run/secrets/
+root/
+root/buildinfo/
+root/buildinfo/Dockerfile-rhel7-7.5-433
+----
+
+
+=== Other Uses of Skopeo
+
+Skopeo can also do the following things:
+
+  * Copy an image (manifest, filesystem layers, signatures) from one location to another. It can convert between manifest types in doing this (oci, v2s1, v2s2)
+  * Delete images from registries that you have admin rights to.
+  * Push images to registries that you have push rights to.
+
+Examples of how to do these things are available in 'man skopeo'
 
 === Cleanup
 
