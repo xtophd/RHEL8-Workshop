@@ -32,7 +32,7 @@
 
 - import_playbook: rhel8-setup-appstreams.yml
 - import_playbook: rhel8-setup-boom.yml
-- import_playbook: rhel8-setup-cockpit.yml
+- import_playbook: rhel8-setup-webconsole.yml
 - import_playbook: rhel8-setup-podman.yml
 - import_playbook: rhel8-setup-stratis.yml
 - import_playbook: rhel8-setup-tlog.yml
