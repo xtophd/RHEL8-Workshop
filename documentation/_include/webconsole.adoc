@@ -31,8 +31,9 @@ The following exercises will walk you through installing and configuring Web Con
 
 Starting on the host workstation.example.com, let’s ssh over to *node2.example.com*. No password should be required.
 
-.[root@workstation]#
+.[student@workstation]#
 ----
+sudo su -
 ssh node2.example.com
 ----
 
