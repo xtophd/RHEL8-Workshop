@@ -7,6 +7,9 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
+:imagesdir: ./_images
+
+
 
 = Wayland
 
