@@ -36,7 +36,7 @@ ssh node3.example.com
 
 Now you are ready to begin your exercises with containers.
 
-== Build an Image
+== Build an Image With Buildah
 
 === Web Site Version 2.0
 
