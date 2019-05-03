@@ -122,7 +122,7 @@ image::ocp-webui-hello1-project-create.png[Create Project]
 == RHEL 8 LAB: EXERCISES
 
 [#toc]
-  . link:{includedir}/getting-started.adoc[*Workshop Environment Preparation*] _(workstation)_
+  . link:{includedir}/getting-started.adoc[*Workshop Preparation* - DO THIS FIRST! ] _(workstation)_
   . link:{includedir}/systemd.adoc[*SystemD* - (UPDATED) System Service Management] _(node1)_
   . link:{includedir}/firewalld.adoc[*FirewallD* - (UPDATED) Firewall Service Management] _(node1)_
   . link:{includedir}/nftables.adoc[*NFTables* - (NEW) Firewall Subsystem] _(node2)_
