@@ -20,10 +20,6 @@ Features of firewalld include:
   * separation of runtime and permanent configuration options
   * interface for external services to manage firewall rules directly
 
-WARNING: Both firewalld and nftables can be used to manage the kernel's network packet filter. Administrators should pick one tool as they will interfere with one another if used simultaneously.  Do not use them both.
-
-Note: Use `systemctl mask` to ensure that only one or the other service may be started, even if both are available on the system.  Refer to the systemd unit for further information.
-
 == Getting Started
 
 Starting on the host *workstation.example.com*, let's ssh over to *node2.example.com*.  No password should be required.
@@ -144,6 +140,8 @@ Red Hat Documentation
 
     * link:None[Put firewalld documentation in here]
 
+    * link:https://developers.redhat.com/blog/2018/08/10/firewalld-the-future-is-nftables/[Firewalld: The Future is nftables]
+    
 [discrete]
 == End of Unit
 
