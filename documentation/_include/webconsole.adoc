@@ -44,7 +44,7 @@ Here are the steps to install and enable Web Console.  These are provided as ref
 yum intall -y cockpit
 systemctl enable --now cockpit.socket
 firewall-cmd --add-service=cockpit --permanent
-firewall-cmd —reload
+firewall-cmd --reload
 ----
 
 == Login
