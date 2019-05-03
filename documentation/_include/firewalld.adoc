@@ -321,7 +321,7 @@ public
 
 
 
-== Remove a Default Service
+=== Remove a Default Service
 
 Now let us disable a service port not needed for our workshop environment, namely *dhcp6-client*.
 
