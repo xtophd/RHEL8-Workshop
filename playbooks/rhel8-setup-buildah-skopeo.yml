@@ -1,0 +1,19 @@
+---
+
+## PODMAN SETUP
+
+- hosts: node3.example.com
+  tasks:
+
+    - name: "SETUP BUILDAH SKOPEO: yum install buildah,skopeo"
+      yum: name=buildah,skopeo state=installed
+
+    - name: "SETUP BUILDAH SKOPEO: cheat script installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0744
+      with_items:
+        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-buildah-checkhost.sh'}
