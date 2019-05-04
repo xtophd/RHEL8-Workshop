@@ -22,10 +22,13 @@ A detailed explanation of the architecture, functionality and features can be fo
 
 === Packages and Services
 
-The graphical desktop is installed by default in a "workstation" install but this is not the case in a "server" installation.
+The graphical desktop is included by default in a "Workstation" installation of RHEL 8, but this is not the case in a "Server" installation.
 
-In the event you installed a text based RHEL host, you can load and enable Wayland with the following steps:
+For today’s lab this has already been done for you, but in the event you installed a text based RHEL 8 host on your own you can load and enable Wayland with the following steps:
 
+[NOTE]
+====
+_Native command(s) to install Wayland_
 ----
 yum groupinstall Workstation
 
@@ -34,7 +37,6 @@ systemctl set-default graphical
 reboot
 ----
 
-For today’s lab this has already been done for you...
 
 
 Log into the console of your workstation as the user *student*.
