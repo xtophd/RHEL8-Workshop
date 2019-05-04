@@ -218,21 +218,19 @@ Create a drop-in configuration file to extend the default httpd.service unit
 
 .[root@node1]#
 ----
-mkdir /etc/systemd/system/httpd.service.d 
-cd /etc/systemd/system/httpd.service.d 
-vi 50-httpd.conf
+cheat-systemd-httpdconfig.sh
 ----
 
-Add the following to the 50-httpd.conf file
-
+.Command Output
 [source,indent=4]
 ----
+# Contents of /etc/systemd/system/httpd.service.d/50-httpd.conf
 [Service]
 Restart=always
 OOMScoreAdjust=-1000
 ----
 
-Save the config file, exit the editor, and notify systemd of the changes:
+Notify systemd of the changes.
 
 .[root@node1]#
 ----
