@@ -1,7 +1,4 @@
 ---
-
-## APPSTREAM Setup
-
 - hosts: node1.example.com
   tasks:
   
