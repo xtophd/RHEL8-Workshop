@@ -35,6 +35,13 @@ There is a dedicated VM we will use for the container exercises.  From *workstat
 ssh node2.example.com
 ----
 
+Verify that you are on the right host for these exercises.
+
+.[root@node3]#
+----
+cheat-ebpf-checkhost.sh
+----
+
 Now you are ready to begin your exercises with eBPF Tracing.
 
 == bcc (BPF Compiler Collection) 
