@@ -32,6 +32,7 @@
 
 - import_playbook: rhel8-setup-appstreams.yml
 - import_playbook: rhel8-setup-firewalld.yml
+- import_playbook: rhel8-setup-ebpf.yml
 - import_playbook: rhel8-setup-boom.yml
 - import_playbook: rhel8-setup-webconsole.yml
 - import_playbook: rhel8-setup-podman.yml
