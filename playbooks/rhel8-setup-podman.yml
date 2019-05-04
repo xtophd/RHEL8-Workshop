@@ -34,4 +34,4 @@
         mode: 0744
       with_items:
         - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-podman-checkhost.sh'}
-        - {src: 'cheat-loadregistry.j2', dest: '/usr/local/bin/cheat-podman-loadregistry.sh'}
+        - {src: 'cheat-podman-loadregistry.j2', dest: '/usr/local/bin/cheat-podman-loadregistry.sh'}
