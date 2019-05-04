@@ -97,7 +97,7 @@ ____
 You’ll be prompted for the password for student - enter the password.  Because the user _student_ is a member of the _wheel_ group, you will be able to perform most administrator tasks.
 
 ====
-image::wayland-image1.png[Credentials Dialog]
+image::wayland-image5.png[Credentials Dialog]
 ====
 
 Feel free to browse the interface but don’t make any changes…
