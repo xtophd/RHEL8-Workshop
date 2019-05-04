@@ -25,13 +25,20 @@ NOTE: You are not required to reference any additional resources for these exerc
     * link:https://developers.redhat.com/blog/2018/11/20/buildah-podman-containers-without-daemons/[Containers without daemons: Podman and Buildah available in RHEL 7.6 and RHEL 8 Beta - Tom Sweeney]
 
 
-== Connect to Host
+== Getting Started
 
 There is a dedicated VM we will use for the container exercises.  From workstation.example.com, you should be able to ssh to node3.example.com as 'root' without any prompts for credentials.
 
 .[root@workstation ~]#
 ----
 ssh node3.example.com
+----
+
+Verify that you are on the right host for these exercises.
+
+.[root@node3 ~]#
+----
+cheat-podman-checkhost.sh
 ----
 
 Now you are ready to begin your exercises with containers.
