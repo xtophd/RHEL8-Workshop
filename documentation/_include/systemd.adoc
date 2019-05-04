@@ -32,7 +32,18 @@ Starting on the host *workstation.example.com*, let's ssh over to *node1.example
 ssh node1.example.com
 ----
 
-Now let's collect some initial data about the boot process
+Verify that you are on the right host for these exercises.
+
+.[root@node1 ~]#
+----
+cheat-systemd-checkhost.sh
+----
+
+You are now ready to proceed with these exercises.
+
+== Analyzong System Startup
+
+Let's collect some initial data about the boot process
 
 .[root@node1]#
 ----
@@ -41,6 +52,7 @@ systemd-analyze
 
 Your output will look something like this
 
+.Command Output
 [source,indent=4]
 ----
 Startup finished in 3.783s (kernel) + 6.526s (initrd) + 14.723s (userspace) = 25.033s
@@ -52,6 +64,7 @@ multi-user.target reached after 10.540s in userspace
 systemd-analyze blame
 ----
 
+.Command Output
 [source,indent=4]
 ----
           4.205s kdump.service
@@ -62,29 +75,28 @@ systemd-analyze blame
           1.562s sssd.service
           ...<output truncated>...
 ----
+
 This command prints a list of all running units, ordered by the time they took to initialize.  To streamline the boot process for something like a cloud image, this helps to learn the “cost” of some of the default services.  Unnecessary services could potentially be removed or disabled to speed boot time.
 
 
 == Core Concepts
+
 === Units
-[indent=4]
+
 The fundamental building block that systemd manages is called a "unit".  A "unit" can describe different types of objects, but the most common type is a "service".  
 
 A "unit file" is the configuration file that describes a unit and tells systemd what dependencies exist and how to start, stop and monitor the object.
 
 "unit files" are stored in 2 different directories.  One location is reserved for the default configurations as shipped by Red Hat and the other is for customization by the local administrators.
 
-[source,indent=8]
-Red Hat unit files:    /usr/lib/systemd/system/...
-Customizations:        /etc/systemd/system/...
-
+  * Red Hat unit files:    /usr/lib/systemd/system/...
+  * Customizations:        /etc/systemd/system/...
 
 === Targets
 systemd has a concept similar to SysV init runlevels, called targets.  systemd will boot to the “default target” which can be configured using the systemctl set-default command.  Some common targets and their equivalent SysV runlevels are:
 
-[source,indent=8]
-multi-user.target == runlevel 3
-graphical.target == runlevel 5
+  * multi-user.target == runlevel 3
+  * graphical.target == runlevel 5
 
 Let's view the current default target.
 
@@ -92,9 +104,12 @@ Let's view the current default target.
 ----
 # systemctl get-default
 ----
-[source,indent=8]
-multi-user.target
 
+.Command Output
+[source,indent=4]
+----
+multi-user.target
+----
 
 === Services
 As mentioned above, systemd has another concept called a service.  A service is a type of unit which defines the traditional daemon or process.  Now let us look at what services are running on the system:
@@ -103,7 +118,11 @@ As mentioned above, systemd has another concept called a service.  A service is 
 ----
 # systemctl -t service
 ----
-[source,indent=8]
+
+
+.Command Output
+[source,indent=4]
+----
 UNIT                               LOAD   ACTIVE SUB     DESCRIPTION                     
 auditd.service                     loaded active running Security Auditing Service       
 chronyd.service                    loaded active running NTP client/server               
@@ -112,6 +131,7 @@ dbus.service                       loaded active running D-Bus System Message Bu
 dracut-shutdown.service            loaded active exited  Restore /run/initramfs on s
 firewalld.service                  loaded active running firewalld - dynamic firewal
 ...<output truncated>...
+----
 
 Next let's view all of the services available (ie: everything installed, running or not) on the system. The following command is similar to the older chkconfig --list as it will show both enabled and disabled services:
 
@@ -119,7 +139,10 @@ Next let's view all of the services available (ie: everything installed, running
 ----
 # systemctl list-unit-files -t service
 ----
-[source,indent=8]
+
+.Command Output
+[source,indent=4]
+----
 UNIT FILE                                   STATE   
 arp-ethers.service                          disabled
 auditd.service                              enabled 
@@ -129,28 +152,33 @@ chrony-dnssrv@.service                      static
 chrony-wait.service                         disabled
 chronyd.service                             enabled 
 ...<output truncated>...
+----
 
 The state will  be enabled, disabled, static, or masked.  Static indicates that the unit file does not contain an "install" section used to enable the unit.  In this case, the unit typically performs a one-off action or is used as a dependency of another unit and should not be run by itself.
 
-
 == Examples
+
 === Installing a LAMP stack
-[indent=4]
+
 Now that we have a good idea of what’s installed on our system, let’s get a basic lamp stack up and running. 
 
 .[root@node1]#
 ----
 yum install -y httpd mariadb-server mariadb 
+
 systemctl enable --now httpd mariadb
 ----
 
 NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
 
+.Command Output
 [source,indent=4]
+----
 Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
 Created symlink /etc/systemd/system/mysql.service → /usr/lib/systemd/system/mariadb.service.
 Created symlink /etc/systemd/system/mysqld.service → /usr/lib/systemd/system/mariadb.service.
 Created symlink /etc/systemd/system/multi-user.target.wants/mariadb.service → /usr/lib/systemd/system/mariadb.service.
+----
 
 Now let's check the status.  You should see two separate sections in the output, one for httpd and one for mariadb.
 
@@ -158,7 +186,10 @@ Now let's check the status.  You should see two separate sections in the output,
 ----
 systemctl status httpd mariadb
 ----
+
+.Command Output
 [source,indent=4]
+----
 ● httpd.service - The Apache HTTP Server
    Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
    Active: active (running) since Wed 2019-05-01 21:37:54 EDT; 12s ago
@@ -171,9 +202,10 @@ systemctl status httpd mariadb
            ├─5135 /usr/sbin/httpd -DFOREGROUND
            ├─5163 /usr/sbin/httpd -DFOREGROUND
         ...<output truncated>...
+----
 
 === Customizing Unit Files
-[indent=4]
+
 systemd controls more than daemons or services. For this lab, we will primarily be working with service units but it's important to know that systemd is handling the dependencies between other types: sockets, timers, mounts, swap, slices, etc.
 Unit files that ship with the RHEL are stored under /usr/lib/systemd/system. 
 
@@ -190,9 +222,10 @@ mkdir /etc/systemd/system/httpd.service.d
 cd /etc/systemd/system/httpd.service.d 
 vi 50-httpd.conf
 ----
+
 Add the following to the 50-httpd.conf file
 
-[source]
+[source,indent=4]
 ----
 [Service]
 Restart=always
@@ -207,6 +240,7 @@ systemctl daemon-reload
 systemctl status httpd
 ----
 
+.Command Output
 [source,indent=4]
 ----
 ● httpd.service - The Apache HTTP Server
