@@ -17,18 +17,7 @@ WARNING: eBPF is considered *Technology Preview* and is not intended for product
 
 In this unit, we will get familiar with eBPF. eBPF stands for Extended Berkeley Packet Filter and is effectively an in kernel virtual machine upon which several applications have been built. To date, these applications center around working with the network stack (eXpress Data Path, Traffic Control) and also offering efficient kernel tracing (BPF Compiler Collection). In today's lab, we will be focusing on the kernel tracing aspect of eBPF.
 
-[discrete]
-== Additional Reference Materials
-
-
-NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
-
-    * link:https://developers.redhat.com/blog/tag/ebpf/[eBPF blogs on Red Hat Developer (covering the networking aspect)]
-    * link:https://access.redhat.com/articles/3550581[Kernel Tracing Using eBPF]
-    * link:http://www.brendangregg.com/ebpf.html[Linux Extended BPF (eBPF Tracing Tools) - Brendan Gregg]
-
-
-== Connect to Host
+== Getting Set Up
 
 There is a dedicated VM we will use for the container exercises.  From *workstation.example.com*, you should be able to ssh to *node2.example.com* as 'root' without any prompts for credentials.
 
@@ -563,30 +552,15 @@ Go to the terminal with trace running and issue a Ctrl-C. This will end the proc
 
 There is a lot more that you can do with this tool when you actually need to start tracing what is getting passed into kernel functions and what is being returned by those kernel functions.
 
-== Exit System
-
-.[root@node3 ~]#
-----
-exit
-----
+[discrete]
+== Additional Resources
 
 
-.[root@workstation ~]#
-----
-uname -n
+NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
 
-whoami
-----
-
-.Command Output
-[source,indent=4]
-----
-workstation.example.com
-
-root
-----
-
-Now you are ready to proceed to the next unit.
+    * link:https://developers.redhat.com/blog/tag/ebpf/[eBPF blogs on Red Hat Developer (covering the networking aspect)]
+    * link:https://access.redhat.com/articles/3550581[Kernel Tracing Using eBPF]
+    * link:http://www.brendangregg.com/ebpf.html[Linux Extended BPF (eBPF Tracing Tools) - Brendan Gregg]
 
 [discrete]
 == End of Unit
