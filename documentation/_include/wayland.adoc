@@ -44,10 +44,6 @@ Log into the console of your workstation as the user *student*.
 
 ____
 Click on `Activities` near the top left corner
-
-.Use following details for Create Project
-[horizontal]
-*Search*:: firewall
 ____
 
 ====
@@ -55,19 +51,23 @@ image::wayland-image6.png[Wayland Desktop]
 ====
 
 ____
-Select the Search Bar near the top center, and enter
+Select the Search Bar near the top center, and enter the following:
 
 .Search Criteria
 [horizontal]
 *Search*:: firewall
 ____
 
+The search will result in a link to the package installer.
+
+____
+Click on `Firewall Configuration`
+____
 
 ====
 image::wayland-image4.png[Firewall]
 ====
 
-Click on “Firewall”
 This will bring up the Gnome Software package installation GUI…
   
 ====
