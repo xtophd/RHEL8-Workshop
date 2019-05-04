@@ -88,7 +88,7 @@ host:
   Distribution:
     distribution: '"rhel"'
     version: "8.0"
-  MemFree: 3282280448
+  MemFree: 3181297664
   MemTotal: 3964538880
   OCIRuntime:
     package: runc-1.0.0-54.rc5.dev.git2abd837.module+el8+2769+577ad176.x86_64
@@ -102,12 +102,13 @@ host:
   kernel: 4.18.0-67.el8.x86_64
   os: linux
   rootless: false
-  uptime: 46m 50.43s
+  uptime: 1h 12m 54.65s (Approximately 0.04 days)
 insecure registries:
-  registries: []
+  registries:
+  - core.example.com
 registries:
   registries:
-  - registry.redhat.io
+  - core.example.com
   - quay.io
   - docker.io
 store:
@@ -334,7 +335,7 @@ host:
   Distribution:
     distribution: '"rhel"'
     version: "8.0"
-  MemFree: 2743906304
+  MemFree: 2508419072
   MemTotal: 3964538880
   OCIRuntime:
     package: runc-1.0.0-54.rc5.dev.git2abd837.module+el8+2769+577ad176.x86_64
@@ -348,12 +349,13 @@ host:
   kernel: 4.18.0-67.el8.x86_64
   os: linux
   rootless: false
-  uptime: 55m 13.64s
+  uptime: 1h 20m 7.85s (Approximately 0.04 days)
 insecure registries:
-  registries: []
+  registries:
+  - core.example.com
 registries:
   registries:
-  - registry.redhat.io
+  - core.example.com
   - quay.io
   - docker.io
 store:
