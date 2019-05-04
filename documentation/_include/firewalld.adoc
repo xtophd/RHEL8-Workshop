@@ -34,7 +34,7 @@ ssh node1.example.com
 
 Verify that you are on the right host for these exercises.
 
-.[root@node3]#
+.[root@node1]#
 ----
 cheat-firewalld-checkhost.sh
 ----
