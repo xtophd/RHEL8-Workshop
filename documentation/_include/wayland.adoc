@@ -42,12 +42,16 @@ Log into the console of your workstation as the user *student*.
   
 == Adding Packages
 
+====
+image::wayland-image6.png[Wayland Desktop]
+====
+
 ____
 Click on `Activities` near the top left corner
 ____
 
 ====
-image::wayland-image6.png[Wayland Desktop]
+image::wayland-image4.png[Firewall]
 ====
 
 ____
@@ -58,10 +62,6 @@ Select the Search Bar near the top center, and enter the following:
 ____
 
 The search will result in a link to the package installer.
-
-====
-image::wayland-image4.png[Firewall]
-====
 
 ____
 Click on `Firewall Configuration`
