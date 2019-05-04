@@ -34,30 +34,25 @@ The following exercises will walk you through installing and configuring Web Con
 
 === Packages and Services
 
-Starting on the host workstation.example.com, let’s ssh over to *node2.example.com*. No password should be required.
+For your convenience, he webconsole has already been installed and configured on *node2.example.com*.  The steps are pretty simple and outlined below.  Remember this provided as reference only as they were executed during the ansible play of prep-rhel8-workshop.
 
-.[student@workstation]#
-----
-sudo su -
-ssh node2.example.com
-----
-
-Here are the steps to install and enable Web Console.  These are provided as reference only as they were executed during the ansible play of rhel8-workshop-prep.
-
-.[root@node2]#
+[NOTE]
+====
+_Native command(s) to install and enable firewalld_
 ----
 yum intall -y cockpit
 systemctl enable --now cockpit.socket
 firewall-cmd --add-service=cockpit --permanent
 firewall-cmd --reload
 ----
+====
 
 == Web Console User Interface
 
 On host *workstation.example.com*, use the console GUI to start a web browser.
 
 Then browse to URL: `https://node2.example.com:9090`
-Login userID: <root>  Password: <root pw>
+Login userID: root  Password: <ROOT-PASSWD>
 
 ====
 image::cockpit-image13.png[Cockpit Login]
