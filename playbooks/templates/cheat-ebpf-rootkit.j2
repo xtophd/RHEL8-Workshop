@@ -1,15 +1,45 @@
 #/bin/bash
 
+echo "# Capture hostname"
 uname -a
 
+echo ""
+
+echo "# Capture who is logged in"
 who
 
+echo ""
+
+echo "# Get the root passwd entry"
 grep root /etc/passwd
 
+echo ""
+
+echo "# Get the root shadow entry"
 grep root /etc/shadow
 
+echo ""
+
+echo "# Get the fs configs"
+cat /etc/fstab
+
+echo ""
+
+echo "# List of processes running"
 ps -ef
 
+echo ""
+
+echo "# List of open ports"
 netstat -tulpn
+
+echo ""
+
+echo "# Are the using SELinux"
+getenforce
+
+echo "# Are the using firewalld"
+firewalld --
+
 
 sleep 5
