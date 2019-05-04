@@ -28,7 +28,7 @@ NOTE: You are not required to reference any additional resources for these exerc
 
 == Connect to Host
 
-There is a dedicated VM we will use for the container exercises.  From workstation.example.com, you should be able to ssh to node2.example.com as 'root' without any prompts for credentials.
+There is a dedicated VM we will use for the container exercises.  From *workstation.example.com*, you should be able to ssh to *node2.example.com* as 'root' without any prompts for credentials.
 
 .[root@workstation ~]#
 ----
