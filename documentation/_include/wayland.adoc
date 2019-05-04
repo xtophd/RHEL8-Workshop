@@ -105,7 +105,7 @@ When you are done exploring - click on the “x” in the upper right hand corne
 
 == Customizing the Desktop
 
-Now lets configure your desktop to have a menu system…
+Now lets configure your desktop to have a menu system.  Instead of using the GUI package installer, let's drop to a terminal window and use yum.
 
 ____
 Click on “Activities”
