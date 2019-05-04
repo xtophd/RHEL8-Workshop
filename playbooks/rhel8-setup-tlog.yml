@@ -26,7 +26,7 @@
         dest: "{{ item.dest }}"
         owner: root
         group: root
-        mode: 0600
+        mode: 0744
       with_items:
         - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-tlog-checkhost.sh'} 
         - {src: 'cheat-tlog-playback.j2', dest: '/usr/local/bin/cheat-tlog-playback.sh'} 
