@@ -41,7 +41,7 @@ Verify that you are on the right host for these exercises.
 cheat-podman-checkhost.sh
 ----
 
-You also need to load the local container registry with a few container images that are stored on configured on core.example.com.  There's a convenient cheat script to take care of this.
+You also need to load the local container registry with a few container images that are staged on core.example.com.  There's a convenient cheat script to take care of this.
 
 .[root@node3 ~]#
 ----
