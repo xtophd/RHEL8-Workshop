@@ -149,7 +149,7 @@ Select the Search Bar near the top center, and enter the following:
 ____
 
 ====
-image::wayland-image5.png[Tweaks Search]
+image::wayland-image10.png[Tweaks Search]
 ====
 
 ____
