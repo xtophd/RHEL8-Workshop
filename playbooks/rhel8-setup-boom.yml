@@ -1,7 +1,4 @@
 ---
-
-## BOOM Setup
-
 - hosts: node3.example.com
   tasks:
   
