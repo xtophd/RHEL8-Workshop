@@ -18,7 +18,7 @@ Stratis is a command-line tool to create, modify, and destroy Stratis pools, and
 
 Instead of an entirely in-kernel approach like ZFS or Btrfs, Stratis uses a hybrid user/kernel approach that builds upon existing block capabilities like device-mapper, existing filesystem capabilities like XFS, and a user space daemon for monitoring and control.
 
-NOTE: Stratis is considered Technology Preview and is not intended for production use.  For information on Red Hat scope of support for Technology Preview features, see:
+NOTE: Stratis is considered *Technology Preview* and is not intended for production use.  For information on Red Hat scope of support for Technology Preview features, see:
      link:https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope]
 
 == Getting Started
