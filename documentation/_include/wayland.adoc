@@ -76,6 +76,7 @@ image::wayland-image8.png[Gnome Pkg Installer]
 
 ____
 Click on `Firewall`
+
 Then click on `Install`
 ____
   
