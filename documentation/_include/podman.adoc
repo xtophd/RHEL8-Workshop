@@ -441,6 +441,8 @@ CONTAINER ID  IMAGE                            COMMAND               CREATED    
 
 === Process ID
 
+Let us have a look at the process table from with-in the container's namespace.
+
 .[root@node3 ~]#
 ----
 podman run ubi ps -ef
@@ -452,6 +454,8 @@ podman run ubi ps -ef
 UID        PID  PPID  C STIME TTY          TIME CMD
 root         1     0  0 19:53 ?        00:00:00 ps -ef
 ----
+
+Notice that all the process belonging to host itself are absent.  The programs running in the container's namespace are isolated from the rest of the host.  From the container's perspective, the process in the container is the only process running.
 
 === Network
 
@@ -471,7 +475,7 @@ container create failed: container_linux.go:336: starting container process caus
 
 What just happened?
 
-For the most part, containers are not meant for interactive (user) sessions.  In this instance, then image that we are using (ie: ubi) does not have the traditional commmandline utilities a user might expect.  Common tools to configure network interfaces like 'ip' simply aren't there.
+For the most part, containers are not meant for interactive (user) sessions.  In this instance, the image that we are using (ie: ubi) does not have the traditional commmandline utilities a user might expect.  Common tools to configure network interfaces like 'ip' simply aren't there.
 
 So for this exercise, we leverage something called a 'bind mount' to effectively mirror a portion of the host's filesystem into the container's namespace.  Bind mounts are declared using the '-v' option.  In the example below, /usr/sbin from the host will be exposed and accessible to the containers namespace mounted at '/usr/bin' (ie: /usr/sbin:/usr/sbin).
 
@@ -525,7 +529,7 @@ nameserver 10.0.0.2
 ----
 
 Take a look at the routing table.
-Pay attention now, the route command is in '/usr/bin'.  Take a look at the routing table for the container namespace.
+Pay attention now, the route command is in '/usr/sbin'.  Take a look at the routing table for the container namespace.
 
 .[root@node3 ~]#
 ----
@@ -543,6 +547,8 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 
 
 === Filesystem
+
+Finally, look at the filesystem(S) in the container's namespace.
 
 .[root@node3 ~]#
 ----
@@ -592,9 +598,9 @@ Let us clean up your environment before proceeding
 
 .[root@node3 ~]#
 ----
-podman kill $(podman ps -q)
+podman kill --all
 
-podman rm $(podman ps -a -q)
+podman rm --all
 ----
 
 == Your First Containerized Application
@@ -667,9 +673,9 @@ lsns
 4026532275 pid        10  8662 1001   httpd -D FOREGROUND
 ----
 
-Again on the host, we see httpd processes running using the mnt uts ipc pid and net namespaces.  That's good too!
+We see that the httpd processes running are using the mnt uts ipc pid and net namespaces.
 
-Well since we explored namespaces, we may as well have a look and discuss the control-groups aligned with our process.
+Since we explored namespaces, we may as well have a look at and discuss the control-groups aligned with our process.
 
 .[root@node3 ~]#
 ----
@@ -697,6 +703,9 @@ systemd-cgls
     └─8651 /usr/libexec/podman/conmon -s -c c76b2199880cc1fb1318953be06be8b2c458cc7ebbd5bb4d74312e96e68c2011 -u c76b2199880cc1fb131>
 ----
 
+What we can tell is that our container is bound by a cgroup called "machine.slice".  Otherwise, nothing remarkable to discern here.
+
+Take a quick look are the network on the host.
 
 .[root@node3 ~]#
 ----
@@ -760,12 +769,14 @@ echo "Hello From My Container" > /usr/sbin/tryme.txt
 
 You should see:
 
+.bash-4.2$ 
 ----
 bash: /usr/sbin/tryme.txt: Permission denied
 ----
 
 Now run:
 
+.bash-4.2$ 
 ----
 exit
 ----
