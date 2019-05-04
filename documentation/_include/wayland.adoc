@@ -43,7 +43,7 @@ Log into the console of your workstation as the user *student*.
 == Adding Packages
 
 ____
-select `Activities` from top left menu
+Click on `Activities` near the top left corner
 
 .Use following details for Create Project
 [horizontal]
@@ -54,7 +54,14 @@ ____
 image::wayland-image6.png[Wayland Desktop]
 ====
 
-Click on Activities, then type in the search box.  “firewall”
+____
+Select the Search Bar near the top center, and enter
+
+.Search Criteria
+[horizontal]
+*Search*:: firewall
+____
+
 
 ====
 image::wayland-image4.png[Firewall]
