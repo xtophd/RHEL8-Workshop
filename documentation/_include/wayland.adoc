@@ -76,8 +76,8 @@ image::wayland-image8.png[Gnome Pkg Installer]
 ====
 
 ____
-Click on “Firewall”.
-Then click “Install”
+Click on `Firewall`
+Then click on `Install`
 ____
   
 ====
@@ -88,7 +88,10 @@ image::wayland-image14.png[Firewall Pkg Install]
 image::wayland-image1.png[Firewall Pkg Install]
 ====
 
-Click “Launch”...
+____
+Click `Launch`
+____
+
 You’ll be prompted for the password for student - enter the password.
 
 ====
