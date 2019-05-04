@@ -3,43 +3,48 @@
 echo "# Capture hostname"
 uname -a
 
-echo ""
+echo "" ; sleep 1
 
 echo "# Capture who is logged in"
 who
 
+echo "" ; sleep 1
+sleep 1
 echo ""
 
 echo "# Get the root passwd entry"
 grep root /etc/passwd
 
+echo "" ; sleep 1
 echo ""
 
 echo "# Get the root shadow entry"
 grep root /etc/shadow
 
+echo "" ; sleep 1
 echo ""
 
 echo "# Get the fs configs"
 cat /etc/fstab
 
+echo "" ; sleep 1
 echo ""
 
 echo "# List of processes running"
 ps -ef
 
+echo "" ; sleep 1
 echo ""
 
 echo "# List of open ports"
 netstat -tulpn
 
-echo ""
+echo "" ; sleep 1
 
-echo "# Are the using SELinux"
+echo "# SELinux status"
 getenforce
 
-echo "# Are the using firewalld"
-firewalld --
+echo "" ; sleep 1
 
-
-sleep 5
+echo "# Firewalld status"
+firewall-cmd --state
