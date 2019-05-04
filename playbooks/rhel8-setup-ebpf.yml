@@ -17,4 +17,4 @@
         mode: 0744
       with_items:
         - {src: 'cheat-checkhost.j2',    dest: '/usr/local/bin/cheat-ebpf-checkhost.sh'}
-        - {src: 'cheat-ebpf-rootkit.j2', dest: '/usr/local/bin/cheat-ebpf-rootkitsh'}
+        - {src: 'cheat-ebpf-rootkit.j2', dest: '/usr/local/bin/cheat-ebpf-rootkit.sh'}
