@@ -841,35 +841,10 @@ Custom Server up and running
 
 .[root@node3 ~]#
 ----
-podman kill $(podman ps -q)
+podman kill --all
 
-podman rm $(podman ps -a -q)
+podman rm --all
 ----
-
-== Exit System
-
-.[root@node3 ~]#
-----
-exit
-----
-
-
-.[root@workstation ~]#
-----
-uname -n
-
-whoami
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-workstation.example.com
-
-root
-----
-
-Now you are ready to proceed to the next unit.
 
 [discrete]
 == End of Unit
