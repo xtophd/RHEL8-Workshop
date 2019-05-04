@@ -1,7 +1,4 @@
 ---
-
-## PODMAN SETUP
-
 - hosts: core.example.com
   tasks:
   
