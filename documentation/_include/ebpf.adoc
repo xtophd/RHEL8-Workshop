@@ -11,7 +11,7 @@ endif::[]
 :toc:
 :toclevels: 1
 
-= A quick introduction to eBPF 
+= eBPF - The Extended Berkeley Packet Filter
 
 WARNING: eBPF is considered *Technology Preview* and is not intended for production use.  For information on Red Hat scope of support for Technology Preview features, see: link:https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope]
 
