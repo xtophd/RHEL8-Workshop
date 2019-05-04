@@ -1,5 +1,8 @@
 #/bin/bash
 
+## Let's be clear THIS IS NOT A ROOTKIT!!!
+## This script is an aid for a teaching tool
+
 echo "# Capture hostname"
 uname -a
 
@@ -9,32 +12,26 @@ echo "# Capture who is logged in"
 who
 
 echo "" ; sleep 1
-sleep 1
-echo ""
 
 echo "# Get the root passwd entry"
 grep root /etc/passwd
 
 echo "" ; sleep 1
-echo ""
 
 echo "# Get the root shadow entry"
 grep root /etc/shadow
 
 echo "" ; sleep 1
-echo ""
 
-echo "# Get the fs configs"
+echo "# Filesystem configs"
 cat /etc/fstab
 
 echo "" ; sleep 1
-echo ""
 
-echo "# List of processes running"
+echo "# List of running processes"
 ps -ef
 
 echo "" ; sleep 1
-echo ""
 
 echo "# List of open ports"
 netstat -tulpn
