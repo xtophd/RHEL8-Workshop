@@ -1,7 +1,4 @@
 ---
-
-## STRATIS Setup
-
 - hosts: node2.example.com
   tasks:
   
