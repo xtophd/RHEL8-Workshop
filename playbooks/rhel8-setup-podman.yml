@@ -34,14 +34,4 @@
         mode: 0744
       with_items:
         - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-podman-checkhost.sh'}
-
-    - name: "SETUP PODMAN: script to preload local container repo"
-      shell: 
-        cmd: |
-          podman rmi --all
-          for IMAGENAME in rhel7.5 httpd-24-rhel7 ubi ; do
-          IMAGEID=`wget -O -  http://core.example.com/containers/${IMAGENAME}.tar | podman load | grep "Loaded image" | cut -f2 -d@`
-          podman tag ${IMAGEID} core.example.com:5000/${IMAGENAME}
-          podman push core.example.com:5000/${IMAGENAME}
-          done
-          podman rmi --all
+        - {src: 'cheat-loadregistry.j2', dest: '/usr/local/bin/cheat-podman-loadregistry.sh'}
