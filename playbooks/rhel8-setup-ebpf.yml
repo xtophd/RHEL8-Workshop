@@ -3,7 +3,7 @@
   tasks:
   
     - name: "SETUP EBPF: yum install bcc-tools"
-      yum: name=bcc-tools,netstat state=installed
+      yum: name=bcc-tools,net-tools state=installed
 
     - name: "SETUP EBPF: cheat script installs"
       template:
