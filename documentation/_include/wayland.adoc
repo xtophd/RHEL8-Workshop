@@ -60,13 +60,14 @@ ____
 
 The search will result in a link to the package installer.
 
+====
+image::wayland-image4.png[Firewall]
+====
+
 ____
 Click on `Firewall Configuration`
 ____
 
-====
-image::wayland-image4.png[Firewall]
-====
 
 This will bring up the Gnome Software package installation GUI…
   
@@ -74,8 +75,10 @@ This will bring up the Gnome Software package installation GUI…
 image::wayland-image8.png[Gnome Pkg Installer]
 ====
 
+____
 Click on “Firewall”.
 Then click “Install”
+____
   
 ====
 image::wayland-image14.png[Firewall Pkg Install]
