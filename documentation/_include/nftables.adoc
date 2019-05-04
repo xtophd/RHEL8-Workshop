@@ -24,7 +24,7 @@ NOTE: For 99% of all use cases the firewalld tools are the best choice.  For thi
 
 
 
-== nft Fundamentals
+== Getting Started
 
 For the first part of this lab we will be using node1.  As the user _root_ on host *workstation.example.com* you should ssh to *node1.example.com*.  You should not be prompted for a password.
 
@@ -32,6 +32,17 @@ For the first part of this lab we will be using node1.  As the user _root_ on ho
 ----
 ssh node1.example.com
 ----
+
+Verify that you are on the right host for these exercises.
+
+.[root@node1 ~]#
+----
+cheat-nftables-checkhost.sh
+----
+
+You are now ready to begin your exercises.
+
+== nft Fundamentals
 
 Using nft, show the current state of the network tables.
 
