@@ -62,7 +62,7 @@ Let's run:
 [source]
 ----
 echo "Every time you run setenforce 0, you make Dan Walsh weep." > ./test.txt
-buildah copy httpd-24-rhel7-working container ./test.txt /var/www/html/
+buildah copy httpd-24-rhel7-working-container ./test.txt /var/www/html/
 ----
 
 At this point, you have copied your local test.txt into the root of the webserver and you should see feedback similar to:
