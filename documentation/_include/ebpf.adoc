@@ -44,8 +44,6 @@ Now you are ready to begin your exercises with eBPF Tracing.
 Start by installing bcc-tools:
 
 .[root@node2 ~]#
-
-[source]
 ----
 yum install bcc-tools -y
 ----
@@ -57,8 +55,6 @@ Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These
 The tcplife tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes. To run this tool, do:
 
 .[root@node2 ~]#
-
-[source]
 ----
 cd /usr/share/bcc/tools
 ./tcplife
@@ -66,7 +62,8 @@ cd /usr/share/bcc/tools
 
 Wait for this to get started and you'll see the following header print out:
 
-[source]
+.Command Output
+[source,indent=4]
 ----
 PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 ----
@@ -74,14 +71,14 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 Now from another workstation terminal, run:
 
 .[root@workstation ~]#
-
-[source]
 ----
-ssh node2.example.com
+ssh node2.example.com cheat-ebpf-rootkit.sh
 ----
 
-Let your session sit open for a few seconds and then run 'exit', thus closing the connection. You should now see on your tcplife window, an entry similar to:
+This command should run for about 10 seconds and then close.  You should now see on your tcplife window, an entry similar to:
 
+.Command Output
+[source,indent=4]
 ----
 30302 sshd       10.0.0.12       22    10.0.0.10       43102    65     8 228901.08
 ----
@@ -90,6 +87,8 @@ Doing the math with my numbers above, my session was open for 3 minutes and 49 s
 
 On the terminal running tcp-life, go ahead and Ctrl-C the process. You will see a python traceback that looks like:
 
+.Command Output
+[source,indent=4]
 ----
 ^CTraceback (most recent call last):
   File "./tcplife", line 506, in <module>
@@ -108,8 +107,6 @@ The execsnoop script monitors all calls to execve() and catches all processes th
 To run this script, do:
 
 .[root@node2 ~]#
-
-[source]
 ----
 cd /usr/share/bcc/tools
 ./execsnoop
@@ -117,7 +114,8 @@ cd /usr/share/bcc/tools
 
 You will see a header print that looks like:
 
-[source]
+.Command Output
+[source,indent=4]
 ----
 PCOMM            PID    PPID   RET ARGS
 ----
@@ -125,10 +123,8 @@ PCOMM            PID    PPID   RET ARGS
 Now from another workstation terminal, run:
 
 .[root@workstation ~]#
-
-[source]
 ----
-ssh node2.example.com
+ssh node2.example.com cheat-ebpf-rootkit.sh
 ----
 
 You can immediately exit your session and return to the workstation. In the execsnoop terminal, you should see output similar to:
@@ -167,8 +163,6 @@ Similar in nature to execsnoop, opensnoop traces the open() syscall, which shows
 To run this script, do:
 
 .[root@node2 ~]#
-
-[source]
 ----
 cd /usr/share/bcc/tools
 ./opensnoop
@@ -176,7 +170,8 @@ cd /usr/share/bcc/tools
 
 You will see a header that prints out like:
 
-[source]
+.Command Output
+[source,indent=4]
 ----
 PID    COMM               FD ERR PATH
 ----
@@ -184,17 +179,8 @@ PID    COMM               FD ERR PATH
 In a workstation terminal, perform the following steps to connect to node2 as a student:
 
 .[root@workstation ~]#
-
-[source]
 ----
-exit
-----
-
-.[student@workstation ~]$
-
-[source]
-----
-ssh node2.example.com
+ssh student@node2 cheat-ebpf-rootkit.sh
 ----
 
 You probably saw a lot of data go by in the window running opensnoop as there are a lot of files opened during the establishing of an ssh session and the corresponding login activity.
@@ -202,15 +188,14 @@ You probably saw a lot of data go by in the window running opensnoop as there ar
 Now on node2, let's do:
 
 .[student@node2 ~]$ 
-
-[source]
 ----
 cat /etc/fstab
 ----
 
 You will see a lot of locale data being loaded in addition to /etc/fstab in the opensnoop window like so:
 
-[source]
+.Command Output
+[source,indent=4]
 ----
 31474  cat                 3   0 /etc/ld.so.cache
 31474  cat                 3   0 /lib64/libc.so.6
@@ -248,8 +233,6 @@ You will see a lot of locale data being loaded in addition to /etc/fstab in the 
 The fourth column is the exit code and you can see that some of these files exit with non-zero codes meaning they don't exist or the user doesn't have appropriate permissions. Let's take a look at /usr/lib/locale/locale-archive:
 
 .[student@node2 ~]$ 
-
-[source]
 ----
 ls /usr/lib/locale/locale-archive
 ----
@@ -315,7 +298,8 @@ We see the following returned in opensnoop:
 
 with the key line being:
 
-[source]
+.Command Output
+[source,indent=4]
 ----
 31480  cat                -1  13 /etc/shadow
 ----
@@ -333,15 +317,13 @@ The purpose of the xfsslower tool (also ext4slower and nfsslower) is to show you
 To run this script, do:
 
 .[root@node2 ~]#
-
-[source]
 ----
 cd /usr/share/bcc/tools
 ./xfsslower
 ----
 
-You should see the following header print:
-[source]
+.Command Output
+[source,indent=4]
 ----
 Tracing XFS operations slower than 10 ms
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
@@ -350,8 +332,6 @@ TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 Now in another node2 terminal window, let's run:
 
 .[root@node2 ~]#
-
-[source]
 ----
 dd if=/dev/urandom of=bigfile bs=1024 count=20000
 ----
@@ -361,14 +341,14 @@ This writes out a 20M file called bigfile and should not register on your xfsslo
 Now, let's execute the above command in a for loop so that we get more I/O going in parallel:
 
 .[root@node2 ~]#
-
-[source]
 ----
 for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
 ----
 
 Now you should see similar output in your xfsslower window:
 
+.Command Output
+[source,indent=4]
 ----
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 20:44:43 b'dd'          32446  W 1024    778        44.11 b'bigfile1'
@@ -420,15 +400,15 @@ The cachestat tool traces kernel page cache functions and prints per-second summ
 To run this script, do:
 
 .[root@node2 ~]#
-
-[source]
 ----
 cd /usr/share/bcc/tools
 ./cachestat
 ----
 
 You should see the following header print:
-[source]
+
+.Command Output
+[source,indent=4]
 ----
    TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
 ----
@@ -436,14 +416,14 @@ You should see the following header print:
 In another root terminal on node 2, run our dd for loop from the xfsslower section:
 
 .[root@node2 ~]#
-
-[source]
 ----
 for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
 ----
 
 In the cachestat window, you should output similar to:
 
+.Command Output
+[source,indent=4]
 ----
    TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
     1135        0     1135        0            5       1464
@@ -459,8 +439,6 @@ Go to the terminal with cachestat running and issue a Ctrl-C. This will end the 
 This tool is a swiss army knife allowing you to specify functions to trace and messages to be printed when certain conditons are met. You can read more about this by running:
 
 .[root@node2 ~]#
-
-[source]
 ----
 man 8 trace
 ----
@@ -468,8 +446,6 @@ man 8 trace
 Let's do a simple trace in which we will dynamically trace the do_sys_open() kernel function and print the names of the files opened. Run this with:
 
 .[root@node2 ~]#
-
-[source]
 ----
 cd /usr/share/bcc/tools
 ./trace 'p::do_sys_open "%s", arg2'
@@ -478,14 +454,14 @@ cd /usr/share/bcc/tools
 Now in another node2 terminal, run:
 
 .[root@node2 ~]#
-
-[source]
 ----
 cat /etc/fstab
 ----
 
 In the window with trace running, you will see something similar to:
 
+.Command Output
+[source,indent=4]
 ----
 32559   32559   cat             do_sys_open      b'/etc/ld.so.cache'
 32559   32559   cat             do_sys_open      b'/lib64/libc.so.6'
@@ -523,8 +499,6 @@ In the window with trace running, you will see something similar to:
 Go ahead and Ctrl-C trace and then let's do one more trace, this time, tracing the return values out of trace:
 
 .[root@node2 ~]#
-
-[source]
 ----
 cd /usr/share/bcc/tools
 ./trace 'r::do_sys_open "ret: %d", retval'
@@ -533,15 +507,14 @@ cd /usr/share/bcc/tools
 Now in another node2 terminal, run:
 
 .[root@node2 ~]#
-
-[source]
 ----
 cat /etc/fstab
 ----
 
 and in your trace window, you will see output similar to:
 
-[source]
+.Command Output
+[source,indent=4]
 ----
 PID     TID     COMM            FUNC             -
 32576   32576   cat             do_sys_open      ret: 3
@@ -596,7 +569,7 @@ uname -n
 whoami
 ----
 
-.Your output should look like this
+.Command Output
 [source,indent=4]
 ----
 workstation.example.com
