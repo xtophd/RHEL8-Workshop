@@ -21,7 +21,7 @@ Instead of an entirely in-kernel approach like ZFS or Btrfs, Stratis uses a hybr
 NOTE: Stratis is considered Technology Preview and is not intended for production use.  For information on Red Hat scope of support for Technology Preview features, see:
      link:https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope]
 
-== Installation
+== Getting Started
 
 Starting on the host *workstation.example.com*, let's ssh over to *node2.example.com*.  No password should be required.
 
@@ -30,7 +30,18 @@ Starting on the host *workstation.example.com*, let's ssh over to *node2.example
 ssh node2.example.com
 ----
 
-Install the required packages - this will pull in several Python related dependencies
+Verify that you are on the right host for these exercises.
+
+.[root@node2 ~]#
+----
+cheat-stratis-checkhost.sh
+----
+
+You are now ready to begin your exercises.
+
+== Installation & Configuration
+
+Install the required packages - this will pull in several Python related dependencies.
 
 .[root@node2]#
 ----
@@ -43,6 +54,7 @@ Next we need to enable the `stratisd` service
 ----
 systemctl enable --now stratisd
 ----
+
 NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
 
 Finally check the service status.
