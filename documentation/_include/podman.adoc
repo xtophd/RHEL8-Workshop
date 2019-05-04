@@ -302,7 +302,7 @@ CONTAINER ID  IMAGE                             COMMAND           CREATED       
 249de20ebdb0  core.example.com:5000/ubi:latest  echo hello world  18 seconds ago  Exited (0) 17 seconds ago         objective_kepler
 ----
 
-Now let us run the exact same command again.
+Now let us run the exact same command as before to print "hello world".
 
 .[root@node3 ~]#
 ----
