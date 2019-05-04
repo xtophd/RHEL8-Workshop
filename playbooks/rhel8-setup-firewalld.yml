@@ -1,7 +1,4 @@
 ---
-
-## FIREWALLD SETUP
-
 - hosts: node1.example.com
   tasks:
   
