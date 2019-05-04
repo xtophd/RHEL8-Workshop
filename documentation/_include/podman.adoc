@@ -162,7 +162,7 @@ REPOSITORY                  TAG      IMAGE ID       CREATED       SIZE
 core.example.com:5000/ubi   latest   c096c0dc7247   2 weeks ago   214 MB
 ----
 
-NOTE: if you are a subscriber to Red Hat Enterprise Linux, you pull authentic Red Hat certified image directly from Red Hat's repository with `podman pull rhel7.5 --creds 'username:password`
+NOTE: if you are a subscriber to Red Hat Enterprise Linux, you can pull authentic Red Hat certified images directly from Red Hat's repository with `podman pull rhel7.5 --creds 'username:password`'
 
 Pull a few more container images.
 
