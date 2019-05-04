@@ -34,6 +34,13 @@ There is a dedicated VM we will use for the container exercises.  From workstati
 ssh node3.example.com
 ----
 
+Verify that you are on the right host for these exercises.
+
+.[root@node3]#
+----
+cheat-buildah-checkhost.sh
+----
+
 Now you are ready to begin your exercises with containers.
 
 == Build an Image With Buildah
