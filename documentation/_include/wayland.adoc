@@ -38,12 +38,18 @@ reboot
 ----
 ====
 
-
-
 Log into the console of your workstation as the user *student*.
   
 == Adding Packages
-  
+
+____
+select `Activities` from top left menu
+
+.Use following details for Create Project
+[horizontal]
+*Search*:: firewall
+____
+
 ====
 image::wayland-image6.png[Wayland Desktop]
 ====
