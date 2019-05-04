@@ -1,7 +1,4 @@
 ---
-
-## PODMAN SETUP
-
 - hosts: node3.example.com
   tasks:
 
