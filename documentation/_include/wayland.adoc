@@ -53,7 +53,6 @@ image::wayland-image6.png[Wayland Desktop]
 ____
 Select the Search Bar near the top center, and enter the following:
 
-.Search Criteria
 [horizontal]
 *Search*:: firewall
 ____
