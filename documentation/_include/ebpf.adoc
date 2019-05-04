@@ -13,7 +13,7 @@ endif::[]
 
 = A quick introduction to eBPF 
 
-NOTE: eBPF is considered *Technology Preview* and is not intended for production use.  For information on Red Hat scope of support for Technology Preview features, see: link:https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope]
+WARNING: eBPF is considered *Technology Preview* and is not intended for production use.  For information on Red Hat scope of support for Technology Preview features, see: link:https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope]
 
 In this unit, we will get familiar with eBPF. eBPF stands for Extended Berkeley Packet Filter and is effectively an in kernel virtual machine upon which several applications have been built. To date, these applications center around working with the network stack (eXpress Data Path, Traffic Control) and also offering efficient kernel tracing (BPF Compiler Collection). In today's lab, we will be focusing on the kernel tracing aspect of eBPF.
 
