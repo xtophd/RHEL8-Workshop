@@ -82,7 +82,9 @@ Sample output will be titled with _'Your output should look like this'_ (or _'Co
 [discrete]
 ==== Alternate Commands
 
-The workshop often provides cheat-scripts to ease certain complex tasks.  This helps the class stay focused and reduces the likelyhood of errors and disruptions to the workshop delivery.  The native commands which the cheat-scripts utilize will be documented in the following way.
+The workshop often provides cheat-scripts to ease certain complex tasks.  This helps the class stay focused and reduces the likelyhood of errors and disruptions to the workshop delivery.  Honetsly, we are not here to learn 'vi', 'emacs' or start arguments about the merits of `sed` and `awk`.
+
+The native commands which the cheat-scripts utilize will be documented in the following way.
 
 .[root@master ~]#
 ----
