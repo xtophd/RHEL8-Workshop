@@ -279,6 +279,7 @@ hello world
 ----
 
 Well that was really boring!! What did we learn from this?  For starters, you should have noticed how fast the container launched and then concluded.  Compare that with traditinal virtualization where:
+
     * you power up, 
     * wait for bios, 
     * wait for grub, 
