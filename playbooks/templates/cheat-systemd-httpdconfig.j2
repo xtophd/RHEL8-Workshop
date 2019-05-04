@@ -1,0 +1,12 @@
+#!/bin/bash
+
+mkdir -p /etc/systemd/system/httpd.service.d
+
+cat >/etc/systemd/system/httpd.service.d/50-httpd.conf << EOCONFIG
+[Service]
+Restart=always
+OOMScoreAdjust=-1000
+EOCONFIG
+
+echo "# Contents of /etc/systemd/system/httpd.service.d/50-httpd.conf"
+cat /etc/systemd/system/httpd.service.d/50-httpd.conf
