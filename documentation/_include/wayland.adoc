@@ -76,23 +76,25 @@ image::wayland-image8.png[Gnome Pkg Installer]
 
 ____
 Click on `Firewall`
-
-Then click on `Install`
 ____
   
 ====
 image::wayland-image14.png[Firewall Pkg Install]
 ====
 
+____
+Click on `Install`
+____
+
 ====
 image::wayland-image1.png[Firewall Pkg Install]
 ====
 
 ____
-Click `Launch`
+Click on `Launch`
 ____
 
-You’ll be prompted for the password for student - enter the password.
+You’ll be prompted for the password for student - enter the password.  Because the user _student_ is a member of the _wheel_ group, you will be able to perform most administrator tasks.
 
 ====
 image::wayland-image1.png[Credentials Dialog]
@@ -104,7 +106,12 @@ When you are done exploring - click on the “x” in the upper right hand corne
 == Customizing the Desktop
 
 Now lets configure your desktop to have a menu system…
-Click on “Activities” then click on the Gnome Terminal icon...
+
+____
+Click on “Activities”
+
+Click on the Gnome Terminal icon
+____
   
 ====
 image::wayland-image2.png[Lanuch Terminal]
@@ -128,13 +135,26 @@ yum install -y gnome-tweaks
 image::wayland-image3.png[Lanuch Terminal]
 ====
 
-Close the terminal window. Click on the “Activities” button… then type “tweaks” in the search window.
+Close the terminal window. 
+
+____
+Click on the “Activities”
+____
+
+____
+Select the Search Bar near the top center, and enter the following:
+
+[horizontal]
+*Search*:: tweaks
+____
 
 ====
 image::wayland-image3.png[Tweaks Search]
 ====
 
-Click on the Tweaks icon right below the search box.
+____
+Click on the `Tweaks`
+____
 
 ====
 image::wayland-image12.png[Tweaks]
