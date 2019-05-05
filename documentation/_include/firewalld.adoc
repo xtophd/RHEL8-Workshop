@@ -155,13 +155,11 @@ firewall-cmd --get-active-zones
 .Command Output
 [source,indent=4]
 ----
-libvirt
-  interfaces: virbr0
 public
   interfaces: ens3
 ----
 
-We see there is a zone for kvm virtual machine network bridge "virbr0", and a zone for the hosts public network on interface *ens3*.
+We see there is a zone for the hosts public network on interface *ens3*.
 
 We had this information from the previous command, but to be more specific let's just list the physical interfaces associated with the public zone.
 
@@ -227,7 +225,7 @@ public (active)
   interfaces: ens3
   sources:
   services: cockpit dhcpv6-client ssh
-  ports: 443/tcp
+  ports: 
   protocols:
   masquerade: no
   forward-ports:
@@ -276,7 +274,7 @@ public (active)
   interfaces: ens3
   sources:
   services: cockpit dhcpv6-client http https ssh
-  ports: 443/tcp
+  ports: 
   protocols:
   masquerade: no
   forward-ports:
@@ -299,7 +297,7 @@ public
   interfaces:
   sources:
   services: cockpit dhcpv6-client ssh
-  ports: 443/tcp
+  ports: 
   protocols:
   masquerade: no
   forward-ports:
@@ -330,7 +328,7 @@ public
   interfaces:
   sources:
   services: cockpit dhcpv6-client http https ssh
-  ports: 443/tcp
+  ports: 
   protocols:
   masquerade: no
   forward-ports:
@@ -401,7 +399,7 @@ public
   interfaces:
   sources:
   services: cockpit http https ssh
-  ports: 443/tcp
+  ports: 
   protocols:
   masquerade: no
   forward-ports:
@@ -446,7 +444,7 @@ public
   interfaces:
   sources:
   services: cockpit http https ssh
-  ports: 443/tcp 8080/tcp 8443/tcp
+  ports: 8080/tcp 8443/tcp
   protocols:
   masquerade: no
   forward-ports:
@@ -486,7 +484,7 @@ public
   interfaces:
   sources:
   services: cockpit http https ssh
-  ports: 443/tcp
+  ports: 
   protocols:
   masquerade: no
   forward-ports:
@@ -597,7 +595,7 @@ public
   interfaces:
   sources:
   services: cockpit http https ssh
-  ports: 443/tcp
+  ports: 
   protocols:
   masquerade: no
   forward-ports:
