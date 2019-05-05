@@ -41,7 +41,7 @@ cheat-systemd-checkhost.sh
 
 You are now ready to proceed with these exercises.
 
-== Analyzong System Startup
+== Analyzing System Startup
 
 Let's collect some initial data about the boot process
 
