@@ -1,0 +1,13 @@
+---
+- hosts: node2.example.com
+  tasks:
+  
+    - name: "SETUP NFTABLES: cheat script installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0744
+      with_items:
+        - {src: 'cheat-checkhost.j2',               dest: '/usr/local/bin/cheat-nftables-checkhost.sh'}
