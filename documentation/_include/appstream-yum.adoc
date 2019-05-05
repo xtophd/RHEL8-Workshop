@@ -239,7 +239,7 @@ https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/ht
 
 == Appendix
 
-Please note that this activity was required with the RHEL 8 BETA we used to constuct this lab.  It has already been executed on the host core.example.com.  This is provided as reference only.
+Please note that this activity is required with the RHEL 8 BETA if you change the contents of an AppStream repository.  It has already been executed on the host core.example.com.  This is provided as reference only.
 
 === Rebuilding repositories that have AppStream components
 
