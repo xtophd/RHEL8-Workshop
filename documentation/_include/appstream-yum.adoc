@@ -35,7 +35,7 @@ Determine what modules are available.
 
 .[root@node1 ~]#
 ----
-yum module list
+yum module list | grep postgresql
 ----
 
 We see that we have:
@@ -92,8 +92,12 @@ yum module install postgresql:9.6/server -y
 The above command tells yum to install the server profile for postgresql
 in the 9.6 version.
 
-Once we’ve installed that, if we look at the corresponding section of
-yum module list again, we will see:
+Once we’ve installed that, we will see:
+
+.[root@node3 ~]#
+----
+yum module list | grep postgresql
+----
 
 [source,indent=4]
 ----
@@ -120,7 +124,12 @@ and install only the client:
 yum module install postgresql:9.6/client -y
 ----
 
-We would then see (in yum module list):
+We would then see:
+
+.[root@node3 ~]#
+----
+yum module list | grep postgresql
+----
 
 [source,indent=4]
 ----
@@ -142,6 +151,11 @@ yum module disable mariadb mysql -y
 ----
 
 Now when we do yum module list, we will see:
+
+.[root@node3 ~]#
+----
+yum module list | grep -e mariadb -e mysql
+----
 
 [source,indent=4]
 ----
