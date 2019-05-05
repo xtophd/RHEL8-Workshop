@@ -630,8 +630,6 @@ firewall-cmd --panic-off
 
 Red Hat Documentation
 
-    * link:None[Put firewalld documentation in here]
-
     * link:https://developers.redhat.com/blog/2018/08/10/firewalld-the-future-is-nftables/[Firewalld: The Future is nftables]
     
 [discrete]
