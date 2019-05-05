@@ -631,7 +631,7 @@ Wahoo! You are done.  If you have any questions, please ask.
 
 == Additional Resources
 
-    * linkx:https://systemd.io/BOOT_LOADER_SPECIFICATION[Boot Loader Specification]
+    * linkx:https://systemd.io/BOOT_LOADER_SPECIFICATION.html[Boot Loader Specification]
 
 [discrete]
 == End of Unit
