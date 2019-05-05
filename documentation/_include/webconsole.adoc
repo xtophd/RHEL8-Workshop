@@ -74,7 +74,7 @@ To enable persistent metrics, Web Console requires “Performance Co-pilot (pcp)
 
 .[root@node2]#
 ----
-yum intall -y cockpit-pcp
+yum install -y cockpit-pcp
 systemctl restart cockpit.socket
 ----
 
