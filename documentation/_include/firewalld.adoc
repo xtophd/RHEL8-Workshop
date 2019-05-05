@@ -82,10 +82,13 @@ Let us examine a couple of the system's default zone files in */usr/lib/firewall
 .public.xml
 [source,indent=4]
 ----
-<?xml version="1.0" encoding="utf-8"?> 
+<?xml version="1.0" encoding="utf-8"?>
 <zone>
-	<service name="ssh"/>
-	<service name="dhcpv6-client"/>
+  <short>Public</short>
+  <description>For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.</description>
+  <service name="ssh"/>
+  <service name="dhcpv6-client"/>
+  <service name="cockpit"/>
 </zone>
 ----
 
@@ -105,7 +108,7 @@ There are nearly 50 built-in services files shipped with firewalld. Services fil
 
 Here are a couple common configs for services defined in */usr/lib/firewalld/services*.
 
-.http.xml
+.ssh.xml
 [source,indent=4]
 ----
 <?xml version="1.0" encoding="utf-8"?>
