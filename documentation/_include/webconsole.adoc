@@ -40,7 +40,7 @@ For your convenience, he webconsole has already been installed and configured on
 ====
 _Native command(s) to install and enable firewalld_
 ----
-yum intall -y cockpit
+yum install -y cockpit
 systemctl enable --now cockpit.socket
 firewall-cmd --add-service=cockpit --permanent
 firewall-cmd --reload
