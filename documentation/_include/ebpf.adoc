@@ -430,7 +430,7 @@ In the cachestat window, you should output similar to:
 
 This shows that we had 31 page cache misses while running the above loop, but during that same second, there were 9,821 hits, indicating great performance from the page cache.
 
-Go to the terminal with cachestat running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+Go to the terminal with cachestat running and issue a Ctrl-C. This will end the process with the message "Detaching...". That is the expected behavior.
 
 === bcc-tools: trace
 
@@ -548,7 +548,7 @@ PID     TID     COMM            FUNC             -
 32576   32576   cat             do_sys_open      ret: 3
 ----
 
-Go to the terminal with trace running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+Go to the terminal with trace running and issue a Ctrl-C. This will end the process and return you to the command line. 
 
 There is a lot more that you can do with this tool when you actually need to start tracing what is getting passed into kernel functions and what is being returned by those kernel functions.
 
