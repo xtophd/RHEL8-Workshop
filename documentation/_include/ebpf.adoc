@@ -178,7 +178,7 @@ In a workstation terminal, perform the following steps to connect to node2 as a 
 
 .[root@workstation ~]#
 ----
-ssh student@node2 cheat-ebpf-rootkit.sh
+ssh student@node2 
 ----
 
 You probably saw a lot of data go by in the window running opensnoop as there are a lot of files opened during the establishing of an ssh session and the corresponding login activity.
