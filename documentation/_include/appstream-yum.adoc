@@ -221,7 +221,7 @@ then:
 
 .[root@workstation config]#
 ----
-ansible rhel8 -a "rpm -q postgresql-server"
+ansible rhel8 -o -a "rpm -q postgresql-server"
 ----
 
 You should have postgresql-server 10.6 on node1 and 9.6 on node3 and no
@@ -231,7 +231,7 @@ and:
 
 .[root@workstation config]#
 ----
-ansible rhel8 -a "rpm -q postgresql"
+ansible rhel8 -o -a "rpm -q postgresql"
 ----
 
 You should have postgresql 10.6 on nodes 1 and 2 and postgresql 9.6 on
