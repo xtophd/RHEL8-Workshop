@@ -629,6 +629,7 @@ firewall-cmd --panic-off
 Red Hat Documentation
 
     * link:https://developers.redhat.com/blog/2018/08/10/firewalld-the-future-is-nftables/[Firewalld: The Future is nftables]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/configuring_and_managing_security/assembly_using-firewalls_configuring-and-managing-security[RHEL 8 Beta Documentation:Firewalls]
     
 [discrete]
 == End of Unit
