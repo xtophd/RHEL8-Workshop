@@ -99,26 +99,18 @@ systemctl status sshd
 ----
 ====
 
+
 [discrete]
-=== Executing tasks in the WebUI
+== How to Connect
 
-Notice that key value pairs for data entry dialogs are presented in a matrix.  
+There are three options to complete the lab.
 
-____
-select `Create Project` from *My Projects* on the *Openshift Landing* page
+  * Follow the instructions to download the ssh-key and use a local terminal for the marjoity of exercises
+  * Skip downloading the ssh-key and simply use a local ternimal with credentials provided by your instructors
+  * The last bullet of the LAB INFORMATION page, provides a link 'to consoles'.  By clicking that link, you can get true console access to "0WORKSTATION".  
 
-.Use following details for Create Project
-[horizontal]
-*Name*:: hello-webui
-*Display Name*:: Hello WebUI
-*Description*:: My First WebUI App
 
-select `Create`.
-____
-
-====
-image::ocp-webui-hello1-project-create.png[Create Project]
-====
+NOTE: you will need true console (GUI) on "0WORKSTATION" for the *Wayland* and *Web Console* units.
 
 [discrete]
 == RHEL 8 LAB: EXERCISES
