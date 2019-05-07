@@ -55,9 +55,19 @@ cd ~/RHEL8-Workshop
 bash prepare-rhel8-workshop.sh
 ----
 
+The preparation script will run for approximately 5 to 7 minutes.
+
 == A Few Words While the Installer Runs (5 or 6 minutes)
 
-Put something clever here :-)
+=== Highlevel New Stuff in RHEL 8
+
+  * Kernel Version: 4.18+
+  * System Compiler: GCC 8.2, LLVM 6.0
+  * Hardware Architectures: Intel/AMD 64-bit, IBM Power LE, IBM z Systems, ARM 64-bit
+  * Default File System: XFS
+  * Package Management: Yum v4
+  * Time Sync: Chrony
+  * Networking: Network Manager
 
 == Conclusion
 
