@@ -59,7 +59,8 @@ The preparation script will run for approximately 5 to 7 minutes.
 
 == A Few Words While the Installer Runs (5 or 6 minutes)
 
-=== Highlevel New Stuff in RHEL 8
+[discrete]
+=== New in RHEL 8
 
   * Kernel Version: 4.18+
   * System Compiler: GCC 8.2, LLVM 6.0
