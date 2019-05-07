@@ -65,7 +65,7 @@ The preparation script will run for approximately 5 to 7 minutes.
 
 The set up of the RHEL 8 Workshop should now be complete.  A couple of remaining words of advice:
 
-1.  Some exercises are dependant on the successful completion of other exericses.  Those dependencies will be noted.
+1.  Some exercises are dependant on the successful completion of other exercises.  Those dependencies will be noted.
 2.  Pay attention to which user-id (login) to use
 3.  Pay attention to which host to use
 4.  There is an exam at the conclusion of the workshop... #notreally
