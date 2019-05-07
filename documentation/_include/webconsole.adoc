@@ -34,7 +34,7 @@ The following exercises will walk you through installing and configuring Web Con
 
 === Packages and Services
 
-For your convenience, he webconsole has already been installed and configured on *node2.example.com*.  The steps are pretty simple and outlined below.  Remember this provided as reference only as they were executed during the ansible play of prep-rhel8-workshop.
+For your convenience, the webconsole has already been installed and configured on *node2.example.com*.  The steps are pretty simple and outlined below.  Remember this provided as reference only as they were executed during the ansible play of prep-rhel8-workshop.
 
 [NOTE]
 ====
