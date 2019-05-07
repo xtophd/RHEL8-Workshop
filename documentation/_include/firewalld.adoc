@@ -67,13 +67,13 @@ The configuration files are stored in
   * /usr/lib/firewalld
   * /etc/firewalld
   
-Red Hat distributes the default servicee configurations in /usr/lib/firewalld.  These configuations are NOT meant for customization.  They WILL be overwritten and replaced from time to time as Red Hat releases new packages or updates for the operating system.
+Red Hat distributes the default service configurations in /usr/lib/firewalld.  These configurations are NOT meant for customization.  They WILL be overwritten and replaced from time to time as Red Hat releases new packages or updates for the operating system.
 
 Customizations for the firewall configuration belong in */etc/filrewalld*.  These configuration files (if they exist) take precedence over the default configs located in */usr/lib/firewalld*.
 
 === Zone Configs
 
-Firewald uses zones to assign a level of trust to a network and its associated connections and interfaces. The zone files include definitions of Services, Ports (ranges) with protocols, Rich rules, Internet Control Message Protocol (ICMP) blocks , Masquerading and Port/packet forwarding. There are several built-in zones: block, dmz, drop, external, home, internal, public, trusted, work - and you can also create new zones 
+Firewalld uses zones to assign a level of trust to a network and its associated connections and interfaces. The zone files include definitions of Services, Ports (ranges) with protocols, Rich rules, Internet Control Message Protocol (ICMP) blocks , Masquerading and Port/packet forwarding. There are several built-in zones: block, dmz, drop, external, home, internal, public, trusted, work - and you can also create new zones 
 
 Each zone is similar to a complete firewall and there is a single zone selection per environment or connection. The public zone is the Initial default. Zones are identified in ifcfg files or NetworkManager configuration using: ZONE=<name> 
 
@@ -207,7 +207,7 @@ cockpit
   destination:
 ----
 
-Nothing too exciting, but we can note that the web conole is configured on port 9090.
+Nothing too exciting, but we can note that the web console is configured on port 9090.
 
 Finally, let's just list everything about the public zone.
 
@@ -378,7 +378,7 @@ firewall-cmd --zone=public --list-all --permanent
 ----
 
 As the output above shows, our unwanted service will return if someone runs `firewall-command --reload` or after a system reboot.
-Thus, there is one more step.  Save our current active configuration to the permament one.
+Thus, there is one more step.  Save our current active configuration to the permanent one.
 
 .[root@node1]#
 ----
