@@ -30,7 +30,7 @@ First of all, THANK YOU for registering and participating in *The Definitive Red
 
 Also, please don't forget to review this session at the completion of this lab.  Your reviews and feedback help keep labs like these as top attractions for the Red Hat Summit.
 
-NOTE:  This whole effort is done using official Red Hat software and although things can likely be set up to work with upstream software components (Fedora, CentOS, etc...), alternate deritives of RHEL are not tested or validated with these exercises.
+NOTE:  This whole effort is done using official Red Hat software and although things can likely be set up to work with upstream software components (Fedora, CentOS, etc...), alternate derivatives of RHEL are not tested or validated with these exercises.
 
 [discrete]
 == Conventions Used
@@ -82,7 +82,7 @@ Sample output will be titled with _'Your output should look like this'_ (or _'Co
 [discrete]
 ==== Alternate Commands
 
-The workshop often provides cheat-scripts to ease certain complex tasks.  This helps the class stay focused and reduces the likelyhood of errors and disruptions to the workshop delivery.  Honetsly, we are not here to learn `vi`, `emacs` or start debates about the merits of `sed` and `awk`.
+The workshop often provides cheat-scripts to ease certain complex tasks.  This helps the class stay focused and reduces the likelihood of errors and disruptions to the workshop delivery.  Honestly, we are not here to learn `vi`, `emacs` or start debates about the merits of `sed` and `awk`.
 
 The native commands which the cheat-scripts utilize will be documented in the following way.
 
@@ -105,8 +105,8 @@ systemctl status sshd
 
 There are three options to complete the lab.
 
-  . Follow the instructions to download the ssh-key and use a local terminal for the marjoity of exercises
-  . Skip downloading the ssh-key and simply use a local ternimal with credentials provided by your instructors
+  . Follow the instructions to download the ssh-key and use a local terminal for the majority of exercises
+  . Skip downloading the ssh-key and simply use a local terminal with credentials provided by your instructors
   . The last bullet of the LAB INFORMATION page, provides a link 'to consoles'.  By clicking that link, you can get true console access to "0WORKSTATION".  
 
 
