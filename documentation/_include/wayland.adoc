@@ -166,7 +166,7 @@ On the left hand side menu, click Extensions, then turn on the Applications Menu
 image::wayland-image9.png[Enable Applications Menu]
 ====
 
-Now click on Windows, then activate the Maximixe and Minimize buttons for all windows…
+Now click on Windows, then activate the Maximize and Minimize buttons for all windows…
   
 ====
 image::wayland-image13.png[Enable Min Max ]
