@@ -190,7 +190,7 @@ core.example.com:5000/rhel7.5          latest   7b875638cfd8   7 months ago   21
 ==== Container Tags
 
 Container images can also be tagged with convenient (ie:custom names).  This could make it more intuitive to understand what they 
-contain, esspecialy after an image has been customized.
+contain, especially after an image has been customized.
 
 .[root@node3 ~]#
 ----
@@ -279,7 +279,7 @@ podman run ubi echo "hello world"
 hello world
 ----
 
-Well that was really boring!! What did we learn from this?  For starters, you should have noticed how fast the container launched and then concluded.  Compare that with traditinal virtualization where:
+Well that was really boring!! What did we learn from this?  For starters, you should have noticed how fast the container launched and then concluded.  Compare that with traditional virtualization where:
 
     * you power up, 
     * wait for bios, 
@@ -289,7 +289,7 @@ Well that was really boring!! What did we learn from this?  For starters, you sh
     * launch all the services, and then finally
     * run the application
 
-Let us run a few more commands to see what else we can gleen.
+Let us run a few more commands to see what else we can glean.
 
 .[root@node3 ~]#
 ----
@@ -825,7 +825,7 @@ localhost/custom_image                    latest   41af4d6affa6   26 minutes ago
 podman run -d --name="custom_server" -p 8080:8080 custom_image
 ----
 
-=== Validatation of Custom Image
+=== Validation of Custom Image
 
 .[root@node3 ~]#
 ----
