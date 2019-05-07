@@ -121,7 +121,7 @@ NOTE: you will need true console (GUI) on "0WORKSTATION" for the *Wayland* and *
   . link:{includedir}/webconsole.adoc[*Web Console* - (UPDATED) System Management] _(workstation, node2)_
   . link:{includedir}/systemd.adoc[*SystemD* - (UPDATED) System Service Management] _(node1)_
   . link:{includedir}/firewalld.adoc[*FirewallD* - (UPDATED) Firewall Service Management] _(node1)_
-  . link:{includedir}/nftables.adoc[*NFTables* - (NEW) Firewall Subsystem] _(node2)_
+  . link:{includedir}/nftables.adoc[*NFTables* - (NEW) Firewall Subsystem] _(node1)_
   . link:{includedir}/ebpf.adoc[*eBPF Tracing* - (NEW) Extended Berkeley Packet Filter for Linux Kernel Tracing] _(node2)_
   . link:{includedir}/appstream-yum.adoc[*App Stream* - (NEW) Application Delivery] _(node1, node2, node3)_
   . link:{includedir}/podman.adoc[*Podman* - (NEW) Container Management] _(node3)_
