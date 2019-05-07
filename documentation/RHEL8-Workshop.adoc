@@ -105,9 +105,9 @@ systemctl status sshd
 
 There are three options to complete the lab.
 
-  * Follow the instructions to download the ssh-key and use a local terminal for the marjoity of exercises
-  * Skip downloading the ssh-key and simply use a local ternimal with credentials provided by your instructors
-  * The last bullet of the LAB INFORMATION page, provides a link 'to consoles'.  By clicking that link, you can get true console access to "0WORKSTATION".  
+  . Follow the instructions to download the ssh-key and use a local terminal for the marjoity of exercises
+  . Skip downloading the ssh-key and simply use a local ternimal with credentials provided by your instructors
+  . The last bullet of the LAB INFORMATION page, provides a link 'to consoles'.  By clicking that link, you can get true console access to "0WORKSTATION".  
 
 
 NOTE: you will need true console (GUI) on "0WORKSTATION" for the *Wayland* and *Web Console* units.
