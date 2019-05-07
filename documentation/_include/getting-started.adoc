@@ -23,15 +23,6 @@ In order to execute the environment preparation, we need to become the administr
 sudo -i
 ----
 
-== Enable 'tmux' Terminal Session
-
-Again, if you haven't already we strongly encourage the use of the `tmux` utility.
-    
-.[student@workstation ~]$ 
-----
-tmux
-----
-
 == Download the Workshop project from GitHub
 
 .[root@workstation ~]#
