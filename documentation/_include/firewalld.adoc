@@ -13,7 +13,7 @@ endif::[]
 
 = Firewalld - Firewall Service Management
 
-The *firewalld* daemon provides a dynamically managed firewall for enhanced network security.  The firewalld daemon is control by way of a command-line tool `firewall-cmd` or a gui tool provided by the `firewall-config` rpm package. For today's workshop, you will focus strictly on the command line interface.
+The *firewalld* daemon provides a dynamically managed firewall for enhanced network security.  The firewalld daemon is controlled by way of a command-line tool `firewall-cmd` or a gui tool provided by the `firewall-config` rpm package. For today's workshop, you will focus strictly on the command line interface.
 
 Features of firewalld include:
 
