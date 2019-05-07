@@ -1,5 +1,5 @@
 ---
-- hosts: node2.example.com
+- hosts: node1.example.com
   tasks:
   
     - name: "SETUP NFTABLES: cheat script installs"
