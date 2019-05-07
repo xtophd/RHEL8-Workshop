@@ -25,7 +25,7 @@ Features of firewalld include:
 
 == Getting Started
 
-Starting on the host *workstation.example.com*, let's ssh over to *node2.example.com*.  No password should be required.
+Starting on the host *workstation.example.com*, let's ssh over to *node1.example.com*.  No password should be required.
 
 .[root@workstation]#
 ----
