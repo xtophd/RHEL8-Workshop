@@ -52,7 +52,7 @@ That was easy!
 == Add Capacity to Root LVM
 
 In order to support LVM snapshots on the root volume, we need to:
-  * add some addtional storage capacity
+  * add some additional storage capacity
   * partition the disk
   * add the partition to the root volume group
   * and finally create logical volume to support the snapshot
@@ -244,7 +244,7 @@ Let's summarize what's been done so far:
   * you created a snapshot of the root volume
   * you then made some changes to the host (deleted a bunch of stuff)
 
-Time to boot our host using the snapshot volue, inspect the host to verify our data is there and then finally recover the host.
+Time to boot our host using the snapshot value, inspect the host to verify our data is there and then finally recover the host.
 
 == BOOM!!!
 
@@ -568,7 +568,7 @@ Last piece of information.  Since the "snapshot" was merged back into it's "orig
 lvs
 ----
 
-Thus our boom-boot entry points to a non-existant volume.  Here are the final commands to clean everything up.
+Thus our boom-boot entry points to a non-existent volume.  Here are the final commands to clean everything up.
 
 .[root@node3]#
 ----
@@ -605,7 +605,7 @@ Note that the snapshot entry has been removed.
 1  title="Red Hat Enterprise Linux (0-rescue-e988045b45b04b11b84741d6a568861b) 8.0 (Ootpa)"
 ----
 
-Make sure grub is configre to boot the entry.
+Make sure grub is configured to boot the entry.
 
 .[root@node3]#
 ----
