@@ -51,8 +51,7 @@ Using nft, show the current state of the network tables.
 nft list tables
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 table ip filter
@@ -79,8 +78,7 @@ Using nft, show the current state of the network chains.
 nft list chains
 ----
 
-Your output should look like this.
-
+.Command Output
 [source,indent=4]
 ----
 table ip filter {
