@@ -26,16 +26,16 @@ NOTE: For 99% of all use cases the firewalld tools are the best choice.  For thi
 
 == Getting Started
 
-For the first part of this lab we will be using node1.  As the user _root_ on host *workstation.example.com* you should ssh to *node1.example.com*.  You should not be prompted for a password.
+For the first part of this lab we will be using node2.  As the user _root_ on host *workstation.example.com* you should ssh to *node2.example.com*.  You should not be prompted for a password.
 
 .[root@workstation]#
 ----
-ssh node1.example.com
+ssh node2.example.com
 ----
 
 Verify that you are on the right host for these exercises.
 
-.[root@node1 ~]#
+.[root@node2 ~]#
 ----
 cheat-nftables-checkhost.sh
 ----
@@ -46,7 +46,7 @@ You are now ready to begin your exercises.
 
 Using nft, show the current state of the network tables.
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft list tables
 ----
@@ -74,7 +74,7 @@ table ip6 firewalld
 
 Using nft, show the current state of the network chains.
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft list chains
 ----
@@ -98,7 +98,7 @@ table bridge nat
 table inet firewalld
 table ip firewalld
 table ip6 firewalld
-[root@node1 tmp]# nft list chains
+[root@node2 tmp]# nft list chains
 table ip filter {
         chain INPUT {
                 type filter hook input priority 0; policy accept;
@@ -117,14 +117,14 @@ NOTE: The output for this can be VERY long.  You can optionally use `nft list ch
 
 == Add Single Rule
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft insert rule ip filter INPUT tcp dport http accept
 ----
 
 Verify the rule change.
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft list table ip filter -n -a
 ----
@@ -133,42 +133,42 @@ Remember the rule handle, we will use it next to delete the rule
 
 == Delete Single Rule
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft delete rule filter INPUT handle 4
 ----
 
 Verify the rule change.
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft list table ip filter -n -a 
 ----
 
 == Add Multiple Rules at Once
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft insert rule ip filter INPUT tcp dport { ssh, http, https, 8181 } accept
 ----
 
 Verify the new rules.
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft list table ip filter -n -a
 ----
 
 == Increase Network Security
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft add chain ip filter INPUT { type filter hook input priority 0\; policy drop\; }
 ----
 
 Verify Increased Security
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft list table ip filter -n -a
 ----
@@ -177,14 +177,14 @@ nft list table ip filter -n -a
 
 Remove rules added during this exercise.  We begin by setting the INPUT chain default policy to accept all traffic.
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft add chain ip filter INPUT { type filter hook input priority 0\; policy accept\; }
 ----
 
 Now find the handle and remove the rule currently allowing access for SSH, HTTP, HTTPS, and 8181
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft list table ip filter -n -a
 
@@ -193,7 +193,7 @@ nft delete rule filter INPUT handle 6
 
 Verify that everything is back to normal
 
-.[root@node1]#
+.[root@node2]#
 ----
 nft list table ip filter -n -a
 ----
