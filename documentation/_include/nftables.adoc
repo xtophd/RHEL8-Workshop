@@ -301,6 +301,8 @@ table ip filter { # handle 1
 }
 ----
 
+NOTE: You can also use the 'flush' option to clear a table as follows: `nft flush table ip filter`
+
 
 == Additional Resources
 
