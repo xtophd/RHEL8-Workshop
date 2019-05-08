@@ -83,22 +83,6 @@ Your output should look like this.
 
 [source,indent=4]
 ----
-table ip filter
-table ip6 filter
-table bridge filter
-table ip security
-table ip raw
-table ip mangle
-table ip nat
-table ip6 security
-table ip6 raw
-table ip6 mangle
-table ip6 nat
-table bridge nat
-table inet firewalld
-table ip firewalld
-table ip6 firewalld
-[root@node2 tmp]# nft list chains
 table ip filter {
         chain INPUT {
                 type filter hook input priority 0; policy accept;
