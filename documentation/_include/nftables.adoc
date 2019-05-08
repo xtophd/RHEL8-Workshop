@@ -276,6 +276,8 @@ In the output above, we determine the handle for our rule is '6'.
 nft delete rule filter INPUT handle 6
 ----
 
+NOTE: You can also use the 'flush' option to clear an entire table: `nft flush table ip filter`
+
 Verify that everything is back to normal
 
 .[root@node2]#
@@ -300,9 +302,6 @@ table ip filter { # handle 1
         }
 }
 ----
-
-NOTE: You can also use the 'flush' option to clear a table as follows: `nft flush table ip filter`
-
 
 == Additional Resources
 
