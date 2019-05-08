@@ -13,6 +13,9 @@ endif::[]
 
 = Building with Buildah and Inspecting with Skopeo!
 
+
+WARNING: You must complete the Podman unit before proceeding.
+
 In this unit, we will get familiar with Buildah and Skopeo!
 
 [discrete]
