@@ -179,7 +179,28 @@ Verify the new rules.
 nft list table ip filter -n -a
 ----
 
+.Command Output
+[source,indent=4]
+----
+table ip filter { # handle 1
+        chain INPUT { # handle 1
+                type filter hook input priority 0; policy accept;
+                tcp dport { ssh, http, https, 8181 } accept # handle 6
+        }
+
+        chain FORWARD { # handle 2
+                type filter hook forward priority 0; policy accept;
+        }
+
+        chain OUTPUT { # handle 3
+                type filter hook output priority 0; policy accept;
+        }
+}
+----
+
 == Increase Network Security
+
+Set the INPUT chain default policy to drop all traffic not specifically accepted.
 
 .[root@node2]#
 ----
@@ -191,6 +212,25 @@ Verify Increased Security
 .[root@node2]#
 ----
 nft list table ip filter -n -a
+----
+
+
+.Command Output
+[source,indent=4]
+table ip filter { # handle 1
+        chain INPUT { # handle 1
+                type filter hook input priority 0; policy drop;
+                tcp dport { ssh, http, https, 8181 } accept # handle 6
+        }
+
+        chain FORWARD { # handle 2
+                type filter hook forward priority 0; policy accept;
+        }
+
+        chain OUTPUT { # handle 3
+                type filter hook output priority 0; policy accept;
+        }
+}
 ----
 
 == Cleanup
@@ -207,7 +247,31 @@ Now find the handle and remove the rule currently allowing access for SSH, HTTP,
 .[root@node2]#
 ----
 nft list table ip filter -n -a
+----
 
+.Command Output
+[source,indent=4]
+----
+table ip filter { # handle 1
+        chain INPUT { # handle 1
+                type filter hook input priority 0; policy accept;
+                tcp dport { ssh, http, https, 8181 } accept # handle 6
+        }
+
+        chain FORWARD { # handle 2
+                type filter hook forward priority 0; policy accept;
+        }
+
+        chain OUTPUT { # handle 3
+                type filter hook output priority 0; policy accept;
+        }
+}
+----
+
+In the output above, we determine the handle for our rule is '6'.
+
+.[root@node2]#
+----
 nft delete rule filter INPUT handle 6
 ----
 
@@ -217,6 +281,26 @@ Verify that everything is back to normal
 ----
 nft list table ip filter -n -a
 ----
+
+.Command Output
+[source,indent=4]
+----
+table ip filter { # handle 1
+        chain INPUT { # handle 1
+                type filter hook input priority 0; policy accept;
+        }
+
+        chain FORWARD { # handle 2
+                type filter hook forward priority 0; policy accept;
+        }
+
+        chain OUTPUT { # handle 3
+                type filter hook output priority 0; policy accept;
+        }
+}
+----
+
+
 == Additional Resources
 
 You can find more information:
