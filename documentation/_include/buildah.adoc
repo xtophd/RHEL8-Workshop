@@ -21,6 +21,7 @@ In this unit, we will get familiar with Buildah and Skopeo!
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
 
+    * link:https://www.redhat.com/en/blog/introducing-red-hat-universal-base-image?sc_cid=701f2000000txokAAA&utm_source=bambu&utm_medium=social&utm_campaign=abm[Introducing the Red Hat Universal Base Image - Scott McCarty]
     * link:https://developers.redhat.com/blog/2018/11/20/buildah-podman-containers-without-daemons/[Containers without daemons: Podman and Buildah available in RHEL 7.6 and RHEL 8 Beta - Tom Sweeney]
     * link:https://linuxhandbook.com/buildah-basics/[Getting Started with Buildah - Servesha]
 
