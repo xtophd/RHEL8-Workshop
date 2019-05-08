@@ -111,6 +111,25 @@ Verify the rule change.
 nft list table ip filter -n -a
 ----
 
+.Command Output
+[source,indent=4]
+----
+table ip filter { # handle 1
+        chain INPUT { # handle 1
+                type filter hook input priority 0; policy accept;
+                tcp dport http accept # handle 4
+        }
+
+        chain FORWARD { # handle 2
+                type filter hook forward priority 0; policy accept;
+        }
+
+        chain OUTPUT { # handle 3
+                type filter hook output priority 0; policy accept;
+        }
+}
+----
+
 Remember the rule handle, we will use it next to delete the rule
 
 == Delete Single Rule
