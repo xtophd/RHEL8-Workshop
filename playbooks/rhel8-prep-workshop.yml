@@ -29,6 +29,17 @@
         - {name: 'root', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
         - {name: 'student', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
 
+    - name: "Sudo Configuration"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0600
+      with_items:
+        - {src: 'sudoers.j2', dest: '/etc/sudoers.d/rhel8-workshop'}
+
+
 
 - import_playbook: rhel8-setup-appstreams.yml
 - import_playbook: rhel8-setup-systemd.yml
