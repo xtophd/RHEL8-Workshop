@@ -217,6 +217,7 @@ nft list table ip filter -n -a
 
 .Command Output
 [source,indent=4]
+----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy drop;
