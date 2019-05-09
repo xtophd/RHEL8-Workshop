@@ -1,0 +1,11 @@
+#!/bin/bash
+
+mkdir -p /etc/systemd/system/mariadb.service.d
+
+cat >/etc/systemd/system/mariadb.service.d/50-mariadb.conf << EOCONFIG
+[Service]
+Restart=always
+EOCONFIG
+
+echo "# Contents of /etc/systemd/system/mariadb.service.d/50-mariadb.conf"
+cat /etc/systemd/system/mariadb.service.d/50-mariadb.conf
