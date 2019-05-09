@@ -216,6 +216,10 @@ While the defaults for unit files won’t need to be altered most of the time, t
 
 Create a drop-in configuration file to extend the default httpd.service unit
 
+
+[discrete]
+Modify httpd
+
 .[root@node1]#
 ----
 cheat-systemd-httpdconfig.sh
@@ -260,7 +264,34 @@ Notice that systemctl status displays that the unit has been extended with a dro
 
 OOMScoreAdjust is use by the Out Of Memory killer and is an  integer between -1000 (to disable OOM killing for this process) and 1000 (to make killing of this process under memory pressure very likely).  
 
-Using what you learned in the last step, extend the mariadb.service unit with Restart=always. Verify that systemd recognizes the settings and test the policy using killall mysqld
+[discrete]
+Modify mariadb
+
+Similar to what you did in the last step, extend the mariadb.service unit with Restart=always. 
+
+Create a drop-in configuration file to extend the default mariadb.service unit
+
+.[root@node1]#
+----
+cheat-systemd-mariadbconfig.sh
+----
+
+.Command Output
+[source,indent=4]
+----
+# Contents of /etc/systemd/system/mariadb.service.d/50-mariadb.conf
+[Service]
+Restart=always
+----
+
+Notify systemd of the changes and verify that systemd recognizes the settings and test the policy using killall mysqld
+
+.[root@node1]#
+----
+systemctl daemon-reload
+systemctl status mariadb
+----
+
 
 == Additional Resources
 
