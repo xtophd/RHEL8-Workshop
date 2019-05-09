@@ -218,7 +218,7 @@ Create a drop-in configuration file to extend the default httpd.service unit
 
 
 [discrete]
-Modify httpd
+==== Modify httpd
 
 .[root@node1]#
 ----
@@ -265,7 +265,7 @@ Notice that systemctl status displays that the unit has been extended with a dro
 OOMScoreAdjust is use by the Out Of Memory killer and is an  integer between -1000 (to disable OOM killing for this process) and 1000 (to make killing of this process under memory pressure very likely).  
 
 [discrete]
-Modify mariadb
+==== Modify mariadb
 
 Similar to what you did in the last step, extend the mariadb.service unit with Restart=always. 
 
