@@ -26,7 +26,7 @@ endif::[]
 [discrete]
 == Introduction
 
-First of all, THANK YOU for registering and participating in *The Definitive Red Hat Enterprise Linux 8 Beta Hands-on Lab*.  The lab team has worked very hard to assemble a series of exercises to introduce many of the new features and capabilities found in the next great release of RHEL.  We hope you enjoy this experience and please don't hesitate to ask questions.
+First of all, THANK YOU for registering and participating in *The Definitive Red Hat Enterprise Linux 8 Hands-on Lab*.  The lab team has worked very hard to assemble a series of exercises to introduce many of the new features and capabilities found in the next great release of RHEL.  We hope you enjoy this experience and please don't hesitate to ask questions.
 
 Also, please don't forget to review this session at the completion of this lab.  Your reviews and feedback help keep labs like these as top attractions for the Red Hat Summit.
 
