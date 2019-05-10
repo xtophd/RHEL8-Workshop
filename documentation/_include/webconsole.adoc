@@ -150,7 +150,7 @@ Under ‘Kernel Dump’, you can enable/disable kdump
 
 Red Hat Documentation
 
-    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/managing_systems_using_the_cockpit_web_interface/index[MANAGING SYSTEMS USING THE COCKPIT WEB INTERFACE]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_systems_using_the_cockpit_web_interface[Managing Systems Using the Web Console]
 
 [discrete]
 == End of Unit
