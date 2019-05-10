@@ -64,7 +64,7 @@ systemctl status sshd
 
 Sample output will be titled with _'Your output should look like this'_ (or _'Command Output'_) and also be indented to help with visual identification.  Sometimes there will also be footnotes and/or callouts.
 
-.Your output should look like this
+.Command Output
 [source,indent=4]
 ----
 ● sshd.service - OpenSSH server daemon
