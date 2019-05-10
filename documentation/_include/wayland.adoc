@@ -31,7 +31,7 @@ For today’s lab this has already been done for you, but in the event you insta
 _Native command(s) to install Wayland_
 ----
 yum groupinstall Workstation
-
+ 
 systemctl set-default graphical
 
 reboot
