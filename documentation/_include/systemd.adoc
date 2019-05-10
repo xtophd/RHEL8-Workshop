@@ -297,7 +297,7 @@ systemctl status mariadb
 
 Red Hat Documentation
 
-    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/chap-managing_services_with_systemd[Managing Services with Systemd]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/managing-services-with-systemd_configuring-basic-system-settings[Managing Services with Systemd]
 
 [discrete]
 == End of Unit
