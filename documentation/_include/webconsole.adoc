@@ -72,7 +72,7 @@ image::cockpit-image7.png[Cockpit Dashboard]
 
 To enable persistent metrics, Web Console requires “Performance Co-pilot (pcp)” and cockpit pcp plugin. Follow the screenshots to install and enable persistent metrics.
 
-Use the Web Console -> Terminal to install a couple of packages and enable the sockets.
+Use the Web Console -> Terminal to install a couple of packages and restart the Web Console socket.
 
 .[root@node2]#
 ----
@@ -81,6 +81,8 @@ systemctl restart cockpit.socket
 ----
 
 NOTE: When the socket is restarted, your Web Console connection will reset and require you to login again.
+
+NOTE: You should also reload your broswer for the option `Store metric` to be visible.
 
 Now enable persistent metrics.
 
