@@ -1,4 +1,4 @@
-:gitrepo: https://github.com/xtophd/SAT6-Workshop
+:gitrepo: https://github.com/xtophd/RHEL8-Workshop
 :includedir: _include
 :doctype: book
 :sectnums:
