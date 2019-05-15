@@ -1,6 +1,11 @@
 
+## workstation: install ansible (shell script)
 
 ## workstation: sudoers.d/student
 
 ## all: enable the core.example.com repos
+
+## all: disable rhgb and quiet in grub
+
+
 
