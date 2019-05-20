@@ -70,7 +70,7 @@ The preparation script will run for approximately 5 to 7 minutes.
   * Time Sync: Chrony
   * Networking: Network Manager
 
-== *tmux*
+== Quick Overview of *tmux*
 
 Simple list of *tmux* commands:
 
