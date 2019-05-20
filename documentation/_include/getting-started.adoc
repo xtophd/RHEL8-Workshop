@@ -74,17 +74,11 @@ The preparation script will run for approximately 5 to 7 minutes.
 
 Simple list of *tmux* commands:
 
-  * list available sessions : `screen -ls`
-  * resume disconnected session : `screen -r {name}`
-  * disconnect current session: `screen -d {name}`
-  * join a session (multiuser): `screen -x {name}`
-  * enable multi user on active session: `ctrl-a :multiuser on`
-  * add an additional screen/shell: `ctrl-a C`
-  * switch to Next screen/shell: `ctrl-a N`
-  * review/navigate output history (use arrow keys, hit ESC to end): `ctrl-a ESC`
-  * Split Screen Horizontally: `ctrl-a S`
-  * Move Cursor to other Split-Screen: `ctrl-a TAB`
-  * Kill all windows and terminate screen: `ctl-a \`
+  * list available sessions : `tmux ls`
+  * attach to disconnected session : `tmux a [-t #]`
+  * add an additional terminal shell: `ctrl-b c`
+  * switch to Next terminal shell: `ctrl-b n`
+  * switch to Previous terminal shell: `ctrl-b n`
 
 == Conclusion
 
