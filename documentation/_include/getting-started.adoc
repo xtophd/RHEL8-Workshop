@@ -16,13 +16,12 @@ Using the connection information and credentials provided by the instructor, get
 
 == Invoke *tmux* Session
 
-*tmux* is a very handy utilty for terminal session management.  If for any reason you lose connectivity or your session is terminated, *tmux* will preserve your session and allow you to reconnect.  There are MANY other features provided by this utility.  Some of them are listed below in the *Additional References* section.
+*tmux* is a very handy utilty for terminal session management.  If for any reason you lose connectivity or your session is terminated, *tmux* will preserve your session and allow you to reconnect.  There are MANY other features provided by this utility.  Some of them are listed below in the section titled *tmux*.
 
 .[root@workstation ~]#
 ----
 tmux
 ----
-
 
 == Become the root user
 
