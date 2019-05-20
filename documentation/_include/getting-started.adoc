@@ -71,6 +71,22 @@ The preparation script will run for approximately 5 to 7 minutes.
   * Time Sync: Chrony
   * Networking: Network Manager
 
+== *tmux*
+
+Simple list of *tmux* commands:
+
+  * list available sessions : `screen -ls`
+  * resume disconnected session : `screen -r {name}`
+  * disconnect current session: `screen -d {name}`
+  * join a session (multiuser): `screen -x {name}`
+  * enable multi user on active session: `ctrl-a :multiuser on`
+  * add an additional screen/shell: `ctrl-a C`
+  * switch to Next screen/shell: `ctrl-a N`
+  * review/navigate output history (use arrow keys, hit ESC to end): `ctrl-a ESC`
+  * Split Screen Horizontally: `ctrl-a S`
+  * Move Cursor to other Split-Screen: `ctrl-a TAB`
+  * Kill all windows and terminate screen: `ctl-a \`
+
 == Conclusion
 
 The set up of the RHEL 8 Workshop should now be complete.  A couple of remaining words of advice:
