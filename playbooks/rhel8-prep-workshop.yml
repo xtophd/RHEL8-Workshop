@@ -40,7 +40,7 @@
         - {src: 'sudoers.j2', dest: '/etc/sudoers.d/rhel8-workshop'}
 
 
-
+- import_playbook: rhel8-setup-wayland.yml
 - import_playbook: rhel8-setup-appstreams.yml
 - import_playbook: rhel8-setup-systemd.yml
 - import_playbook: rhel8-setup-firewalld.yml
