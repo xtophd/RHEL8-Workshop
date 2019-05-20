@@ -1,7 +1,3 @@
-# RHEL8-Workshop
-
-Master Document: ./documentation/RHEL8-Workshop.adoc
-
 :gitrepo: https://github.com/xtophd/RHEL7-Workshop
 :docsdir: documents
 :includedir: _include
@@ -17,7 +13,7 @@ ifdef::env-github[]
 endif::[]
 :imagesdir: ./_include/_images/
 
-= RHEL7-Workshop
+= RHEL8-Workshop
 
 Foundational exercises to introduce core concepts of Red Hat Enterprise Linux 8
 
