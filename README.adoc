@@ -1,5 +1,5 @@
 :gitrepo: https://github.com/xtophd/RHEL7-Workshop
-:docsdir: documents
+:docsdir: documentation
 :includedir: _include
 :doctype: book
 :sectnums:
