@@ -48,14 +48,15 @@ yum install bcc-tools -y
 
 Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These all have man pages for them.
 
+TIP: Now is a great time to use the multi session capability of *tmux*.  Using `Ctrl-b c` create another session.  You can now cycle back and forth between then with `CTRL-b n` (next) and `CTRL-b p` (previous).  Just make sure you are the user *root* on *workstation.example.com* in order to sucessfully run the rootkit script.
+
 === bcc-tools: tcplife
 
 The tcplife tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes. To run this tool, do:
 
 .[root@node2 ~]#
 ----
-cd /usr/share/bcc/tools
-./tcplife
+/usr/share/bcc/tools/tcplife
 ----
 
 Wait for this to get started and you'll see the following header print out:
@@ -106,8 +107,7 @@ To run this script, do:
 
 .[root@node2 ~]#
 ----
-cd /usr/share/bcc/tools
-./execsnoop
+/usr/share/bcc/tools/execsnoop
 ----
 
 You will see a header print that looks like:
