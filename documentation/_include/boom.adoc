@@ -149,39 +149,52 @@ Now that we have created some important data, it's time to create a snapshot of 
 
 .[root@node3]#
 ----
-echo "Creating logical volume to back root LV snapshot"
+cheat-boom-snapshot.sh
+----
+
+[NOTE]
+====
+_Native command(s) to create lvm snapshot_
+----
 lvcreate -s rhel/root -n root_snapshot -L 10G
 ----
+====
 
 Let us take a quick look at what we just did.
 
 .[root@node3]#
 ----
-lvs -a -o lv_name,lv_size,lv_attr,segtype,devices rhel/root_snapshot
+cheat-boom-lvreport.sh
 ----
+
+[NOTE]
+====
+_Native command(s) to report lv status_
+----
+lvs -a -o lv_name,lv_size,lv_attr,segtype,devices
+
+lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent
+----
+====
+
+This script uses different options to create 2 different reports.
 
 .Command Output
 [source,indent=4]
 ----
-LV            LSize  Attr       Type   Devices
-root_snapshot <8.03g swi-a-s--- linear /dev/vdb1(0)
+Local volume reports:
+  LV            LSize  Attr       Type   Devices
+  root          <8.00g owi-aos--- linear /dev/vda2(256)
+  root_snapshot <8.03g swi-a-s--- linear /dev/vdb1(0)
+  swap           1.00g -wi-ao---- linear /dev/vda2(0)
+
+  LV            LSize  Attr       Origin Snap%
+  root          <8.00g owi-aos---
+  root_snapshot <8.03g swi-a-s--- root   0.01
+  swap           1.00g -wi-ao----
 ----
 
-Another look at the snapshot volume with some different options
-
-.[root@node3]#
-----
-lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
-----
-
-In your output, note the percentage used in the new snapshot.
-
-.Command Output
-[source,indent=4]
-----
-LV            LSize  Attr       Origin Snap%
-root_snapshot <8.03g swi-a-s--- root   0.01
-----
+In your output, note the percentage used in the new snapshot as shown by the 2nd report.
 
 Since we have made no real changes to our system, the percentage of the "exception store" used is still very small.  Let's change that.
 
@@ -227,14 +240,22 @@ Analyze the snapshot data and we see that there is now a measurable difference.
 
 .[root@node3]#
 ----
-lvs -a -o lv_name,lv_size,lv_attr,origin,snap_percent rhel/root_snapshot
+cheat-boom-lvreport.sh
 ----
 
 .Command Output
 [source,indent=4]
 ----
+Local volume reports:
+  LV            LSize  Attr       Type   Devices
+  root          <8.00g owi-aos--- linear /dev/vda2(256)
+  root_snapshot <8.03g swi-a-s--- linear /dev/vdb1(0)
+  swap           1.00g -wi-ao---- linear /dev/vda2(0)
+
   LV            LSize  Attr       Origin Snap%
-  root_snapshot <8.03g swi-a-s--- root   0.82
+  root          <8.00g owi-aos---
+  root_snapshot <8.03g swi-a-s--- root   0.38
+  swap           1.00g -wi-ao----
 ----
 
 Let's summarize what's been done so far:
