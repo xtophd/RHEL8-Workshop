@@ -176,7 +176,7 @@ ____
 image::wayland-110-tweaks-appmenu.png[Application Menu]
 ====
 
-Now that we are back on the *Activities Overivew* page, we search for a package.
+Now that we are back on the *Activities Overview* page, we search for a package.
 
 ____
 In the *Search Bar* near the top center, enter the following:
