@@ -145,7 +145,7 @@ Click -> Calculator
 ____
 
 ====
-image::wayland-120-calculator.png[Disks Utility]
+image::wayland-120-calculator.png[Calculator]
 ====
 
 Notice that apps now have a maximize and minimize button.
