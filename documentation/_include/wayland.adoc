@@ -122,39 +122,6 @@ ____
 Select the Search Bar near the top center, and enter the following:
 
 [horizontal]
-*Search*:: firewall
-____
-
-
-
-Become root.
-
-.[student@workstation]#
-----
-sudo -i
-----
-
-Then we’ll install some packages to better configure our desktop and improve our graphical user experience…
-
-.[root@workstation]#
-----
-yum install -y gnome-tweaks
-----
-
-====
-image::wayland-image3.png[Lanuch Terminal]
-====
-
-Close the terminal window. 
-
-____
-Click on the “Activities”
-____
-
-____
-Select the Search Bar near the top center, and enter the following:
-
-[horizontal]
 *Search*:: tweaks
 ____
 
@@ -162,8 +129,10 @@ ____
 image::wayland-80-tweaks-search.png[Tweaks Search]
 ====
 
+NOTE: the package gnome-tweaks was pre-installed during the workshop preparation scripts
+
 ____
-Click on the `Tweaks`
+Click -> `Tweaks`
 ____
 
 ====
