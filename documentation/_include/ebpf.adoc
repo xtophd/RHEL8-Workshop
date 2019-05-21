@@ -9,7 +9,7 @@ ifdef::env-github[]
 endif::[]
 
 :toc:
-:toclevels: 1
+:toclevels: 2
 
 = eBPF - The Extended Berkeley Packet Filter
 
