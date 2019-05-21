@@ -273,8 +273,16 @@ Create a boom profile.
 
 .[root@node3]#
 ----
+cheat-boom-profile.sh
+----
+
+[NOTE]
+====
+_Native command(s) to report lv status_
+----
 boom profile create --from-host --uname-pattern el8
 ----
+====
 
 .Command Output
 [source,indent=4]
@@ -308,8 +316,16 @@ Now to create a boot entry for grub which utilizes the snapshot as the boot volu
 
 .[root@node3]#
 ----
+cheat-boom-grubentry.sh
+----
+
+[NOTE]
+====
+_Native command(s) to report lv status_
+----
 boom create --title "root LV snapshot" --rootlv rhel/root_snapshot
 ----
+====
 
 .Command Output
 [source,indent=4]
