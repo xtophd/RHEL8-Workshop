@@ -40,7 +40,7 @@ NOTE:  X11 is still shipped with RHEL 8, but requires manual installation as it 
 
 The graphical desktop is included by default in a "Workstation" installation of RHEL 8, but this is not the case in a "Server" installation.
 
-For today’s lab this has already been done for you, but in the event you installed a text based RHEL 8 host on your own you can load and enable Wayland with the following steps:
+For today’s lab this has already been done for you. In the event you installed a text based RHEL 8 host on your own, you can load and enable Wayland with the following simple steps:
 
 [NOTE]
 ====
@@ -54,11 +54,19 @@ reboot
 ----
 ====
 
-Log into the console of your workstation as the user *student*.
+Please proceed to log into the GUI console of *workstation.example.com* as the user *student*.  The password should be provided by your instructor.
 
 == Customizing the Desktop
 
-Now lets configure your desktop to have a menu system.  Instead of using the GUI package installer, let's drop to a terminal window and use yum.
+After successfully signing in as *student*, you should notice that you have an amazingly clean desktop as shown below.
+
+====
+image::wayland-10-desktop.png[Wayland Desktop]
+====
+
+Let us being our exploration of Wayland by customizing a few things.
+
+First, we configure your desktop to have a menu system using the GNOME Tweaks utility.
 
 ____
 Click -> “Activities”
@@ -67,6 +75,8 @@ ____
 ====
 image::wayland-20-activities.png[Activities]
 ====
+
+Now enter a search string for the utlity we want.
 
 ____
 Select the Search Bar near the top center, and enter the following:
@@ -81,11 +91,13 @@ image::wayland-80-tweaks-search.png[Tweaks Search]
 
 NOTE: the package gnome-tweaks was pre-installed during the workshop preparation scripts
 
+Now launch the tool so we can make a few changes to the desktop functionality and appearance.
+
 ____
 Click -> `Tweaks`
 ____
 
-Now let's enable the traditional cascading applications menu in the top bar.
+Enable a more traditional cascading applications menu in the top bar.
 
 ____
 Click -> `Extensions` on the left
@@ -138,7 +150,6 @@ Close the app without making changes…
 
 == Adding Packages
 
-After successfully signing in as *student*, you have an amazingly clean desktop.  Let's mess it up some.
 
 ====
 image::wayland-10-desktop.png[Wayland Desktop]
