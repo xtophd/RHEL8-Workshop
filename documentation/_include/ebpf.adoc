@@ -37,9 +37,9 @@ cheat-ebpf-checkhost.sh
 
 Now you are ready to begin your exercises with eBPF Tracing.
 
-== Installation: BPF Compiler Collection (BCC)
+== Installation
 
-Start by installing bcc-tools:
+Start by installing the *BPF Compiler Collection* bcc-tools package:
 
 .[root@node2 ~]#
 ----
