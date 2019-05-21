@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Creating snapshot of root filesystem"
+lvcreate -s rhel/root -n root_snapshot -L 10G
