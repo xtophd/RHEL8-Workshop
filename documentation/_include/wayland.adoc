@@ -66,7 +66,7 @@ image::wayland-10-desktop.png[Wayland Desktop]
 
 Let us being our exploration of Wayland by customizing a few things.
 
-First, we configure your desktop to have a menu system using the GNOME Tweaks utility.
+First, we will configure your desktop to have a menu system.
 
 ____
 Click -> “Activities”
