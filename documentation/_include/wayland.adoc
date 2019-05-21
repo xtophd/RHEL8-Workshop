@@ -117,7 +117,7 @@ Click -> “Activities”
 ____
   
 ====
-image::wayland-20-activites.png
+image::wayland-20-activities.png[Activities]
 ====
 
 ____
