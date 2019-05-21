@@ -67,22 +67,27 @@ Wait for this to get started and you'll see the following header print out:
 PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 ----
 
-Now from another workstation terminal, run:
+TIP: Remember that *tmux* is your friend here.  If you have any questions, ask the instructor on how to use it
+
+Now from another workstation terminal session, run:
 
 .[root@workstation ~]#
 ----
 ssh node2.example.com cheat-ebpf-rootkit.sh
 ----
 
-This command should run for about 10 seconds and then close.  You should now see on your tcplife window, an entry similar to:
+This command should run for about 10 seconds and then exit.  
+
+On the *node2* terminal sessions you should now see the output of tcplife similar to:
 
 .Command Output
 [source,indent=4]
 ----
-30302 sshd       10.0.0.12       22    10.0.0.10       43102    65     8 228901.08
+PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
+28478 sshd       10.0.0.12       22    10.0.0.10       33514    14     2 9091.95
 ----
 
-Doing the math with my numbers above, my session was open for 3 minutes and 49 seconds and was initiated by IP 10.0.0.10, the workstation.
+Doing the math with my numbers above, my session was open for about 9 seconds and was initiated by IP 10.0.0.10, the workstation.
 
 On the terminal running tcp-life, go ahead and Ctrl-C the process. You will see a python traceback that looks like:
 
@@ -129,25 +134,33 @@ You can immediately exit your session and return to the workstation. In the exec
 
 ----
 PCOMM            PID    PPID   RET ARGS
-sshd             31354  777      0 /usr/sbin/sshd -D -oCiphers=aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr,aes256-cbc,aes128-gcm@openssh.com,aes128-ctr,aes128-cb -oMACs=hmac-sha2-256-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2- -oGSSAPIKexAlgorithms=gss-gex-sha1-,gss-group14-sha1- -oKexAlgorithms=curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-excha -oHostKeyAlgorithms=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha2-nis -oPubkeyAcceptedKeyTypes=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha -R
-unix_chkpwd      31356  31354    0 /usr/sbin/unix_chkpwd root chkexpiry
-bash             31358  31357    0 /bin/bash
-id               31360  31359    0 /usr/bin/id -un
-hostname         31362  31361    0 /usr/bin/hostname
-grepconf.sh      31363  31358    0 /usr/libexec/grepconf.sh -c
-grep             31364  31363    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
-grepconf.sh      31365  31358    0 /usr/libexec/grepconf.sh -c
-grep             31366  31365    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
-grepconf.sh      31367  31358    0 /usr/libexec/grepconf.sh -c
-grep             31368  31367    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
-sed              31370  31369    0 /usr/bin/sed -r -e s/^[[:blank:]]*([[:upper:]_]+)=([[:print:][:digit:]\._-]+|"[[:print:][:digit:]\._-]+")/export \1=\2/;t;d /etc/locale.conf
-man              31371  31358    0 /usr/bin/man execsnoop
-nroff            31379  31371    0 /usr/bin/nroff -mandoc -Tutf8
-preconv          31377  31371    0 /usr/bin/preconv -e UTF-8
-locale           31385  31384    0 /usr/bin/locale charmap
-groff            31386  31379    0 /usr/bin/groff -mtty-char -Tutf8 -mandoc
-grotty           31388  31386    0 /usr/bin/grotty
-troff            31387  31386    0 /usr/bin/troff -mtty-char -mandoc -Tutf8
+sshd             28512  749      0 /usr/sbin/sshd -D -oCiphers=aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr,aes256-cbc,aes128-gcm@openssh.com,aes128-ctr,aes128-cb -oMACs=hmac-sha2-256-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2- -oGSSAPIKexAlgorithms=gss-gex-sha1-,gss-group14-sha1- -oKexAlgorithms=curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-excha -oHostKeyAlgorithms=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha2-nis -oPubkeyAcceptedKeyTypes=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha -R
+unix_chkpwd      28514  28512    0 /usr/sbin/unix_chkpwd root chkexpiry
+bash             28516  28515    0 /bin/bash -c cheat-ebpf-rootkit.sh
+grepconf.sh      28517  28516    0 /usr/libexec/grepconf.sh -c
+grep             28518  28517    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
+grepconf.sh      28519  28516    0 /usr/libexec/grepconf.sh -c
+grep             28520  28519    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
+grepconf.sh      28521  28516    0 /usr/libexec/grepconf.sh -c
+grep             28522  28521    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
+sed              28524  28523    0 /usr/bin/sed -r -e s/^[[:blank:]]*([[:upper:]_]+)=([[:print:][:digit:]\._-]+|"[[:print:][:digit:]\._-]+")/export \1=\2/;t;d /etc/locale.conf
+uname            28525  28516    0 /usr/bin/uname -a
+sleep            28526  28516    0 /usr/bin/sleep 1
+who              28527  28516    0 /usr/bin/who
+sleep            28528  28516    0 /usr/bin/sleep 1
+grep             28530  28516    0 /usr/bin/grep root /etc/passwd
+sleep            28531  28516    0 /usr/bin/sleep 1
+grep             28532  28516    0 /usr/bin/grep root /etc/shadow
+sleep            28533  28516    0 /usr/bin/sleep 1
+cat              28534  28516    0 /usr/bin/cat /etc/fstab
+sleep            28535  28516    0 /usr/bin/sleep 1
+ps               28536  28516    0 /usr/bin/ps -ef
+sleep            28537  28516    0 /usr/bin/sleep 1
+netstat          28538  28516    0 /usr/bin/netstat -tulpn
+sleep            28539  28516    0 /usr/bin/sleep 1
+getenforce       28540  28516    0 /usr/sbin/getenforce
+sleep            28541  28516    0 /usr/bin/sleep 1
+firewall-cmd     28542  28516    0 /usr/bin/firewall-cmd --state
 ----
 
 This shows you all the processes that ran exec during that ssh login, their PID, their parent PID, their return code, and the arguments that were sent to the process. You could keep monitoring this for quite some time to catch potential bad actors on the system.
@@ -162,8 +175,7 @@ To run this script, do:
 
 .[root@node2 ~]#
 ----
-cd /usr/share/bcc/tools
-./opensnoop
+/usr/share/bcc/tools/opensnoop
 ----
 
 You will see a header that prints out like:
@@ -237,7 +249,8 @@ ls /usr/lib/locale/locale-archive
 
 and we see the following returned:
 
-[source]
+.Command Output
+[source,indent=4]
 ----
 ls: cannot access '/usr/lib/locale/locale-archive': No such file or directory
 ----
@@ -245,15 +258,14 @@ ls: cannot access '/usr/lib/locale/locale-archive': No such file or directory
 Now let's try to cat /etc/shadow as the student user:
 
 .[student@node2 ~]$
-
-[source]
 ----
 cat /etc/shadow
 ----
 
 We see the following returned in opensnoop:
 
-[source]
+.Command Output
+[source,indent=4]
 ----
 31480  cat                 3   0 /etc/ld.so.cache
 31480  cat                 3   0 /lib64/libc.so.6
@@ -316,8 +328,7 @@ To run this script, do:
 
 .[root@node2 ~]#
 ----
-cd /usr/share/bcc/tools
-./xfsslower
+/usr/share/bcc/tools/xfsslower
 ----
 
 .Command Output
