@@ -60,23 +60,24 @@ Please proceed to log into the GUI console of *workstation.example.com* as the u
 
 After successfully signing in as *student*, you should notice that you have an amazingly clean desktop as shown below.
 
-====
-image::wayland-10-desktop.png[Wayland Desktop]
-====
-
-Let us being our exploration of Wayland by customizing a few things.
+Let us being our exploration of Wayland by customizing a few things.  
 
 First, we will configure your desktop to have a menu system.
 
 ____
 Click -> “Activities”
 ____
+
+
+====
+image::wayland-10-desktop.png[Wayland Desktop]
+====
+
+Shown below is the *Activities Overview* page.
   
 ====
 image::wayland-20-activities.png[Activities]
 ====
-
-Shown below is the *Activities Overview* page.
 
 Now enter a search string for the utlity we want.
 
