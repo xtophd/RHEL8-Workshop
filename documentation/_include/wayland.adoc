@@ -16,9 +16,9 @@ endif::[]
 
 == About Wayland
 
-Wayland is a replacement for X which is easier to develop and maintain.  Wayland is a compositor protocol and library implementation of that protocol.
+Wayland is a compositor protocol and library implementation of that protocol.  Wayland replaces the legacy X11 protocol with the primary benefit being that it is easier to develop and maintain.  Meaning, Wayland drops many of the X11 specifications that are no longer in use.
 
-Wayland enables features that are hard or impossible to support under X:
+That said, Wayland also enables features that are hard or impossible to support under X:
 
   * input transformation
   * transparent hardware overlays
@@ -26,11 +26,13 @@ Wayland enables features that are hard or impossible to support under X:
   * isolating clients (sandboxing)
   * ... and plenty more (link::https://wiki.gnome.org/Initiatives/Wayland[GNOME Wiki Wayland])
 
-Many core X contributors are eager to move to the next generation display system - after all Wayland was born and raised in the X community, and has strong support there.
+Wayland was born and raised in the X community, and has strong support.
 
-Wayland was first introduced to the Fedora community back in version 25. For several years, development, hardening and rich features have made Wayland the new standard in graphical desktop environments. (replacing X.org)
+First introduced to the Fedora community back in version 25, Wayland has been under developemnt for several years before it's introduction in RHEL 8.   Wayland is the new standard in graphical desktop environments. 
 
 For more information, see the resources listed below.
+
+NOTE:  X11 is still shipped with RHEL 8, but requires manual installation as it is not the default installed compsitor protocol
 
 == Installation & Configuration
 
@@ -53,74 +55,6 @@ reboot
 ====
 
 Log into the console of your workstation as the user *student*.
-  
-== Adding Packages
-
-After successfully signing in as *student*, you have an amazingly clean desktop.  Let's mess it up some.
-
-====
-image::wayland-10-desktop.png[Wayland Desktop]
-====
-
-____
-Click -> `Activities` near the top left corner
-____
-
-====
-image::wayland-20-activities.png[Activities]
-====
-
-____
-In the *Search Bar* near the top center, enter the following:
-
-[horizontal]
-*Search*:: firewall
-____
-
-The search will result in a link to the package installer.
-
-____
-Click -> `Firewall Configuration`
-____
-
-====
-image::wayland-30-firewall-search.png[Firewall Search]
-====
-
-This will bring up the Gnome Software package installation GUI…
-
-____
-Click -> `Firewall`
-____
-
-====
-image::wayland-40-firewall-description.png[Firewall Description]
-====
-
-____
-Click -> `Install`
-____
-  
-====
-image::wayland-50-firewall-install.png[Firewall Install]
-====
-
-____
-Click -> `Launch`
-____
-
-====
-image::wayland-60-firewall-launch.png[Firewall Install]
-====
-
-You’ll be prompted for the password for student - enter the password.  Because the user _student_ is a member of the _wheel_ group, you will be able to perform most administrator tasks.
-
-====
-image::wayland-70-firewall-password.png[Firewall Install]
-====
-
-Feel free to browse the interface but don’t make any changes…
-When you are done exploring - click on the “X” in the upper right hand corner of the window.
 
 == Customizing the Desktop
 
@@ -198,6 +132,77 @@ image::wayland-120-disks.png[Tweaks Extensions]
 Notice that all graphical apps now have a maximize and minimize button…
 
 Close the app without making changes…
+
+
+
+
+== Adding Packages
+
+After successfully signing in as *student*, you have an amazingly clean desktop.  Let's mess it up some.
+
+====
+image::wayland-10-desktop.png[Wayland Desktop]
+====
+
+____
+Click -> `Activities` near the top left corner
+____
+
+====
+image::wayland-20-activities.png[Activities]
+====
+
+____
+In the *Search Bar* near the top center, enter the following:
+
+[horizontal]
+*Search*:: firewall
+____
+
+The search will result in a link to the package installer.
+
+____
+Click -> `Firewall Configuration`
+____
+
+====
+image::wayland-30-firewall-search.png[Firewall Search]
+====
+
+This will bring up the Gnome Software package installation GUI…
+
+____
+Click -> `Firewall`
+____
+
+====
+image::wayland-40-firewall-description.png[Firewall Description]
+====
+
+____
+Click -> `Install`
+____
+  
+====
+image::wayland-50-firewall-install.png[Firewall Install]
+====
+
+____
+Click -> `Launch`
+____
+
+====
+image::wayland-60-firewall-launch.png[Firewall Install]
+====
+
+You’ll be prompted for the password for student - enter the password.  Because the user _student_ is a member of the _wheel_ group, you will be able to perform most administrator tasks.
+
+====
+image::wayland-70-firewall-password.png[Firewall Install]
+====
+
+Feel free to browse the interface but don’t make any changes…
+When you are done exploring - click on the “X” in the upper right hand corner of the window.
 
 That is all for this quick first time introduction to Wayland.
 
