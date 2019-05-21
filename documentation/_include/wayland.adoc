@@ -207,9 +207,9 @@ Red Hat Documentation
 
 Wayland Related Sites
 
-  * link::https://wayland.freedesktop.org/[Wayland Project]
-  * link::https://wiki.gnome.org/Initiatives/Wayland[GNOME Wiki Wayland]
-  * link::https://en.wikipedia.org/wiki/Wayland_(display_server_protocol)[Wayland Architecture Wikipedia]
+  * link:https://wayland.freedesktop.org/[Wayland Project]
+  * link:https://wiki.gnome.org/Initiatives/Wayland[GNOME Wiki Wayland]
+  * link:https://en.wikipedia.org/wiki/Wayland_(display_server_protocol)[Wayland Architecture Wikipedia]
   
 [discrete]
 == End of Unit
