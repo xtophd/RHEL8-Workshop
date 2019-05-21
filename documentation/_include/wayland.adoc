@@ -195,7 +195,7 @@ ____
 image::wayland-30-firewall-search.png[Firewall Search]
 ====
 
-This will bring up the Gnome Software package installation GUI…
+This will bring up the Gnome Software package installation GUI along with a description of the utility.  Now let us proceed with installation.
 
 ____
 Click -> `Firewall`
@@ -205,6 +205,9 @@ ____
 image::wayland-40-firewall-description.png[Firewall Description]
 ====
 
+Now you are on the details page of the utlity.  You can scroll down and read more about the tool, see reviews and ratings.  Time to install the Firewall Configuration tool.
+
+
 ____
 Click -> `Install`
 ____
@@ -212,6 +215,8 @@ ____
 ====
 image::wayland-50-firewall-install.png[Firewall Install]
 ====
+
+Now that it is installed, proceed to launch the tool and explore the firewall configuration.
 
 ____
 Click -> `Launch`
@@ -221,14 +226,17 @@ ____
 image::wayland-60-firewall-launch.png[Firewall Install]
 ====
 
-You’ll be prompted for the password for student - enter the password.  Because the user _student_ is a member of the _wheel_ group, you will be able to perform most administrator tasks.
+You’ll be prompted for the password for student - enter the password.  Because the user *student* is a member of the *wheel* group, you will be able to perform most administrator tasks.
 
 ====
 image::wayland-70-firewall-password.png[Firewall Install]
 ====
 
-Feel free to browse the interface but don’t make any changes…
-When you are done exploring - click on the “X” in the upper right hand corner of the window.
+Feel free to browse the interface but don’t make any changes.  When you are done exploring close the Firewall Configuration tool
+
+____
+Click -> X in the titlebar
+____
 
 That is all for this quick first time introduction to Wayland.
 
