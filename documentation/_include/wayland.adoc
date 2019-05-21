@@ -141,6 +141,7 @@ Now let's enable the traditional cascading applications menu in the top bar.
 
 ____
 Click -> `Extensions` on the left
+
 Enable -> `Applications Menu` on the right
 ____
 
@@ -152,7 +153,9 @@ Now activate the Title Bar Maximize and Minimize buttons for all windows.
   
 ____
 Click -> `Windows` on the left
+
 Enable -> `Maximize` on the right
+
 Enable -> `Minimize` on the right
 ____
   
