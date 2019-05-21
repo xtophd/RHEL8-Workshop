@@ -278,7 +278,7 @@ cheat-boom-profile.sh
 
 [NOTE]
 ====
-_Native command(s) to report lv status_
+_Native command(s) to create boom profile_
 ----
 boom profile create --from-host --uname-pattern el8
 ----
@@ -321,7 +321,7 @@ cheat-boom-grubentry.sh
 
 [NOTE]
 ====
-_Native command(s) to report lv status_
+_Native command(s) to create grub entry_
 ----
 boom create --title "root LV snapshot" --rootlv rhel/root_snapshot
 ----
