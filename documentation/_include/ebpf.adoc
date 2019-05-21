@@ -17,6 +17,8 @@ WARNING: eBPF is considered *Technology Preview* and is not intended for product
 
 In this unit, we will get familiar with eBPF. eBPF stands for Extended Berkeley Packet Filter and is effectively an in-kernel virtual machine upon which several applications have been built. To date, these applications center around working with the network stack (eXpress Data Path, Traffic Control) and also offering efficient kernel tracing (BPF Compiler Collection). In today's lab, we will be focusing on the kernel tracing aspect of eBPF.
 
+TIP: Now is a great time to use the multi session capability of *tmux*.  Using `Ctrl-b c` create another session.  You can now cycle back and forth between then with `CTRL-b n` (next) and `CTRL-b p` (previous).  Just make sure you are the user *root* on *workstation.example.com* in order to sucessfully run the rootkit script.
+
 == Getting Set Up
 
 There is a dedicated VM we will use for the container exercises.  From *workstation.example.com*, you should be able to ssh to *node2.example.com* as 'root' without any prompts for credentials.
@@ -47,8 +49,6 @@ yum install bcc-tools -y
 ----
 
 Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These all have man pages for them.
-
-TIP: Now is a great time to use the multi session capability of *tmux*.  Using `Ctrl-b c` create another session.  You can now cycle back and forth between then with `CTRL-b n` (next) and `CTRL-b p` (previous).  Just make sure you are the user *root* on *workstation.example.com* in order to sucessfully run the rootkit script.
 
 === bcc-tools: tcplife
 
