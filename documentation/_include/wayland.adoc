@@ -163,7 +163,7 @@ ____
 Next we will install a package using the Package Manager.  Start on the desktop as shown below.
 
 ====
-image::wayland-10-desktop.png[Wayland Desktop]
+image::wayland-130-desktop-appmenu.png[Desktop with AppMenu]
 ====
 
 ____
