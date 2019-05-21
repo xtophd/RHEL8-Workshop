@@ -42,12 +42,14 @@ Log into the console of your workstation as the user *student*.
   
 == Adding Packages
 
+After successfully signing in as *student*, you have an amazingly clean desktop.  Let's mess it up some.
+
 ====
 image::wayland-10-desktop.png[Wayland Desktop]
 ====
 
 ____
-Click on `Activities` near the top left corner
+Click -> `Activities` near the top left corner
 ____
 
 ====
@@ -55,7 +57,7 @@ image::wayland-20-activities.png[Activities]
 ====
 
 ____
-Select the Search Bar near the top center, and enter the following:
+In the *Search Bar* near the top center, enter the following:
 
 [horizontal]
 *Search*:: firewall
@@ -63,22 +65,26 @@ ____
 
 The search will result in a link to the package installer.
 
+____
+Click -> `Firewall Configuration`
+____
+
 ====
 image::wayland-30-firewall-search.png[Firewall Search]
 ====
 
+This will bring up the Gnome Software package installation GUI…
+
 ____
-Click on `Firewall Configuration`
+Click -> `Firewall`
 ____
 
-This will bring up the Gnome Software package installation GUI…
-  
 ====
 image::wayland-40-firewall-description.png[Firewall Description]
 ====
 
 ____
-Click on `Firewall`
+Click -> `Install`
 ____
   
 ====
@@ -86,16 +92,12 @@ image::wayland-50-firewall-install.png[Firewall Install]
 ====
 
 ____
-Click on `Install`
+Click -> `Launch`
 ____
 
 ====
 image::wayland-60-firewall-launch.png[Firewall Install]
 ====
-
-____
-Click on `Launch`
-____
 
 You’ll be prompted for the password for student - enter the password.  Because the user _student_ is a member of the _wheel_ group, you will be able to perform most administrator tasks.
 
@@ -104,18 +106,18 @@ image::wayland-70-firewall-password.png[Firewall Install]
 ====
 
 Feel free to browse the interface but don’t make any changes…
-When you are done exploring - click on the “x” in the upper right hand corner.
+When you are done exploring - click on the “X” in the upper right hand corner of the window.
 
 == Customizing the Desktop
 
 Now lets configure your desktop to have a menu system.  Instead of using the GUI package installer, let's drop to a terminal window and use yum.
 
 ____
-Click on “Activities”
+Click -> “Activities”
 ____
   
 ====
-image::wayland-image2.png[Lanuch Terminal]
+image::wayland-20-activites.png
 ====
 
 ____
@@ -135,26 +137,42 @@ ____
 Click -> `Tweaks`
 ____
 
+Now let's enable the traditional cascading applications menu in the top bar.
+
+____
+Click -> `Extensions` on the left
+Enable -> `Applications Menu` on the right
+____
+
 ====
 image::wayland-90-tweaks-extensions.png[Tweaks Extensions]
 ====
 
-On the left hand side menu, click Extensions, then turn on the Applications Menu…
+Now activate the Title Bar Maximize and Minimize buttons for all windows.
+  
+____
+Click -> `Windows` on the left
+Enable -> `Maximize` on the right
+Enable -> `Minimize` on the right
+____
   
 ====
 image::wayland-100-tweaks-windows.png[Tweaks Windows]
 ====
 
-Now click on Windows, then activate the Maximize and Minimize buttons for all windows…
+Close the the Tweaks interface by clicking on the X in the upper right hand corner
+
+Now you have an Applications menu system in Gnome!
   
 ====
 image::wayland-110-tweaks-appmenu.png[Tweaks AppMenu]
 ====
 
-Close the the Tweaks interface by clicking on the X in the upper right hand corner…
-Now you have an Applications menu system in Gnome!
+Take a tour of the menus.
 
-Take a tour of the menus… Click on Utilities → Disks…
+____
+Click -> Utilities -> Disks
+____
 
 ====
 image::wayland-120-disks.png[Tweaks Extensions]
