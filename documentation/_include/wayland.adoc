@@ -82,7 +82,7 @@ ____
 Select the Search Bar near the top center, and enter the following:
 
 [horizontal]
-*Search*:: tweaks
+*Search*:: gnome-tweaks
 ____
 
 ====
