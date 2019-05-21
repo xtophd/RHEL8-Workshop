@@ -76,6 +76,8 @@ ____
 image::wayland-20-activities.png[Activities]
 ====
 
+Shown below is the *Activities Overview* page.
+
 Now enter a search string for the utlity we want.
 
 ____
@@ -131,25 +133,34 @@ Now you have an Applications menu system in Gnome!
 image::wayland-110-tweaks-appmenu.png[Tweaks AppMenu]
 ====
 
-Take a tour of the menus.
+Launch the calculator utility to verify that windows have maximize and minimize buttons in the title bar.
 
 ____
-Click -> Utilities -> Disks
+
+Click -> Applications
+
+Click -> Accessories
+
+Click -> Calculator
 ____
 
 ====
-image::wayland-120-disks.png[Tweaks Extensions]
+image::wayland-120-calculator.png[Disks Utility]
 ====
 
-Notice that all graphical apps now have a maximize and minimize button…
+Notice that apps now have a maximize and minimize button.
 
-Close the app without making changes…
+You can close the Calculator.
 
+____
+Click -> X in the title bar
+____
 
 
 
 == Adding Packages
 
+Next we will install a package using the Package Manager.  Start on the desktop as shown below.
 
 ====
 image::wayland-10-desktop.png[Wayland Desktop]
@@ -157,11 +168,15 @@ image::wayland-10-desktop.png[Wayland Desktop]
 
 ____
 Click -> `Activities` near the top left corner
+
+Click -> `Activities Overview` near the bottom left
 ____
 
 ====
-image::wayland-20-activities.png[Activities]
+image::wayland-110-tweaks-appmenu.png[Application Menu]
 ====
+
+Now that we are back on the *Activities Overivew* page, we search for a package.
 
 ____
 In the *Search Bar* near the top center, enter the following:
