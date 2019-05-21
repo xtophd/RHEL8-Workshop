@@ -56,14 +56,26 @@ On your new RHEL 8 system, if you do:
 
 .[root@node1 ~]#
 ----
-yum install postgresql-server
+yum install -y postgresql-server
 ----
 
 you will get:
 
+.Command Output
 [source,indent=4]
 ----
-10.6-1.module+el8+2469+5ecd5aae
+...<SNIP>...
+  Installing       : postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64            3/3
+  Running scriptlet: postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64            3/3
+  Verifying        : libpq-10.5-1.el8.x86_64                                             1/3
+  Verifying        : postgresql-10.6-1.module+el8+2469+5ecd5aae.x86_64                   2/3
+  Verifying        : postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64            3/3
+
+Installed:
+  postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64      libpq-10.5-1.el8.x86_64
+  postgresql-10.6-1.module+el8+2469+5ecd5aae.x86_64
+
+Complete!
 ----
 
 But let’s say that our application teams have a dependency on 9.6 but we
@@ -85,7 +97,7 @@ On node3.example.com, let’s now run:
 
 .[root@node3 ~]#
 ----
-yum module install postgresql:9.6/server -y
+yum module install -y postgresql:9.6/server
 ----
 
 The above command tells yum to install the server profile for postgresql
@@ -98,6 +110,7 @@ Once we’ve installed that, we will see:
 yum module list | grep postgresql
 ----
 
+.Command Output
 [source,indent=4]
 ----
 postgresql               10 [d]          client, server [d]                           PostgreSQL server and client module
@@ -113,14 +126,14 @@ wanted the client, we could remove the server profile:
 
 .[root@node3 ~]#
 ----
-yum module remove postgresql:9.6/server -y
+yum module remove -y postgresql:9.6/server
 ----
 
 and install only the client:
 
 .[root@node3 ~]#
 ----
-yum module install postgresql:9.6/client -y
+yum module install -y postgresql:9.6/client
 ----
 
 We would then see:
@@ -130,6 +143,7 @@ We would then see:
 yum module list | grep postgresql
 ----
 
+.Command Output
 [source,indent=4]
 ----
 postgresql               10 [d]          client, server [d]                           PostgreSQL server and client module
@@ -156,6 +170,7 @@ Now when we do yum module list, we will see:
 yum module list | grep -e mariadb -e mysql
 ----
 
+.Command Output
 [source,indent=4]
 ----
 mariadb                  10.3 [d][x]     client, server [d], galera                   MariaDB Module
@@ -171,6 +186,7 @@ yum install mariadb -y
 
 we get:
 
+.Command Output
 [source,indent=4]
 ----
 No match for argument: mariadb
@@ -239,16 +255,6 @@ node3.
 
 
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/using_application_stream/index
-
-
-
-
-
-
-
-
-
-
 
 == Appendix
 
