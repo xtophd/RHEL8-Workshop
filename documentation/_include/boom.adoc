@@ -273,7 +273,7 @@ Create a boom profile.
 
 .[root@node3]#
 ----
-cheat-boom-profile.sh
+cheat-boom-mkprofile.sh
 ----
 
 [NOTE]
@@ -316,7 +316,7 @@ Now to create a boot entry for grub which utilizes the snapshot as the boot volu
 
 .[root@node3]#
 ----
-cheat-boom-grubentry.sh
+cheat-boom-mkgrub.sh
 ----
 
 [NOTE]
