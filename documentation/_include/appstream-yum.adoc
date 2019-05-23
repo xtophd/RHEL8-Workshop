@@ -257,7 +257,7 @@ node3.
 
 Red Hat Documentation
 
-    * link: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/installing_managing_and_removing_user_space_components/index[INSTALLING, MANAGING, AND REMOVING USER SPACE COMPONENTS]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/installing_managing_and_removing_user_space_components/index[INSTALLING, MANAGING, AND REMOVING USER SPACE COMPONENTS]
     
 
 [discrete]
