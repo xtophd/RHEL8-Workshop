@@ -45,7 +45,7 @@ First introduced to the Fedora community back in version 25, Wayland has been un
 
 For more information, see the resources listed below.
 
-NOTE:  X11 is still shipped with RHEL 8, but requires manual installation as it is not the default installed compsitor protocol
+NOTE:  X11 is still shipped with RHEL 8, but requires manual installation as it is not the default installed compositor protocol
 
 == Installation & Configuration
 
