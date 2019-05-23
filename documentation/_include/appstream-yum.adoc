@@ -253,8 +253,12 @@ ansible rhel8 -o -a "rpm -q postgresql"
 You should have postgresql 10.6 on nodes 1 and 2 and postgresql 9.6 on
 node3.
 
+== Additional Resources
 
-https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/using_application_stream/index
+Red Hat Documentation
+
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/using_application_stream/index[USING APPLICATION STREAM]
+
 
 == Appendix
 
@@ -313,12 +317,6 @@ baseurl=http://core.example.com/repos/rhel8/rc-1/AppStream
 enabled=1
 gpgcheck=0
 ----
-
-== Additional Resources
-
-Red Hat Documentation
-
-    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/using_application_stream/index[USING APPLICATION STREAM]
 
 [discrete]
 == End of Unit
