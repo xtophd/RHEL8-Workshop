@@ -80,6 +80,18 @@ Simple list of *tmux* commands:
   * switch to Next terminal shell: `ctrl-b n`
   * switch to Previous terminal shell: `ctrl-b n`
 
+== How to Cut & Paste with Web Console
+
+NOTE: Chrome is the only "supported" browser that I test for this workshop.  Chances are you will have the same experience with Firefox, but that is not confirmed.
+
+Using Chrome:
+
+  * COPY standard app: CTRL-c
+  * PASTE to stardard app: CTRL-v
+
+  * COPY from web-console terminal: CTRL-a + CTRL-c
+  * PASTE to web-console terminal: CTRL-a + CTRL-v
+
 == Conclusion
 
 The set up of the RHEL 8 Workshop should now be complete.  A couple of remaining words of advice:
