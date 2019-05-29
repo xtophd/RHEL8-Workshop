@@ -88,7 +88,6 @@ Using Chrome:
 
   * COPY standard app: CTRL-c
   * PASTE to stardard app: CTRL-v
-
   * COPY from web-console terminal: CTRL-a + CTRL-c
   * PASTE to web-console terminal: CTRL-a + CTRL-v
 
