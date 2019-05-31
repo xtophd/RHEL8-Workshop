@@ -200,7 +200,7 @@ table ip filter { # handle 1
 
 == Increase Network Security
 
-WARNING: Do NOT do this step unless you successfully completed "Add Multiple Rules at Once" above.  You will get locked out of your network conneciton to node2.example.com if you have not.
+WARNING: DO NOT do this step unless you successfully completed "Add Multiple Rules at Once" above.  You will get locked out of your network conneciton to node2.example.com if you have not.
 
 Set the INPUT chain default policy to drop all traffic not specifically accepted.
 
