@@ -1,4 +1,4 @@
-:gitrepo: https://github.com/xtophd/RHEL7-Workshop
+:gitrepo: https://github.com/xtophd/RHEL8-Workshop
 :docsdir: documentation
 :includedir: _include
 :doctype: book
