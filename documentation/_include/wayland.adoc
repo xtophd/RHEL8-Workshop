@@ -24,7 +24,7 @@ That said, Wayland also enables features that are hard or impossible to support 
   * transparent hardware overlays
   * direct rendering
   * isolating clients (sandboxing)
-  * ... and plenty more ( link::https://wiki.gnome.org/Initiatives/Wayland[GNOME Wiki Wayland] )
+  * ... and plenty more ( link:https://wiki.gnome.org/Initiatives/Wayland[GNOME Wiki Wayland] )
 
 Wayland was born and raised in the X community, and has strong support.
 
