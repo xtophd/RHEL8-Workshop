@@ -30,6 +30,30 @@ Web Console is a Red Hat Enterprise Linux 8 web-based interface designed for man
 
 The following exercises will walk you through installing and configuring Web Console on RHEL 8. 
 
+== Getting Started
+
+Since we already have web-console installed and active on *workstation.example.com*, we have the option to manage multiple additional hosts via this single portal.  Let's install a few packages to enable the web-console dashboard on *workstation.example.com*.  These steps needs to be performed as root.
+
+.[root@workstation]#
+----
+yum install -y cockpit-dashboard
+----
+
+Once the packages are installed, you will need to restart the cockpit services to enable the new functionality.
+
+.[root@workstation]#
+----
+systemctl restart cockpit
+----
+
+This will likely force you to sign-on to the web console again.
+
+Click the icon on the left that looks like a speedometer.
+
+Now click on the *+* icon to add *node2.example.com* to the list of servers we can manage with this web-console.
+
+Now click on *node2.example.com* in the server list to start with this lab.
+
 == Installation and Configuraiton
 
 === Packages and Services
@@ -48,6 +72,8 @@ firewall-cmd --reload
 ====
 
 == Web Console User Interface
+
+NOTE: If you are usng the web-console on *workstation.example* with your local browser, you do not need to access the GUI console.
 
 On host *workstation.example.com*, use the console GUI to start a web browser.
 
