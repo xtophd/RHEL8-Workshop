@@ -82,7 +82,7 @@ systemctl restart cockpit.socket
 
 NOTE: When the socket is restarted, your Web Console connection will reset and require you to login again.
 
-NOTE: You should also reload your broswer for the option `Store metric` to be visible.
+NOTE: You should also refresh your broswer for the option `Store metric` to be visible.
 
 Now enable persistent metrics.
 
