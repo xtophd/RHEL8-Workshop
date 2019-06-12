@@ -12,4 +12,3 @@
       with_items:
         - {src: 'cheat-checkhost.j2',           dest: '/usr/local/bin/cheat-systemd-checkhost.sh'}
         - {src: 'cheat-systemd-httpdconfig.j2', dest: '/usr/local/bin/cheat-systemd-httpdconfig.sh'}
-        - {src: 'cheat-systemd-mariadbconfig.j2', dest: '/usr/local/bin/cheat-systemd-mariadbconfig.sh'}
