@@ -60,7 +60,7 @@ Please proceed to log into the GUI console of *workstation.example.com* as the u
 
 After successfully signing in as *student*, you should notice that you have an amazingly clean desktop as shown below.
 
-Let us being our exploration of Wayland by customizing a few things.  
+Let us begin our exploration of Wayland by customizing a few things.  
 
 First, we will configure your desktop to have a menu system.
 

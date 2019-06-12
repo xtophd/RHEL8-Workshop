@@ -59,10 +59,11 @@ image::cockpit-image13.png[Cockpit Login]
 ====
 
 Here is a simple dashboard where you can monitor current system activities:
-  . CPU utilization
-  . Memory Utilization
-  . Disk I/O
-  . Network traffic
+
+  * CPU utilization
+  * Memory Utilization
+  * Disk I/O
+  * Network traffic
 
 ====
 image::cockpit-image7.png[Cockpit Dashboard]
@@ -150,9 +151,10 @@ image::cockpit-image17.png[Cockpit Service 5]
 ====
 
 This concludes a short exercise with Web Console. Feel free to click through and explore other sections:
-Under ‘accounts’ section, you can manage user accounts on your RHEL 8 server
-Diagnostic Reports allows you to create sosreport for Red Hat support
-Under ‘Kernel Dump’, you can enable/disable kdump
+
+* Under *Accounts* section, you can manage user accounts on your RHEL 8 server
+* *Diagnostic Reports* allows you to create sosreport for Red Hat support
+* Under *Kernel Dump*, you can enable/disable kdump
 
 == Additional Resources
 
