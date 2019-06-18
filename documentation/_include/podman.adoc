@@ -482,9 +482,9 @@ So for this exercise, we leverage something called a 'bind mount' to effectively
 
 NOTE: Using bind mounts is generally suitable for debugging, but not a good practice as a design decision for enterprise container strategies.  After all, creating dependencies between applications and host operating systems is what we are trying to get away from.
 
-.[root@noede3 ~]#
+.[root@node3 ~]#
 ----
-podman run -v /usr/sbin:/usr/sbin -v /usr/lib64:/usr/lib64 --rm ubi /usr/sbin/ip addr show eth0
+podman run -v /usr/sbin:/usr/sbin -v /usr/lib64:/usr/lib64  ubi /usr/sbin/ip addr show eth0
 ----
 
 .Your output should look like this
@@ -501,6 +501,8 @@ podman run -v /usr/sbin:/usr/sbin -v /usr/lib64:/usr/lib64 --rm ubi /usr/sbin/ip
 A couple more commands to understand the network setup.
 
 Let us begin by examining the '/etc/hosts' file.
+
+NOTE: Note that we introduce the '--rm' flag to our podman command.  This tells podman to automatically cleanup after the container exists
 
 .[root@node3 ~]#
 ----
