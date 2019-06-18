@@ -127,7 +127,7 @@ drwxr-xr-x. 1 importantuser root 18 Apr 19 02:13 ..
 -rw-r--r--. 1 importantuser root 58 May  2 14:54 test.txt
 ----
 
-There is our test.txt! Let's add the following as var/www/html/index.html:
+There is our test.txt! Let's add the following as /var/www/html/index.html:
 
 [source]
 ----
@@ -147,7 +147,7 @@ Once you have written that, you should be able to run:
 
 [source]
 ----
-ls -lahZ var/www/html/
+ls -lahZ /var/www/html/
 ----
 
 and see:
