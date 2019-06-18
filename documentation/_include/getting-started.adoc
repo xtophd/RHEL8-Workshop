@@ -78,7 +78,7 @@ Simple list of *tmux* commands:
   * attach to disconnected session : `tmux a [-t #]`
   * add an additional terminal shell: `ctrl-b c`
   * switch to Next terminal shell: `ctrl-b n`
-  * switch to Previous terminal shell: `ctrl-b n`
+  * switch to Previous terminal shell: `ctrl-b p`
 
 == How to Cut & Paste with Web Console
 
