@@ -114,7 +114,7 @@ Do the following (using the path returned by buildah for the cd command):
 [source]
 ----
 cd /var/lib/containers/storage/overlay/669b69de30cf8a39eafabccddb6a6e1db7d8d707e6a76c552518f4a8ed716cef/merged
-ls -lah var/www/html
+ls -lah /var/www/html
 ----
 
 and you should see:
