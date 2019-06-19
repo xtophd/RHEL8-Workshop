@@ -51,7 +51,7 @@ ATTENTION! Your session is being recorded!
 Let us now do a few activities worth logging.  You can check out a directory listing, look at the host's _passwd_ and _shadow_ files.  
 Oh wait, you need root priviledges to see the contents of _/etc/shadow_.  You can use sudo for that!  Now exit your shell.
 
-.[root@node1]#
+.[student@node1]#
 ----
 ls -l /etc
 
