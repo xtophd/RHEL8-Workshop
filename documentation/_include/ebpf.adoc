@@ -320,10 +320,9 @@ Go to the terminal with opensnoop running and issue a Ctrl-C. This will end the 
 
 == bcc-tools: xfsslower
 
-The purpose of the xfsslower tool (also ext4slower and nfsslower) is to show you filesystem operations slower than 10ms. It traces reads, writes, opens, and syncs and then prints out the timestamp of the operation, the process name, the ID, the type of operation, the file offset in kilobytes, the latency of the I/O measured from when it was issued by VFS to the filesystem to when it was completed, and finally, the filename being operated on.
-
-
 WARNING: Please check which filesystem your host is using with the command `df -T /`.  If you host is configured with ext4, then substitute the command *ext4slower* in place of *xfsslower*.
+
+The purpose of the xfsslower tool (also ext4slower and nfsslower) is to show you filesystem operations slower than 10ms. It traces reads, writes, opens, and syncs and then prints out the timestamp of the operation, the process name, the ID, the type of operation, the file offset in kilobytes, the latency of the I/O measured from when it was issued by VFS to the filesystem to when it was completed, and finally, the filename being operated on.
 
 To run this script, do:
 
