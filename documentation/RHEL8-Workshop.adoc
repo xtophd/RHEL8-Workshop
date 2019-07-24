@@ -116,7 +116,6 @@ NOTE: you will need true console (GUI) on "0WORKSTATION" for the *Wayland* and *
 
 [#toc]
   . link:{includedir}/getting-started.adoc[*Workshop Preparation* - DO THIS FIRST! ] _(workstation)_
-  . link:{includedir}/wayland.adoc[*Wayland* - (NEW) Desktop GUI ] _(workstation)_
   . link:{includedir}/webconsole.adoc[*Web Console* - (UPDATED) System Management] _(workstation, node2)_
   . link:{includedir}/systemd.adoc[*SystemD* - (UPDATED) System Service Management] _(node1)_
   . link:{includedir}/firewalld.adoc[*FirewallD* - (UPDATED) Firewall Service Management] _(node1)_
@@ -128,12 +127,12 @@ NOTE: you will need true console (GUI) on "0WORKSTATION" for the *Wayland* and *
   . link:{includedir}/tlog.adoc[*TLog* - (NEW) Session Logging] _(node1)_
   . link:{includedir}/stratis.adoc[*Stratis* - (NEW) Storage Management] _(node2)_
   . link:{includedir}/boom.adoc[*BOOM* - (NEW) Boot Management] _(node3)_
+  . link:{includedir}/wayland.adoc[*Wayland* - (NEW) Desktop GUI ] _(workstation)_
 
 
 ////  
 TO PRINT THIS DOC REMOVE THIS LINE AND COMMENTS AROUND INCLUDES
 include::{includedir}/Getting-Started.adoc[leveloffset=+1]
-include::{includedir}/wayland.adoc[leveloffset=+1]
 include::{includedir}/webconsole.adoc[leveloffset=+1]
 include::{includedir}/systemd.adoc[leveloffset=+1]
 include::{includedir}/firewalld.adoc[leveloffset=+1]
@@ -144,6 +143,7 @@ include::{includedir}/buildah[leveloffset=+1]
 include::{includedir}/tlog.adoc[leveloffset=+1]
 include::{includedir}/stratis.adoc[leveloffset=+1]
 include::{includedir}/boom.adoc[leveloffset=+1]
+include::{includedir}/wayland.adoc[leveloffset=+1]
 ////
 
 [discrete]
