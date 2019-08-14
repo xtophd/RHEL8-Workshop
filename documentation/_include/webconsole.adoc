@@ -186,7 +186,7 @@ This concludes a short exercise with Web Console. Feel free to click through and
 
 Red Hat Documentation
 
-    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_systems_using_the_cockpit_web_interface[Managing Systems Using the Web Console]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_systems_using_the_rhel_8_web_console/[Managing Systems Using the Web Console]
 
 [discrete]
 == End of Unit
