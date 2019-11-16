@@ -1,0 +1,415 @@
+:sectnums:
+:sectnumlevels: 3
+:imagesdir: ./_images
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+:toc:
+:toclevels: 1
+
+= Virtualization Management
+
+Provided your hardware is reasonably modern, chances are it supports virtualization.  This unit introduces simple virtualization management using kvm and libvirt.  You will learn how to:
+    * Install additional necessary software
+    * Enable necessary system services and firewall ports
+    * Use the command line to create and manage a virtual machine
+    * Use the web console (cockpit) to create and manage a virtual machine
+
+== Getting Started
+
+Log into workstation VM as student and then use sudo to gain root priviledges.
+
+----
+sudo -i
+----
+
+=== Requirements
+
+First we need to ensure the system being used supports either:
+
+    * Intel VT-x and Intel 64 virtualization extensions
+    * AMD-V and the AMD64 virtualization extensions
+
+This is done with the following simple commands.
+
+You can start by examining the CPU flags (capabilities) advertised by your system.
+
+----
+grep -E 'svm|vmx' /proc/cpuinfo
+----
+
+You are looking for either the Intel flag (vtx) or the AMD flag (svm).  A more sophisticated command makes it a little easier to determine.
+
+----
+if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "*WARN* Virt NOT Supported"; fi
+----
+
+After you install all the required software, there are some additional tools to provide more detailed reporting on system capabilities.
+
+=== Installation
+
+Verifying that yum repos are enabled to install Cockpit and the virtualization tools.
+
+----
+yum repolist
+----
+
+Make sure rhel-7-server-rpms, rhel-7-server-optional-rpms and rhel-7-server-extras-rpms repos are enabled.
+
+Installing Packages for virtualization enablement
+
+----
+yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools
+----
+
+Installing Packages for webconsole enablement
+
+----
+yum install -y cockpit cockpit-dashboard cockpit-machines 
+----
+
+To make the creating of custom VM images easy, install the Image-Builder tools
+
+----
+yum install -y lorax-composer composer-cli cockpit-composer
+----
+
+We are also going to use httpd to serve up varous configs for our installations
+
+----
+yum install -y httpd
+----
+
+
+=== Enable System Services
+
+----
+# systemctl enable cockpit.socket lorax-composer.socket libvirtd httpd
+# systemctl start cockpit lorax-composer libvirtd httpd
+----
+
+NOTE: As shown below, notice that the webconsole has been configured to run on port 443 in addition to  the standard port 9090.
+
+You should see cockpit.service is now active and running.
+
+----
+systemctl status cockpit.socket
+----
+
+----
+* cockpit.service - Cockpit Web Service
+   Loaded: loaded (/usr/lib/systemd/system/cockpit.service; static; vendor preset: disabled)
+   Active: active (running) since Thu 2019-10-24 08:39:32 EDT; 15s ago
+     Docs: man:cockpit-ws(8)
+  Process: 14933 ExecStartPre=/usr/sbin/remotectl certificate --ensure --user=root --group=cockpit-ws --selinux-type=etc_t (code=exited, status=0/SUCCESS)
+ Main PID: 14938 (cockpit-ws)
+   CGroup: /system.slice/cockpit.service
+           └─14938 /usr/libexec/cockpit-ws
+
+* cockpit.socket - Cockpit Web Service Socket
+   Loaded: loaded (/usr/lib/systemd/system/cockpit.socket; enabled; vendor preset: disabled)
+  Drop-In: /etc/systemd/system/cockpit.socket.d
+           └─listen.conf
+   Active: active (running) since Thu 2019-10-24 08:01:23 EDT; 38min ago
+     Docs: man:cockpit-ws(8)
+   Listen: [::]:9090 (Stream)
+           [::]:443 (Stream)
+----
+
+=== Firewall Configuration
+
+NOTE: If firewalld is active, configure firewalld to allow cockpit.
+
+----
+firewall-cmd --state
+firewall-cmd --add-port=9090/tcp --add-service=http
+firewall-cmd --permanent --add-port=9090/tcp --add-service=http
+firewall-cmd --list-ports
+firewall-cmd --list-services
+----
+
+=== Verify Virtualization Host Status
+
+----
+virt-host-validate
+----
+
+----
+QEMU: Checking for hardware virtualization                                 : PASS
+QEMU: Checking if device /dev/kvm exists                                   : PASS
+QEMU: Checking if device /dev/kvm is accessible                            : PASS
+QEMU: Checking if device /dev/vhost-net exists                             : PASS
+QEMU: Checking if device /dev/net/tun exists                               : PASS
+QEMU: Checking for cgroup 'memory' controller support                      : PASS                                                    
+QEMU: Checking for cgroup 'memory' controller mount-point                  : PASS
+QEMU: Checking for cgroup 'cpu' controller support                         : PASS
+QEMU: Checking for cgroup 'cpu' controller mount-point                     : PASS
+QEMU: Checking for cgroup 'cpuacct' controller support                     : PASS
+QEMU: Checking for cgroup 'cpuacct' controller mount-point                 : PASS
+QEMU: Checking for cgroup 'cpuset' controller support                      : PASS
+QEMU: Checking for cgroup 'cpuset' controller mount-point                  : PASS
+QEMU: Checking for cgroup 'devices' controller support                     : PASS
+QEMU: Checking for cgroup 'devices' controller mount-point                 : PASS
+QEMU: Checking for cgroup 'blkio' controller support                       : PASS
+QEMU: Checking for cgroup 'blkio' controller mount-point                   : PASS
+QEMU: Checking for device assignment IOMMU support                         : WARN (No ACPI IVRS table found, IOMMU either disabled in BIOS or not supported by this hardware platform)
+ LXC: Checking for Linux >= 2.6.26                                         : PASS
+ LXC: Checking for namespace ipc                                           : PASS
+ LXC: Checking for namespace mnt                                           : PASS
+ LXC: Checking for namespace pid                                           : PASS
+ LXC: Checking for namespace uts                                           : PASS
+ LXC: Checking for namespace net                                           : PASS
+ LXC: Checking for namespace user                                          : PASS
+ LXC: Checking for cgroup 'memory' controller support                      : PASS
+ LXC: Checking for cgroup 'memory' controller mount-point                  : PASS
+ LXC: Checking for cgroup 'cpu' controller support                         : PASS
+ LXC: Checking for cgroup 'cpu' controller mount-point                     : PASS
+ LXC: Checking for cgroup 'cpuacct' controller support                     : PASS
+ LXC: Checking for cgroup 'cpuacct' controller mount-point                 : PASS
+ LXC: Checking for cgroup 'cpuset' controller support                      : PASS
+ LXC: Checking for cgroup 'cpuset' controller mount-point                  : PASS
+ LXC: Checking for cgroup 'devices' controller support                     : PASS
+ LXC: Checking for cgroup 'devices' controller mount-point                 : PASS
+ LXC: Checking for cgroup 'blkio' controller support                       : PASS
+ LXC: Checking for cgroup 'blkio' controller mount-point                   : PASS
+ LXC: Checking if device /sys/fs/fuse/connections exists                   : FAIL (Load the 'fuse' module to enable /proc/ overrides)
+----
+
+=== Configure Network Bridge (using nmcli)
+
+Kind-of cool to show all properties:
+
+----
+nmcli con edit <name>
+nmcli> ?
+nmcli> print
+nmcli> quit
+----
+
+NOTE: Becareful to ensure netowrk connection information is accurate.  IE: don't configure for DHCP if it should be using static IPs
+
+----
+export BRNAME=virbr1 DEVNAME=enp0s31f6
+
+nmcli con add type bridge con-name ${BRNAME} ifname ${BRNAME} autoconnect yes bridge.stp no ipv6.method ignore
+nmcli con modify ${BRNAME} connection.autoconnect-slaves yes
+----
+
+This is what I want ifcfg-<BRIDGE> to look like:
+
+----
+STP=no
+TYPE=Bridge
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=dhcp
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=no
+NAME=virbr1
+UUID=3aad9e94-507f-4c54-9579-c7d42e01fbf9
+DEVICE=virbr1
+ONBOOT=yes
+AUTOCONNECT_SLAVES=yes
+----
+
+----
+rm -f /etc/sysconfig/network-scripts/ifcfg-${DEVNAME}
+nmcli con add type ethernet con-name ${DEVNAME} ifname ${DEVNAME} master ${BRNAME}
+----
+
+This is what I want in the ifcfg-<DEVICE> file
+
+----
+TYPE=Ethernet
+NAME=enp0s31f6
+UUID=2cdaf676-4f3f-44b3-b038-919eb5965432
+DEVICE=enp0s31f6
+ONBOOT=yes
+BRIDGE=virbr1
+----
+
+----
+ifdown ${DEVNAME} ; sleep 3 ; ifdown ${BRNAME} ; sleep 3; ifup ${BRNAME}
+----
+
+=== Configure Libvirt to use Bridge
+
+----
+cat > /var/tmp/bridge.xml <<EOF
+<network>
+    <name>host-bridge</name>
+    <forward mode="bridge"/>
+    <bridge name="${BRNAME}"/>
+</network>
+EOF
+
+virsh net-define /var/tmp/bridge.xml
+
+virsh net-list --all
+
+virsh net-start host-bridge
+
+virsh net-autostart host-bridge
+----
+
+See reference doc: http://blog.leifmadsen.com/blog/2016/12/01/create-network-bridge-with-nmcli-for-libvirt/
+
+=== Install VM from ISO
+
+==== Fetch ISO from redhat.com
+
+Log on to access.redhat.com
+
+Go to Downloads
+
+Select Red Hat Enterprise Linux (rhel 7 or older releases if needed)
+
+copy the URL [right click] for the "Red Hat Enterprise Linux 8.1 Binary DVD"
+
+On our host, change directories to /var/lib/libvirt/images
+
+Be sure to use quotes around the link
+
+wget "<paste link>"
+
+==== Configure HTTP Accessible ks.cfg
+
+We already took the time to install and configure the http service during the setup portion of this lab.  So now we just need to create an accessible kickstart config.
+
+Create the following file with the contents below: `/var/www/html/ks.cfg`
+
+----
+lang en_US
+keyboard us
+timezone America/New_York --isUtc
+rootpw $1$XJbwDNTe$Wqttcf7vWP5n.nPo2J9mk. --iscrypted
+reboot
+text
+cdrom
+bootloader --location=mbr --append="nofb quiet splash=quiet"
+
+zerombr
+clearpart --drives=vda --all --initlabel
+part /boot --fstype=ext2 --size=512 --ondisk=vda --asprimary
+part pv.01 --size=16000 --grow --ondisk=vda --asprimary
+volgroup vg_rhel pv.01
+logvol /     --fstype=ext4  --vgname=vg_rhel --name=root   --size=6000 --grow
+logvol /var  --fstype=ext4  --vgname=vg_rhel --name=var    --size=4000
+logvol /home --fstype=ext4  --vgname=vg_rhel --name=home   --size=2000
+logvol /tmp  --fstype=ext4  --vgname=vg_rhel --name=tmp    --size=2000
+logvol swap  --fstype=swap  --vgname=vg_rhel --name=swap01 --size=2000
+
+auth --passalgo=sha512 --useshadow
+selinux --enforcing
+firewall --enabled
+skipx
+firstboot --disable
+
+%packages
+@Core
+redhat-lsb-core
+dhclient
+bind-utils
+wget
+git
+%end
+----
+
+Verify that the file and service are available
+
+----
+wget -q -O - http://localhost/ks.cfg
+----
+
+The results should match the file contents described above.  Now it's time to start building VMs.
+
+
+==== virt-install to Install A System from ISO
+
+In this example, we are creating a host called "ocp-bastion".  This set of arguments will config a vm, mount and boot from the RHEL Installation ISO, and initiate an automated kickstart install using the ks.cfg our web server is hosting.  This assumes DHCP.
+
+----
+export ISO_PATH="/var/lib/libvirt/images/rhel-8.1-x86_64-dvd.iso"
+export KS_URL="http://rhv2.lab.linuxsoup.com/ks.cfg"
+export VM_NAME="bastion-host"
+
+virt-install \
+    --console pty,target_type=virtio \
+    --graphics vnc \
+    --location ${ISO_PATH} \
+    --vcpus 4 \
+    --ram 16000 \
+    --disk /var/lib/libvirt/images/${VM_NAME},bus=virtio,sparse=no,size=25 \
+    --extra-args "ks=${KS_URL}" \
+    --name "${VM_NAME}"
+----
+
+Here is a similar example except specifying the network parameters.
+
+----
+export ISO_PATH="/var/lib/libvirt/images/rhel-8.1-x86_64-dvd.iso"
+export KS_URL="http://rhv2.lab.linuxsoup.com/ks.cfg"
+export KS_NET="ip=192.168.1.160 netmask=255.255.255.0 dns=192.168.1.30 gateway=192.168.1.1"
+export VM_NAME="bastion-host"
+
+virt-install \
+    --console pty,target_type=virtio \
+    --graphics vnc \
+    --location ${ISO_PATH} \
+    --vcpus 4 \
+    --ram 16000 \
+    --disk /var/lib/libvirt/images/${VM_NAME},bus=virtio,sparse=no,size=25 \
+    --extra-args "ks=${KS_URL} ${KS_NET}" \
+    --name "VM_NAME"
+----
+
+Some additional simple virtual machine management commands
+
+----
+virsh list
+
+virsh shutdown ocp-bastion
+
+virsh list
+virsh list --all
+
+virsh start ocp-bastion
+
+virsh console ocp-bastion
+
+## use ^] to disconnect the serial console
+
+----
+
+==== Use Web Console to Install A System
+
+Coming Soon...
+
+
+== Additional Resources
+
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bridging
+
+http://blog.leifmadsen.com/blog/2016/12/01/create-network-bridge-with-nmcli-for-libvirt/
+
+Cockpit Project Page
+
+    * link:http://cockpit-project.org/blog/category/release.html[Cockpit Project]
+
+[discrete]
+== End of Unit
+
+link:../RHEL7-Workshop.adoc#toc[Return to TOC]
+
+
+
+////
+Always end files with a blank line to avoid include problems.
+////
