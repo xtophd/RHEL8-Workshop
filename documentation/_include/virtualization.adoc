@@ -191,6 +191,18 @@ From th menu, select the Machines tab.  You will notice that the interface is st
 
 Take some time to explore the capabilities of the Web-Console Machines webui.
 
+== Shutdown Virtual Machines
+
+WARN: It is IMPORTANT to stop or delete the deployed VMs
+
+Using either the CLI (or the Web-Console), be sure to shutdown the VM(s) you deployed to ensure additional workshop exercises perform reasonably.
+
+----
+virsh list --all
+
+virsh shutdown vmguest-01
+----
+
 == Additional Resources
 
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bridging
