@@ -155,7 +155,7 @@ Now you need to set a root password in the image
 virt-customize -a rhel-8.1-x86_64-kvm.qcow2 --root-password password:redhat --uninstall cloud-init
 ----
 
-=== Deply the QCOW Image
+=== Deploy the QCOW Image
 
 Finally it's time to launch the VM
 
