@@ -71,7 +71,7 @@ yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools
 Installing Packages for webconsole enablement
 
 ----
-yum install -y cockpit cockpit-dashboard cockpit-machines 
+yum install -y cockpit-machines 
 ----
 
 To make the creating of custom VM images easy, install the Image-Builder tools
@@ -80,18 +80,11 @@ To make the creating of custom VM images easy, install the Image-Builder tools
 yum install -y lorax-composer composer-cli cockpit-composer
 ----
 
-We are also going to use httpd to serve up varous configs for our installations
-
-----
-yum install -y httpd
-----
-
-
 === Enable System Services
 
 ----
-# systemctl enable cockpit.socket lorax-composer.socket libvirtd httpd
-# systemctl start cockpit lorax-composer libvirtd httpd
+# systemctl enable cockpit.socket lorax-composer.socket libvirtd
+# systemctl start cockpit lorax-composer libvirtd
 ----
 
 NOTE: As shown below, notice that the webconsole has been configured to run on port 443 in addition to  the standard port 9090.
@@ -181,217 +174,51 @@ QEMU: Checking for device assignment IOMMU support                         : WAR
  LXC: Checking if device /sys/fs/fuse/connections exists                   : FAIL (Load the 'fuse' module to enable /proc/ overrides)
 ----
 
-=== Configure Network Bridge (using nmcli)
+=== Use virt-install to Install A VM
 
-Kind-of cool to show all properties:
+Now you are going to leverage a Red Hat pre-built QCOW image to rapidly load a VM with Red Hat Enterprise Linux.
 
-----
-nmcli con edit <name>
-nmcli> ?
-nmcli> print
-nmcli> quit
-----
-
-NOTE: Becareful to ensure netowrk connection information is accurate.  IE: don't configure for DHCP if it should be using static IPs
+First we need to grab a copy of the image
 
 ----
-export BRNAME=virbr1 DEVNAME=enp0s31f6
+cd /var/lib/libvirt/images
 
-nmcli con add type bridge con-name ${BRNAME} ifname ${BRNAME} autoconnect yes bridge.stp no ipv6.method ignore
-nmcli con modify ${BRNAME} connection.autoconnect-slaves yes
+wget -O rhel-8.1-x86_64-kvm.qcow2 http://core.example.com/images/rhel-8.1-x86_64-kvm.qcow2
 ----
 
-This is what I want ifcfg-<BRIDGE> to look like:
+Now you need to set a root password in the image
 
 ----
-STP=no
-TYPE=Bridge
-PROXY_METHOD=none
-BROWSER_ONLY=no
-BOOTPROTO=dhcp
-DEFROUTE=yes
-IPV4_FAILURE_FATAL=no
-IPV6INIT=no
-NAME=virbr1
-UUID=3aad9e94-507f-4c54-9579-c7d42e01fbf9
-DEVICE=virbr1
-ONBOOT=yes
-AUTOCONNECT_SLAVES=yes
+virt-customize -a rhel-8.1-x86_64-kvm.qcow2 --root-password password:redhat --uninstall cloud-init
 ----
 
-----
-rm -f /etc/sysconfig/network-scripts/ifcfg-${DEVNAME}
-nmcli con add type ethernet con-name ${DEVNAME} ifname ${DEVNAME} master ${BRNAME}
-----
-
-This is what I want in the ifcfg-<DEVICE> file
+Finally it's time to launch the VM
 
 ----
-TYPE=Ethernet
-NAME=enp0s31f6
-UUID=2cdaf676-4f3f-44b3-b038-919eb5965432
-DEVICE=enp0s31f6
-ONBOOT=yes
-BRIDGE=virbr1
-----
-
-----
-ifdown ${DEVNAME} ; sleep 3 ; ifdown ${BRNAME} ; sleep 3; ifup ${BRNAME}
-----
-
-=== Configure Libvirt to use Bridge
-
-----
-cat > /var/tmp/bridge.xml <<EOF
-<network>
-    <name>host-bridge</name>
-    <forward mode="bridge"/>
-    <bridge name="${BRNAME}"/>
-</network>
-EOF
-
-virsh net-define /var/tmp/bridge.xml
-
-virsh net-list --all
-
-virsh net-start host-bridge
-
-virsh net-autostart host-bridge
-----
-
-See reference doc: http://blog.leifmadsen.com/blog/2016/12/01/create-network-bridge-with-nmcli-for-libvirt/
-
-=== Install VM from ISO
-
-==== Fetch ISO from redhat.com
-
-Log on to access.redhat.com
-
-Go to Downloads
-
-Select Red Hat Enterprise Linux (rhel 7 or older releases if needed)
-
-copy the URL [right click] for the "Red Hat Enterprise Linux 8.1 Binary DVD"
-
-On our host, change directories to /var/lib/libvirt/images
-
-Be sure to use quotes around the link
-
-wget "<paste link>"
-
-==== Configure HTTP Accessible ks.cfg
-
-We already took the time to install and configure the http service during the setup portion of this lab.  So now we just need to create an accessible kickstart config.
-
-Create the following file with the contents below: `/var/www/html/ks.cfg`
-
-----
-lang en_US
-keyboard us
-timezone America/New_York --isUtc
-rootpw $1$XJbwDNTe$Wqttcf7vWP5n.nPo2J9mk. --iscrypted
-reboot
-text
-cdrom
-bootloader --location=mbr --append="nofb quiet splash=quiet"
-
-zerombr
-clearpart --drives=vda --all --initlabel
-part /boot --fstype=ext2 --size=512 --ondisk=vda --asprimary
-part pv.01 --size=16000 --grow --ondisk=vda --asprimary
-volgroup vg_rhel pv.01
-logvol /     --fstype=ext4  --vgname=vg_rhel --name=root   --size=6000 --grow
-logvol /var  --fstype=ext4  --vgname=vg_rhel --name=var    --size=4000
-logvol /home --fstype=ext4  --vgname=vg_rhel --name=home   --size=2000
-logvol /tmp  --fstype=ext4  --vgname=vg_rhel --name=tmp    --size=2000
-logvol swap  --fstype=swap  --vgname=vg_rhel --name=swap01 --size=2000
-
-auth --passalgo=sha512 --useshadow
-selinux --enforcing
-firewall --enabled
-skipx
-firstboot --disable
-
-%packages
-@Core
-redhat-lsb-core
-dhclient
-bind-utils
-wget
-git
-%end
-----
-
-Verify that the file and service are available
-
-----
-wget -q -O - http://localhost/ks.cfg
-----
-
-The results should match the file contents described above.  Now it's time to start building VMs.
-
-
-==== virt-install to Install A System from ISO
-
-In this example, we are creating a host called "ocp-bastion".  This set of arguments will config a vm, mount and boot from the RHEL Installation ISO, and initiate an automated kickstart install using the ks.cfg our web server is hosting.  This assumes DHCP.
-
-----
-export ISO_PATH="/var/lib/libvirt/images/rhel-8.1-x86_64-dvd.iso"
-export KS_URL="http://rhv2.lab.linuxsoup.com/ks.cfg"
-export VM_NAME="bastion-host"
-
 virt-install \
-    --console pty,target_type=virtio \
-    --graphics vnc \
-    --location ${ISO_PATH} \
-    --vcpus 4 \
-    --ram 16000 \
-    --disk /var/lib/libvirt/images/${VM_NAME},bus=virtio,sparse=no,size=25 \
-    --extra-args "ks=${KS_URL}" \
-    --name "${VM_NAME}"
-----
-
-Here is a similar example except specifying the network parameters.
-
-----
-export ISO_PATH="/var/lib/libvirt/images/rhel-8.1-x86_64-dvd.iso"
-export KS_URL="http://rhv2.lab.linuxsoup.com/ks.cfg"
-export KS_NET="ip=192.168.1.160 netmask=255.255.255.0 dns=192.168.1.30 gateway=192.168.1.1"
-export VM_NAME="bastion-host"
-
-virt-install \
-    --console pty,target_type=virtio \
-    --graphics vnc \
-    --location ${ISO_PATH} \
-    --vcpus 4 \
-    --ram 16000 \
-    --disk /var/lib/libvirt/images/${VM_NAME},bus=virtio,sparse=no,size=25 \
-    --extra-args "ks=${KS_URL} ${KS_NET}" \
-    --name "VM_NAME"
+  --name vmguest-01 \
+  --memory 2048 \
+  --vcpus 1 \
+  --disk /var/lib/libvirt/images/rhel-8.1-x86_64-kvm.qcow2 \
+  --graphics vnc \
+  --os-variant rhel8
 ----
 
 Some additional simple virtual machine management commands
 
 ----
 virsh list
-
-virsh shutdown ocp-bastion
-
-virsh list
 virsh list --all
 
-virsh start ocp-bastion
-
-virsh console ocp-bastion
-
-## use ^] to disconnect the serial console
-
+virsh start vmguest-01
+virsh shutdown vmguest-01
 ----
 
-==== Use Web Console to Install A System
+=== Use Web-Console to Manager VMs
 
-Coming Soon...
+From th menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary, but one critical feature is available: the console!
 
+Take some time to explore the capabilities of the Web-Console Machines webui.
 
 == Additional Resources
 
