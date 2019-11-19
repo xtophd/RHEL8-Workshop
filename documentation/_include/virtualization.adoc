@@ -121,8 +121,8 @@ NOTE: If firewalld is active, configure firewalld to allow cockpit.
 
 ----
 firewall-cmd --state
-firewall-cmd --add-port=9090/tcp --add-service=http
-firewall-cmd --permanent --add-port=9090/tcp --add-service=http
+firewall-cmd --add-port=9090/tcp
+firewall-cmd --permanent --add-port=9090/tcp
 firewall-cmd --list-ports
 firewall-cmd --list-services
 ----
