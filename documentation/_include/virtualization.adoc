@@ -167,8 +167,11 @@ virt-install \
   --vcpus 1 \
   --disk /var/lib/libvirt/images/rhel-8.1-x86_64-kvm.qcow2 \
   --graphics vnc \
+  --noautoconsole\
   --os-variant rhel8.1
 ----
+
+INFO: If you hop on the Virtual Machines Manager in the Web-Console, you an bring up the VM's Console and watch the deployment.
 
 === Additional CLI Commands
 
@@ -182,7 +185,7 @@ virsh start vmguest-01
 virsh shutdown vmguest-01
 ----
 
-== Exmplore VM Management with 'Web-Console'
+== Explore VM Management with 'Web-Console'
 
 From th menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary, but one critical feature is available: the console!
 
