@@ -6,7 +6,7 @@
       yum: name=qemu-kvm,libvirt,virt-install,libvirt-client,libguestfs-tools,wget,cockpit-machines,lorax-composer,composer-cli,cockpit-composer state=installed
 
     - name: "SETUP VIRTUALIZATION: service restart"
-      service: name="cockpit.socket" state=restarted enabled=yes
+      service: name="cockpit.socket" state=started enabled=yes
       
     - name: "SETUP VIRTUALIZATION: firewall configuration"
       firewalld: port=9090/tcp permanent=yes immediate=yes state=enabled
