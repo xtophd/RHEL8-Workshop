@@ -72,7 +72,7 @@ Now you need to set a root password in the image
 virt-customize -a vmguest-02.qcow2 --root-password password:redhat --uninstall cloud-init
 ----
 
-=== Deployment
+=== Deploy the Image
 
 Finally it's time to launch the VM
 
