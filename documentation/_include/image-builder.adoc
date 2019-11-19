@@ -1,0 +1,122 @@
+:sectnums:
+:sectnumlevels: 3
+:imagesdir: ./_images
+
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+:toc:
+:toclevels: 1
+
+= Image Builder
+
+WARN: You must complete the Virtualization unit before proceeding.
+
+INFO: If you are using the web-console and do not see "Virtual Machines" or the "Image Builder" icon in the menus, chances are that you need to sign-out and sign-in again.
+
+== Getting Started
+
+Starting on the host *workstation.example.com*, just make sure you're the root user.
+
+.[root@workstation]#
+----
+id
+
+uid=0(root) gid=0(root) groups=0(root)
+----
+
+Verify that you are on the right host for these exercises.
+
+.[root@workstation ~]#
+----
+cheat-imagebuilder-checkhost.sh
+----
+
+You are now ready to proceed with these exercises.
+
+=== Installation
+
+Assuming that the web-console is already installed and enabled, proceed to install the packages for Image Builder.
+
+----
+yum install -y lorax-composer composer-cli cockpit-composer
+----
+
+=== Enable System Services
+
+----
+# systemctl enable lorax-composer.socket
+# systemctl start lorax-composer
+----
+
+== Create a QCOW Image
+
+=== Create Blueprint
+
+=== Create Image
+
+=== Download Image
+
+== Deploy the QCOW Image
+
+=== Modify the Image
+
+Now you need to set a root password in the image
+
+----
+virt-customize -a vmguest-02.qcow2 --root-password password:redhat --uninstall cloud-init
+----
+
+=== Deployment
+
+Finally it's time to launch the VM
+
+----
+virt-install \
+  --import \
+  --name vmguest-01 \
+  --memory 2048 \
+  --vcpus 1 \
+  --disk /var/lib/libvirt/images/rhel-8.1-x86_64-kvm.qcow2 \
+  --graphics vnc \
+  --noautoconsole\
+  --os-variant rhel8.1
+----
+
+INFO: If you hop on the Virtual Machines Manager in the Web-Console, you an bring up the VM's Console and watch the deployment.
+
+== Shutdown Virtual Machines
+
+WARN: It is IMPORTANT to stop or delete the deployed VMs
+
+Using either the CLI (or the Web-Console), be sure to shutdown the VM(s) you deployed to ensure additional workshop exercises perform reasonably.
+
+----
+virsh list --all
+
+virsh shutdown vmguest-01
+----
+
+== Additional Resources
+
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bridging
+
+http://blog.leifmadsen.com/blog/2016/12/01/create-network-bridge-with-nmcli-for-libvirt/
+
+Cockpit Project Page
+
+    * link:http://cockpit-project.org/blog/category/release.html[Cockpit Project]
+
+[discrete]
+== End of Unit
+
+link:../RHEL8-Workshop.adoc#toc[Return to TOC]
+
+////
+Always end files with a blank line to avoid include problems.
+////
