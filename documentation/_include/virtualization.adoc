@@ -196,12 +196,13 @@ Finally it's time to launch the VM
 
 ----
 virt-install \
+  --import \
   --name vmguest-01 \
   --memory 2048 \
   --vcpus 1 \
   --disk /var/lib/libvirt/images/rhel-8.1-x86_64-kvm.qcow2 \
   --graphics vnc \
-  --os-variant rhel8
+  --os-variant rhel8.1
 ----
 
 Some additional simple virtual machine management commands
