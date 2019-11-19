@@ -15,6 +15,8 @@ endif::[]
 
 = Virtualization Management
 
+NOTE: If you are using the web-console and do not see "Virtual Machines" in the menu, chances are that you need to sign-out and sign-in again.
+
 Provided your hardware is reasonably modern, chances are it supports virtualization.  This unit introduces simple virtualization management using kvm and libvirt.  You will learn how to:
     * Install additional necessary software
     * Enable necessary system services and firewall ports
@@ -22,6 +24,28 @@ Provided your hardware is reasonably modern, chances are it supports virtualizat
     * Use the web console (cockpit) to create and manage a virtual machine
 
 == Getting Started
+
+Starting on the host *workstation.example.com*, just make sure you're the root user.
+
+.[root@workstation]#
+----
+id
+
+uid=0(root) gid=0(root) groups=0(root)
+----
+
+Verify that you are on the right host for these exercises.
+
+.[root@workstation ~]#
+----
+cheat-virt-checkhost.sh
+----
+
+You are now ready to proceed with these exercises.
+
+
+
+
 
 Log into workstation VM as student and then use sudo to gain root priviledges.
 
