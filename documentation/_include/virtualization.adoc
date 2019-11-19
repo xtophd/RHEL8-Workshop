@@ -133,9 +133,11 @@ virt-host-validate
   QEMU: Checking for device assignment IOMMU support                         : WARN (No ACPI IVRS table found, IOMMU either disabled in BIOS or not supported by this hardware platform)
 ----
 
-=== Install A Virtual-Machine with 'virt-install'
+== Deploy A Virtual-Machine with 'virt-install'
 
 Now you are going to leverage a Red Hat pre-built QCOW image to rapidly load a VM with Red Hat Enterprise Linux.
+
+=== Retrieve a QCOW Image
 
 First we need to grab a copy of the image
 
@@ -145,11 +147,15 @@ cd /var/lib/libvirt/images
 wget -O rhel-8.1-x86_64-kvm.qcow2 http://core.example.com/images/rhel-8.1-x86_64-kvm.qcow2
 ----
 
+=== Modify the QCOW Image
+
 Now you need to set a root password in the image
 
 ----
 virt-customize -a rhel-8.1-x86_64-kvm.qcow2 --root-password password:redhat --uninstall cloud-init
 ----
+
+=== Deply the QCOW Image
 
 Finally it's time to launch the VM
 
@@ -164,6 +170,8 @@ virt-install \
   --os-variant rhel8.1
 ----
 
+=== Additional CLI Commands
+
 Some additional simple virtual machine management commands
 
 ----
@@ -174,7 +182,7 @@ virsh start vmguest-01
 virsh shutdown vmguest-01
 ----
 
-=== Use Web-Console to Manager VMs
+== Exmplore VM Management with 'Web-Console'
 
 From th menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary, but one critical feature is available: the console!
 
