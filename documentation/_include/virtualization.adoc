@@ -107,49 +107,10 @@ yum install -y lorax-composer composer-cli cockpit-composer
 === Enable System Services
 
 ----
-# systemctl enable cockpit.socket lorax-composer.socket libvirtd
-# systemctl start cockpit lorax-composer libvirtd
+# systemctl enable lorax-composer.socket libvirtd
+# systemctl start lorax-composer libvirtd
 ----
 
-NOTE: As shown below, notice that the webconsole has been configured to run on port 443 in addition to  the standard port 9090.
-
-You should see cockpit.service is now active and running.
-
-----
-systemctl status cockpit.socket
-----
-
-----
-* cockpit.service - Cockpit Web Service
-   Loaded: loaded (/usr/lib/systemd/system/cockpit.service; static; vendor preset: disabled)
-   Active: active (running) since Thu 2019-10-24 08:39:32 EDT; 15s ago
-     Docs: man:cockpit-ws(8)
-  Process: 14933 ExecStartPre=/usr/sbin/remotectl certificate --ensure --user=root --group=cockpit-ws --selinux-type=etc_t (code=exited, status=0/SUCCESS)
- Main PID: 14938 (cockpit-ws)
-   CGroup: /system.slice/cockpit.service
-           └─14938 /usr/libexec/cockpit-ws
-
-* cockpit.socket - Cockpit Web Service Socket
-   Loaded: loaded (/usr/lib/systemd/system/cockpit.socket; enabled; vendor preset: disabled)
-  Drop-In: /etc/systemd/system/cockpit.socket.d
-           └─listen.conf
-   Active: active (running) since Thu 2019-10-24 08:01:23 EDT; 38min ago
-     Docs: man:cockpit-ws(8)
-   Listen: [::]:9090 (Stream)
-           [::]:443 (Stream)
-----
-
-=== Firewall Configuration
-
-NOTE: If firewalld is active, configure firewalld to allow cockpit.
-
-----
-firewall-cmd --state
-firewall-cmd --add-port=9090/tcp
-firewall-cmd --permanent --add-port=9090/tcp
-firewall-cmd --list-ports
-firewall-cmd --list-services
-----
 
 === Verify Virtualization Host Status
 
