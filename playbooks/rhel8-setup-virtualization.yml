@@ -1,0 +1,7 @@
+---
+- hosts: workstation.example.com
+  tasks:
+
+    - name: "SETUP VIRTUALIZATION: yum install qemu-kvm libvirt virt-install libvirt-client libguestfs-tools"
+      yum: name=qemu-kvm,libvirt,virt-install,libvirt-client,libguestfs-tools,wget,cockpit-machines,lorax-composer,composer-cli,cockpit-composer state=installed
+
