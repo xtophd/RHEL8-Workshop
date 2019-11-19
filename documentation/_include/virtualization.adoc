@@ -148,7 +148,7 @@ virt-host-validate
   QEMU: Checking for device assignment IOMMU support                         : WARN (No ACPI IVRS table found, IOMMU either disabled in BIOS or not supported by this hardware platform)
 ----
 
-=== Use virt-install to Install A VM
+=== Install A Virtual-Machine with 'virt-install'
 
 Now you are going to leverage a Red Hat pre-built QCOW image to rapidly load a VM with Red Hat Enterprise Linux.
 
