@@ -129,6 +129,7 @@ NOTE: you will need true console (GUI) on "0WORKSTATION" for the *Wayland* and *
   . link:{includedir}/appstream-yum.adoc[*App Stream* - (NEW) Application Delivery] _(node1, node2, node3)_
   . link:{includedir}/podman.adoc[*Podman* - (NEW) Container Management] _(node3)_
   . link:{includedir}/buildah.adoc[*Buildah & Skopeo* - (NEW) Container Development] _(node3)_
+  . link:{includedir}/virtualization.adoc[*Virtualizaion* - (NEW) Virtualization Management] _(node3)_
   . link:{includedir}/tlog.adoc[*TLog* - (NEW) Session Logging] _(node1)_
   . link:{includedir}/stratis.adoc[*Stratis* - (NEW) Storage Management] _(node2)_
   . link:{includedir}/boom.adoc[*BOOM* - (NEW) Boot Management] _(node3)_
