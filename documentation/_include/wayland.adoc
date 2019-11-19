@@ -16,7 +16,7 @@ endif::[]
 
 [NOTE]
 ====
-The graphical desktop is disabled by default to improve the overall performance of this workshop in the public cloud.  If you have access to the console, as the root user you can switch-on the graphical desktop with 'systemctl isolate'.  To make the change permanent with 'systemctl set-default' option.
+The graphical desktop is disabled by default to improve the overall performance of this workshop in the public cloud.  If you have access to the console, as the root user you can switch-on the graphical desktop with 'systemctl isolate'.  Make the change permanent with 'systemctl set-default' option.
 
 _Enable the Graphical Desktop_
 ----
