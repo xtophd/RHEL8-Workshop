@@ -14,6 +14,9 @@ endif::[]
 
 = Wayland
 
+NOTE: The graphical desktop is disabled by default to improve the overall performance of this workshop in the public cloud.  If you have access to the console, you can switch on the graphical desktop with the following command run as the root user: `systemctl isolate graphical.target`
+
+
 == About Wayland
 
 Wayland is a compositor protocol and library implementation of that protocol.  Wayland replaces the legacy X11 protocol with the primary benefit being that it is easier to develop and maintain.  Meaning, Wayland drops many of the X11 specifications that are no longer in use.
