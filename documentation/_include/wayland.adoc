@@ -14,7 +14,17 @@ endif::[]
 
 = Wayland
 
-NOTE: The graphical desktop is disabled by default to improve the overall performance of this workshop in the public cloud.  If you have access to the console, you can switch on the graphical desktop with the following command run as the root user: `systemctl isolate graphical.target`
+[NOTE]
+====
+The graphical desktop is disabled by default to improve the overall performance of this workshop in the public cloud.  If you have access to the console, as the root user you can switch-on the graphical desktop with 'systemctl isolate'.  To make the change permanent with 'systemctl set-default' option.
+
+_Enable the Graphical Desktop_
+----
+systemctl isolate graphical.target
+
+systemctl set-default graphical.target
+----
+====
 
 
 == About Wayland
