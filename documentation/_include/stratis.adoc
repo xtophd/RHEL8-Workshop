@@ -51,7 +51,7 @@ Next we need to enable the `stratisd` service
 
 .[root@node2]#
 ----
-systemctl enable --now stratisd
+sudo systemctl enable --now stratisd
 ----
 
 NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
