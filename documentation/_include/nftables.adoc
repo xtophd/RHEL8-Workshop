@@ -37,7 +37,7 @@ Verify that you are on the right host for these exercises.
 
 .[root@node2 ~]#
 ----
-cheat-nftables-checkhost.sh
+sudo cheat-nftables-checkhost.sh
 ----
 
 You are now ready to begin your exercises.
