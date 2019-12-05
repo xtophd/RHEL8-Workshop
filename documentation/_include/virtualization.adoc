@@ -18,6 +18,7 @@ endif::[]
 NOTE: If you are using the web-console and do not see "Virtual Machines" in the menu, chances are that you need to sign-out and sign-in again.
 
 Provided your hardware is reasonably modern, chances are it supports virtualization.  This unit introduces simple virtualization management using kvm and libvirt.  You will learn how to:
+
     * Install additional necessary software
     * Enable necessary system services and firewall ports
     * Use the command line to create and manage a virtual machine
