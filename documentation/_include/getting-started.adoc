@@ -64,6 +64,8 @@ The preparation script will run for approximately 5 to 7 minutes.
 
 NOTE: If the presenter (or partner) has some slides to show, this is a good place to use them.  Otherwise, here are some high-level bullets about RHEL 8.
 
+==== Release Information
+
   * RHEL 8 GA Release Date: May 7th, 2019
   * End of Full Support: May 2024
   * End of Maintenance Support: May 2029
@@ -71,8 +73,8 @@ NOTE: If the presenter (or partner) has some slides to show, this is a good plac
   * (NEW) RHEL 8 Release cadence is now a predictable 6 month cycle
   ** RHEL 8.1 was released Nov 5, 2019
   
-General Information
-    
+==== General Information
+
   * Kernel Version: 4.18+  
   * System Compiler: GCC 8.2, LLVM 6.0
   * Hardware Architectures: Intel/AMD 64-bit, IBM Power LE, IBM z Systems, ARM 64-bit
