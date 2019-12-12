@@ -16,7 +16,7 @@ Using the connection information and credentials provided by the instructor, get
 
 == Invoke *tmux* Session
 
-*tmux* is a very handy utilty for terminal session management.  If for any reason you lose connectivity or your session is terminated, *tmux* will preserve your session and allow you to reconnect.  There are MANY other features provided by this utility.  Some of them are listed below in the section titled *tmux*.
+*tmux* is a very handy utilty for terminal session management.  If for any reason you lose connectivity or your session is terminated, *tmux* will preserve your session and allow you to reconnect.  There are MANY other features provided by this utility.  Some of them are listed on the front page section titled *tmux*.
 
 .[root@workstation ~]#
 ----
@@ -62,7 +62,18 @@ The preparation script will run for approximately 5 to 7 minutes.
 [discrete]
 === New in RHEL 8
 
-  * Kernel Version: 4.18+
+  NOTE: If the presenter (or partner) has some slides to show, this is a good place to use them.  Otherwise, here are some high-level bullets about RHEL 8.
+
+  * RHEL 8 GA Release Date: May 7th, 2019
+  * End of Full Support: May 2024
+  * End of Maintenance Support: May 2029
+  ** _Subject to change, please refer to:_
+  ** https://access.redhat.com/support/policy/updates/errata[Red Hat Enterprise Linux Life Cycle]
+  
+  * (NEW) RHEL 8 Release cadence is now a predictable 6 month cycle
+  * RHEL 8.1 was released Nov 5, 2019
+    
+  * Kernel Version: 4.18+  
   * System Compiler: GCC 8.2, LLVM 6.0
   * Hardware Architectures: Intel/AMD 64-bit, IBM Power LE, IBM z Systems, ARM 64-bit
   * Default File System: XFS
@@ -70,26 +81,6 @@ The preparation script will run for approximately 5 to 7 minutes.
   * Time Sync: Chrony
   * Networking: Network Manager
 
-== Quick Overview of *tmux*
-
-Simple list of *tmux* commands:
-
-  * list available sessions : `tmux ls`
-  * attach to disconnected session : `tmux a [-t #]`
-  * add an additional terminal shell: `ctrl-b c`
-  * switch to Next terminal shell: `ctrl-b n`
-  * switch to Previous terminal shell: `ctrl-b p`
-
-== How to Cut & Paste with Web Console
-
-NOTE: Chrome is the only "supported" browser that I test for this workshop.  Chances are you will have the same experience with Firefox, but that is not confirmed.
-
-Using Chrome:
-
-  * COPY standard app: CTRL-c
-  * PASTE to stardard app: CTRL-v
-  * COPY from web-console terminal: CTRL-a + CTRL-c
-  * PASTE to web-console terminal: CTRL-a + CTRL-v
 
 == Conclusion
 
