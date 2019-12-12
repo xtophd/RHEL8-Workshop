@@ -105,6 +105,7 @@ systemctl status sshd
 ====
 
 
+
 [discrete]
 == How to Connect
 
@@ -115,6 +116,45 @@ There are three options to complete the lab.
   . The last bullet of the LAB INFORMATION page, provides a link 'to consoles'.  By clicking that link, you can get true console access to "0WORKSTATION".  
 
 NOTE: you will need true console (GUI) on "0WORKSTATION" for the *Wayland* and *Web Console* units.
+
+
+
+[discrete]
+== Quick Overview of *tmux*
+
+NOTE: We strongly advise the use of *tmux* before you begin your exercises.  This will prevent the loss of active work in the event your connection is broken.  
+
+Simple list of *tmux* commands:
+
+  * run tmux: `tmux`
+  * create an additional terminal shell: `ctrl-b c`
+  * switch to Next terminal shell: `ctrl-b n`
+  * switch to Previous terminal shell: `ctrl-b p`
+
+After a broken connection:
+
+  * list available sessions : `tmux ls`
+  * attach to disconnected session : `tmux a [-t #]`
+
+
+
+[discrete]
+== How to Cut & Paste with Web Console
+
+NOTE: Chrome is the only "supported" browser that I test for this workshop.  Chances are you will have the same experience with Firefox, but that is not confirmed.
+
+For Linux or MacOS based desktops:
+
+  * normal mouse selections with cut & paste should work as expected.
+
+For Windows desktops:
+
+  * COPY standard app: CTRL-c
+  * PASTE to stardard app: CTRL-v
+  * COPY from web-console terminal: CTRL-a + CTRL-c
+  * PASTE to web-console terminal: CTRL-a + CTRL-v
+
+
 
 [discrete]
 == RHEL 8 LAB: EXERCISES
