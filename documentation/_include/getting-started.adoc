@@ -67,8 +67,7 @@ NOTE: If the presenter (or partner) has some slides to show, this is a good plac
   * RHEL 8 GA Release Date: May 7th, 2019
   * End of Full Support: May 2024
   * End of Maintenance Support: May 2029
-  ** _Subject to change, please refer to:_
-  ** https://access.redhat.com/support/policy/updates/errata[Red Hat Enterprise Linux Life Cycle]
+  ** _Subject to change, please refer to:_ https://access.redhat.com/support/policy/updates/errata[Red Hat Enterprise Linux Life Cycle]
   * (NEW) RHEL 8 Release cadence is now a predictable 6 month cycle
   ** RHEL 8.1 was released Nov 5, 2019
   
