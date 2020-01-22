@@ -52,3 +52,4 @@
 - import_playbook: rhel8-setup-buildah.yml
 - import_playbook: rhel8-setup-stratis.yml
 - import_playbook: rhel8-setup-tlog.yml
+- import_playbook: rhel8-setup-virtualization.yml
