@@ -1,5 +1,5 @@
 ---
-- hosts: node3.example.com
+- hosts: node3
   tasks:
 
     - name: "SETUP BUILDAH SKOPEO: yum install buildah,skopeo"

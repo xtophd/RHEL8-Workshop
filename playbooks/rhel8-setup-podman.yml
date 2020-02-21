@@ -1,14 +1,14 @@
 ---
-- hosts: core.example.com
-  tasks:
-  
-    - name: "SETUP PODMAN: yum install docker-distribution"
-      yum: name=docker-distribution state=installed
-      
-    - name: "SETUP PODMAN: service start docker-distribution"
-      service: name=docker-distribution state=started enabled=yes
+#- hosts: workstation
+#  tasks:
+#  
+#    - name: "SETUP PODMAN: yum install docker-distribution"
+#      yum: name=docker-distribution state=installed
+#      
+#    - name: "SETUP PODMAN: service start docker-distribution"
+#      service: name=docker-distribution state=started enabled=yes
 
-- hosts: node3.example.com
+- hosts: node3
   tasks:
 
     - name: "SETUP PODMAN: yum install podman,net-tools,wget"

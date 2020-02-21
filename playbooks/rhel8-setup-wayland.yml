@@ -1,5 +1,5 @@
 ---
-- hosts: workstation.example.com
+- hosts: workstation
   tasks:
   
     - name: "SETUP WAYLAND: yum install packages"
