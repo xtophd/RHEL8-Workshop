@@ -1,5 +1,5 @@
 ---
-- hosts: node1.example.com
+- hosts: node1
   tasks:
   
     - name: "SETUP TLOG: yum install packages"

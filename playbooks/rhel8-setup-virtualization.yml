@@ -1,5 +1,5 @@
 ---
-- hosts: workstation.example.com
+- hosts: workstation
   tasks:
 
     - name: "SETUP VIRTUALIZATION: yum install qemu-kvm libvirt virt-install libvirt-client libguestfs-tools"
