@@ -31,6 +31,10 @@ fi
 case "$1" in
     "all")
         time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-setup.yml 
+
+        if $? ; then
+          time ansible-playbook -i ${myInventory} -f 10 ./playbooks/libvirt-postinstall.yml 
+        fi
         ;;
          
     "basics")
@@ -57,13 +61,18 @@ case "$1" in
         time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-create-nodes.yml 
         ;;
 
-    "yumconfig")
-        time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-yumconfig.yml 
+    "nodeconfig")
+        time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-nodeconfig.yml 
+        ;;
+
+    "postinstall")
+        time ansible-playbook -i ${myInventory} -f 10 ./playbooks/libvirt-postinstall.yml 
         ;;
 
     *)
-        echo "USAGE: libvirt-setup.sh [ all | basics | network | dns | bastion | nodes | yumconfig ]"
+        echo "USAGE: libvirt-setup.sh [ all | basics | cockpit | network | dns | bastion | nodes | nodeconfig | postinstall ]"
         ;;
 
 esac         
+
 

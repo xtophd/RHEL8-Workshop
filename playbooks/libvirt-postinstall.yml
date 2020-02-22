@@ -1,0 +1,28 @@
+## Authors: 
+##   Christoph Doerbeck
+##
+## Summary:
+##
+## Playbook Assumptions:
+##
+
+---
+- hosts: myBastion
+  tasks:
+ 
+  - name: "LIBVIRT-POSTINSTALL: stat project directory"
+    stat: path="./RHEL8-Workshop"
+    register: test_project_dir
+
+  - name: "LIBVIRT-POSTINSTALL: clone project from github"
+    shell: 
+      cmd:|
+        git clone -b Summit2020 http://github.com/xtophd/RHEL8-Workshop
+    when: test_project_dir.stat.exists == false
+
+  - name: "LIBVIRT-POSTINSTALL: install fresh config files"
+    shell: 
+      cmd:|
+        cp ./RHEL8-Workshop/sample-configs/rhel8-workshop ./RHEL8-Workshop/config
+
+    when: test_project_dir.stat.exists == false
