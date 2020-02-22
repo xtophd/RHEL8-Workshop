@@ -32,7 +32,7 @@ case "$1" in
     "all")
         time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-setup.yml 
 
-        if $? ; then
+        if [[ $? -eq 0 ]]; then
           time ansible-playbook -i ${myInventory} -f 10 ./playbooks/libvirt-postinstall.yml 
         fi
         ;;
