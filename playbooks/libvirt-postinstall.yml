@@ -7,9 +7,20 @@
 ##
 
 ---
+
+####################
+##
+## TASKS TO EXECUTE - to complete postinstall on bastion host
+
 - hosts: myBastion
   tasks:
- 
+
+  - name: "LIBVIRT-POSTINSTALL: check for ansible"
+    shell: 
+      cmd: rpm -q ansible
+    ignore_errors: yes
+    register: test_ansible
+
   - name: "LIBVIRT-POSTINSTALL: stat project directory"
     stat: path="./RHEL8-Workshop"
     register: test_project_dir
@@ -24,5 +35,47 @@
     shell: 
       cmd:|
         cp ./RHEL8-Workshop/sample-configs/rhel8-workshop ./RHEL8-Workshop/config
-
     when: test_project_dir.stat.exists == false
+
+####################
+##
+## TASKS TO EXECUTE - when ansible is not installed
+
+  - block:
+
+    - name: "LIBVIRT-POSTINSTALL: collect RHN username and password"
+      pause:
+        prompt: "Enter RHSM username: "
+      register: rhsm_username
+
+    - pause:
+        prompt: "Enter RHN password: "
+        echo: no
+      register: rhsm_password
+
+    - debug:
+        var: rhsm_username
+
+    - name: "LIBVIRT-POSTINSTALL: rhsm register"
+      redhat_subscription:
+        state: present
+        auto_attach: yes
+        username: "{{ rhsm_username.user_input }}"
+        password: "{{ rhsm_password.user_input }}"
+  
+    - name: "LIBVIRT-POSTINSTALL: enable ansible repo"
+      rhsm_repository: 
+        name: "{{ item }}"
+        purge: True
+        state: enabled
+      with_items: 
+        - "ansible-2.9-for-rhel-8-x86_64-rpms"
+  
+    - name: "LIBVIRT-POSTINSTALL: install ansible"
+      yum: name=ansible state=installed
+  
+    - name: "LIBVIRT-POSTINSTALL: rhsm register"
+      redhat_subscription:
+        state: absent
+
+    when: test_ansible.rc != 0
