@@ -46,6 +46,7 @@
     - name: "LIBVIRT-POSTINSTALL: collect RHN username and password"
       pause:
         prompt: "Enter RHSM username: "
+        echo: yes
       register: rhsm_username
 
     - pause:
@@ -71,7 +72,7 @@
     - name: "LIBVIRT-POSTINSTALL: install ansible"
       yum: name=ansible state=installed
   
-    - name: "LIBVIRT-POSTINSTALL: rhsm register"
+    - name: "LIBVIRT-POSTINSTALL: rhsm unregister"
       redhat_subscription:
         state: absent
 
