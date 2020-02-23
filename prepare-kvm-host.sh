@@ -1,26 +1,22 @@
 #!/bin/bash
 
 ##
-## NOTE: you must point to the correct inventory
+## NOTE: you must point to the correct inventory and extravars yml
 ##
-##   Take a sample config from ./configs and 
-##   copy it to ./playbooks/vars-custom/master-config.yml
+##   Take a sample configs from ./sample-configs and 
+##   copy it to ./playbooks/config/{master,libvirt}-config.yml
 ##
 
 myInventory="./config/master-config.yml"
+myExtravars="./config/libvirt-config.yml"
 
 ## This script is intended to be run:
 ##     on the libvirt hypervisor node
 ##     in the project directory
-##     EX: CWD == ~root/OCP4-Workshop
+##     EX: CWD == ~root/RHEL8-Workshop
 
-if [ ! -e "${myInventory}" ] ; then
-    echo "ERROR: Are you in the right directory? Can not find ${myInventory}" ; exit
-    exit
-fi
-
-if [ ! -e "./playbooks" ] ; then
-    echo "ERROR: Are you in the right directory? Can not find ./playbooks" ; exit
+if [[ ! -e "${myInventory}" || ! -e "${myExtravars}" || ! -d "./playbooks" ]] ; then
+    echo "ERROR: Are you in the right directory? Can not find ${myInventory} | ${myExtravars} | ./playbooks " ; exit
     exit
 fi
 
@@ -30,49 +26,26 @@ fi
 
 case "$1" in
     "all")
-        time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-setup.yml 
 
-        if [[ $? -eq 0 ]]; then
-          time ansible-playbook -i ${myInventory} -f 10 ./playbooks/libvirt-postinstall.yml 
-        fi
-        ;;
-         
-    "basics")
-        time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-basics.yml 
-        ;;
-         
-    "cockpit")
-        time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-cockpit.yml 
+        echo "ansible-playbook -i ${myInventory} -e @${myExtravars} -f 10  ./playbooks.deployer-kvm/libvirt.yml"
+        time  ansible-playbook -i ${myInventory} -e @${myExtravars} -f 10  ./playbooks.deployer-kvm/libvirt.yml 
         ;;
 
-    "network")
-        time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-network.yml 
-        ;;
-         
-    "dns")
-        time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-dns.yml 
-        ;;
-         
-    "bastion")
-        time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-create-bastion.yml 
-        ;;
-
-    "nodes")
-        time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-create-nodes.yml 
-        ;;
-
-    "nodeconfig")
-        time ansible-playbook -i ${myInventory} -f 10 ./playbooks.deployer-kvm/libvirt-nodeconfig.yml 
-        ;;
-
+    "basics"     | \
+    "cockpit"    | \
+    "network"    | \
+    "dns"        | \
+    "bastion"    | \
+    "nodes"      | \
+    "postconfig" | \
     "postinstall")
-        time ansible-playbook -i ${myInventory} -f 10 ./playbooks/libvirt-postinstall.yml 
+
+        echo "ansible-playbook -i ${myInventory} -e @${myExtravars} -f 10  --tags $1 ./playbooks.deployer-kvm/libvirt.yml"
+        time  ansible-playbook -i ${myInventory} -e @${myExtravars} -f 10  --tags $1 ./playbooks.deployer-kvm/libvirt.yml 
         ;;
 
     *)
-        echo "USAGE: libvirt-setup.sh [ all | basics | cockpit | network | dns | bastion | nodes | nodeconfig | postinstall ]"
+        echo "USAGE: libvirt-setup.sh [ all | basics | cockpit | network | dns | bastion | nodes | postconfig | postinstall ]"
         ;;
 
 esac         
-
-

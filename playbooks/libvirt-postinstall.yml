@@ -53,9 +53,6 @@
         echo: no
       register: rhsm_password
 
-    - debug:
-        var: rhsm_username
-
     - name: "LIBVIRT-POSTINSTALL: rhsm register"
       redhat_subscription:
         state: present
