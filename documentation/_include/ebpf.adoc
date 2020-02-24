@@ -50,6 +50,88 @@ Start by installing the *BPF Compiler Collection* bcc-tools package:
 yum install bcc-tools -y
 ----
 
+== Observing `yum update`
+
+In this lab, we will be using some of the tools from the bcc-tools package to analyse what happens on a system during a `yum update`. We have picked `yum update` because it represents a non-trivial real world applicatio. In a `yum update`, we have the following activity happening:
+
+     * TCP connections are established to configured repositories, which we will track with `gethostlatency` and `tcplife`.
+     * Many files will be opened on our XFS filesystem, which we will observe with `filetop`. We will also use `xfsslower` to determine which XFS operations take longer than 10ms to execute.
+     * Memory access. Linux uses a memory cache to ensure faster access to needed information than having to go to disk. Using cachestat, we will be able to see hits and misses on this cache in realtime. When everything Linux needs is chaced, we should have zero misses and while the cache is being populated, we will see a number of misses. If the cache continues to be populated beyond the size of the cache, Linux will employ a LRU (Least Recently Used) algorithm with a lot of heuristics and some cached data will be removed and replaced with new data.
+
+To get started, let's run `bpftool` to verify that no eBPF programs are currently loaded in the kernel:
+
+.[root@node2 ~]#
+----
+bpftool prog list
+----
+
+=== Setting up our observability terminals
+
+Now that we've verified, that, let's open 5 new terminals and in each of those terminals, we will start a tool for observing the system. By doing this, we'll be able to move between the 5 terminals to observe what's happening while the yum update is running.
+
+In the first new terminal, run:
+
+.[root@node2 ~]#
+----
+/usr/share/bcc/tools/gethostlatency
+----
+
+`gethostlatency` is going to give us latency statistics on the getaddrinfo() and gethostbyname() system calls. Effectively, we'll get to see how long these take and which hostnames our applications need IP addresses for. This can be useful for discovering interseting connections that you may not be aware your applications are making.
+
+In the second new terminal, run:
+
+.[root@node2 ~]#
+----
+/usr/share/bcc/tools/tcplife
+----
+
+`tcplife` will give us a lot of data about established tcp connections, including the total time that the connections are alive. When yum is finished downloading packages, we should get entries in tcplife for the exact amount of time that yum spent downloading packages over the tcp connections that it established for this activity.
+
+In the third new terminal, run:
+
+.[root@node2 ~]#
+----
+/usr/share/bcc/tools/filetop
+----
+
+`filetop` will allow us to see which files are being accessed by which processes in realtime, so expect this terminal to be pretty busy while running `yum update`.
+
+In the fourth new terminal, run:
+
+.[root@node2 ~]#
+----
+/usr/share/bcc/tools/xfsslower
+----
+
+`xfsslower` will show us operations on XFS that take longer than 10ms. This terminal will likely stay pretty quiet until `yum update` starts installing the packages. Once it starts to install the packages, yum will push the boundaries of what our virtual machine's storage can keep up with while delivering <10ms latency on XFS operations. You will see operations taking longer than 10ms and the files these operations were operating on.
+
+Finally, in the fifth new terminal, run:
+
+.[root@node2 ~]#
+----
+/usr/share/bcc/tools/cachestat
+----
+
+`cachestat` enables us to see in real time the hits and misses on the Linux memory cache. The second column of output is misses and the third column is hits. We should have mostly 0 misses for the first part of the yum update. Once we get to the installation of packages, we should see our misses start to increase.
+
+=== Observing the `yum update`
+
+`yum update` goes through the following steps:
+
+     * Updating repository metadata
+     * Determining what packages on the system need to be updated
+     * Downloading the appropriate packages for updates.
+     * Installing the updates and removing old packages.
+     * Verifying the updates have been successful.
+
+Let's get started in our original terminal by running:
+
+.[root@node2 ~]#
+----
+yum update -y
+----
+
+Now we can cycle through the various terminals and observe how the system is utilizing its available resources while doing a yum update.
 
 [discrete]
 == Additional Resources
