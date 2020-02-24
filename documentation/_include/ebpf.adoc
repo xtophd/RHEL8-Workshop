@@ -13,9 +13,13 @@ endif::[]
 
 = eBPF - The Extended Berkeley Packet Filter
 
-WARNING: eBPF is considered *Technology Preview* and is not intended for production use.  For information on Red Hat scope of support for Technology Preview features, see: link:https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope]
+eBPF is an in-kernel virtual machine that allows code execution in the kernel space, in a restricted sandbox environment with access to a limited set of functions. There are numerous components shipped by Red Hat that utilize the eBPF virtual machine. Each component is in a different development phase, and thus not all components are currently fully supported. Those that are not supported are avaialable as a *Technology Preview* and are not intended for production use.For information on Red Hat scope of support for Technology Preview features, see: link:https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope]
 
-In this unit, we will get familiar with eBPF. eBPF stands for Extended Berkeley Packet Filter and is effectively an in-kernel virtual machine upon which several applications have been built. To date, these applications center around working with the network stack (eXpress Data Path, Traffic Control) and also offering efficient kernel tracing (BPF Compiler Collection). In today's lab, we will be focusing on the kernel tracing aspect of eBPF.
+In this unit, we will be focusing on the kernel tracing offering shipped as bcc-tools (BPF Compiler Collection Tools). There are just over 100 tools shipped in this package. A few things of note:
+
+     * All of these tools live in `/usr/share/bcc/tools`.
+     * These tools must run as the root user as any eBPF program can read kernel data. As such, injecting eBPF bytecode as a regular user is not allowed in RHEL 8.
+     * Each tool has a man page to view the man page, run `man <tool name>`. These man pages include descriptions of the tools, provide the options that can be called and have information on the expected overhead of the specific tool.
 
 TIP: Now is a great time to use the multi session capability of *tmux*.  Using `Ctrl-b c` create another session.  You can now cycle back and forth between them with `CTRL-b n` (next) and `CTRL-b p` (previous).  Just make sure you are the user *root* on *workstation.example.com* in order to sucessfully run the rootkit script.
 
@@ -579,5 +583,5 @@ NOTE: You are not required to reference any additional resources for these exerc
 link:../RHEL8-Workshop.adoc#toc[Return to TOC]
 
 ////
-Always end files with a blank line to avoid include problems.
+Alway end files with a blank line to avoid include problems.
 ////
