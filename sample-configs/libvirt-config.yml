@@ -13,6 +13,8 @@ g_kvmhost_ip:   "192.168.124.1"
 g_http_port:    "8008"
 g_cockpit_port: "9090"
 
+kvm_postinstall: "../playbooks/libvirt-postinstall.yml"
+
 kvm_cfg: 
 
   http_port:    "{{ g_http_port }}"
