@@ -35,6 +35,7 @@ case "$1" in
     "cockpit"    | \
     "network"    | \
     "dns"        | \
+    "haproxy"    | \
     "bastion"    | \
     "nodes"      | \
     "postconfig" | \
