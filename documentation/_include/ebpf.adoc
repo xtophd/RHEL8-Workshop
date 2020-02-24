@@ -139,8 +139,9 @@ Now we can cycle through the various terminals and observe how the system is uti
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
 
-    * link:https://developers.redhat.com/blog/tag/ebpf/[eBPF blogs on Red Hat Developer (covering the networking aspect)]
-    * link:https://access.redhat.com/articles/3550581[Kernel Tracing Using eBPF]
+    * link:https://www.redhat.com/en/blog/bcc-tools-brings-dynamic-kernel-tracing-red-hat-enterprise-linux-81[bcc-tools brings dynamic kernel tracing to Red Hat Enterprise Linux 8.1]
+    * link:https://www.redhat.com/en/blog/why-networkmanager-talking-staticredhatcom-find-out-bcc-tools[Why is NetworkManager talking to static.redhat.com? Find out with bcc-tools!]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/analyzing-system-performance-with-bpf-compiler_collection_managing-monitoring-and-updating-the-kernel[Analyzing System Performance with BPF Compiler Collection]
     * link:http://www.brendangregg.com/ebpf.html[Linux Extended BPF (eBPF Tracing Tools) - Brendan Gregg]
 
 [discrete]
