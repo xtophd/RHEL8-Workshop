@@ -17,6 +17,8 @@ kvm_postinstall: "../playbooks/libvirt-postinstall.yml"
 
 kvm_cfg: 
 
+  enable_nested_virt: true
+  
   http_port:    "{{ g_http_port }}"
   cockpit_port: "{{ g_cockpit_port }}"
  

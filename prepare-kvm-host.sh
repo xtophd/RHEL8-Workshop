@@ -32,6 +32,7 @@ case "$1" in
         ;;
 
     "basics"     | \
+    "nested"     | \
     "cockpit"    | \
     "network"    | \
     "dns"        | \
@@ -46,7 +47,7 @@ case "$1" in
         ;;
 
     *)
-        echo "USAGE: libvirt-setup.sh [ all | basics | cockpit | network | dns | bastion | nodes | postconfig | postinstall ]"
+        echo "USAGE: libvirt-setup.sh [ all | basics | nested | cockpit | network | dns | haproxy | bastion | nodes | postconfig | postinstall ]"
         ;;
 
 esac         
