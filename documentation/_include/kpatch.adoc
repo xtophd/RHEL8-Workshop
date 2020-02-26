@@ -1,0 +1,51 @@
+----
+[root@dci-infra ~]# rpm -q kernel
+kernel-4.18.0-147.el8.x86_64
+[root@dci-infra ~]# uname -r
+4.18.0-147.el8.x86_64
+[root@dci-infra ~]# yum install "kpatch-patch = $(uname -r)"
+Updating Subscription Management repositories.
+...
+[root@dci-infra ~]# kpatch list
+Loaded patch modules:
+kpatch_4_18_0_147_1_4 [enabled]
+
+Installed patch modules:
+kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
+[root@dci-infra ~]# systemctl reboot
+----
+
+----
+[root@dci-infra ~]# kpatch list
+Loaded patch modules:
+kpatch_4_18_0_147_1_4 [enabled]
+
+Installed patch modules:
+kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
+[root@dci-infra ~]# yum update kernel -y
+Updating Subscription Management repositories.
+...
+[root@dci-infra ~]# rpm -q kernel
+kernel-4.18.0-147.el8.x86_64
+kernel-4.18.0-147.5.1.el8_1.x86_64
+[root@dci-infra ~]# kpatch list
+Loaded patch modules:
+kpatch_4_18_0_147_1_4 [enabled]
+
+Installed patch modules:
+kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
+[root@dci-infra ~]# systemctl reboot
+----
+
+----
+[root@dci-infra ~]# rpm -q kernel
+kernel-4.18.0-147.el8.x86_64
+kernel-4.18.0-147.5.1.el8_1.x86_64
+[root@dci-infra ~]# uname -r
+4.18.0-147.5.1.el8_1.x86_64
+[root@dci-infra ~]# kpatch list
+Loaded patch modules:
+
+Installed patch modules:
+kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
+----
