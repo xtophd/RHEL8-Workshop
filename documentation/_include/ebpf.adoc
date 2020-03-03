@@ -43,11 +43,11 @@ Now you are ready to begin your exercises with eBPF Tracing.
 
 == Installation
 
-Start by installing the *BPF Compiler Collection* bcc-tools package:
+Start by installing the *BPF Compiler Collection* bcc-tools package and bpftool:
 
 .[root@node2 ~]#
 ----
-yum install bcc-tools -y
+yum install bcc-tools bpftool -y
 ----
 
 == Observing `yum update`
@@ -76,7 +76,13 @@ In the first new terminal, run:
 /usr/share/bcc/tools/gethostlatency
 ----
 
-`gethostlatency` is going to give us latency statistics on the getaddrinfo() and gethostbyname() system calls. Effectively, we'll get to see how long these take and which hostnames our applications need IP addresses for. This can be useful for discovering interseting connections that you may not be aware your applications are making.
+We should see this header in the gethostlatency terminal, indicating the tool is properly running:
+
+----
+TIME      PID    COMM                  LATms HOST
+----
+
+In the gethostlatency terminal, we are running gethostlatency, and this is going to give us latency statistics on the getaddrinfo() and gethostbyname() system calls. Effectively, we'll get to see how long these take and which hostnames our applications need IP addresses for. This can be useful for discovering interesting connections that you may not be aware your applications are making.
 
 In the second new terminal, run:
 
@@ -85,7 +91,13 @@ In the second new terminal, run:
 /usr/share/bcc/tools/tcplife
 ----
 
-`tcplife` will give us a lot of data about established tcp connections, including the total time that the connections are alive. When yum is finished downloading packages, we should get entries in tcplife for the exact amount of time that yum spent downloading packages over the tcp connections that it established for this activity.
+We should see this header in the tcplife terminal, indicating the tool is properly running:
+
+----
+PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
+----
+
+In the tcplife terminal, we are running tcplife and this will tell us a lot of data about established tcp connections, and the total time that the connection was alive. When yum is finished downloading packages, we should get entries in tcplife for the amount of time that yum spent downloading packages over the tcp connections that it established for this activity.
 
 In the third new terminal, run:
 
@@ -94,7 +106,17 @@ In the third new terminal, run:
 /usr/share/bcc/tools/filetop
 ----
 
-`filetop` will allow us to see which files are being accessed by which processes in realtime, so expect this terminal to be pretty busy while running `yum update`.
+In the filetop terminal, we should see a top like tool that refreshes every second with a header that looks like:
+
+----
+09:08:28 loadavg: 0.26 0.48 0.72 1/817 76893
+
+TID    COMM           READS  WRITES R_Kb     W_Kb    T FILE
+----
+
+If we see this, we know that the tool is properly running.
+
+In the filetop terminal, we are going to see applications accessing files in realtime, so this will get pretty busy.
 
 In the fourth new terminal, run:
 
@@ -103,7 +125,14 @@ In the fourth new terminal, run:
 /usr/share/bcc/tools/xfsslower
 ----
 
-`xfsslower` will show us operations on XFS that take longer than 10ms. This terminal will likely stay pretty quiet until `yum update` starts installing the packages. Once it starts to install the packages, yum will push the boundaries of what our virtual machine's storage can keep up with while delivering <10ms latency on XFS operations. You will see operations taking longer than 10ms and the files these operations were operating on.
+We should see this header in the xfsslower terminal, indicating that the tool is properly running:
+
+----
+Tracing XFS operations slower than 10 ms
+TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
+----
+
+In the xfsslower terminal, we probably won't see much until yum update starts installing the packages. Once it starts to install the packages, it's going to push the boundaries of what our virtual machine's storage can keep up with while delivering <10ms latency on XFS operations. You will see operations taking longer than 10ms and the files these operations were operating on.
 
 Finally, in the fifth new terminal, run:
 
@@ -112,7 +141,37 @@ Finally, in the fifth new terminal, run:
 /usr/share/bcc/tools/cachestat
 ----
 
-`cachestat` enables us to see in real time the hits and misses on the Linux memory cache. The second column of output is misses and the third column is hits. We should have mostly 0 misses for the first part of the yum update. Once we get to the installation of packages, we should see our misses start to increase.
+We should see this header in the cachestat terminal, indicating that the tool is properly running:
+
+----
+    HITS   MISSES  DIRTIES HITRATIO   BUFFERS_MB  CACHED_MB
+----
+
+In the cachestat terminal, we will get to see in real time our hits and misses on the Linux memory cache. The second column is misses and the third column is hits. We should have mostly 0 misses for the first part of the yum update. Once we get to the installation of packages, we should see our misses start to increase.
+
+Let's now use bpftool to verify what we have loaded in the kernel:
+
+----
+bpftool prog list
+----
+
+We should see output similar to:
+
+----
+1: kprobe  name do_entry  tag 8ac728a12cedba65  gpl
+        loaded_at 2020-02-19T19:07:30-0500  uid 0
+        xlated 2352B  jited 1408B  memlock 4096B
+2: kprobe  name do_return  tag 6deef7357e7b4530  gpl
+        loaded_at 2020-02-19T19:07:30-0500  uid 0
+        xlated 64B  jited 61B  memlock 4096B
+3: tracepoint  name sock__inet_sock  tag 6deef7357e7b4530  gpl
+        loaded_at 2020-02-19T19:07:30-0500  uid 0
+        xlated 64B  jited 61B  memlock 4096B
+
+<< OUTPUT ABRIDGED >>
+----
+
+This shows us all the bpf programs presently loaded.
 
 === Observing the `yum update`
 
@@ -131,7 +190,96 @@ Let's get started in our original terminal by running:
 yum update -y
 ----
 
-Now we can cycle through the various terminals and observe how the system is utilizing its available resources while doing a yum update.
+The first thing that yum does is updates repository metadata. This is going to create activity on our gethostlatency terminal and our tcplife terminal. We can look at those to see the network connections that yum establishes in real time.
+
+We will see entries on our gethostlatency terminal similar to:
+
+----
+TIME      PID    COMM                  LATms HOST
+08:45:23  75923  yum                    0.10 localhost
+08:45:25  75924  yum                  375.39 subscription.rhsm.redhat.com
+08:45:27  75926  yum                  109.50 subscription.rhsm.redhat.com
+08:45:38  75927  yum                   10.23 cdn.redhat.com
+08:45:39  75929  yum                   10.21 cdn.redhat.com
+08:45:40  75931  yum                   10.18 cdn.redhat.com
+----
+
+that show yum looking up IP addresses for localhost, subscription.rhsm.redhat.com, and cdn.redhat.com. This makes it really easy to know what hosts our application is talking to.
+
+Let's also look at the cachestat terminal and we should see output similar to:
+
+----
+    HITS   MISSES  DIRTIES HITRATIO   BUFFERS_MB  CACHED_MB
+      14        0        0  100.00%            0       1681
+    2768        0        0  100.00%            0       1699
+     596        0        0  100.00%            0       1700
+    4143        0        0  100.00%            0       1708
+    3252        0        0  100.00%            0       1698
+
+<< OUTPUT ABRIDGED >>
+----
+
+This shows that we are operating entirely out of cache and not having to go all the way to main memory at this point.
+
+If we look at our tcplife terminal when yum has finished downloading packages, we will see output similar to:
+
+----
+PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
+75963 yum        172.17.0.39     38054 2.16.30.83      443      23 138393 36375.04
+75963 yum        172.17.0.39     38054 2.16.30.83      443      24 163378 36374.62
+75963 yum        172.17.0.39     38054 2.16.30.83      443      22 163223 36374.69
+----
+
+that show us that yum has established a connection on 443 to 2.16.30.83 and that connection lasted for 36375.04 milliseconds, or 36.37504 seconds. This correlates to the amount of time yum spent downloading packages.
+
+Next, yum will begin installing the updates and removing old packages. To do this, yum is going to use our disk and memory resources and so we will monitor this with filetop, xfsslower and cachestat.
+
+In the filetop terminal, we will start to actually see files being read and written to disk. As yum reads files from the rpm, it then writes them out to the disk. Here is what the reads look like:
+
+----
+TID    COMM             READS  WRITES R_Kb    W_Kb    T FILE
+77699  yum              7      0      2       0       R stat.h;5e5574b8
+77699  yum              3      0      0       0       R tc_defact.h;5.5574b8
+77699  yum              1      0      0       0       R rpmsg.h;5e5574b8
+77699  yum              2      0      0       0       R midi.h;5e5574b8
+<< OUTPUT ABRIDGED >>
+----
+
+From the above output, we can see in the "T"ype column that these are "R"eads. Further, we see the counters in the "READS" column as greater than 0. This shows us in real time what yum is doing with files on the system.
+
+Further, on the xfsslower terminal, we will start to see XFS operations take longer than 10ms and these will start to show:
+
+----
+Tracing XFS operations slower than 10 ms
+TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
+09:22:58 b'yum'         77726  S 0       0         567.45 b'packages.db-journal'
+09:22:58 b'yum'         77726  S 0       0          14.21 b'packages.db-journal'
+09:22:58 b'yum'         77726  S 0       0          14.48 b'packages.db-journal'
+09:22:58 b'yum'         77726  S 0       0          13.83 b'packages.db-journal'
+09:22:58 b'yum'         77726  S 0       0          14.16 b'packages.db-journal'
+09:22:59 b'yum'         77726  S 0       0          10.07 b'packages.db-journal'
+09:22:59 b'yum'         77726  S 0       0          27.65 b'packages.db'
+<< OUTPUT ABRIDGED >>
+----
+
+In the above output, we see the file that yum was working on and the latency in the "LAT(ms)" column, which shows us that the longest latency was 567.45 milliseconds accessing packages.db-journal. If we wish to improve the speed of yum update on this system by reducing latency, we may want to look at upgrading the underlying storage of this system.
+
+Further, if we look at the cachestat terminal, we'll see that the number of misses on the cache has gone up during the installation procedure as we are starting to need access to memory locations that are not cached:
+
+----
+    HITS   MISSES  DIRTIES HITRATIO   BUFFERS_MB  CACHED_MB
+       0       62        0    0.00%            0       1701
+       0       52        0    0.00%            0       1702
+      45        2        0   95.74%            0       1701
+    5721     3777        0   60.23%            0       1716
+   18683     6606        0   73.88%            0       1747
+   14853     6223        0   70.47%            0       1778
+       0        2        0    0.00%            0       1778
+
+<< OUTPUT ABRIDGED >>
+----
+
+If we keep watching cachestat, we'll notice that the number of misses goes back down to zero after the yum update is done. This is because when the yum update is finished, our virtual machine is idle and there is very little running that needs access to memory.
 
 [discrete]
 == Additional Resources
