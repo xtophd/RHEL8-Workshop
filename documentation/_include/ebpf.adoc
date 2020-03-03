@@ -67,7 +67,7 @@ bpftool prog list
 
 === Setting up our observability terminals
 
-Now that we've verified, that, let's open 5 new terminals and in each of those terminals, we will start a tool for observing the system. By doing this, we'll be able to move between the 5 terminals to observe what's happening while the yum update is running.
+Now that we've verified, that, let's open 5 new terminals and in each of those terminals, we will start a tool for observing the system. By doing this, we'll be able to move between the 5 terminals to observe what's happening while the `yum update` is running.
 
 In the first new terminal, run:
 
@@ -132,7 +132,7 @@ Tracing XFS operations slower than 10 ms
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 ----
 
-In the xfsslower terminal, we probably won't see much until yum update starts installing the packages. Once it starts to install the packages, it's going to push the boundaries of what our virtual machine's storage can keep up with while delivering <10ms latency on XFS operations. You will see operations taking longer than 10ms and the files these operations were operating on.
+In the xfsslower terminal, we probably won't see much until `yum update` starts installing the packages. Once it starts to install the packages, it's going to push the boundaries of what our virtual machine's storage can keep up with while delivering <10ms latency on XFS operations. You will see operations taking longer than 10ms and the files these operations were operating on.
 
 Finally, in the fifth new terminal, run:
 
@@ -147,7 +147,7 @@ We should see this header in the cachestat terminal, indicating that the tool is
     HITS   MISSES  DIRTIES HITRATIO   BUFFERS_MB  CACHED_MB
 ----
 
-In the cachestat terminal, we will get to see in real time our hits and misses on the Linux memory cache. The second column is misses and the third column is hits. We should have mostly 0 misses for the first part of the yum update. Once we get to the installation of packages, we should see our misses start to increase.
+In the cachestat terminal, we will get to see in real time our hits and misses on the Linux memory cache. The second column is misses and the third column is hits. We should have mostly 0 misses for the first part of the `yum update`. Once we get to the installation of packages, we should see our misses start to increase.
 
 Let's now use bpftool to verify what we have loaded in the kernel:
 
@@ -262,7 +262,7 @@ TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 << OUTPUT ABRIDGED >>
 ----
 
-In the above output, we see the file that yum was working on and the latency in the "LAT(ms)" column, which shows us that the longest latency was 567.45 milliseconds accessing packages.db-journal. If we wish to improve the speed of yum update on this system by reducing latency, we may want to look at upgrading the underlying storage of this system.
+In the above output, we see the file that yum was working on and the latency in the "LAT(ms)" column, which shows us that the longest latency was 567.45 milliseconds accessing packages.db-journal. If we wish to improve the speed of `yum update` on this system by reducing latency, we may want to look at upgrading the underlying storage of this system.
 
 Further, if we look at the cachestat terminal, we'll see that the number of misses on the cache has gone up during the installation procedure as we are starting to need access to memory locations that are not cached:
 
@@ -279,7 +279,7 @@ Further, if we look at the cachestat terminal, we'll see that the number of miss
 << OUTPUT ABRIDGED >>
 ----
 
-If we keep watching cachestat, we'll notice that the number of misses goes back down to zero after the yum update is done. This is because when the yum update is finished, our virtual machine is idle and there is very little running that needs access to memory.
+If we keep watching cachestat, we'll notice that the number of misses goes back down to zero after the `yum update` is done. This is because when the `yum update` is finished, our virtual machine is idle and there is very little running that needs access to memory.
 
 [discrete]
 == Additional Resources
