@@ -1,20 +1,92 @@
+:sectnums:
+:sectnumlevels: 2
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+:toc:
+:toclevels: 1
+
+= Kernel Live Patching - Plan your reboots!
+
+Red Hat Enterprise Linux offers kernel live patching, a solution to patch your running kernel without rebooting or restarting any processes. In this lab, we'll explore this solution, which ships in the form of "kpatches" that can be managed with the "kpatch" tool.
+
+== Installing a kpatch
+
+Let's start by looking at the current kernel version:
 ----
 [root@dci-infra ~]# rpm -q kernel
 kernel-4.18.0-147.el8.x86_64
 [root@dci-infra ~]# uname -r
 4.18.0-147.el8.x86_64
+----
+
+Here we can see that we are running the 4.18.0-147 kernel. Now we install all kpatches for our kernel:
+
+----
 [root@dci-infra ~]# yum install "kpatch-patch = $(uname -r)"
 Updating Subscription Management repositories.
 ...
+----
+
+Note that kpatches are cumulative, so you cannot pick and choose a specific set of patches. You must take all fixes shipped by kpatches. At this time, kpatches are limited to security vulnerabilities. For a list of which kpatches are available and which vulnerabilities they address by CVE, please see: <https://access.redhat.com/articles/4499631>
+
+Further, if you'd like to look at which CVEs are included by the kpatch installed on the system, you can do:
+
+----
+[root@dci-infra ~]# rpm -qi --changelog kpatch-patch-4_18_0-147
+----
+
+and you will get output similar to:
+
+----
+Name        : kpatch-patch-4_18_0-147
+Version     : 1
+Release     : 4.el8
+Architecture: x86_64
+Install Date: Wed 26 Feb 2020 08:43:23 PM EST
+....
+* Tue Dec 03 2019 Joe Lawrence <joe.lawrence@redhat.com> [1-4.el8]
+- hw: [incomplete fix] Machine Check Error on Page Size Change (IFU) [1779250] {CVE-2018-12207}
+
+* Mon Nov 18 2019 Josh Poimboeuf <jpoimboe@redhat.com> [1-3.el8]
+- Fix sysfs reporting for MDS-affected systems [1766986] {CVE-2019-11135}
+
+* Sun Nov 17 2019 Josh Poimboeuf <jpoimboe@redhat.com> [1-2.el8]
+- Fix IFU bug bit conflict [1766987] {CVE-2018-12207}
+
+* Fri Nov 15 2019 Joe Lawrence <joe.lawrence@redhat.com> [1-1.el8]
+- hw: Machine Check Error on Page Size Change (IPU) [1766987] {CVE-2018-12207}
+- hw: TSX Asynchronous Abort Side channel attack [1766986] {CVE-2019-11135}
+
+* Thu Oct 17 2019 Joe Lawrence <joe.lawrence@redhat.com> [0-0.el8]
+- An empty patch to subscribe to kpatch stream for kernel-4.18.0-147.el8 [1762443]
+----
+
+This tells us that we are now protected against CVE-2018-12207 and CVE-2019-11135. Let's check `kpatch list`:
+
+----
 [root@dci-infra ~]# kpatch list
 Loaded patch modules:
 kpatch_4_18_0_147_1_4 [enabled]
 
 Installed patch modules:
 kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
+----
+
+We can see that we have kpatch_4_18_0_147_1_4 now installed and loaded. We have these protections effective immediately and without having to reboot. We can now schedule a reboot for a time that is convenient for us. 
+
+Since we're in a lab environment, let's go ahead and reboot this node:
+
+----
 [root@dci-infra ~]# systemctl reboot
 ----
 
+When the machine comes back up, we can run `kpatch list` again and see that our kpatches have persisted through the reboot, so we are still protected.
 ----
 [root@dci-infra ~]# kpatch list
 Loaded patch modules:
@@ -22,20 +94,37 @@ kpatch_4_18_0_147_1_4 [enabled]
 
 Installed patch modules:
 kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
+----
+
+Now, let's actually update the kernel and reboot:
+
+----
 [root@dci-infra ~]# yum update kernel -y
 Updating Subscription Management repositories.
 ...
 [root@dci-infra ~]# rpm -q kernel
 kernel-4.18.0-147.el8.x86_64
 kernel-4.18.0-147.5.1.el8_1.x86_64
+----
+
+We see now that we have the updated kernel. Let's look at the output of `kpatch list`:
+
+----
 [root@dci-infra ~]# kpatch list
 Loaded patch modules:
 kpatch_4_18_0_147_1_4 [enabled]
 
 Installed patch modules:
 kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
+----
+
+Everything looks as expected here. Let's reboot:
+
+----
 [root@dci-infra ~]# systemctl reboot
 ----
+
+Upon reboot, we can see that we are running the latest kernel:
 
 ----
 [root@dci-infra ~]# rpm -q kernel
@@ -43,6 +132,11 @@ kernel-4.18.0-147.el8.x86_64
 kernel-4.18.0-147.5.1.el8_1.x86_64
 [root@dci-infra ~]# uname -r
 4.18.0-147.5.1.el8_1.x86_64
+----
+
+If we do `kpatch list` again, we will see that there are no loaded patch modules, but we do still have the kpatches for 4.18.0-147 installed. These can be removed if desired.
+
+----
 [root@dci-infra ~]# kpatch list
 Loaded patch modules:
 
