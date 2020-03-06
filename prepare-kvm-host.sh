@@ -31,6 +31,14 @@ case "$1" in
         time  ansible-playbook -i ${myInventory} -e @${myExtravars} -f 10  ./playbooks.deployer-kvm/libvirt.yml 
         ;;
 
+    "deploy")
+
+        ## deploy is a special tag that only runs deployment plays, not host setup plays
+
+        echo "ansible-playbook -i ${myInventory} -e @${myExtravars} -f 10  --tags $1 ./playbooks.deployer-kvm/libvirt.yml"
+        time  ansible-playbook -i ${myInventory} -e @${myExtravars} -f 10  --tags $1 ./playbooks.deployer-kvm/libvirt.yml 
+        ;;
+
     "basics"     | \
     "nested"     | \
     "cockpit"    | \

@@ -2,6 +2,12 @@
 myLocation = "Boston"
 myDomain = "example.com"
 
+student_username = "cloud-user"
+
+ansible_become          = True
+ansible_become_user     = root
+ansible_become_ask_pass = False
+
 [workstation:vars]
 myExample = "Sample Parameter"
 
