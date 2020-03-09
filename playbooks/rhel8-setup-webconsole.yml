@@ -7,10 +7,15 @@
       
     - name: "SETUP WEBCONSOLE: service restart"
       service: name="cockpit.socket" state=restarted enabled=yes
-      
-    - name: "SETUP WEBCONSOLE: firewall configuration"
+
+    - name: "SETUP VIRTUALIZATION: firewalld service start"
+      service: name="firewalld" state=started enabled=yes
+
+    - name: "SETUP VIRTUALIZATION: firewall configuration"
       firewalld: port=9090/tcp permanent=yes immediate=yes state=enabled
-      
+      vars:
+        ansible_python_interpreter: '/usr/bin/python3'
+
     - name: "SETUP WEBCONSOLE: cheat file installs"
       template:
         src: "{{ item.src }}"

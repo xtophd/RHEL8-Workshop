@@ -36,7 +36,7 @@
         owner: root
         group: root
         mode: 0600
-        username: "{{ student_username }}"
+#gmk#        username: "{{ student_username }}"
       with_items:
         - {src: 'sudoers.j2', dest: '/etc/sudoers.d/rhel8-workshop'}
         - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ student_username }}'}
