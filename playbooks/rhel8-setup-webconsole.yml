@@ -1,5 +1,5 @@
 ---
-- hosts: node2
+- hosts: workstation 
   tasks:
   
     - name: "SETUP WEBCONSOLE: yum install packages"
@@ -8,13 +8,11 @@
     - name: "SETUP WEBCONSOLE: service restart"
       service: name="cockpit.socket" state=restarted enabled=yes
 
-    - name: "SETUP VIRTUALIZATION: firewalld service start"
-      service: name="firewalld" state=started enabled=yes
+    - name: "SETUP WEBCONSOLE: firewalld service start"
+      service: name="firewalld" state=restarted enabled=yes
 
-    - name: "SETUP VIRTUALIZATION: firewall configuration"
-      firewalld: port=9090/tcp permanent=yes immediate=yes state=enabled
-      vars:
-        ansible_python_interpreter: '/usr/bin/python3'
+    - name: "SETUP WEBCONSOLE: firewall configuration"
+      firewalld: service="cockpit" permanent=yes immediate=yes state=enabled
 
     - name: "SETUP WEBCONSOLE: cheat file installs"
       template:
