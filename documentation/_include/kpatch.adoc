@@ -45,6 +45,9 @@ Here we can see that we are running the 4.18.0-147 kernel. Now we install all kp
 .[root@node2 ~]# 
 ----
 yum install "kpatch-patch = $(uname -r)" -y
+----
+Output should look similar to:
+----
 Updating Subscription Management repositories.
 ...
 ----
@@ -89,6 +92,10 @@ This tells us that we are now protected against CVE-2018-12207 and CVE-2019-1113
 .[root@node2 ~]# 
 ----
 kpatch list
+----
+
+Output should look like:
+----
 Loaded patch modules:
 kpatch_4_18_0_147_1_4 [enabled]
 
@@ -117,6 +124,10 @@ ssh node2
 .[root@node2 ~]# 
 ----
 kpatch list
+----
+
+Output should look like:
+----
 Loaded patch modules:
 kpatch_4_18_0_147_1_4 [enabled]
 
@@ -129,6 +140,10 @@ Now, let's actually update the kernel and reboot:
 .[root@node2 ~]# 
 ----
 yum update kernel -y
+----
+
+Output should look similar to:
+----
 Updating Subscription Management repositories.
 ...
 ----
@@ -136,6 +151,10 @@ Updating Subscription Management repositories.
 .[root@node2 ~]# 
 ----
 rpm -q kernel
+----
+
+Output should look like:
+----
 kernel-4.18.0-147.el8.x86_64
 kernel-4.18.0-147.5.1.el8_1.x86_64
 ----
@@ -145,6 +164,10 @@ We see now that we have the updated kernel. Let's look at the output of `kpatch 
 .[root@node2 ~]# 
 ----
 kpatch list
+----
+
+Output should look like:
+----
 Loaded patch modules:
 kpatch_4_18_0_147_1_4 [enabled]
 
@@ -169,6 +192,10 @@ ssh node2
 .[root@node2 ~]# 
 ----
 rpm -q kernel
+----
+
+Output should look like:
+----
 kernel-4.18.0-147.el8.x86_64
 kernel-4.18.0-147.5.1.el8_1.x86_64
 ----
@@ -176,6 +203,10 @@ kernel-4.18.0-147.5.1.el8_1.x86_64
 .[root@node2 ~]# 
 ----
 uname -r
+----
+
+Output should look like:
+----
 4.18.0-147.5.1.el8_1.x86_64
 ----
 
@@ -184,6 +215,10 @@ If we do `kpatch list` again, we will see that there are no loaded patch modules
 .[root@node2 ~]# 
 ----
 kpatch list
+----
+
+Output should look like:
+----
 Loaded patch modules:
 
 Installed patch modules:
