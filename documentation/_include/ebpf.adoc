@@ -36,7 +36,11 @@ Verify that you are on the right host for these exercises.
 
 .[root@node2]#
 ----
-cheat-ebpf-checkhost.sh
+hostname
+----
+Your output should look like:
+----
+node2.example.com
 ----
 
 Now you are ready to begin your exercises with eBPF Tracing.
@@ -55,7 +59,7 @@ yum install bcc-tools bpftool -y
 In this lab, we will be using some of the tools from the bcc-tools package to analyse what happens on a system during a `yum update`. We have picked `yum update` because it represents a non-trivial real world applicatio. In a `yum update`, we have the following activity happening:
 
      * TCP connections are established to configured repositories, which we will track with `gethostlatency` and `tcplife`.
-     * Many files will be opened on our XFS filesystem, which we will observe with `filetop`. We will also use `xfsslower` to determine which XFS operations take longer than 10ms to execute.
+     * Many files will be opened on our ext4 filesystem, which we will observe with `filetop`. We will also use `ext4slower` to determine which ext4 operations take longer than 10ms to execute.
      * Memory access. Linux uses a memory cache to ensure faster access to needed information than having to go to disk. Using cachestat, we will be able to see hits and misses on this cache in realtime. When everything Linux needs is chaced, we should have zero misses and while the cache is being populated, we will see a number of misses. If the cache continues to be populated beyond the size of the cache, Linux will employ a LRU (Least Recently Used) algorithm with a lot of heuristics and some cached data will be removed and replaced with new data.
 
 To get started, let's run `bpftool` to verify that no eBPF programs are currently loaded in the kernel:
@@ -64,6 +68,8 @@ To get started, let's run `bpftool` to verify that no eBPF programs are currentl
 ----
 bpftool prog list
 ----
+
+We should immediately be returned to the same prompt with no output. 
 
 === Setting up our observability terminals
 
@@ -122,17 +128,17 @@ In the fourth new terminal, run:
 
 .[root@node2 ~]#
 ----
-/usr/share/bcc/tools/xfsslower
+/usr/share/bcc/tools/ext4slower
 ----
 
-We should see this header in the xfsslower terminal, indicating that the tool is properly running:
+We should see this header in the ext4slower terminal, indicating that the tool is properly running:
 
 ----
-Tracing XFS operations slower than 10 ms
+Tracing ext4 operations slower than 10 ms
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 ----
 
-In the xfsslower terminal, we probably won't see much until `yum update` starts installing the packages. Once it starts to install the packages, it's going to push the boundaries of what our virtual machine's storage can keep up with while delivering <10ms latency on XFS operations. You will see operations taking longer than 10ms and the files these operations were operating on.
+In the ext4slower terminal, we probably won't see much until `yum update` starts installing the packages. Once it starts to install the packages, it's going to push the boundaries of what our virtual machine's storage can keep up with while delivering <10ms latency on ext4 operations. You will see operations taking longer than 10ms and the files these operations were operating on.
 
 Finally, in the fifth new terminal, run:
 
@@ -232,7 +238,7 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 
 that show us that yum has established a connection on 443 to 2.16.30.83 and that connection lasted for 36375.04 milliseconds, or 36.37504 seconds. This correlates to the amount of time yum spent downloading packages.
 
-Next, yum will begin installing the updates and removing old packages. To do this, yum is going to use our disk and memory resources and so we will monitor this with filetop, xfsslower and cachestat.
+Next, yum will begin installing the updates and removing old packages. To do this, yum is going to use our disk and memory resources and so we will monitor this with filetop, ext4slower and cachestat.
 
 In the filetop terminal, we will start to actually see files being read and written to disk. As yum reads files from the rpm, it then writes them out to the disk. Here is what the reads look like:
 
@@ -247,10 +253,10 @@ TID    COMM             READS  WRITES R_Kb    W_Kb    T FILE
 
 From the above output, we can see in the "T"ype column that these are "R"eads. Further, we see the counters in the "READS" column as greater than 0. This shows us in real time what yum is doing with files on the system.
 
-Further, on the xfsslower terminal, we will start to see XFS operations take longer than 10ms and these will start to show:
+Further, on the ext4slower terminal, we will start to see ext4 operations take longer than 10ms and these will start to show:
 
 ----
-Tracing XFS operations slower than 10 ms
+Tracing ext4 operations slower than 10 ms
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 09:22:58 b'yum'         77726  S 0       0         567.45 b'packages.db-journal'
 09:22:58 b'yum'         77726  S 0       0          14.21 b'packages.db-journal'
