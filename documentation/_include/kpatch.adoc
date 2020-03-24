@@ -19,9 +19,9 @@ Red Hat Enterprise Linux offers kernel live patching, a solution to patch your r
 
 
 There is a dedicated VM we will use for the container exercises. From workstation.example.com, you should be able to ssh to node2.example.com as 'root' without any prompts for credentials.
-----
-[root@workstation ~]#
 
+.[root@workstation ~]#
+----
 ssh node2.example.com
 ----
 
@@ -29,17 +29,22 @@ ssh node2.example.com
 == Installing a kpatch
 
 Let's start by looking at the current kernel version:
+
+.[root@node2 ~]# rpm -q kernel
 ----
-[root@node2 ~]# rpm -q kernel
 kernel-4.18.0-147.el8.x86_64
-[root@node2 ~]# uname -r
+----
+
+.[root@node2 ~]# uname -r
+----
 4.18.0-147.el8.x86_64
 ----
 
 Here we can see that we are running the 4.18.0-147 kernel. Now we install all kpatches for our kernel:
 
+.[root@node2 ~]# 
 ----
-[root@node2 ~]# yum install "kpatch-patch = $(uname -r)" -y
+yum install "kpatch-patch = $(uname -r)" -y
 Updating Subscription Management repositories.
 ...
 ----
@@ -48,8 +53,9 @@ Note that kpatches are cumulative, so you cannot pick and choose a specific set 
 
 Further, if you'd like to look at which CVEs are included by the kpatch installed on the system, you can do:
 
+.[root@node2 ~]# 
 ----
-[root@node2 ~]# rpm -qi --changelog kpatch-patch-4_18_0-147
+rpm -qi --changelog kpatch-patch-4_18_0-147
 ----
 
 and you will get output similar to:
@@ -80,8 +86,9 @@ Install Date: Wed 26 Feb 2020 08:43:23 PM EST
 
 This tells us that we are now protected against CVE-2018-12207 and CVE-2019-11135. Let's check `kpatch list`:
 
+.[root@node2 ~]# 
 ----
-[root@node2 ~]# kpatch list
+kpatch list
 Loaded patch modules:
 kpatch_4_18_0_147_1_4 [enabled]
 
@@ -95,15 +102,21 @@ We can see that we have kpatch_4_18_0_147_1_4 now installed and loaded. We have 
 
 Since we're in a lab environment, let's go ahead and reboot this node:
 
+.[root@node2 ~]# 
 ----
-[root@node2 ~]# systemctl reboot
+systemctl reboot
 ----
 
 When the machine comes back up, we can run `kpatch list` again and see that our kpatches have persisted through the reboot, so we are still protected.
-----
-[root@workstation ~]# ssh node2
 
-[root@node2 ~]# kpatch list
+.[root@workstation ~]# 
+----
+ssh node2
+----
+
+.[root@node2 ~]# 
+----
+kpatch list
 Loaded patch modules:
 kpatch_4_18_0_147_1_4 [enabled]
 
@@ -113,19 +126,25 @@ kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
 
 Now, let's actually update the kernel and reboot:
 
+.[root@node2 ~]# 
 ----
-[root@node2 ~]# yum update kernel -y
+yum update kernel -y
 Updating Subscription Management repositories.
 ...
-[root@node2 ~]# rpm -q kernel
+----
+
+.[root@node2 ~]# 
+----
+rpm -q kernel
 kernel-4.18.0-147.el8.x86_64
 kernel-4.18.0-147.5.1.el8_1.x86_64
 ----
 
 We see now that we have the updated kernel. Let's look at the output of `kpatch list`:
 
+.[root@node2 ~]# 
 ----
-[root@node2 ~]# kpatch list
+kpatch list
 Loaded patch modules:
 kpatch_4_18_0_147_1_4 [enabled]
 
@@ -135,26 +154,36 @@ kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
 
 Everything looks as expected here. Let's reboot:
 
+.[root@node2 ~]# 
 ----
-[root@node2 ~]# systemctl reboot
+systemctl reboot
 ----
 
 Upon reboot, we can see that we are running the latest kernel:
 
+.[root@workstation ~]# 
 ----
-[root@workstation ~]# ssh node2
+ssh node2
+----
 
-[root@node2 ~]# rpm -q kernel
+.[root@node2 ~]# 
+----
+rpm -q kernel
 kernel-4.18.0-147.el8.x86_64
 kernel-4.18.0-147.5.1.el8_1.x86_64
-[root@node2 ~]# uname -r
+----
+
+.[root@node2 ~]# 
+----
+uname -r
 4.18.0-147.5.1.el8_1.x86_64
 ----
 
 If we do `kpatch list` again, we will see that there are no loaded patch modules, but we do still have the kpatches for 4.18.0-147 installed. These can be removed if desired.
 
+.[root@node2 ~]# 
 ----
-[root@node2 ~]# kpatch list
+kpatch list
 Loaded patch modules:
 
 Installed patch modules:
