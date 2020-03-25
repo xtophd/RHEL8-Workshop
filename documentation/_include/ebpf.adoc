@@ -322,23 +322,23 @@ As you can see, this tool is very useful for trying to determine where an applic
 
 Go to the terminal with opensnoop running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
 
-== bcc-tools: xfsslower
+== bcc-tools: ext4slower
 
-WARNING: Please check which filesystem your host is using with the command `df -T /`.  If you host is configured with ext4, then substitute the command *ext4slower* in place of *xfsslower*.
+WARNING: Please check which filesystem your host is using with the command `df -T /`.  If you host is configured with xfs, then substitute the command *xfsslower* in place of *ext4slower*.
 
-The purpose of the xfsslower tool (also ext4slower and nfsslower) is to show you filesystem operations slower than 10ms. It traces reads, writes, opens, and syncs and then prints out the timestamp of the operation, the process name, the ID, the type of operation, the file offset in kilobytes, the latency of the I/O measured from when it was issued by VFS to the filesystem to when it was completed, and finally, the filename being operated on.
+The purpose of the ext4slower tool (also xfsslower and nfsslower) is to show you filesystem operations slower than 10ms. It traces reads, writes, opens, and syncs and then prints out the timestamp of the operation, the process name, the ID, the type of operation, the file offset in kilobytes, the latency of the I/O measured from when it was issued by VFS to the filesystem to when it was completed, and finally, the filename being operated on.
 
 To run this script, do:
 
 .[root@node2 ~]#
 ----
-/usr/share/bcc/tools/xfsslower
+/usr/share/bcc/tools/ext4slower
 ----
 
 .Command Output
 [source,indent=4]
 ----
-Tracing XFS operations slower than 10 ms
+Tracing ext4 operations slower than 10 ms
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 ----
 
@@ -349,7 +349,7 @@ Now in another node2 terminal window, let's run:
 dd if=/dev/urandom of=bigfile bs=1024 count=20000
 ----
 
-This writes out a 20M file called bigfile and should not register on your xfsslower window.
+This writes out a 20M file called bigfile and should not register on your ext4slower window.
 
 Now, let's execute the above command in a for loop so that we get more I/O going in parallel:
 
@@ -358,7 +358,7 @@ Now, let's execute the above command in a for loop so that we get more I/O going
 for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
 ----
 
-Now you should see similar output in your xfsslower window:
+Now you should see similar output in your ext4slower window:
 
 .Command Output
 [source,indent=4]
@@ -402,9 +402,9 @@ TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 20:44:44 b'dd'          32447  W 1024    19508      36.20 b'bigfile2'
 ----
 
-So we can see that when writing these files in parallel, we have xfs operations taking longer than 10ms to complete.
+So we can see that when writing these files in parallel, we have ext4 operations taking longer than 10ms to complete.
 
-Go to the terminal with xfsslower running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+Go to the terminal with ext4slower running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
 
 == bcc-tools: cachestat
 
