@@ -573,8 +573,9 @@ There is a lot more that you can do with this tool when you actually need to sta
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
 
+    * link:https://www.redhat.com/en/blog/bcc-tools-brings-dynamic-kernel-tracing-red-hat-enterprise-linux-81[bcc-tools brings dynamic kernel tracing to Red Hat Enterprise Linux 8.1]
+    * link:https://www.redhat.com/en/blog/why-networkmanager-talking-staticredhatcom-find-out-bcc-tools[Why is NetworkManager talking to static.redhat.com? Find out with bcc-tools!]   
     * link:https://developers.redhat.com/blog/tag/ebpf/[eBPF blogs on Red Hat Developer (covering the networking aspect)]
-    * link:https://access.redhat.com/articles/3550581[Kernel Tracing Using eBPF]
     * link:http://www.brendangregg.com/ebpf.html[Linux Extended BPF (eBPF Tracing Tools) - Brendan Gregg]
 
 [discrete]
