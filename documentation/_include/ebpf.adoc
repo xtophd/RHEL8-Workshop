@@ -575,6 +575,7 @@ NOTE: You are not required to reference any additional resources for these exerc
 
     * link:https://www.redhat.com/en/blog/bcc-tools-brings-dynamic-kernel-tracing-red-hat-enterprise-linux-81[bcc-tools brings dynamic kernel tracing to Red Hat Enterprise Linux 8.1]
     * link:https://www.redhat.com/en/blog/why-networkmanager-talking-staticredhatcom-find-out-bcc-tools[Why is NetworkManager talking to static.redhat.com? Find out with bcc-tools!]   
+    * link:https://lab.redhat.com/ebpf-tracing[Performance observability in practice with bcc-tools: A lab on lab.redhat.com]
     * link:https://developers.redhat.com/blog/tag/ebpf/[eBPF blogs on Red Hat Developer (covering the networking aspect)]
     * link:http://www.brendangregg.com/ebpf.html[Linux Extended BPF (eBPF Tracing Tools) - Brendan Gregg]
 
