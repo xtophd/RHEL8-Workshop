@@ -35,12 +35,12 @@ NOTE:  This whole effort is done using official Red Hat software and although th
 [discrete]
 == Workshop Abstract
 
-. link:{includedir}/abstract.adoc[About This Workshop]
+    . link:{includedir}/abstract.adoc[About This Workshop]
 
 [discrete]
 == Conventions Used
 
-. link:{includedir}/conventions.adoc[Documentation Style and Conventions]
+    . link:{includedir}/conventions.adoc[Documentation Style and Conventions]
 
 [discrete]
 == How to Connect
