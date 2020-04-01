@@ -4,15 +4,41 @@
   
     - name: "SETUP WEBCONSOLE: yum install packages"
       yum: name=cockpit,cockpit-dashboard,firewalld,sos state=installed
+
+    - name: "SETUP WEBCONSOLE: shell to add selinux rule for websm on port 443"
+      shell: 
+        cmd: |
+          semanage port -m -t websm_port_t -p tcp 443
       
+    - name: "SETUP WEBCONSOLE: create cockpit systemd drop-in directory"
+      file:
+        path: "/etc/systemd/system/cockpit.socket.d/"
+        mode: "0755"
+        owner: "root"
+        group: "root"
+        state: directory
+
+    - name: "SETUP WEBCONSOLE: deploy cockpit drop-in config"
+      vars:
+        - p_port: "443"
+      template:
+        src:  "cockpit-listen-conf.j2"
+        dest: "/etc/systemd/system/cockpit.socket.d/listen.conf"
+        owner: root
+        group: root
+        mode: 0644
+
     - name: "SETUP WEBCONSOLE: service restart"
-      service: name="cockpit.socket" state=restarted enabled=yes
+      service: name="cockpit.socket" state=restarted enabled=yes daemon-reload=yes
 
     - name: "SETUP WEBCONSOLE: firewalld service start"
       service: name="firewalld" state=restarted enabled=yes
 
     - name: "SETUP WEBCONSOLE: firewall configuration"
       firewalld: service="cockpit" permanent=yes immediate=yes state=enabled
+
+    - name: "SETUP WEBCONSOLE: firewall configuration"
+      firewalld: port=443/tcp permanent=yes immediate=yes state=enabled
 
     - name: "SETUP WEBCONSOLE: cheat file installs"
       template:
