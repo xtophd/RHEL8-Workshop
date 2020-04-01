@@ -14,62 +14,72 @@ endif::[]
 
 = Web Console
 
-Web Console is a Red Hat Enterprise Linux 8 web-based interface designed for managing and monitoring your local system, as well as Linux servers located in your network environment.
+[discrete]
+== Overview
 
-  * Managing services
+Web Console is a Red Hat Enterprise Linux 8 web-based interface designed for managing and monitoring your local system.  The Web Console can also be extended to manage multiple servers located in your network.
+
+Features of the Web Console include:
+
   * Managing user accounts
   * Managing and monitoring system services
-  * Configuring network interfaces and firewall
+  * Configuring network interfaces
+  * Configuring firewall rules
   * Reviewing system logs
   * Managing virtual machines
   * Creating diagnostic reports
   * Setting kernel dump configuration
   * Configuring SELinux
-  * Updating software
-  * Managing system subscriptions
+  * Installing and Updating software
+  * Managing System Subscriptions
+  * more...
 
 The following exercises will walk you through installing and configuring Web Console on RHEL 8. 
-
-== Getting Started
-
-Since we already have web-console installed and active on *workstation.example.com*, we have the option to manage multiple additional hosts via this single portal.  Let's install a few packages to enable the web-console dashboard on *workstation.example.com*.  These steps needs to be performed as root.
-
-.[root@workstation]#
-----
-yum install -y cockpit-dashboard
-----
-
-Once the packages are installed, you will need to restart the cockpit services to enable the new functionality.
-
-.[root@workstation]#
-----
-systemctl restart cockpit
-----
-
-This will likely force you to sign-on to the web console again.
-
-Click the icon on the left that looks like a speedometer.
-
-Now click on the *+* icon to add *node2.example.com* to the list of servers we can manage with this web-console.
-
-Now click on *node2.example.com* in the server list to start with this lab.
 
 == Installation and Configuraiton
 
 === Packages and Services
 
-For your convenience, the webconsole has already been installed and configured on *node2.example.com*.  The steps are pretty simple and outlined below.  Remember this provided as reference only as they were executed during the ansible play of prep-rhel8-workshop.
+For your convenience, the webconsole has already been installed and configured on *workstation.example.com*.  The steps for installation and setup are pretty simple and outlined below.  Remember this provided as reference only.
 
 [NOTE]
 ====
-_Native command(s) to install and enable firewalld_
+_Native command(s) to install and enable the Web Console_
 ----
-yum install -y cockpit
+yum install -y cockpit cockpit-dashboard firewalld
 systemctl enable --now cockpit.socket
 firewall-cmd --add-service=cockpit --permanent
 firewall-cmd --reload
 ----
 ====
+
+=== Custom Ports
+
+The Web Console listens on port 9090 of the host.  To make the system more accessible to students, an additional port of 443 was added to the configuration.  This was done by creating a systemd drop-in config:
+
+/etc/systemd/system/cockpit.socket.d/listen.conf
+====
+[Socket]
+ListenStream=443
+====
+
+This also required a systemctl daemon-reload, selinux update and firewall rule addition.  Remember this provided as reference only.
+
+[NOTE]
+====
+_Native command(s) to enable the Web Console on port 443_
+----
+systemctl daemon-reload
+systemctl restart cockpit.socket
+
+semanage port -m -t websm_port_t -p tcp 443
+
+firewall-cmd --add-port=443/tcp --permanent
+firewall-cmd --add-port=443/tcp --permanent
+----
+====
+
+
 
 == Web Console User Interface
 
