@@ -35,87 +35,23 @@ NOTE:  This whole effort is done using official Red Hat software and although th
 [discrete]
 == Workshop Abstract
 
-. link:{includedir}/abstract.adoc[About This Workshop]
+  * link:{includedir}/abstract.adoc[About This Workshop]
 
 [discrete]
 == Conventions Used
 
-This guide is intended to support a series of workshop exercises for individuals getting familiar with Red Hat Enterprise Linux 8.  What follows are examples of how this document is formatted and expected to be consumed.
-
-[discrete]
-=== Tips, Notes & Warnings
-
-TIP: Extra info which could be helpful, but not essential for a given task or discussion
-
-NOTE: Special information to pay attention
-
-WARNING: Critical information which could help you avoid major set backs
-
-[discrete]
-=== Executing tasks on the CLI
-
-[discrete]
-==== Input
-
-Each block of commands to execute will be labeled with the expected *user-id* and *host*.  To enhance cut & paste efficiency, the command prompt is omitted from each line.
-
-.[root@master ~]#
-----
-systemctl status sshd
-----
-
-[discrete]
-==== Output
-
-Sample output will be titled with _'Your output should look like this'_ (or _'Command Output'_) and also be indented to help with visual identification.  Sometimes there will also be footnotes and/or callouts.
-
-.Command Output
-[source,indent=4]
-----
-● sshd.service - OpenSSH server daemon
-   Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled; vendor preset: enabled)
-   Active: active (running) since Tue 2019-02-26 12:04:16 EST; 27min ago // <1>
-     Docs: man:sshd(8)
-           man:sshd_config(5)
- Main PID: 3094 (sshd)
-   CGroup: /system.slice/sshd.service
-           └─3094 /usr/sbin/sshd -D
-...<snip>...
-----
-<1> This is the line we are interested in with a special note
-
-[discrete]
-==== Alternate Commands
-
-The workshop often provides cheat-scripts to ease certain complex tasks.  This helps the class stay focused and reduces the likelihood of errors and disruptions to the workshop delivery.  Honestly, we are not here to learn `vi`, `emacs` or start debates about the merits of `sed` and `awk`.
-
-The native commands which the cheat-scripts utilize will be documented in the following way.
-
-.[root@master ~]#
-----
-cheat-service-status.sh
-----
-
-[NOTE]
-====
-_Native command(s) to verify system service_
-----
-systemctl status sshd
-----
-====
-
-
+  * link:{includedir}/conventions.adoc[Documentation Style and Conventions]
 
 [discrete]
 == How to Connect
 
-There are three options to complete the lab.
+There are (typically) three options to complete the lab.
 
-  . Follow the instructions to download the ssh-key and use a local terminal for the majority of exercises
-  . Skip downloading the ssh-key and simply use a local terminal with credentials provided by your instructors
-  . The last bullet of the LAB INFORMATION page, provides a link 'to consoles'.  By clicking that link, you can get true console access to "0WORKSTATION".  
+  . Follow instructions provided to connect to the shell embedded on the  workstation WebConsole
+  . Depending on deployed infrastructure, use a local ssh terminal with credentials provided by instructors
+  . Depending on deployed infrastructure, use true console provided by a VDI solution
 
-NOTE: you will need true console (GUI) on "0WORKSTATION" for the *Wayland* and *Web Console* units.
+NOTE: you will need true console (GUI) on "WORKSTATION" for the *Wayland* unit.
 
 
 
@@ -165,8 +101,7 @@ For Windows desktops:
   . link:{includedir}/systemd.adoc[*SystemD* - (UPDATED) System Service Management] _(node1)_
   . link:{includedir}/firewalld.adoc[*FirewallD* - (UPDATED) Firewall Service Management] _(node1)_
   . link:{includedir}/nftables.adoc[*NFTables* - (NEW) Firewall Subsystem] _(node2)_
-  . link:{includedir}/kpatch.adoc[*Kernel Live Patching* - (NEW) Plan Your Reboots] _(node2)_
-  . link:{includedir}/ebpf.adoc[*BPF Tracing* - (Updated) Observability of System Performance] _(node2)_
+  . link:{includedir}/ebpf.adoc[*eBPF Tracing* - (NEW) Extended Berkeley Packet Filter for Linux Kernel Tracing] _(node2)_
   . link:{includedir}/appstream-yum.adoc[*App Stream* - (NEW) Application Delivery] _(node1, node2, node3)_
   . link:{includedir}/podman.adoc[*Podman* - (NEW) Container Management] _(node3)_
   . link:{includedir}/buildah.adoc[*Buildah & Skopeo* - (NEW) Container Development] _(node3)_
@@ -205,3 +140,5 @@ safe-mode-name:: {safe-mode-name}
 ////
 Always end files with a blank line to avoid include problems.
 ////
+
+
