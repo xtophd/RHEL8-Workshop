@@ -6,7 +6,7 @@
       yum: name=gnome-tweaks state=installed
       
     - name: "SETUP WAYLAND: user modification"
-      user: name="student" groups="wheel"
+      user: name="{{ student_username }}" groups="wheel"
             
     - name: "SETUP WAYLAND: cheat file installs"
       template:
