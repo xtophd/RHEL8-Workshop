@@ -37,6 +37,8 @@ sudo -i
 
 == Download the Workshop project from GitHub
 
+WARNING: It is very likely that your instructor (or the automated deployment system) has already performed this step.  Do NOT delete and clone a new project directory if it already exists.
+
 .[root@workstation ~]#
 ----
 cd ~
@@ -47,6 +49,8 @@ git clone https://github.com/xtophd/RHEL8-Workshop
 == Run the Prep Script
 
 WARNING: It is important to be in the correct working directory for these installation procedures to function properly.  
+
+NOTE:  It is very likely that your instructor (or the automated deployment system) has already performed this step also.  However, there is no harm in performing this action again.
 
 .[root@workstation ~]#
 ----
