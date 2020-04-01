@@ -3,7 +3,7 @@
   tasks:
   
     - name: "SETUP WEBCONSOLE: yum install packages"
-      yum: name=cockpit,firewalld,sos state=installed
+      yum: name=cockpit,cockpit-dashboard,firewalld,sos state=installed
       
     - name: "SETUP WEBCONSOLE: service restart"
       service: name="cockpit.socket" state=restarted enabled=yes
