@@ -75,6 +75,7 @@ systemctl status sshd
 ----
 ====
 
+[discrete]
 == End of Unit
 
 link:../RHEL8-Workshop.adoc[Return to Document]
