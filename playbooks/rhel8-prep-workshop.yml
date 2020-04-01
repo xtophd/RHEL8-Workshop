@@ -1,13 +1,16 @@
 - hosts: all
   tasks:
   
-    - name: "TEMPLATE modify /etc/motd"
+    - name: "PREP: template /etc/motd"
       template:
         src: motd-generic.j2
         dest: /etc/motd
         owner: root
         group: root
         mode: 0644  
+
+    - name: "PREP: yum install tmux"
+      yum: name=tmux state=installed
 
     - name: "SERVICE disable and stop unwanted services"
       service: 
