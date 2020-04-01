@@ -55,7 +55,7 @@ firewall-cmd --reload
 
 === Custom Ports
 
-The Web Console listens on port 9090 of the host.  To make the system more accessible to students, an additional port of 443 was added to the configuration.  This was done by creating a systemd drop-in config:
+By default, the Web Console listens on port 9090 of a host.  To make the system more accessible to students, an additional port of 443 was added to the configuration.  This was done by creating a systemd drop-in config:
 
 /etc/systemd/system/cockpit.socket.d/listen.conf
 ====
@@ -63,7 +63,7 @@ The Web Console listens on port 9090 of the host.  To make the system more acces
 ListenStream=443
 ====
 
-This also required a systemctl daemon-reload, selinux update and firewall rule addition.  Remember this provided as reference only.
+This configuration change required a systemctl daemon-reload, selinux update and a firewall rule addition.  Remember this provided as reference only.
 
 [NOTE]
 ====
@@ -74,21 +74,23 @@ systemctl restart cockpit.socket
 
 semanage port -m -t websm_port_t -p tcp 443
 
-firewall-cmd --add-port=443/tcp --permanent
+firewall-cmd --add-port=443/tcp
 firewall-cmd --add-port=443/tcp --permanent
 ----
 ====
 
-
+That completes the installation and configuration of the Web Console.
 
 == Web Console User Interface
 
-NOTE: If you are usng the web-console on *workstation.example* with your local browser, you do not need to access the GUI console.
+Your instructors may provide you with a unique link with special instructions to access the web-console on *https://workstation.example.com* with your local browser. This is the PREFERRED method.
 
-On host *workstation.example.com*, use the console GUI to start a web browser.
+Browse to the URL: `https://workstation.example.com`
 
-Then browse to URL: `https://node2.example.com:9090`
-Login userID: root  Password: <ROOT-PASSWD>
+Accept the various notifications about insecure ceritificates, and then login in:
+
+  * UserID: root
+  * Password: <ROOT-PASSWD-PROVIDED>
 
 ====
 image::cockpit-image13.png[Cockpit Login]
