@@ -57,11 +57,11 @@ firewall-cmd --reload
 
 By default, the Web Console listens on port 9090 of a host.  To make the system more accessible to students, an additional port of 443 was added to the configuration.  This was done by creating a systemd drop-in config:
 
-/etc/systemd/system/cockpit.socket.d/listen.conf
-====
+./etc/systemd/system/cockpit.socket.d/listen.conf
+----
 [Socket]
 ListenStream=443
-====
+----
 
 This configuration change required a systemctl daemon-reload, selinux update and a firewall rule addition.  Remember this provided as reference only.
 
