@@ -21,7 +21,7 @@ Using the connection information and credentials provided by the instructor, get
 
 *tmux* is a very handy utilty for terminal session management.  If for any reason you lose connectivity or your session is terminated, *tmux* will preserve your session and allow you to reconnect.  There are MANY other features provided by this utility.  Some of them are listed in the primary document section titled *Quick Overview of tmux*.
 
-.[root@workstation ~]#
+.[cloud-user@workstation ~]#
 ----
 tmux
 ----
@@ -30,7 +30,7 @@ tmux
 
 In order to execute the environment preparation, we need to become the administrative user 'root'.
 
-.[student@workstation ~]$ 
+.[cloud-user@workstation ~]$ 
 ----
 sudo -i
 ----
@@ -50,21 +50,32 @@ git clone https://github.com/xtophd/RHEL8-Workshop
 
 WARNING: It is important to be in the correct working directory for these installation procedures to function properly.  
 
-NOTE:  It is very likely that your instructor (or the automated deployment system) has already performed this step also.  However, there is no harm in performing this action again.
+NOTE: It is likely that your instructor (or the automated deployment system) has already performed this step also.  However, there is no harm in performing this action again.
+
+NOTE: If you run the deployment playbooks from the web console shell, you will be disconnected and have to sign in again.  If you used tmux, you can easily recover your shell with 'tmux a'
 
 .[root@workstation ~]#
 ----
 cd ~/RHEL8-Workshop
 ----
 
+Next we will make sure we have the latest updates for this project (branch).
+
+.[root@workstation ~]#
+----
+git pull
+----
+
+Now we will run the playbooks that will set up the workshop.
+
 .[root@workstation RHEL8-Workshop]#
 ----
 bash prepare-rhel8-workshop.sh
 ----
 
-The preparation script will run for approximately 5 to 7 minutes.
+The preparation script will run for approximately 5 to 7 minutes on a fresh deployment.
 
-== A Few Words While the Installer Runs (5 or 6 minutes)
+== A Few Words While the Installer Runs
 
 [discrete]
 === New in RHEL 8

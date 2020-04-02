@@ -57,11 +57,11 @@ firewall-cmd --reload
 
 By default, the Web Console listens on port 9090 of a host.  To make the system more accessible to students, an additional port of 443 was added to the configuration.  This was done by creating a systemd drop-in config:
 
-/etc/systemd/system/cockpit.socket.d/listen.conf
-====
+./etc/systemd/system/cockpit.socket.d/listen.conf
+----
 [Socket]
 ListenStream=443
-====
+----
 
 This configuration change required a systemctl daemon-reload, selinux update and a firewall rule addition.  Remember this provided as reference only.
 
@@ -85,16 +85,19 @@ That completes the installation and configuration of the Web Console.
 
 Your instructors may provide you with a unique link with special instructions to access the web-console on *https://workstation.example.com* with your local browser. This is the PREFERRED method.
 
-Browse to the URL: `https://workstation.example.com`
+WARNING: You MUST enable "Reuse my password for privileged tasks" during sign-on.  If you did not, please log-off and start again.
 
 Accept the various notifications about insecure ceritificates, and then login in:
 
-  * UserID: root
-  * Password: <ROOT-PASSWD-PROVIDED>
+  * UserID: cloud-user
+  * Password: <PROVIDED-CLOUD-USER-PASSWD>
+  * Enable "Reuse my password for privileged tasks"
 
 ====
 image::cockpit-image13.png[Cockpit Login]
 ====
+
+
 
 Here is a simple dashboard where you can monitor current system performance:
 
@@ -164,7 +167,11 @@ Under the networking section, you can monitor current networking activities. You
 image::cockpit-image8.png[Cockpit Network]
 ====
 
-Also under the networking section, you can configure your firewall rules. In the following example, you will find and enable NTP firewall rule.
+== Firewall Management
+
+Also under the networking section, you can configure your firewall rules. 
+
+For the next exercise, let's enable a rule for NTP (Network Time Protocol).
 
 ====
 image::cockpit-image6.png[Cockpit Firewall 1]
@@ -179,7 +186,11 @@ image::cockpit-image10.png[Cockpit Firewall 3]
 image::cockpit-image15.png[Cockpit Firewall 4]
 ====
 
-Now that NTP firewall rule is enabled. Let’s make sure NTP service is enabled and running under the service section
+== System Services Management
+
+Now that you enabled a NTP firewall rule, let’s make sure an NTP service provider is enabled and running under the Web Console Services section.
+
+Remember that RHEL 8 uses a provider called 'chrony' for ntp.  So you can search for either 'chrony' or 'ntp'.
 
 ====
 image::cockpit-image11.png[Cockpit Firewall 5]
