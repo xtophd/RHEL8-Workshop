@@ -1,0 +1,65 @@
+- hosts: workstation
+  tasks:
+
+  - name: "PREP-SSHKEYS: file/directory .ssh permissions"
+    file:
+      path: ~{{ student_username }}/.ssh
+      mode: "0700"
+      owner: "{{ student_username }}"
+      group: "{{ student_username }}"
+      state: directory
+
+  - name: "PREP-SSHKEYS: known_hosts {{ student_username }} file permissions"
+    file:
+      path: "~{{ student_username }}/.ssh/known_hosts"
+      mode: "0700"
+      owner: "{{ student_username }}"
+      group: "{{ student_username }}"
+      state: touch
+
+  - name: "PREP-SSHKEYS: openssh_keypair {{ student_username }} create"
+    openssh_keypair:
+      path:  ~{{ student_username }}/.ssh/id_rsa
+      owner: "{{ student_username }}"
+      group: "{{ student_username }}"
+
+  - name: "PREP-SSHKEYS: add ssh keys for nodes"
+    vars:
+      p_file: "~{{ student_username }}/.ssh/known_hosts"
+    shell:
+      cmd: |
+        ssh-keyscan -f "{{ p_file }}" -R "{{ hostvars[item]['inventory_hostname'] }}"
+        ssh-keyscan -f "{{ p_file }}" -R "{{ hostvars[item]['inventory_hostname_short'] }}"
+    loop: "{{ [ groups['workstation'], groups['nodes'] ]  | flatten(1) }}"
+    ignore_errors: yes
+
+  - name: "PREP-SSHKEYS: add ssh keys for nodes"
+    vars:
+      p_file: "~{{ student_username }}/.ssh/known_hosts"
+    shell:
+      cmd: |
+        ssh-keyscan -f "{{ p_file }}" "{{ hostvars[item]['inventory_hostname'] }}"
+        ssh-keyscan -f "{{ p_file }}" "{{ hostvars[item]['inventory_hostname_short'] }}"
+    loop: "{{ [ groups['workstation'], groups['nodes'] ]  | flatten(1) }}"
+    ignore_errors: yes
+
+
+
+
+- hosts: nodes
+  tasks:
+
+  - name: "PREP-SSHKEYS: file/directory .ssh permissions"
+    file:
+      path: ~{{ student_username }}/.ssh
+      mode: "0700"
+      owner: "{{ student_username }}"
+      group: "{{ student_username }}"
+      state: directory
+
+  - name: "PREP-SSHKEYS: authorized_key deployment"
+    authorized_key:
+      user: "{{ student_username }}"
+      state: present
+      key: "{{ lookup('file','~{{ student_username }}/.ssh/id_rsa.pub' ) }}"
+

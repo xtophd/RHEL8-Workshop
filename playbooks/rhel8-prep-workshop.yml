@@ -47,6 +47,7 @@
         - {src: 'sudoers.j2', dest: '/etc/sudoers.d/rhel8-workshop'}
         - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ student_username }}'}
 
+- import_playbook: rhel8-prep-sshkeys.yml
 - import_playbook: rhel8-setup-wayland.yml
 - import_playbook: rhel8-setup-appstreams.yml
 - import_playbook: rhel8-setup-systemd.yml
