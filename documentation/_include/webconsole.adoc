@@ -89,8 +89,8 @@ WARNING: You MUST enable "Reuse my password for privileged tasks" during sign-on
 
 Accept the various notifications about insecure ceritificates, and then login in:
 
-  * UserID: root
-  * Password: <ROOT-PASSWD-PROVIDED>
+  * UserID: cloud-user
+  * Password: <PROVIDED-CLOUD-USER-PASSWD>
   * Enable "Reuse my password for privileged tasks"
 
 ====
