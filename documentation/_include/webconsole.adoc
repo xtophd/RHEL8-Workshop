@@ -85,16 +85,19 @@ That completes the installation and configuration of the Web Console.
 
 Your instructors may provide you with a unique link with special instructions to access the web-console on *https://workstation.example.com* with your local browser. This is the PREFERRED method.
 
-Browse to the URL: `https://workstation.example.com`
+WARNING: You MUST enable "Reuse my password for privileged tasks" during sign-on.  If you did not, please log-off and start again.
 
 Accept the various notifications about insecure ceritificates, and then login in:
 
   * UserID: root
   * Password: <ROOT-PASSWD-PROVIDED>
+  * Enable "Reuse my password for privileged tasks"
 
 ====
 image::cockpit-image13.png[Cockpit Login]
 ====
+
+
 
 Here is a simple dashboard where you can monitor current system performance:
 
