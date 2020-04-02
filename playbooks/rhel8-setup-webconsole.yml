@@ -49,3 +49,22 @@
         mode: 0744
       with_items:
         - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-cockpit-checkhost.sh'} 
+
+
+
+
+- hosts: nodes
+  tasks:
+  
+    - name: "SETUP WEBCONSOLE: yum install packages"
+      yum: name=cockpit,cockpit-dashboard,firewalld,sos state=installed
+
+    - name: "SETUP WEBCONSOLE: service restart"
+      service: name="cockpit.socket" state=restarted enabled=yes daemon-reload=yes
+
+    - name: "SETUP WEBCONSOLE: firewalld service start"
+      service: name="firewalld" state=restarted enabled=yes
+
+    - name: "SETUP WEBCONSOLE: firewall configuration"
+      firewalld: service="cockpit" permanent=yes immediate=yes state=enabled
+
