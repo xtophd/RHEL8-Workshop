@@ -30,7 +30,7 @@ tmux
 
 In order to execute the environment preparation, we need to become the administrative user 'root'.
 
-.[student@workstation ~]$ 
+.[cloud-user@workstation ~]$ 
 ----
 sudo -i
 ----
