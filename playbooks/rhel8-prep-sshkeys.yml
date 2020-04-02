@@ -28,8 +28,8 @@
       p_file: "~{{ student_username }}/.ssh/known_hosts"
     shell:
       cmd: |
-        ssh-keyscan -f "{{ p_file }}" -R "{{ hostvars[item]['inventory_hostname'] }}"
-        ssh-keyscan -f "{{ p_file }}" -R "{{ hostvars[item]['inventory_hostname_short'] }}"
+        ssh-keyscan -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname'] }}
+        ssh-keyscan -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}
     loop: "{{ [ groups['workstation'], groups['nodes'] ]  | flatten(1) }}"
     ignore_errors: yes
 
@@ -38,8 +38,8 @@
       p_file: "~{{ student_username }}/.ssh/known_hosts"
     shell:
       cmd: |
-        ssh-keyscan -f "{{ p_file }}" "{{ hostvars[item]['inventory_hostname'] }}"
-        ssh-keyscan -f "{{ p_file }}" "{{ hostvars[item]['inventory_hostname_short'] }}"
+        ssh-keyscan {{ hostvars[item]['inventory_hostname'] }} >> {{ p_file }}
+        ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }} >> {{ p_file }}
     loop: "{{ [ groups['workstation'], groups['nodes'] ]  | flatten(1) }}"
     ignore_errors: yes
 
