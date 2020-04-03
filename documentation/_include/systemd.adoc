@@ -222,10 +222,12 @@ cheat-systemd-lamp.sh
 === Customizing Unit Files
 
 systemd controls more than daemons or services. For this lab, we will primarily be working with service units but it's important to know that systemd is handling the dependencies between other types: sockets, timers, mounts, swap, slices, etc.
-Unit files that ship with the RHEL are stored under /usr/lib/systemd/system. 
 
-Custom unit files, changes or extensions are stored under /etc/systemd/system 
-(or /run/systemd/system for runtime changes that won't persist).
+Unit files are stored in one of three places:
+
+  * '/usr/lib/systemd/system' - default configs that ship with the RHEL and are updated by regular maintenance
+  * '/etc/systemd/system' - custom configs that persist and replace (or augment) default configs
+  * '/run/systemd/system' - runtime changes that won't persist
 
 While the defaults for unit files won’t need to be altered most of the time, there will be circumstances where changing the defaults is quite beneficial. These could include hardware or software watchdog monitoring, tunings, resource management, or many other reasons.
 
