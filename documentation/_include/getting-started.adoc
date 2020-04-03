@@ -59,7 +59,7 @@ git pull
 
 == Configure the Workshop
 
-NOTE: It is likely that your instructor (or the automated deployment system) has already performed these steps.  These steps are provided as an aid in case you are deploying the workshop for the first time, or if steps need to be repeated.
+WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace or overwrite the configuration unless explicitly told to do so.
 
 Copy the default configuration (ansible inventory) to the config directory.
 
@@ -72,9 +72,7 @@ cp ./sample-configs/rhel8-workshop ./config
 
 == Run the Prep Script
 
-WARNING: It is important to be in the correct working directory for these installation procedures to function properly.  
-
-NOTE: It is likely that your instructor (or the automated deployment system) has already performed these steps.  There is no harm in rerunning the deployment playbooks.
+WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  There is typically no harm in rerunning the deployment playbooks.  Again, follow your instructor's guidance.
 
 NOTE: If you run the deployment playbooks from the web console shell, you will be disconnected and have to sign in again.  If you used tmux, you can easily recover your shell with 'tmux a'
 
