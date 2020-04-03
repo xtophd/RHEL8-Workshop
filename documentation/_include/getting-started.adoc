@@ -48,7 +48,9 @@ git clone https://github.com/xtophd/RHEL8-Workshop
 
 == Update the Workshop
 
-Not needed if you just cloned the workshop, but if the project fixed a bug or updated documentation you may need to get the latest updates for the project (branch).
+NOTE: This step is not needed if you just cloned the workshop, but if recent bug fixes or documentation updates were committed you may need to pull them into you project (branch).
+
+Here is how to refresh the workshop with the latest updates.
 
 .[root@workstation ~]#
 ----
@@ -80,6 +82,8 @@ Now we will run the playbooks that will set up the workshop.
 
 .[root@workstation RHEL8-Workshop]#
 ----
+cd ~/RHEL8-Workshop
+
 bash prepare-rhel8-workshop.sh
 ----
 
