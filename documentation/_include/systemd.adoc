@@ -278,7 +278,7 @@ systemctl status httpd
 
 Notice that systemctl status displays that the unit has been extended with a drop-in file.
 
-OOMScoreAdjust is use by the Out Of Memory killer and is an  integer between -1000 (to disable OOM killing for this process) and 1000 (to make killing of this process under memory pressure very likely).  
+OOMScoreAdjust is used by the Kernel's Out Of Memory killer and is an  integer between -1000 (to disable OOM killing for this process) and 1000 (to make killing of this process under memory pressure very likely).  
 
 [discrete]
 ==== Modify mariadb
