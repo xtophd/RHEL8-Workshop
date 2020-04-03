@@ -160,7 +160,7 @@ The state will  be enabled, disabled, static, or masked.  Static indicates that 
 
 === Installing a LAMP stack
 
-Now that we have a good idea of what’s installed on our system, let’s get a basic lamp stack up and running. 
+Now that we have a good idea of what’s installed on our system, let’s get a basic lamp stack up and running.  If you prefer not to type all of these commands, there's a cheat script below to save you some time.
 
 .[root@node1]#
 ----
@@ -204,6 +204,21 @@ systemctl status httpd mariadb
         ...<output truncated>...
 ----
 
+Last but not least, you need to enable a firewall port.
+
+.[root@node1]#
+----
+firewall-cmd --add-service=http
+----
+
+So as promised, here is a cheat script that performs all of the above steps.
+
+.[root@node1]#
+----
+cheat-systemd-lamp.sh
+----
+
+
 === Customizing Unit Files
 
 systemd controls more than daemons or services. For this lab, we will primarily be working with service units but it's important to know that systemd is handling the dependencies between other types: sockets, timers, mounts, swap, slices, etc.
@@ -215,7 +230,6 @@ Custom unit files, changes or extensions are stored under /etc/systemd/system
 While the defaults for unit files won’t need to be altered most of the time, there will be circumstances where changing the defaults is quite beneficial. These could include hardware or software watchdog monitoring, tunings, resource management, or many other reasons.
 
 Create a drop-in configuration file to extend the default httpd.service unit
-
 
 [discrete]
 ==== Modify httpd
