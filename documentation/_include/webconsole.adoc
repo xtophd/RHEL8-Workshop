@@ -204,11 +204,29 @@ Web Console also allows you to start/stop, restart, enable/disable a service on 
 image::cockpit-image17.png[Cockpit Service 5]
 ====
 
+== Dashboard
+
+You system has been configured with an additional plug-in called the Dashboard.  It appears like a speedometer on the left menu.
+
+The graph displays performance metrics for all hosts configured in the dashboard, which at this time is pretty boring since the workstatino is the only host.  So let us add the additional systems in our workshop cluster.
+
+Select the '+' (add) button on the right side of the Servers list.
+
+Add system 'node1.example.com'.
+
+Repeat the steps for 'node2.example.com' and 'node3.example.com'
+
+Now not only do have visibility to performance data on all of the systems, you can also click on the servers and manage those through the Web Console as well (including Terminal access).  Very handy!
+
+== Conclusion
+
 This concludes a short exercise with Web Console. Feel free to click through and explore other sections:
 
 * Under *Accounts* section, you can manage user accounts on your RHEL 8 server
 * *Diagnostic Reports* allows you to create sosreport for Red Hat support
 * Under *Kernel Dump*, you can enable/disable kdump
+
+You will get an opportunity to manager Virtual Machines and Build System Images in later exercises.
 
 == Additional Resources
 
