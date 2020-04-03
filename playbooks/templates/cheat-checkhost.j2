@@ -2,7 +2,9 @@
 
 # Check if this is the expected host
 
-if [[ "{{ inventory_hostname }}" = "${HOSTNAME}" ]]; then
+HOSTNAME_SHORT=`hostname -s`
+
+if [[ "{{ inventory_hostname_short }}" = "${HOSTNAME_SHORT}" ]]; then
   echo "YES : this is the correct host"
 else
   echo "WARNING - NOT THE RIGHT HOST: check your instructions"

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo ""
+echo "Installing packages for lamp stack"
+yum install -y httpd mariadb-server mariadb
+
+echo ""
+echo "Enabling services"
+systemctl enable --now httpd mariadb
+
+echo ""
+echo "Enabling firewall"
+firewall-cmd --add-service=http
+
