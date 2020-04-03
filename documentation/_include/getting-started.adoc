@@ -46,32 +46,37 @@ cd ~
 git clone https://github.com/xtophd/RHEL8-Workshop
 ----
 
-== Run the Prep Script
+== Update the Workshop
 
-WARNING: It is important to be in the correct working directory for these installation procedures to function properly.  
-
-NOTE: It is likely that your instructor (or the automated deployment system) has already performed these steps.  These steps are provided as an aid in case you are deploying the workshop for the first time, or if steps need to be repeated.
-
-NOTE: If you run the deployment playbooks from the web console shell, you will be disconnected and have to sign in again.  If you used tmux, you can easily recover your shell with 'tmux a'
+Not needed if you just cloned the workshop, but if the project fixed a bug or updated documentation you may need to get the latest updates for the project (branch).
 
 .[root@workstation ~]#
 ----
 cd ~/RHEL8-Workshop
-----
 
-Next we will make sure we have the latest updates for this project (branch).
-
-.[root@workstation ~]#
-----
 git pull
 ----
+
+== Configure the Workshop
+
+NOTE: It is likely that your instructor (or the automated deployment system) has already performed these steps.  These steps are provided as an aid in case you are deploying the workshop for the first time, or if steps need to be repeated.
 
 Copy the default configuration (ansible inventory) to the config directory.
 
 .[root@workstation ~]#
 ----
+cd ~/RHEL8-Workshop
+
 cp ./sample-configs/rhel8-workshop ./config
 ----
+
+== Run the Prep Script
+
+WARNING: It is important to be in the correct working directory for these installation procedures to function properly.  
+
+NOTE: It is likely that your instructor (or the automated deployment system) has already performed these steps.  There is no harm in rerunning the deployment playbooks.
+
+NOTE: If you run the deployment playbooks from the web console shell, you will be disconnected and have to sign in again.  If you used tmux, you can easily recover your shell with 'tmux a'
 
 Now we will run the playbooks that will set up the workshop.
 
