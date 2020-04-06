@@ -63,7 +63,8 @@ systemctl status -l firewalld
 
 Firewalld uses several different, completely adaptable, XML config files to store configurations. These files also ensure run-time and persistent configuration separation. 
 
-The configuration files are stored in 
+The configuration files are stored in
+
   * /usr/lib/firewalld
   * /etc/firewalld
   
