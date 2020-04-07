@@ -51,14 +51,12 @@ From the bottom up, here is a basic explanation of the layered technology stack 
 |===
 |                | Physical Volumes | Volumes Groups | Logical Volumes
 | Core Utilities l| 
-----
 *pvcreate* 
 pvdisplay 
 pvremove 
 *pvs* 
 pvscan 
-pvmove 
-----
+pvmove
                  | *vgcreate* vgdisplayvgextend vgreduce vgremove vgrename *vgs* vgscan vgcfgbackup vgcfgrestore 
                  | lvconvert *lvcreate* lvdisplay lvextend lvreduce lvremove lvrename lvresize *lvs* lvscan
 | Other Stuff    | fdisk parted partprobe multipath smartd
