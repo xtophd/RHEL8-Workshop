@@ -30,7 +30,9 @@ Why use Logical Volume Management?
 * Snapshots: Historical Recovery
 * Data Optimization: Compression and De-Duplication
 
-Building Blocks of Storage Management
+== Building Blocks of Storage Management
+
+From the bottom up, here is a basic explanation of the layered technology stack that comprises modern storage.
 
 |===
 | File-systems    | Formatted LV's become filesystems
