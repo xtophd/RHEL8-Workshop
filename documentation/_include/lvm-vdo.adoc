@@ -45,6 +45,42 @@ From the bottom up, here is a basic explanation of the layered technology stack 
                     loopback
 |===
 
+== LVM CLI Toolbox
+
+|===
+|                | Physical Volumes | Volumes Groups | Logical Volumes
+| Core Utilities | pvcreate
+pvdisplay
+pvremove
+pvs
+pvscan
+pvmove | vgcreate
+vgdisplay
+vgextend
+vgreduce
+vgremove
+vgrename
+vgs
+vgscan
+vgcfgbackup
+vgcfgrestore | lvconvert
+lvcreate
+lvdisplay
+lvextend
+lvreduce
+lvremove
+lvrename
+lvresize
+lvs
+lvscan
+| Other Stuff    | fdisk
+parted
+partprobe
+multipath
+smartd |  | mkfs
+mount
+|===
+
 
 == Getting Started
 
