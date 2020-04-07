@@ -49,7 +49,7 @@ From the bottom up, here is a basic explanation of the layered technology stack 
 
 [width="80%",options="header"]
 |===
-|                | Physical Volumes | Volumes Groups | Logical Volumes
+| Physical Volumes | Volumes Groups | Logical Volumes
 | Core Utilities | pvcreate
 pvdisplay
 pvremove
