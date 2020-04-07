@@ -151,18 +151,32 @@ vgcreate vg_lab /dev/vdb /dev/vdc
 lvcreate -n lab1 -L 100% vg_lab
 ----
 
-==== Step 5: Filesystem
+==== Step 5: Create and Mount Filesystem
 
 ----
 mkfs -t ext4 /dev/vg_lab/lab1
-----
 
-| Mount l|
 mkdir -p /mnt/lab1
 mount /dev/vg_lab/lab1 /mnt/lab1
+----
 
-|===
+NOTE: If this were going to be a persistent filesystem, you would still need to add an entry to `etc/fstab`.
 
+==== Examine Your Work
+
+----
+lvs
+
+lvs vg_summit/lab1
+
+lvs -o lv_name,lv_size,lv_attr,segtype,devices vg_summit/lab1
+
+lvs -o +devices vg_summit/lab1
+
+lvs -o +devices --noheadings vg_summit/lab1
+
+lvs --separator ':' --noheadings vg_summit/lab1
+----
 
 
 
