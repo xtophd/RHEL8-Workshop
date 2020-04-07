@@ -93,29 +93,39 @@ mkfs mount
 
 == Traditional Storage Workflow
 
-From the top down, here is a basic work flow for adding storage to a Linux host.
+Here is a basic work flow for adding storage to a Linux host.
 
-|===
-| Device/Partition l|
+.Device (partition)
+----
 fdisk /dev/vdb
 partprobe
+----
                    
-| Physical Volume l|
+.Physical Volume
+----
 pvcreate /dev/vdb
+----
 
-
-| Volume Group l|
+.Volume Group
+----
 vgcreate vg_lab /dev/vdb
+----
 
-| Logical Volume l|
-lvcrate -n lab1 -L 10M vg_lab
+.Logical Volume
+----
+lvcreate -n lab1 -L 10M vg_lab
+----
 
-| Filesystem l|
+.Filesystem
+----
 mkfs -t ext4 /dev/vg_lab/lab1
+----
 
-| Mount l|
+.Mount
+----
 mkdir -p /mnt/lab1
 mount /dev/vg_lab/lab1 /mnt/lab1
+----
 
 |===
 
