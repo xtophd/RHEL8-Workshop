@@ -95,37 +95,26 @@ mkfs mount
 
 Here is a basic work flow for adding storage to a Linux host.
 
-.Device (partition)
-----
+|===
+| Device (partition) l|
 fdisk /dev/vdb
 partprobe
-----
                    
-.Physical Volume
-----
+| Physical Volume l|
 pvcreate /dev/vdb
-----
 
-.Volume Group
-----
+| Volume Group
 vgcreate vg_lab /dev/vdb
-----
 
-.Logical Volume
-----
+| Logical Volume
 lvcreate -n lab1 -L 10M vg_lab
-----
 
-.Filesystem
-----
+| Filesystem
 mkfs -t ext4 /dev/vg_lab/lab1
-----
 
-.Mount
-----
+| Mount
 mkdir -p /mnt/lab1
 mount /dev/vg_lab/lab1 /mnt/lab1
-----
 
 |===
 
