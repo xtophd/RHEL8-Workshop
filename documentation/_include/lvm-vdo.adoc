@@ -96,8 +96,14 @@ mkfs mount
 From the top down, here is a basic work flow for adding storage to a Linux host.
 
 |===
-| Device/Partition | fdisk /dev/vdb 
-| Physical Volume
+| Device/Partition l|
+fdisk /dev/vdb
+partprobe
+                   
+| Physical Volume l|
+pvcreate /dev/vdb
+
+
 | Volume Group
 | Logical Volume
 | Filesystem
