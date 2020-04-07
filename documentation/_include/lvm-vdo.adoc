@@ -50,13 +50,36 @@ From the bottom up, here is a basic explanation of the layered technology stack 
 [width="80%",options="header"]
 |===
 |                | Physical Volumes | Volumes Groups | Logical Volumes
-| Core Utilities | *pvcreate* pvdisplay pvremove *pvs* pvscan pvmove 
+| Core Utilities l| 
+----
+*pvcreate* 
+pvdisplay 
+pvremove 
+*pvs* 
+pvscan 
+pvmove 
+----
                  | *vgcreate* vgdisplayvgextend vgreduce vgremove vgrename *vgs* vgscan vgcfgbackup vgcfgrestore 
                  | lvconvert *lvcreate* lvdisplay lvextend lvreduce lvremove lvrename lvresize *lvs* lvscan
 | Other Stuff    | fdisk parted partprobe multipath smartd
                  |
                  | mkfs mount
 |===
+
+== Traditional Storage Workflow
+
+From the top down, here is a basic work flow for adding storage to a Linux host.
+
+|===
+| Device/Partition | fdisk /dev/vdb 
+| Physical Volume
+| Volume Group
+| Logical Volume
+| Filesystem
+| Mount
+|===
+
+
 
 
 == Getting Started
