@@ -104,10 +104,19 @@ partprobe
 pvcreate /dev/vdb
 
 
-| Volume Group
-| Logical Volume
-| Filesystem
-| Mount
+| Volume Group l|
+vgcreate vg_lab /dev/vdb
+
+| Logical Volume l|
+lvcrate -n lab1 -L 10M vg_lab
+
+| Filesystem l|
+mkfs -t ext4 /dev/vg_lab/lab1
+
+| Mount l|
+mkdir -p /mnt/lab1
+mount /dev/vg_lab/lab1 /mnt/lab1
+
 |===
 
 
