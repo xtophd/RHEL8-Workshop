@@ -47,7 +47,7 @@ From the bottom up, here is a basic explanation of the layered technology stack 
 
 == LVM CLI Toolbox
 
-[width="80%",options="header"]
+[options="header"]
 |===
 |                | Physical Volumes | Volumes Groups | Logical Volumes
 | Core Utilities l| 
@@ -106,7 +106,7 @@ pvcreate /dev/vdb
 | Volume Group l|
 vgcreate vg_lab /dev/vdb
 
-| Logical Volume
+| Logical Volume l|
 lvcreate -n lab1 -L 10M vg_lab
 
 | Filesystem l|
