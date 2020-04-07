@@ -91,20 +91,7 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 
 Doing the math with my numbers above, my session was open for about 9 seconds and was initiated by IP 10.0.0.10, the workstation.
 
-On the terminal running tcp-life, go ahead and Ctrl-C the process. You will see a python traceback that looks like:
-
-.Command Output
-[source,indent=4]
-----
-^CTraceback (most recent call last):
-  File "./tcplife", line 506, in <module>
-    b.perf_buffer_poll()
-  File "/usr/lib/python3.6/site-packages/bcc/__init__.py", line 1216, in perf_buffer_poll
-    lib.perf_reader_poll(len(readers), readers, timeout)
-KeyboardInterrupt
-----
-
-This is safe to ignore and the expected behavior of a Ctrl-C on this process.
+On the terminal running tcp-life, go ahead and Ctrl-C the process. You should then be returned to the prompt.
 
 == bcc-tools: execsnoop
 
@@ -167,7 +154,7 @@ firewall-cmd     28542  28516    0 /usr/bin/firewall-cmd --state
 
 This shows you all the processes that ran exec during that ssh login, their PID, their parent PID, their return code, and the arguments that were sent to the process. You could keep monitoring this for quite some time to catch potential bad actors on the system.
 
-Go to the terminal with execsnoop running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+Go to the terminal with execsnoop running and issue a Ctrl-C. This will return you to a prompt. That is the expected behavior.
 
 == bcc-tools: opensnoop
 
@@ -177,7 +164,7 @@ To run this script, do:
 
 .[root@node2 ~]#
 ----
-/usr/share/bcc/tools/opensnoop
+/usr/share/bcc/tools/opensnoop 
 ----
 
 You will see a header that prints out like:
@@ -320,7 +307,7 @@ The -13 return code indicates that we did not have permission to open the reques
 
 As you can see, this tool is very useful for trying to determine where an application has its configurations or for seeing why an application may be failing.
 
-Go to the terminal with opensnoop running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+Go to the terminal with opensnoop running and issue a Ctrl-C. This will return you to your prompt. That is the expected behavior.
 
 == bcc-tools: ext4slower
 
@@ -404,11 +391,11 @@ TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 
 So we can see that when writing these files in parallel, we have ext4 operations taking longer than 10ms to complete.
 
-Go to the terminal with ext4slower running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+Go to the terminal with ext4slower running and issue a Ctrl-C. This will return you to the prompt. That is the expected behavior.
 
 == bcc-tools: cachestat
 
-The cachestat tool traces kernel page cache functions and prints per-second summaries to aid you in workload characterization.
+The cachestat tool traces kernel page cache functions and prints every five second summaries to aid you in workload characterization.
 
 To run this script, do:
 
@@ -426,10 +413,11 @@ You should see the following header print:
    TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
 ----
 
-In another root terminal on node 2, run our dd for loop from the xfsslower section:
+In another root terminal on node 2, let's flush the cache and then run our dd for loop from the xfsslower section:
 
 .[root@node2 ~]#
 ----
+echo 3 > /proc/sys/vm/drop_caches
 for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
 ----
 
@@ -439,11 +427,11 @@ In the cachestat window, you should output similar to:
 [source,indent=4]
 ----
    TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
-    1135        0     1135        0            5       1464
-    9852       31     9821        0            5       1464
+       0        0        0        0            0        154
+   14773      901    13872    44133            1        200
 ----
 
-This shows that we had 31 page cache misses while running the above loop, but during that same second, there were 9,821 hits, indicating great performance from the page cache.
+This shows that we had 901 page cache misses during a five second period while running the above loop, but during that same second, there were 9,821 hits, indicating great performance from the page cache.
 
 Go to the terminal with cachestat running and issue a Ctrl-C. This will end the process with the message "Detaching...". That is the expected behavior.
 
