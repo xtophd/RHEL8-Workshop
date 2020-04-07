@@ -17,7 +17,7 @@ endif::[]
 
 == Overview
 
-Why use Logical Volume Management?
+=== Why use Logical Volume Management?
 
 * Flexibility
 * Grow, shrink or relocate your data/filesystems
@@ -30,7 +30,7 @@ Why use Logical Volume Management?
 * Snapshots: Historical Recovery
 * Data Optimization: Compression and De-Duplication
 
-== Building Blocks of Storage Management
+=== Building Blocks of Storage Management
 
 From the bottom up, here is a basic explanation of the layered technology stack that comprises modern storage.
 
@@ -45,7 +45,7 @@ From the bottom up, here is a basic explanation of the layered technology stack 
                     loopback
 |===
 
-== LVM CLI Toolbox
+=== LVM CLI Toolbox
 
 [options="header"]
 |===
@@ -91,26 +91,71 @@ smartd
 mkfs mount
 |===
 
-== Traditional Storage Workflow
 
-Here is a basic work flow for adding storage to a Linux host.
 
-|===
-| Device (partition) l|
-fdisk /dev/vdb
+
+
+== LVM Linear Volume
+
+=== Summary
+
+A Linear Volume is a virtual device of any size, possibly composed of multiple concatenated physical devices
+
+=== Usage
+
+* lvcreate -n <lv_name> -L <size> <vg_name>
+
+==== Additional Comments
+
+Many options have short & long identifiers:
+
+  * '--size' and '-L' are equivalent
+
+Also, you can specifiy the size with --L in (M)egabytes, (G)igabytes or % percentage of available capacity.  Be sure to have a look at the `man` page for all of the available options.
+
+===  Exercise
+
+In this exercise, you will create a simple linear volume (concatination) followed by basic resizing operations.  The commands are grouped by category to mirror the building blocks of storage matrix above.
+
+Note, you can run all of the commands below or use the cheat script listed at the end.
+
+==== Step 1: Clear the device partition data
+
+Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
+
+----
+vgremove -ff vg_lab
+pvremove /dev/vd{b..e}
+
+wipefs /dev/vdb
+wipefs /dev/vdc
+
 partprobe
-                   
-| Physical Volume l|
-pvcreate /dev/vdb
+----
 
-| Volume Group l|
-vgcreate vg_lab /dev/vdb
+==== Step 2: Create the Physical Volumes
 
-| Logical Volume l|
-lvcreate -n lab1 -L 10M vg_lab
+----
+pvcreate /dev/vdb /dev/vdc
+----
 
-| Filesystem l|
+==== Step 3: Create a Volume Group (Pool)
+
+----
+vgcreate vg_lab /dev/vdb /dev/vdc
+----
+
+==== Step 4: Create a Logical Volume
+
+----
+lvcreate -n lab1 -L 100% vg_lab
+----
+
+==== Step 5: Filesystem
+
+----
 mkfs -t ext4 /dev/vg_lab/lab1
+----
 
 | Mount l|
 mkdir -p /mnt/lab1
