@@ -51,17 +51,44 @@ From the bottom up, here is a basic explanation of the layered technology stack 
 |===
 |                | Physical Volumes | Volumes Groups | Logical Volumes
 | Core Utilities l| 
-*pvcreate* 
+pvcreate
 pvdisplay 
 pvremove 
-*pvs* 
+pvs 
 pvscan 
 pvmove
-                 | *vgcreate* vgdisplayvgextend vgreduce vgremove vgrename *vgs* vgscan vgcfgbackup vgcfgrestore 
-                 | lvconvert *lvcreate* lvdisplay lvextend lvreduce lvremove lvrename lvresize *lvs* lvscan
-| Other Stuff    | fdisk parted partprobe multipath smartd
+                 l| 
+vgcreate 
+vgdisplay
+vgextend 
+vgreduce 
+vgremove 
+vgrename 
+vgs
+vgscan
+vgcfgbackup 
+vgcfgrestore 
+                 l| 
+lvconvert
+lvcreate
+lvdisplay 
+lvextend 
+lvreduce 
+lvremove 
+lvrename 
+lvresize 
+lvs
+lvscan
+
+| Other Stuff    l| 
+fdisk 
+parted 
+partprobe 
+multipath 
+smartd
                  |
-                 | mkfs mount
+                 l| 
+mkfs mount
 |===
 
 == Traditional Storage Workflow
