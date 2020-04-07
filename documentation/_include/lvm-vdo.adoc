@@ -13,7 +13,7 @@ endif::[]
 :toclevels: 1
 
 
-= LVM Basics plus VDO : Storage Management and Data Optimization
+= LVM and VDO : Storage Management and Data Optimization
 
 == Overview
 
