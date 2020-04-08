@@ -125,10 +125,10 @@ Since we will be reusing the same resources for many exercises, we will begin by
 
 ----
 vgremove -ff vg_lab
+
 pvremove /dev/vd{b..e}
 
-wipefs -a /dev/vdb
-wipefs -a /dev/vdc
+wipefs -a /dev/vd{b..e}
 
 partprobe
 ----
@@ -223,19 +223,148 @@ Filesystem              1K-blocks  Used Available Use% Mounted on
 
 ==== Step 6 - Extend & Resize
 
+----
+pvcreate /dev/vdd
+
+vgextend vg_lab /dev/vdd
+
+lvresize -L 100%FREE /dev/vg_lab/lab1
+
+resize2fs /dev/vg_lab/lab1
+----
+
+==== Examine Your Work
+
+----
+df -h /mnt/lab1
+----
+
+----
+ lvs -o lv_name,lv_size,lv_attr,segtype,devices vg_lab/lab1
+----
+
+== LVM RAID1
+
+=== Summary
+
+RAID logical volumes provide device fault tolerance and differing I/O patterns based on the type of RAID used
+
+=== Usage
+
+  * lvcreate --type raid[456] -i <stripe_count> -n <lv_name> -L <size> <vg>
+  * lvcreate [--type raid1] -m <copy_count> -n <lv_name> -L <size> <vg>
+  * lvcreate [--type raid10] -m 1 -i <#stripes> -n <lv_name> -L <size> <vg>
+    * RAID10 only supports 2-way mirrors (ie: -m 1)
+
+=== Step 1:
+
+=== Step 2:
+
+=== Step 3:
 
 
 
 
 
 
+== LVM with Virtual Data Optimizer (VDO)
 
+
+We will be leveraging devices /dev/vd{b..e}.  As before, we will cleanup up prior work and start fresh.
+
+==== Step 1: Clear the device partition data
+
+Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
+
+----
+vgremove -ff vg_lab
+
+pvremove /dev/vd{b..e}
+
+wipefs -a /dev/vd{b..e}
+
+partprobe
+----
+
+
+
+
+.[root@workstation]#
+----
+vdo create 	--name=exercise4 --device=/dev/vdb11 --vdoLogicalSize=30G
+mkfs.xfs -K /dev/mapper/exercise4
+mkdir /mnt/exercise4
+mount /dev/mapper/exercise4 /mnt/exercise4
+----
+
+To make the mount persistent across reboots, you need to either add a systemd unit to mount the filesystem, or add an entry to /etc/fstab. as follows:
+
+./etc/fstab
+----
+## Add the following to /etc/fstab
+/dev/mapper/exercise4 /mnt/exercise4 xfs defaults,x-systemd.requires=vdo.service 0 0
+----
+
+
+.[root@workstation]#
+----
+vdostats --human-readable
+
+vdostats --verbose
+
+df -h /mnt/exercise4
+----
+
+Let us now populate the filesystem with some content.  Create a bunch of random subdirectories in our new filesystems with the following command.
+
+.[root@workstation]#
+----
+for i in {1..100} ; do mktemp -d /mnt/exercise4/XXXXXX ; done
+----
+
+Now we will copy the same content into each of the folders as follows.
+
+NOTE: This could take a few minutes.
+
+.[root@workstation]#
+----
+for i in /mnt/exercise4/* ; do echo "${i}" ; cp -rf /usr/share/locale $i ; done
+----
+
+The prevoius command should have copied approximately 100MB in 100 folders yielding about 10G of traditional fielsystem consumption.
+
+Let us now check some statistics.  
+
+.[root@workstation]#
+----
+du -sh /mnt/exercise4
+
+df /mnt/exercise4
+
+vdostats --human-readable
+----
+
+So in summary, we built a 30GB filesystem that only has 10GB of actual physical disk capacity.  We then copied 10GB of data into the filesystem, but after deduplication `vdostats --human-readbale` should reflect something near 4GB of available plysical space.
+
+A few additional high-level things to know about VDO.  
+
+First, the VDO systemd unit is installed and enabled by default when the vdo package is installed. This unit automatically runs the vdo start --all command at system startup to bring up all activated VDO volumes
+
+Second, VDO uses a high-performance deduplication index called UDS to detect duplicate blocks of data as they are being stored. The deduplication window is the number of previously written blocks which the index remembers. The size of the deduplication window is configurable.  The index will require a specific amount of RAM and a specific amount of disk space.
+
+Last, Red Hat generally recommends using a "sparse" UDS index for all production use cases. This indexing data structure requires approximately one-tenth of a byte of DRAM (memory) per block in its deduplication window. On disk, it requires approximately 72 bytes of disk space per block.
+
+The default configuration of the index is to use a "dense" index. This index is considerably less efficient (by a factor of 10) in DRAM, but it has much lower (also by a factor of 10) minimum required disk space, making it more convenient for evaluation in constrained environments.
+
+Please refer to the Red Hat Storage Administration Guide further information on provisioning and managing your data with VDO:
+
+Red Hat Enterprise Linux Storage Administration Guide (VDO)
 
 == Additional Resources
 
+Red Hat Documentation
 
-
-
+    * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[Deplying Session Recording on Red Hat Enterprise Linux]
 
 [discrete]
 == End of Unit
