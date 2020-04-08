@@ -127,8 +127,8 @@ Since we will be reusing the same resources for many exercises, we will begin by
 vgremove -ff vg_lab
 pvremove /dev/vd{b..e}
 
-wipefs /dev/vdb
-wipefs /dev/vdc
+wipefs -a /dev/vdb
+wipefs -a /dev/vdc
 
 partprobe
 ----
@@ -136,19 +136,19 @@ partprobe
 ==== Step 2: Create the Physical Volumes
 
 ----
-pvcreate /dev/vdb /dev/vdc
+pvcreate /dev/vdb
 ----
 
 ==== Step 3: Create a Volume Group (Pool)
 
 ----
-vgcreate vg_lab /dev/vdb /dev/vdc
+vgcreate vg_lab /dev/vdb
 ----
 
 ==== Step 4: Create a Logical Volume
 
 ----
-lvcreate -n lab1 -L 100% vg_lab
+lvcreate -n lab1 -l 100%FREE vg_lab
 ----
 
 ==== Step 5: Create and Mount Filesystem
@@ -158,6 +158,7 @@ mkfs -t ext4 /dev/vg_lab/lab1
 
 mkdir -p /mnt/lab1
 mount /dev/vg_lab/lab1 /mnt/lab1
+
 ----
 
 NOTE: If this were going to be a persistent filesystem, you would still need to add an entry to `etc/fstab`.
@@ -165,46 +166,67 @@ NOTE: If this were going to be a persistent filesystem, you would still need to 
 ==== Examine Your Work
 
 ----
-lvs
+*lvs*
 
-lvs vg_summit/lab1
-
-lvs -o lv_name,lv_size,lv_attr,segtype,devices vg_summit/lab1
-
-lvs -o +devices vg_summit/lab1
-
-lvs -o +devices --noheadings vg_summit/lab1
-
-lvs --separator ':' --noheadings vg_summit/lab1
+  LV     VG      Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  lab1   vg_lab  -wi-ao----  9.99g
+  home   vg_rhel -wi-ao----  1.95g
+  root   vg_rhel -wi-ao---- 19.73g
+  swap01 vg_rhel -wi-ao----  1.95g
+  tmp    vg_rhel -wi-ao----  1.95g
+  var    vg_rhel -wi-ao---- <3.91g
 ----
 
-
-
-== Getting Started
-
-Starting on the host *workstation.example.com*, let's ssh over to *node3.example.com*.  No password should be required.
-
-.[root@workstation]#
 ----
-ssh node3.example.com
+*lvs vg_lab/lab1*
+
+  LV   VG     Attr      v LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  lab1 vg_lab -wi-ao---- 9.99g
 ----
 
-Verify that you are on the right host for these exercises.
-
-.[root@node2 ~]#
 ----
-cheat-lvm-checkhost.sh
+*lvs -o lv_name,lv_size,lv_attr,segtype,devices vg_lab/lab1*
+
+  LV   LSize Attr       Type   Devices
+  lab1 9.99g -wi-ao---- linear /dev/vdb(0)
+  lab1 9.99g -wi-ao---- linear /dev/vdc(0)
 ----
 
-You are now ready to begin your exercises.
+----
+*lvs -o +devices vg_lab/lab1*
 
-== Installation & Configuration
+  LV   VG     Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert Devices   
+  lab1 vg_lab -wi-ao---- 9.99g                                                     /dev/vdb(0)
+  lab1 vg_lab -wi-ao---- 9.99g                                                     /dev/vdc(0)
+----
 
-Install the required packages.
+----
+*lvs -o +devices --noheadings vg_lab/lab1*
 
-*Surprise!!!* There is nothing you need to install or configure for fundamental storage management.
+  lab1 vg_lab -wi-ao---- 9.99g                                                     /dev/vdb(0)
+  lab1 vg_lab -wi-ao---- 9.99g                                                     /dev/vdc(0)
 
-== 
+----
+
+----
+*lvs --separator ':' --noheadings vg_lab/lab1*
+
+  lab1:vg_lab:-wi-ao----:9.99g::::::::
+----
+
+----
+*df /mnt/lab1*
+
+Filesystem              1K-blocks  Used Available Use% Mounted on
+/dev/mapper/vg_lab-lab1  10247444 36888   9670296   1% /mnt/lab1
+----
+
+==== Step 6 - Extend & Resize
+
+
+
+
+
 
 
 
