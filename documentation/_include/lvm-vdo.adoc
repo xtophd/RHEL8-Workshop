@@ -93,33 +93,15 @@ mkfs mount
 
 
 
-
-
-== LVM Linear Volume
+== LVM Management - Introduction
 
 === Summary
 
-A Linear Volume is a virtual device of any size, possibly composed of multiple concatenated physical devices
+In this exercise, you will perform steps to make a new filesystem available to the system using the Logical Volume Management tools.  
 
-=== Usage
+We will begin with a simple linear volume (concatination).
 
-* lvcreate -n <lv_name> -L <size> <vg_name>
-
-==== Additional Comments
-
-Many options have short & long identifiers:
-
-  * '--size' and '-L' are equivalent
-
-Also, you can specifiy the size with --L in (M)egabytes, (G)igabytes or % percentage of available capacity.  Be sure to have a look at the `man` page for all of the available options.
-
-===  Exercise
-
-In this exercise, you will create a simple linear volume (concatination) followed by basic resizing operations.  The commands are grouped by category to mirror the building blocks of storage matrix above.
-
-Note, you can run all of the commands below or use the cheat script listed at the end.
-
-==== Step 1: Clear the device partition data
+==== Clear the device partition data
 
 Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
 
@@ -133,25 +115,25 @@ wipefs -a /dev/vd{b..e}
 partprobe
 ----
 
-==== Step 2: Create the Physical Volumes
+==== Physical Volume Creation
 
 ----
 pvcreate /dev/vdb
 ----
 
-==== Step 3: Create a Volume Group (Pool)
+==== Volume Group (Pool) Creation
 
 ----
 vgcreate vg_lab /dev/vdb
 ----
 
-==== Step 4: Create a Logical Volume
+==== Logical Volume Creation
 
 ----
 lvcreate -n lab1 -l 100%FREE vg_lab
 ----
 
-==== Step 5: Create and Mount Filesystem
+==== Step 5: Make and Mount Filesystem
 
 ----
 mkfs -t ext4 /dev/vg_lab/lab1
@@ -161,7 +143,7 @@ mount /dev/vg_lab/lab1 /mnt/lab1
 
 ----
 
-NOTE: If this were going to be a persistent filesystem, you would still need to add an entry to `etc/fstab`.
+NOTE: If this were going to be a persistent filesystem, you would also need to add an entry to `etc/fstab`.
 
 ==== Examine Your Work
 
@@ -221,7 +203,7 @@ Filesystem              1K-blocks  Used Available Use% Mounted on
 /dev/mapper/vg_lab-lab1  10247444 36888   9670296   1% /mnt/lab1
 ----
 
-==== Step 6 - Extend & Resize
+== LVM Management - Extend and Resize
 
 ----
 pvcreate /dev/vdd
