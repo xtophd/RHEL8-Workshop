@@ -130,7 +130,7 @@ vgcreate vg_lab /dev/vdb
 ==== Logical Volume Creation
 
 ----
-lvcreate -n lab1 -l 95%FREE vg_lab
+lvcreate -y -n lab1 -l 95%FREE vg_lab
 ----
 
 ==== Make and Mount Filesystem
