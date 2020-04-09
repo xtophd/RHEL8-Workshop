@@ -101,12 +101,12 @@ In this exercise, you will perform steps to make a new filesystem available to t
 
 We will begin with a simple linear volume (concatination).
 
-==== Clear the device partition data
+==== Clean Up Devices
 
 Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
 
 ----
-umount /mnt/lab1
+umount /mnt/lab*
 
 vgremove -ff vg_lab
 
@@ -231,12 +231,12 @@ It is not always optimal to allocate 100% of volume group to the logical volumes
 
 We will be leveraging devices /dev/vd{b..e}.  As before, we will cleanup up prior work and start fresh.
 
-==== Step 1: Clear the device partition data
+==== Clean Up Devices
 
 Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
 
 ----
-umount /mnt/lab1
+umount /mnt/lab*
 
 vgremove -ff vg_lab
 
@@ -247,60 +247,73 @@ wipefs -a /dev/vd{b..e}
 partprobe
 ----
 
+==== Physical Volume Creation
 
+----
+ pvcreate /dev/vd{b..e}
+ 
+  Physical volume "/dev/vdb" successfully created.
+  Physical volume "/dev/vdc" successfully created.
+  Physical volume "/dev/vdd" successfully created.
+  Physical volume "/dev/vde" successfully created.
+----
 
+==== Volumge Group Creation
+
+----
+vgcreate vg_lab /dev/vd{b..e}
+
+  Volume group "vg_lab" successfully created
+----
+
+====
+
+This time, we are going to use all four disks to create a mirrored set of striped disks.  Otherwise known as RAID10
+----
+lvcreate -y --type raid10 -m1 -i 2 -n lv_raid10 -l 95%FREE vg_lab
+----
+
+====
+
+==== Add VDO deduplication
 
 .[root@workstation]#
 ----
-vdo create 	--name=exercise4 --device=/dev/vdb --vdoLogicalSize=30G
-mkfs.xfs -K /dev/mapper/exercise4
-mkdir /mnt/exercise4
-mount /dev/mapper/exercise4 /mnt/exercise4
+vdo create 	--name=lab2 --device=/dev/vg_lab/lv_raid10 --vdoLogicalSize=30G
+mkfs.xfs -K /dev/mapper/lab2
+mkdir /mnt/lab2
+mount /dev/mapper/exercise4 /mnt/lab2
 ----
 
-To make the mount persistent across reboots, you need to either add a systemd unit to mount the filesystem, or add an entry to /etc/fstab. as follows:
+NOTE: To make the mount persistent across reboots, you would still need to either add a systemd unit to mount the filesystem, or add an entry to /etc/fstab.
 
-./etc/fstab
-----
-## Add the following to /etc/fstab
-/dev/mapper/exercise4 /mnt/exercise4 xfs defaults,x-systemd.requires=vdo.service 0 0
-----
-
-
-.[root@workstation]#
-----
-vdostats --human-readable
-
-vdostats --verbose
-
-df -h /mnt/exercise4
-----
+==== Create Some Data
 
 Let us now populate the filesystem with some content.  Create a bunch of random subdirectories in our new filesystems with the following command.
 
-.[root@workstation]#
 ----
-for i in {1..100} ; do mktemp -d /mnt/exercise4/XXXXXX ; done
+for i in {1..100} ; do mktemp -d /mnt/lab2/XXXXXX ; done
 ----
 
 Now we will copy the same content into each of the folders as follows.
 
 NOTE: This could take a few minutes.
 
-.[root@workstation]#
 ----
-for i in /mnt/exercise4/* ; do echo "${i}" ; cp -rf /usr/share/locale $i ; done
+for i in /mnt/lab2/* ; do echo "${i}" ; cp -rf /usr/share/locale $i ; done
 ----
 
 The prevoius command should have copied approximately 100MB in 100 folders yielding about 10G of traditional fielsystem consumption.
+
+==== Examine You Work
 
 Let us now check some statistics.  
 
 .[root@workstation]#
 ----
-du -sh /mnt/exercise4
+du -sh /mnt/lab2
 
-df /mnt/exercise4
+df /mnt/lab2
 
 vdostats --human-readable
 ----
