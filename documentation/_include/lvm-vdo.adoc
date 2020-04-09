@@ -344,9 +344,10 @@ Red Hat Enterprise Linux Storage Administration Guide (VDO)
 
 == Additional Resources
 
+    * link:https://www.redhat.com/en/blog/look-vdo-new-linux-compression-layer[A Look At VDO (BLOG)]
+
 Red Hat Documentation
 
-    * link:https://www.redhat.com/en/blog/look-vdo-new-linux-compression-layer[A Look At VDO (BLOG)]
     * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_storage_devices/index[Managing Storage Devices]
     * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/index[Managing Logical Volumes]
     * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/system_design_guide/deploying-vdo_system-design-guide[Deploying VDO]
