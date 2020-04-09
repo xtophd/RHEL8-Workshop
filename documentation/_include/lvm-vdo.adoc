@@ -277,7 +277,7 @@ This time, we are going to use all four disks to create a mirrored set of stripe
 lvcreate -y --type raid10 -m1 -i 2 -n lv_raid10 -l 95%FREE vg_lab
 ----
 
-==== Add VDO Deduplication
+=== Add VDO Deduplication
 
 ----
 vdo create 	--name=lab2 --device=/dev/vg_lab/lv_raid10 --vdoLogicalSize=30G
