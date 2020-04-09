@@ -342,7 +342,9 @@ Red Hat Enterprise Linux Storage Administration Guide (VDO)
 
 Red Hat Documentation
 
-    * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[Deplying Session Recording on Red Hat Enterprise Linux]
+    * link:https://www.redhat.com/en/blog/look-vdo-new-linux-compression-layer[A Look At VDO(BLOG)]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_storage_devices/index[Managing Storage Devices]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_and_managing_logical_volumes/index[Managing Logical Volumes]
 
 [discrete]
 == End of Unit
