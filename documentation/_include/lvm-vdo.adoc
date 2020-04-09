@@ -150,7 +150,7 @@ NOTE: If this were going to be a persistent filesystem, you would also need to a
 lvs
 
   LV     VG      Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
-  lab1   vg_lab  -wi-ao---- <4.50g
+  lab1   vg_lab  -wi-ao---- <4.75g
   home   vg_rhel -wi-ao----  1.95g
   root   vg_rhel -wi-ao---- 19.73g
   swap01 vg_rhel -wi-ao----  1.95g
@@ -162,36 +162,36 @@ lvs
 lvs vg_lab/lab1
 
   LV   VG     Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
-  lab1 vg_lab -wi-ao---- <4.50g
+  lab1 vg_lab -wi-ao---- <4.75g
 ----
 
 ----
 lvs -o lv_name,lv_size,lv_attr,segtype,devices vg_lab/lab1
 
-LV   LSize  Attr       Type   Devices
-  lab1 <4.50g -wi-ao---- linear /dev/vdb(0)
+  LV   LSize  Attr       Type   Devices
+  lab1 <4.75g -wi-ao---- linear /dev/vdb(0)
 ----
 
 ----
 lvs --units g -o +devices vg_lab/lab1
 
-  LV   VG     Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert Devices   
-  lab1 vg_lab -wi-ao---- 4.50g                                                     /dev/vdb(0)
+  LV   VG     Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert Devices
+  lab1 vg_lab -wi-ao---- 4.75g                                                     /dev/vdb(0)
 ----
 
 ----
 df /mnt/lab1
 
 Filesystem              1K-blocks  Used Available Use% Mounted on
-/dev/mapper/vg_lab-lab1   4574880 18424   4304348   1% /mnt/lab1
+/dev/mapper/vg_lab-lab1   4832912 19448   4548248   1% /mnt/lab1
 ----
 
 == Extend and Resize a Linear Volume
 
 ----
-pvcreate /dev/vdd
+pvcreate /dev/vdc
 
-vgextend vg_lab /dev/vdd
+vgextend vg_lab /dev/vdc
 
 lvresize -l 95%VG /dev/vg_lab/lab1
 
@@ -200,48 +200,32 @@ resize2fs /dev/vg_lab/lab1
 
 ==== Examine Your Work
 
+Let us take a look at the logical volume.  Notice a few things:
+
+  * we added `seg_size` to the options to report segment size
+  * the logical volume is comprised of 2 devices (vdb, vdc)
+  * the first segment is copletely used at 5g
+  * the second segement is almost used, but has some space remaining
+  * Over all, the volume group has approximately 500mb remaining
 
 ----
+lvs -o vg_name,vg_free,lv_name,lv_size,seg_size,segtype,devices vg_lab/lab1
 
+  VG     VFree   LV   LSize  SSize  Type   Devices
+  vg_lab 508.00m lab1 <9.50g <5.00g linear /dev/vdb(0)
+  vg_lab 508.00m lab1 <9.50g  4.50g linear /dev/vdc(0)
 ----
 
 ----
 df /mnt/lab1
 
 Filesystem              1K-blocks  Used Available Use% Mounted on
-/dev/mapper/vg_lab-lab1   5041792 18424   4752420   1% /mnt/lab1
+/dev/mapper/vg_lab-lab1   9735476 21840   9249360   1% /mnt/lab1
 ----
 
-----
- lvs -o lv_name,lv_size,lv_attr,segtype,devices vg_lab/lab1
-----
-
-== LVM RAID1
-
-=== Summary
-
-RAID logical volumes provide device fault tolerance and differing I/O patterns based on the type of RAID used
-
-=== Usage
-
-  * lvcreate --type raid[456] -i <stripe_count> -n <lv_name> -L <size> <vg>
-  * lvcreate [--type raid1] -m <copy_count> -n <lv_name> -L <size> <vg>
-  * lvcreate [--type raid10] -m 1 -i <#stripes> -n <lv_name> -L <size> <vg>
-    * RAID10 only supports 2-way mirrors (ie: -m 1)
-
-=== Step 1:
-
-=== Step 2:
-
-=== Step 3:
-
-
-
-
-
+It is not always optimal to allocate 100% of volume group to the logical volumes.  For example, the unused space in the volume group could be used for a temporary snapshot.
 
 == LVM with Virtual Data Optimizer (VDO)
-
 
 We will be leveraging devices /dev/vd{b..e}.  As before, we will cleanup up prior work and start fresh.
 
@@ -264,7 +248,7 @@ partprobe
 
 .[root@workstation]#
 ----
-vdo create 	--name=exercise4 --device=/dev/vdb11 --vdoLogicalSize=30G
+vdo create 	--name=exercise4 --device=/dev/vdb --vdoLogicalSize=30G
 mkfs.xfs -K /dev/mapper/exercise4
 mkdir /mnt/exercise4
 mount /dev/mapper/exercise4 /mnt/exercise4
