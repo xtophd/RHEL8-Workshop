@@ -188,7 +188,7 @@ Filesystem              1K-blocks  Used Available Use% Mounted on
 /dev/mapper/vg_lab-lab1   4832912 19448   4548248   1% /mnt/lab1
 ----
 
-== Extend and Resize a Linear Volume
+=== Extend and Resize a Linear Volume
 
 ----
 pvcreate /dev/vdc
