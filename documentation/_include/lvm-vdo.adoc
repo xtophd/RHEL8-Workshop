@@ -101,7 +101,7 @@ In this exercise, you will perform steps to make a new filesystem available to t
 
 We will begin with a simple linear volume (concatination).
 
-==== Clean Up Devices
+=== Clean Up Devices
 
 Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
 
@@ -117,25 +117,25 @@ wipefs -a /dev/vd{b..e}
 partprobe
 ----
 
-==== Physical Volume Creation
+=== Physical Volume Creation
 
 ----
 pvcreate /dev/vdb
 ----
 
-==== Volume Group (Pool) Creation
+=== Volume Group (Pool) Creation
 
 ----
 vgcreate vg_lab /dev/vdb
 ----
 
-==== Logical Volume Creation
+=== Logical Volume Creation
 
 ----
 lvcreate -y -n lab1 -l 95%FREE vg_lab
 ----
 
-==== Make and Mount Filesystem
+=== Make and Mount Filesystem
 
 ----
 mkfs -t ext4 /dev/vg_lab/lab1
@@ -146,7 +146,7 @@ mount /dev/vg_lab/lab1 /mnt/lab1
 
 NOTE: If this were going to be a persistent filesystem, you would also need to add an entry to `etc/fstab`.
 
-==== Examine Your Work
+=== Examine Your Work
 
 ----
 lvs
@@ -188,7 +188,7 @@ Filesystem              1K-blocks  Used Available Use% Mounted on
 /dev/mapper/vg_lab-lab1   4832912 19448   4548248   1% /mnt/lab1
 ----
 
-=== Extend and Resize a Linear Volume
+== Extend and Resize a Linear Volume
 
 ----
 pvcreate /dev/vdc
@@ -200,7 +200,7 @@ lvresize -l 95%VG /dev/vg_lab/lab1
 resize2fs /dev/vg_lab/lab1
 ----
 
-==== Examine Your Work
+=== Examine Your Work
 
 Let us take a look at the logical volume.  Notice a few things:
 
@@ -227,11 +227,15 @@ Filesystem              1K-blocks  Used Available Use% Mounted on
 
 It is not always optimal to allocate 100% of volume group to the logical volumes.  For example, the unused space in the volume group could be used for a temporary snapshot.
 
-== LVM with Virtual Data Optimizer (VDO)
+
+
+
+
+== Create a RAID-10 Volume with Virtual Data Optimizer (VDO)
 
 We will be leveraging devices /dev/vd{b..e}.  As before, we will cleanup up prior work and start fresh.
 
-==== Clean Up Devices
+=== Clean Up Devices
 
 Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
 
@@ -247,7 +251,7 @@ wipefs -a /dev/vd{b..e}
 partprobe
 ----
 
-==== Physical Volume Creation
+=== Physical Volume Creation
 
 ----
  pvcreate /dev/vd{b..e}
@@ -258,7 +262,7 @@ partprobe
   Physical volume "/dev/vde" successfully created.
 ----
 
-==== Volumge Group Creation
+=== Volumge Group Creation
 
 ----
 vgcreate vg_lab /dev/vd{b..e}
@@ -266,28 +270,28 @@ vgcreate vg_lab /dev/vd{b..e}
   Volume group "vg_lab" successfully created
 ----
 
-====
+=== Logical Volume Creation
 
 This time, we are going to use all four disks to create a mirrored set of striped disks.  Otherwise known as RAID10
 ----
 lvcreate -y --type raid10 -m1 -i 2 -n lv_raid10 -l 95%FREE vg_lab
 ----
 
-====
+==== Add VDO Deduplication
 
-==== Add VDO deduplication
-
-.[root@workstation]#
 ----
 vdo create 	--name=lab2 --device=/dev/vg_lab/lv_raid10 --vdoLogicalSize=30G
+
 mkfs.xfs -K /dev/mapper/lab2
+
 mkdir /mnt/lab2
+
 mount /dev/mapper/exercise4 /mnt/lab2
 ----
 
 NOTE: To make the mount persistent across reboots, you would still need to either add a systemd unit to mount the filesystem, or add an entry to /etc/fstab.
 
-==== Create Some Data
+=== Create Sample Data
 
 Let us now populate the filesystem with some content.  Create a bunch of random subdirectories in our new filesystems with the following command.
 
@@ -305,7 +309,7 @@ for i in /mnt/lab2/* ; do echo "${i}" ; cp -rf /usr/share/locale $i ; done
 
 The prevoius command should have copied approximately 100MB in 100 folders yielding about 10G of traditional fielsystem consumption.
 
-==== Examine You Work
+=== Examine You Work
 
 Let us now check some statistics.  
 
