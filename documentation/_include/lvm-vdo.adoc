@@ -93,7 +93,7 @@ mkfs mount
 
 
 
-== LVM Management - Introduction
+== Create a Linear Volume
 
 === Summary
 
@@ -130,17 +130,16 @@ vgcreate vg_lab /dev/vdb
 ==== Logical Volume Creation
 
 ----
-lvcreate -n lab1 -l 100%FREE vg_lab
+lvcreate -n lab1 -l 95%FREE vg_lab
 ----
 
-==== Step 5: Make and Mount Filesystem
+==== Make and Mount Filesystem
 
 ----
 mkfs -t ext4 /dev/vg_lab/lab1
 
 mkdir -p /mnt/lab1
 mount /dev/vg_lab/lab1 /mnt/lab1
-
 ----
 
 NOTE: If this were going to be a persistent filesystem, you would also need to add an entry to `etc/fstab`.
@@ -148,10 +147,10 @@ NOTE: If this were going to be a persistent filesystem, you would also need to a
 ==== Examine Your Work
 
 ----
-*lvs*
+lvs
 
   LV     VG      Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
-  lab1   vg_lab  -wi-ao----  9.99g
+  lab1   vg_lab  -wi-ao---- <4.50g
   home   vg_rhel -wi-ao----  1.95g
   root   vg_rhel -wi-ao---- 19.73g
   swap01 vg_rhel -wi-ao----  1.95g
@@ -160,65 +159,57 @@ NOTE: If this were going to be a persistent filesystem, you would also need to a
 ----
 
 ----
-*lvs vg_lab/lab1*
+lvs vg_lab/lab1
 
-  LV   VG     Attr      v LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
-  lab1 vg_lab -wi-ao---- 9.99g
+  LV   VG     Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  lab1 vg_lab -wi-ao---- <4.50g
 ----
 
 ----
-*lvs -o lv_name,lv_size,lv_attr,segtype,devices vg_lab/lab1*
+lvs -o lv_name,lv_size,lv_attr,segtype,devices vg_lab/lab1
 
-  LV   LSize Attr       Type   Devices
-  lab1 9.99g -wi-ao---- linear /dev/vdb(0)
-  lab1 9.99g -wi-ao---- linear /dev/vdc(0)
+LV   LSize  Attr       Type   Devices
+  lab1 <4.50g -wi-ao---- linear /dev/vdb(0)
 ----
 
 ----
-*lvs -o +devices vg_lab/lab1*
+lvs --units g -o +devices vg_lab/lab1
 
   LV   VG     Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert Devices   
-  lab1 vg_lab -wi-ao---- 9.99g                                                     /dev/vdb(0)
-  lab1 vg_lab -wi-ao---- 9.99g                                                     /dev/vdc(0)
+  lab1 vg_lab -wi-ao---- 4.50g                                                     /dev/vdb(0)
 ----
 
 ----
-*lvs -o +devices --noheadings vg_lab/lab1*
-
-  lab1 vg_lab -wi-ao---- 9.99g                                                     /dev/vdb(0)
-  lab1 vg_lab -wi-ao---- 9.99g                                                     /dev/vdc(0)
-
-----
-
-----
-*lvs --separator ':' --noheadings vg_lab/lab1*
-
-  lab1:vg_lab:-wi-ao----:9.99g::::::::
-----
-
-----
-*df /mnt/lab1*
+df /mnt/lab1
 
 Filesystem              1K-blocks  Used Available Use% Mounted on
-/dev/mapper/vg_lab-lab1  10247444 36888   9670296   1% /mnt/lab1
+/dev/mapper/vg_lab-lab1   4574880 18424   4304348   1% /mnt/lab1
 ----
 
-== LVM Management - Extend and Resize
+== Extend and Resize a Linear Volume
 
 ----
 pvcreate /dev/vdd
 
 vgextend vg_lab /dev/vdd
 
-lvresize -L 100%FREE /dev/vg_lab/lab1
+lvresize -l 95%VG /dev/vg_lab/lab1
 
 resize2fs /dev/vg_lab/lab1
 ----
 
 ==== Examine Your Work
 
+
 ----
-df -h /mnt/lab1
+
+----
+
+----
+df /mnt/lab1
+
+Filesystem              1K-blocks  Used Available Use% Mounted on
+/dev/mapper/vg_lab-lab1   5041792 18424   4752420   1% /mnt/lab1
 ----
 
 ----
