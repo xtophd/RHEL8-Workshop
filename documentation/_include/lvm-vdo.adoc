@@ -284,7 +284,7 @@ lvcreate -y --type raid10 -m1 -i 2 -n lv_raid10 -l 95%FREE vg_lab
 === Add VDO Deduplication
 
 ----
-vdo create 	--name=lab2 --device=/dev/vg_lab/lv_raid10 --vdoLogicalSize=30G
+vdo create --name=lab2 --device=/dev/vg_lab/lv_raid10 --vdoLogicalSize=30G
 
 mkfs.xfs -K /dev/mapper/lab2
 
