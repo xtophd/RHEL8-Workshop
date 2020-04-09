@@ -242,6 +242,10 @@ Since we will be reusing the same resources for many exercises, we will begin by
 ----
 umount /mnt/lab*
 
+vdo stop --all
+
+vdo remove --all --force
+
 vgremove -ff vg_lab
 
 pvremove /dev/vd{b..e}
@@ -286,7 +290,7 @@ mkfs.xfs -K /dev/mapper/lab2
 
 mkdir /mnt/lab2
 
-mount /dev/mapper/exercise4 /mnt/lab2
+mount /dev/mapper/lab2 /mnt/lab2
 ----
 
 NOTE: To make the mount persistent across reboots, you would still need to either add a systemd unit to mount the filesystem, or add an entry to /etc/fstab.
