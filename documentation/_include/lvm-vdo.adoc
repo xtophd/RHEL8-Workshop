@@ -106,6 +106,8 @@ We will begin with a simple linear volume (concatination).
 Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
 
 ----
+umount /mnt/lab1
+
 vgremove -ff vg_lab
 
 pvremove /dev/vd{b..e}
@@ -234,6 +236,8 @@ We will be leveraging devices /dev/vd{b..e}.  As before, we will cleanup up prio
 Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
 
 ----
+umount /mnt/lab1
+
 vgremove -ff vg_lab
 
 pvremove /dev/vd{b..e}
