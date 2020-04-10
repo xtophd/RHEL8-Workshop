@@ -7,7 +7,7 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
-:imagesdir: ./_images
+:imagesdir: ./_images/rhel8.1-cockpit
 
 :toc:
 :toclevels: 1
@@ -94,7 +94,7 @@ Accept the various notifications about insecure ceritificates, and then login in
   * Enable "Reuse my password for privileged tasks"
 
 ====
-image::cockpit-image13.png[Cockpit Login]
+image::slide1.png[Cockpit Login]
 ====
 
 
