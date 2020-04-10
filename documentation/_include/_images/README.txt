@@ -16,3 +16,5 @@
     
     FOR %a in (*.png) DO magick convert "%a" -crop 1920x1160+0+72  ".\crops\%a"
 
+    Then used PowerPoint to annotate the images and export to PNG
+
