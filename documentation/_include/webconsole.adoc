@@ -12,6 +12,8 @@ endif::[]
 :toc:
 :toclevels: 1
 
+
+
 = Web Console
 
 [discrete]
@@ -81,6 +83,8 @@ firewall-cmd --add-port=443/tcp --permanent
 
 That completes the installation and configuration of the Web Console.
 
+
+
 == Webconsole Login
 
 Your instructors may provide you with a unique link with special instructions to access the web-console on *https://workstation.example.com* with your local browser. This is the PREFERRED method.
@@ -146,20 +150,22 @@ systemctl restart cockpit.socket
 ----
 ====
 
-====
-image::cockpit-image2.png[Cockpit Persistence 3]
-====
+
 
 == Change Performance Profile
 
 RHEL 8 comes with several pre-canned performance tuning profiles from Tuned. Since this is a virtual machine, the default profile “virtual-guest” was selected. You can easily switch profile via the Web Console web UI. In this exercise, we will change the profile to “throughput-performance”
 
 ====
-image::cockpit-image9.png[Cockpit Performance 1]
+image::slide6.png[Cockpit Perf Profile]
 ====
+
+A dialog box will appear.  Scroll and find "throughput-performance" and select.
+
 ====
-image::cockpit-image5.png[Cockpit Performance 2]
+image::slide7.png[Cockpit Perf Throughout]
 ====
+
 
 == View Logs
 
