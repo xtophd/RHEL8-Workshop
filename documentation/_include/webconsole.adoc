@@ -198,6 +198,8 @@ Due to the nature of workshops, we refrain from making and saving changes to the
 image::slide10.png[Cockpit Network]
 ====
 
+
+
 == Firewall Management
 
 Also under the networking section, you can configure your firewall rules. 
@@ -205,17 +207,17 @@ Also under the networking section, you can configure your firewall rules.
 For the next exercise, let's enable a rule for NTP (Network Time Protocol).
 
 ====
-image::cockpit-image6.png[Cockpit Firewall 1]
+image::slide11.png[Cockpit Firewall]
 ====
+
 ====
-image::cockpit-image3.png[Cockpit Firewall 2]
+image::slide12.png[Cockpit Firewall Service]
 ====
+
 ====
-image::cockpit-image10.png[Cockpit Firewall 3]
+image::slide13.png[Cockpit Firewall Dialog]
 ====
-====
-image::cockpit-image15.png[Cockpit Firewall 4]
-====
+
 
 == System Services Management
 
