@@ -124,13 +124,13 @@ image::slide3.png[Cockpit Enable Stored Metrics]
 A dialog will pop-up with basic notifications, go ahead and hit "Install".
 
 ====
-image::slide3.png[Cockpit Install PCP]
+image::slide4.png[Cockpit Install PCP]
 ====
 
 Following the installation, there should be a toggle labelled `Store Metrics`, go ahead and click to enable and wait a few seconds for switch on.
 
 ====
-image::slide4.png[Cockpit Turn-On Stored Metrics]
+image::slide5.png[Cockpit Turn-On Stored Metrics]
 ====
 
 That's it, now you can view the performance data over time including when you are not signed into the web console.
