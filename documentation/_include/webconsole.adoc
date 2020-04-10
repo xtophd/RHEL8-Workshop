@@ -219,37 +219,55 @@ image::slide13.png[Cockpit Firewall Dialog]
 ====
 
 
-== System Services Management
+
+== Service Management
 
 Now that you enabled a NTP firewall rule, let’s make sure an NTP service provider is enabled and running under the Web Console Services section.
 
 Remember that RHEL 8 uses a provider called 'chrony' for ntp.  So you can search for either 'chrony' or 'ntp'.
 
 ====
-image::cockpit-image11.png[Cockpit Firewall 5]
+image::slide14.png[Cockpit Services]
 ====
 
-== Service Management
-
-Web Console also allows you to start/stop, restart, enable/disable a service on your RHEL 8 server:
+Turns out, chronyd is already enabled and active.  Nothing to do here...
 
 ====
-image::cockpit-image17.png[Cockpit Service 5]
+image::slide15.png[Cockpit Services]
 ====
+
+
 
 == Dashboard
 
-You system has been configured with an additional plug-in called the Dashboard.  It appears like a speedometer on the left menu.
+You system has been configured with an additional plug-in called the Web Console Dashboard.  It appears like a speedometer on the left menu.
 
-The graph displays performance metrics for all hosts configured in the dashboard, which at this time is pretty boring since the workstatino is the only host.  So let us add the additional systems in our workshop cluster.
+====
+image::slide16.png[Cockpit Services]
+====
+
+The graph displays performance metrics for all hosts configured in the dashboard, which at this time is pretty boring since the workstation is the only host.  So let us add the additional systems in our workshop cluster.
 
 Select the '+' (add) button on the right side of the Servers list.
 
+====
+image::slide17.png[Cockpit Services]
+====
+
 Add system 'node1.example.com'.
+
 
 Repeat the steps for 'node2.example.com' and 'node3.example.com'
 
+====
+image::slide18.png[Cockpit Services]
+====
+
 Now not only do have visibility to performance data on all of the systems, you can also click on the servers and manage those through the Web Console as well (including Terminal access).  Very handy!
+
+====
+image::slide19.png[Cockpit Services]
+====
 
 == Conclusion
 
