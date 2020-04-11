@@ -42,28 +42,6 @@ Verify that you are on the right host for these exercises.
 cheat-podman-checkhost.sh
 ----
 
-You also need to load the local container registry with a few container images that are staged on core.example.com.  There's a convenient cheat script to take care of this.
-
-.[root@node3 ~]#
-----
-cheat-podman-loadregistry.sh
-----
-
-[NOTE]
-====
-_Native command(s) to load local registry_
-----
-for IMAGENAME in rhel7.5 httpd-24-rhel7 ubi ; do
-
-  IMAGEID=`wget -O -  http://core.example.com/containers/${IMAGENAME}.tar | podman load | grep "Loaded image" | cut -f2 -d@`
-
-  podman tag ${IMAGEID} core.example.com:5000/${IMAGENAME}
-  podman push core.example.com:5000/${IMAGENAME}
-  
-done
-----
-====
-
 Now you are ready to begin your exercises with containers.
 
 == Container Basics
