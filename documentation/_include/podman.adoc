@@ -431,26 +431,8 @@ podman run ubi ps -ef
 .Your output should look like this
 [source,indent=4]
 ----
-UID        PID  PPID  C STIME TTY          TIME CMD
-root         1     0  0 19:53 ?        00:00:00 ps -ef
-----
-
-Notice that all the process belonging to host itself are absent.  The programs running in the container's namespace are isolated from the rest of the host.  From the container's perspective, the process in the container is the only process running.
-
-=== Network
-
-Now let us run a command to report the network configuration from within the a container's namespace.
-
-.[root@node3 ~]#
-----
-podman run ubi ip addr show eth0
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-container create failed: container_linux.go:336: starting container process caused "exec: \"ip\": executable file not found in $PATH"
-: internal libpod error
+Error: container_linux.go:345: starting container process caused "exec: \"ps\": executable file not found in $PATH"
+: OCI runtime error
 ----
 
 What just happened?
@@ -460,6 +442,25 @@ For the most part, containers are not meant for interactive (user) sessions.  In
 So for this exercise, we leverage something called a 'bind mount' to effectively mirror a portion of the host's filesystem into the container's namespace.  Bind mounts are declared using the '-v' option.  In the example below, /usr/sbin from the host will be exposed and accessible to the containers namespace mounted at '/usr/bin' (ie: /usr/sbin:/usr/sbin).
 
 NOTE: Using bind mounts is generally suitable for debugging, but not a good practice as a design decision for enterprise container strategies.  After all, creating dependencies between applications and host operating systems is what we are trying to get away from.
+
+.[root@node3 ~]#
+----
+podman run -v /usr/bin:/usr/bin -v /usr/lib64:/usr/lib64 ubi /bin/ps -ef
+----
+
+
+.Your output should look like this
+[source,indent=4]
+----
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         1     0  0 20:33 ?        00:00:00 /bin/ps -ef
+----
+
+Notice that all the process belonging to host itself are absent.  The programs running in the container's namespace are isolated from the rest of the host.  From the container's perspective, the process in the container is the only process running.
+
+=== Network
+
+Now let us run a command to report the network configuration from within the a container's namespace.
 
 .[root@node3 ~]#
 ----
