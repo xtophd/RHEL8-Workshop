@@ -147,7 +147,7 @@ Time to pull a container from our local repository.
 
 .[root@node3 ~]#
 ----
-podman pull registry.access.redhat.com/ubi8/ubi
+podman pull ubi8/ubi
 ----
 
 Have a looks at the image list now.
@@ -164,15 +164,15 @@ REPOSITORY                            TAG      IMAGE ID       CREATED       SIZE
 registry.access.redhat.com/ubi8/ubi   latest   8121a9f5303b   11 days ago   240 MB
 ----
 
-NOTE: if you are a subscriber to Red Hat Enterprise Linux, you can pull authentic Red Hat certified images directly from Red Hat's repository with `podman pull rhel7.5 --creds 'username:password'`
+NOTE: if you are a subscriber to Red Hat Enterprise Linux, you can pull authentic Red Hat certified images directly from Red Hat's repository.  For example: `podman pull rhel7.5 --creds 'username:password'`
 
 Pull a few more container images.
 
 .[root@node3 ~]#
 ----
-podman pull registry.access.redhat.com/ubi8/ubi-minimal
+podman pull ubi8/ubi-minimal
 
-podman pull registry.access.redhat.com/ubi8/ubi-init
+podman pull ubi8/ubi-init
 ----
 
 .[root@node3 ~]#
