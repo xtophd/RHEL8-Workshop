@@ -5,7 +5,7 @@ RUN yum clean all
 
 RUN echo "The Web Server is Running" > /var/www/html/index.html
 
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["-D", "FOREGROUND"]
 ENTRYPOINT ["/usr/sbin/httpd"]
