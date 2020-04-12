@@ -42,28 +42,6 @@ Verify that you are on the right host for these exercises.
 cheat-podman-checkhost.sh
 ----
 
-You also need to load the local container registry with a few container images that are staged on core.example.com.  There's a convenient cheat script to take care of this.
-
-.[root@node3 ~]#
-----
-cheat-podman-loadregistry.sh
-----
-
-[NOTE]
-====
-_Native command(s) to load local registry_
-----
-for IMAGENAME in rhel7.5 httpd-24-rhel7 ubi ; do
-
-  IMAGEID=`wget -O -  http://core.example.com/containers/${IMAGENAME}.tar | podman load | grep "Loaded image" | cut -f2 -d@`
-
-  podman tag ${IMAGEID} core.example.com:5000/${IMAGENAME}
-  podman push core.example.com:5000/${IMAGENAME}
-  
-done
-----
-====
-
 Now you are ready to begin your exercises with containers.
 
 == Container Basics
@@ -147,7 +125,7 @@ Time to pull a container from our local repository.
 
 .[root@node3 ~]#
 ----
-podman pull core.example.com:5000/ubi
+podman pull ubi8/ubi
 ----
 
 Have a looks at the image list now.
@@ -160,19 +138,19 @@ podman images
 .Your output should look like this
 [source,indent=4]
 ----
-REPOSITORY                  TAG      IMAGE ID       CREATED       SIZE
-core.example.com:5000/ubi   latest   c096c0dc7247   2 weeks ago   214 MB
+REPOSITORY                            TAG      IMAGE ID       CREATED       SIZE
+registry.access.redhat.com/ubi8/ubi   latest   8121a9f5303b   11 days ago   240 MB
 ----
 
-NOTE: if you are a subscriber to Red Hat Enterprise Linux, you can pull authentic Red Hat certified images directly from Red Hat's repository with `podman pull rhel7.5 --creds 'username:password'`
+NOTE: if you are a subscriber to Red Hat Enterprise Linux, you can pull authentic Red Hat certified images directly from Red Hat's repository.  For example: `podman pull rhel7.5 --creds 'username:password'`
 
 Pull a few more container images.
 
 .[root@node3 ~]#
 ----
-podman pull core.example.com:5000/rhel7.5
+podman pull ubi8/ubi-minimal
 
-podman pull core.example.com:5000/httpd-24-rhel7
+podman pull ubi8/ubi-init
 ----
 
 .[root@node3 ~]#
@@ -183,9 +161,10 @@ podman images
 .Your output should look like this
 [source,indent=4]
 ----
-core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   12 days ago    323 MB
-core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago    214 MB
-core.example.com:5000/rhel7.5          latest   7b875638cfd8   7 months ago   211 MB
+REPOSITORY                                    TAG      IMAGE ID       CREATED       SIZE
+registry.access.redhat.com/ubi8/ubi-init      latest   0f5485af5398   11 days ago   256 MB
+registry.access.redhat.com/ubi8/ubi           latest   8121a9f5303b   11 days ago   240 MB
+registry.access.redhat.com/ubi8/ubi-minimal   latest   91d23a64fdf2   11 days ago   108 MB
 ----
 
 ==== Container Tags
@@ -195,7 +174,7 @@ contain, especially after an image has been customized.
 
 .[root@node3 ~]#
 ----
-podman tag core.example.com:5000/ubi myfavorite
+podman tag registry.access.redhat.com/ubi8/ubi myfavorite
 ----
 
 .[root@node3 ~]#
@@ -206,15 +185,14 @@ podman images
 .Your output should look like this
 [source,indent=4]
 ----
-core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   12 days ago    323 MB
-core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago    214 MB
-localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago    214 MB
-core.example.com:5000/rhel7.5          latest   7b875638cfd8   7 months ago   211 MB
+REPOSITORY                                    TAG      IMAGE ID       CREATED       SIZE
+registry.access.redhat.com/ubi8/ubi-init      latest   0f5485af5398   11 days ago   256 MB
+registry.access.redhat.com/ubi8/ubi           latest   8121a9f5303b   11 days ago   240 MB
+localhost/myfavorite                          latest   8121a9f5303b   11 days ago   240 MB
+registry.access.redhat.com/ubi8/ubi-minimal   latest   91d23a64fdf2   11 days ago   108 MB
 ----
 
-Notice host the image-id for "ubi" and "myfavorite" are identical.
-
-Later you will create a custom image based on an official Red Hat Enterprise Linux container image.
+Notice how the image-id for "ubi" and "myfavorite" are identical.
 
 NOTE: The link:https://access.redhat.com/containers[Red Hat Container Catalog] (RHCC) provides a convenient service to locate certified container images built and supported by Red Hat.  You can also view the "security evaluation" for each image.
 
@@ -227,7 +205,7 @@ podman images
 
 .[root@node3 ~]#
 ----
-podman rmi rhel7.5
+podman rmi ubi-init
 ----
 
 .[root@node3 ~]#
@@ -238,9 +216,10 @@ podman images
 .Your output should look like this
 [source,indent=4]
 ----
-core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   12 days ago    323 MB
-core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago    214 MB
-localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago    214 MB
+REPOSITORY                                    TAG      IMAGE ID       CREATED       SIZE
+registry.access.redhat.com/ubi8/ubi           latest   8121a9f5303b   11 days ago   240 MB
+localhost/myfavorite                          latest   8121a9f5303b   11 days ago   240 MB
+registry.access.redhat.com/ubi8/ubi-minimal   latest   91d23a64fdf2   11 days ago   108 MB
 ----
 
 === Essential Container Commands
@@ -422,7 +401,7 @@ podman run ubi cat /proc/sys/kernel/hostname
 .Your output should look like this
 [source,indent=4]
 ----
-5d6d58699069
+d8736f5cbd35
 ----
 
 So what we have learned here is that the hostname in the container's namespace is NOT the same as the host platform (node3.example.com).  It is unique and is by default identical to the container's ID.  You can verify this with 'podman ps -a'.
@@ -435,8 +414,8 @@ podman ps -a
 .Your output should look like this
 [source,indent=4]
 ----
-CONTAINER ID  IMAGE                            COMMAND               CREATED         STATUS                     PORTS  NAMES
-5d6d58699069  core.example.com:5000/ubi:latest cat /proc/sys/ker...  42 seconds ago  Exited (0) 42 seconds ago         sharp_swanson
+CONTAINER ID  IMAGE                                       COMMAND               CREATED         STATUS                     PORTS  NAMES
+d8736f5cbd35  registry.access.redhat.com/ubi8/ubi:latest  cat /proc/sys/ker...  30 seconds ago  Exited (0) 30 seconds ago         dazzling_mendeleev
 ----
 
 
@@ -452,26 +431,8 @@ podman run ubi ps -ef
 .Your output should look like this
 [source,indent=4]
 ----
-UID        PID  PPID  C STIME TTY          TIME CMD
-root         1     0  0 19:53 ?        00:00:00 ps -ef
-----
-
-Notice that all the process belonging to host itself are absent.  The programs running in the container's namespace are isolated from the rest of the host.  From the container's perspective, the process in the container is the only process running.
-
-=== Network
-
-Now let us run a command to report the network configuration from within the a container's namespace.
-
-.[root@node3 ~]#
-----
-podman run ubi ip addr show eth0
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-container create failed: container_linux.go:336: starting container process caused "exec: \"ip\": executable file not found in $PATH"
-: internal libpod error
+Error: container_linux.go:345: starting container process caused "exec: \"ps\": executable file not found in $PATH"
+: OCI runtime error
 ----
 
 What just happened?
@@ -481,6 +442,25 @@ For the most part, containers are not meant for interactive (user) sessions.  In
 So for this exercise, we leverage something called a 'bind mount' to effectively mirror a portion of the host's filesystem into the container's namespace.  Bind mounts are declared using the '-v' option.  In the example below, /usr/sbin from the host will be exposed and accessible to the containers namespace mounted at '/usr/bin' (ie: /usr/sbin:/usr/sbin).
 
 NOTE: Using bind mounts is generally suitable for debugging, but not a good practice as a design decision for enterprise container strategies.  After all, creating dependencies between applications and host operating systems is what we are trying to get away from.
+
+.[root@node3 ~]#
+----
+podman run -v /usr/bin:/usr/bin -v /usr/lib64:/usr/lib64 ubi /bin/ps -ef
+----
+
+
+.Your output should look like this
+[source,indent=4]
+----
+UID        PID  PPID  C STIME TTY          TIME CMD
+root         1     0  0 20:33 ?        00:00:00 /bin/ps -ef
+----
+
+Notice that all the process belonging to host itself are absent.  The programs running in the container's namespace are isolated from the rest of the host.  From the container's perspective, the process in the container is the only process running.
+
+=== Network
+
+Now let us run a command to report the network configuration from within the a container's namespace.
 
 .[root@node3 ~]#
 ----
