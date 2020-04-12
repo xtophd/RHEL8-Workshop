@@ -762,12 +762,7 @@ What we can tell is that our container is bound by a cgroup called "machine.slic
 podman stop webserver
 
 podman rm webserver
-----
 
-=== Cleanup
-
-.[root@node3 ~]#
-----
 podman kill --all
 
 podman rm --all
