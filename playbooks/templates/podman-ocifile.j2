@@ -1,3 +1,11 @@
-FROM core.example.com:5000/httpd-24-rhel7
+FROM ubi8/ubi
 
-ADD ./test.txt /var/www/html/
+RUN yum install -y httpd
+RUN yum clean all
+
+RUN echo "The Web Server is Running" > /var/www/html/index.html
+
+EXPOSE 80
+
+CMD ["-D", "FOREGROUND"]
+ENTRYPOINT ["/usr/sbin/httpd"]
