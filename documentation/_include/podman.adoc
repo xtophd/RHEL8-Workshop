@@ -308,35 +308,34 @@ podman info
 [source,indent=4]
 ----
 host:
-  BuildahVersion: 1.6-dev
+  BuildahVersion: 1.9.0
   Conmon:
-    package: podman-1.0.0-2.git921f98f.module+el8+2785+ff8a053f.x86_64
+    package: podman-1.4.2-5.module+el8.1.0+4240+893c1ab8.x86_64
     path: /usr/libexec/podman/conmon
-    version: 'conmon version 1.14.0-dev, commit: be8255a19cda8a598d76dfa49e16e337769d4528-dirty'
+    version: 'conmon version 2.0.1-dev, commit: unknown'
   Distribution:
     distribution: '"rhel"'
-    version: "8.0"
-  MemFree: 2508419072
-  MemTotal: 3964538880
+    version: "8.1"
+  MemFree: 2372833280
+  MemTotal: 3863744512
   OCIRuntime:
-    package: runc-1.0.0-54.rc5.dev.git2abd837.module+el8+2769+577ad176.x86_64
+    package: runc-1.0.0-60.rc8.module+el8.1.0+4081+b29780af.x86_64
     path: /usr/bin/runc
-    version: 'runc version spec: 1.0.0'
-  SwapFree: 1073737728
-  SwapTotal: 1073737728
+    version: 'runc version spec: 1.0.1-dev'
+  SwapFree: 2097147904
+  SwapTotal: 2097147904
   arch: amd64
   cpus: 2
-  hostname: node3.example.com
-  kernel: 4.18.0-67.el8.x86_64
+  hostname: node3.rhel8.example.com
+  kernel: 4.18.0-147.el8.x86_64
   os: linux
   rootless: false
-  uptime: 1h 20m 7.85s (Approximately 0.04 days)
-insecure registries:
-  registries:
-  - core.example.com
+  uptime: 21m 46.96s
 registries:
-  registries:
-  - core.example.com
+  blocked: null
+  insecure: null
+  search:
+  - registry.access.redhat.com
   - quay.io
   - docker.io
 store:
@@ -347,13 +346,15 @@ store:
   GraphOptions: null
   GraphRoot: /var/lib/containers/storage
   GraphStatus:
-    Backing Filesystem: xfs
+    Backing Filesystem: extfs
     Native Overlay Diff: "true"
     Supports d_type: "true"
+    Using metacopy: "false"
   ImageStore:
     number: 2
   RunRoot: /var/run/containers/storage
-----
+  VolumePath: /var/lib/containers/storage/volumes
+  ----
 
 You should notice that the number of containers (ContainerStore) has incremented to 2, and that the number of ImageStore(s) has grown.  
 
