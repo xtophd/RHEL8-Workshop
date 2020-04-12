@@ -59,35 +59,34 @@ podman info
 [source,indent=4]
 ----
 host:
-  BuildahVersion: 1.6-dev
+  BuildahVersion: 1.9.0
   Conmon:
-    package: podman-1.0.0-2.git921f98f.module+el8+2785+ff8a053f.x86_64
+    package: podman-1.4.2-5.module+el8.1.0+4240+893c1ab8.x86_64
     path: /usr/libexec/podman/conmon
-    version: 'conmon version 1.14.0-dev, commit: be8255a19cda8a598d76dfa49e16e337769d4528-dirty'
+    version: 'conmon version 2.0.1-dev, commit: unknown'
   Distribution:
     distribution: '"rhel"'
-    version: "8.0"
-  MemFree: 3181297664
-  MemTotal: 3964538880
+    version: "8.1"
+  MemFree: 2770325504
+  MemTotal: 3863744512
   OCIRuntime:
-    package: runc-1.0.0-54.rc5.dev.git2abd837.module+el8+2769+577ad176.x86_64
+    package: runc-1.0.0-60.rc8.module+el8.1.0+4081+b29780af.x86_64
     path: /usr/bin/runc
-    version: 'runc version spec: 1.0.0'
-  SwapFree: 1073737728
-  SwapTotal: 1073737728
+    version: 'runc version spec: 1.0.1-dev'
+  SwapFree: 2097147904
+  SwapTotal: 2097147904
   arch: amd64
   cpus: 2
-  hostname: node3.example.com
-  kernel: 4.18.0-67.el8.x86_64
+  hostname: node3.rhel8.example.com
+  kernel: 4.18.0-147.el8.x86_64
   os: linux
   rootless: false
-  uptime: 1h 12m 54.65s (Approximately 0.04 days)
-insecure registries:
-  registries:
-  - core.example.com
+  uptime: 10m 40.82s
 registries:
-  registries:
-  - core.example.com
+  blocked: null
+  insecure: null
+  search:
+  - registry.access.redhat.com
   - quay.io
   - docker.io
 store:
@@ -98,12 +97,14 @@ store:
   GraphOptions: null
   GraphRoot: /var/lib/containers/storage
   GraphStatus:
-    Backing Filesystem: xfs
+    Backing Filesystem: extfs
     Native Overlay Diff: "true"
     Supports d_type: "true"
+    Using metacopy: "false"
   ImageStore:
     number: 0
   RunRoot: /var/run/containers/storage
+  VolumePath: /var/lib/containers/storage/volumes
 ----
 
 === Container Image Management
@@ -307,35 +308,34 @@ podman info
 [source,indent=4]
 ----
 host:
-  BuildahVersion: 1.6-dev
+  BuildahVersion: 1.9.0
   Conmon:
-    package: podman-1.0.0-2.git921f98f.module+el8+2785+ff8a053f.x86_64
+    package: podman-1.4.2-5.module+el8.1.0+4240+893c1ab8.x86_64
     path: /usr/libexec/podman/conmon
-    version: 'conmon version 1.14.0-dev, commit: be8255a19cda8a598d76dfa49e16e337769d4528-dirty'
+    version: 'conmon version 2.0.1-dev, commit: unknown'
   Distribution:
     distribution: '"rhel"'
-    version: "8.0"
-  MemFree: 2508419072
-  MemTotal: 3964538880
+    version: "8.1"
+  MemFree: 2372833280
+  MemTotal: 3863744512
   OCIRuntime:
-    package: runc-1.0.0-54.rc5.dev.git2abd837.module+el8+2769+577ad176.x86_64
+    package: runc-1.0.0-60.rc8.module+el8.1.0+4081+b29780af.x86_64
     path: /usr/bin/runc
-    version: 'runc version spec: 1.0.0'
-  SwapFree: 1073737728
-  SwapTotal: 1073737728
+    version: 'runc version spec: 1.0.1-dev'
+  SwapFree: 2097147904
+  SwapTotal: 2097147904
   arch: amd64
   cpus: 2
-  hostname: node3.example.com
-  kernel: 4.18.0-67.el8.x86_64
+  hostname: node3.rhel8.example.com
+  kernel: 4.18.0-147.el8.x86_64
   os: linux
   rootless: false
-  uptime: 1h 20m 7.85s (Approximately 0.04 days)
-insecure registries:
-  registries:
-  - core.example.com
+  uptime: 21m 46.96s
 registries:
-  registries:
-  - core.example.com
+  blocked: null
+  insecure: null
+  search:
+  - registry.access.redhat.com
   - quay.io
   - docker.io
 store:
@@ -346,12 +346,14 @@ store:
   GraphOptions: null
   GraphRoot: /var/lib/containers/storage
   GraphStatus:
-    Backing Filesystem: xfs
+    Backing Filesystem: extfs
     Native Overlay Diff: "true"
     Supports d_type: "true"
+    Using metacopy: "false"
   ImageStore:
     number: 2
   RunRoot: /var/run/containers/storage
+  VolumePath: /var/lib/containers/storage/volumes
 ----
 
 You should notice that the number of containers (ContainerStore) has incremented to 2, and that the number of ImageStore(s) has grown.  
@@ -439,7 +441,7 @@ What just happened?
 
 For the most part, containers are not meant for interactive (user) sessions.  In this instance, the image that we are using (ie: ubi) does not have the traditional commmandline utilities a user might expect.  Common tools to configure network interfaces like 'ip' simply aren't there.
 
-So for this exercise, we leverage something called a 'bind mount' to effectively mirror a portion of the host's filesystem into the container's namespace.  Bind mounts are declared using the '-v' option.  In the example below, /usr/sbin from the host will be exposed and accessible to the containers namespace mounted at '/usr/bin' (ie: /usr/sbin:/usr/sbin).
+So for this exercise, we leverage something called a 'bind mount' to effectively mirror a portion of the host's filesystem into the container's namespace.  Bind mounts are declared using the '-v' option.  In the example below, /usr/bin from the host will be exposed and accessible to the containers namespace mounted at '/usr/bin' (ie: /usr/bin:/usr/bin).
 
 NOTE: Using bind mounts is generally suitable for debugging, but not a good practice as a design decision for enterprise container strategies.  After all, creating dependencies between applications and host operating systems is what we are trying to get away from.
 
@@ -574,8 +576,7 @@ tmpfs                  1.9G     0  1.9G   0% /proc/scsi
 tmpfs                  1.9G     0  1.9G   0% /sys/firmware
 ----
 
-Notice above how there is now a dedicated mount point for /usr/bin.  Bind-Mounts can be a very powerful tool (primarily for diagnostics) to termporarily inject tools and files that are not normally part of a container image.  Using bind mounts as a design decision for enterprise container strategies is folly.  Creating direct dependencies between containerized applications and host operating systems is what we are trying to get away from.
-
+Notice above how there is now a dedicated mount point for /usr/bin.  Bind-Mounts can be a very powerful tool (primarily for diagnostics) to termporarily inject tools and files that are not normally part of a container image.  Remember, using bind mounts as a design decision for enterprise container strategies is folly.
 
 Let us clean up your environment before proceeding
 
@@ -590,23 +591,70 @@ podman rm --all
 
 === Setup 
 
+A configuration file for a podman build has already been supplied for your system.  Have a look at the contents of that config.
+
+./root/custom_image.OCIfile
+----
+FROM ubi8/ubi
+
+RUN yum install -y httpd
+RUN yum clean all
+
+RUN echo "The Web Server is Running" > /var/www/html/index.html
+
+EXPOSE 8080
+
+CMD ["-D", "FOREGROUND"]
+ENTRYPOINT ["/usr/sbin/httpd"]
+----
+
+Notice a few things about the configuration:
+
+  * that our image is based on `ubi8/ubi`
+  * the build process will install an additional package `httpd` along with it's dependencies
+  * the build will create a file `/var/www/html/index.html` with the contents "The Web Server is Running".
+
+=== Build
+
+Now it's time to build the new container image.
+
 .[root@node3 ~]#
 ----
-mkdir -p /var/www/html
-
-echo "Server up and running" > /var/www/html/test.txt
-
-restorecon -Rv /var/www
+podman build -t custom_image --file custom_image.OCIFile
 ----
 
-=== Deployment
+Once this completes, run:
 
 .[root@node3 ~]#
 ----
-podman run --name "web_example" -v /var/www/html:/var/www/html -d -p 8080:8080 httpd-24-rhel7
+podman images
+----
+
+and you should see something like:
+----
+REPOSITORY                                TAG      IMAGE ID       CREATED          SIZE
+localhost/custom_image                    latest   41af4d6affa6   26 minutes ago   323 MB
+----
+
+=== Deploy
+
+.[root@node3 ~]#
+----
+podman run -d --name="custom_server" -p 8080:8080 custom_image
 ----
 
 === Validation
+
+.[root@node3 ~]#
+----
+curl localhost:8080/test.txt
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+Custom Server up and running
+----
 
 .[root@node3 ~]#
 ----
@@ -771,54 +819,6 @@ podman stop web_example
 podman rm web_example
 ----
 
-
-== Creating a Custom Image
-
-=== Setup
-
-.[root@node3 ~]#
-----
-echo "Custom Server up and running" > /root/test.txt
-----
-
-=== Building
-
-.[root@node3 ~]#
-----
-podman build -t custom_image --file custom_image.OCIFile
-----
-
-Once this completes, run:
-
-.[root@node3 ~]#
-----
-podman images
-----
-
-and you should see something like:
-----
-REPOSITORY                                TAG      IMAGE ID       CREATED          SIZE
-localhost/custom_image                    latest   41af4d6affa6   26 minutes ago   323 MB
-----
-
-=== Deployment of Custom Image
-
-.[root@node3 ~]#
-----
-podman run -d --name="custom_server" -p 8080:8080 custom_image
-----
-
-=== Validation of Custom Image
-
-.[root@node3 ~]#
-----
-curl localhost:8080/test.txt
-----
-
-This should return:
-----
-Custom Server up and running
-----
 
 === Cleanup
 
