@@ -13,7 +13,9 @@ endif::[]
 
 = Building with Buildah and Inspecting with Skopeo!
 
-In this unit, we will get familiar with Buildah and Skopeo!
+In this unit, we will get familiar with Buildah and Skopeo.  
+
+NOTE: These exercises are an extension of the `podman` unit and although not required, it is strongly encourage that you complete that unit first.
 
 [discrete]
 == Additional Reference Materials
