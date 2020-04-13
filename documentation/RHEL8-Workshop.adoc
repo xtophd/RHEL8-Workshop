@@ -105,7 +105,7 @@ For Windows desktops:
   . link:{includedir}/appstream-yum.adoc[*App Stream* - Application Delivery]
   . link:{includedir}/podman.adoc[*Podman* - Container Management]
   . link:{includedir}/buildah.adoc[*Buildah & Skopeo* - Container Development]
-  . link:{includedir}/virtualization.adoc[*Virtualizaion* - Virtualization Management]
+  . link:{includedir}/virtualization.adoc[*Virtualization* - Virtualization Management]
   . link:{includedir}/tlog.adoc[*TLog* - Session Logging]
   . link:{includedir}/lvm-vdo.adoc[*LVM and VDO* - Storage Management and Data Optimization]
   . link:{includedir}/stratis.adoc[*Stratis* - Simplified Storage Management]
