@@ -49,7 +49,7 @@ Now you are ready to extend your knowledge of containers with buildah and skopeo
 
 === Web Server Version 2.0
 
-In the previous lab on `podman`, we pulled down the ubi image and used an OCIFile to build a "webserver" container image. That process used `buildah` under the hood, but in this lab we are going to use `buildah` directly. 
+In the previous lab on `podman`, we pulled down the ubi image and used an OCIFile to build a "webserver" container image. That process used `buildah` under the hood, but in this lab we are going to use `buildah` directly to create a similar image manually.
 
 ==== Start a Fresh Build
 
