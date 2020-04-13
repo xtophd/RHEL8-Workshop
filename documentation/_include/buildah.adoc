@@ -41,7 +41,7 @@ Verify that you are on the right host for these exercises.
 cheat-buildah-checkhost.sh
 ----
 
-Now you are ready to begin your exercises with containers.
+Now you are ready to extend your knowledge of containers with buildah and skopeo.
 
 == Build an Image With Buildah
 
