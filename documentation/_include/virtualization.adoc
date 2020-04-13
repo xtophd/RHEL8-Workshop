@@ -17,7 +17,7 @@ endif::[]
 
 NOTE: If you are using the web-console and do not see "Virtual Machines" in the menu, chances are that you need to sign-out and sign-in again.
 
-Provided your hardware is reasonably modern, chances are it supports virtualization.  This unit introduces simple virtualization management using kvm and libvirt.  You will learn how to:
+Provided your hardware is reasonably modern, chances are that it supports virtualization.  This unit introduces simple virtualization management using kvm and libvirt.  You will learn how to:
 
     * Install additional necessary software
     * Enable necessary system services and firewall ports
@@ -26,7 +26,7 @@ Provided your hardware is reasonably modern, chances are it supports virtualizat
 
 == Getting Started
 
-Starting on the host *workstation.example.com*, just make sure you're the root user.
+Starting on the host *workstation*, just make sure you're the root user.  All exercises will be performed on the *workstation* host.
 
 .[root@workstation]#
 ----
@@ -43,16 +43,6 @@ cheat-virt-checkhost.sh
 ----
 
 You are now ready to proceed with these exercises.
-
-
-
-
-
-Log into workstation VM as student and then use sudo to gain root priviledges.
-
-----
-sudo -i
-----
 
 === Requirements
 
