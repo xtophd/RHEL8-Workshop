@@ -121,9 +121,50 @@ virt-host-validate
   QEMU: Checking for device assignment IOMMU support                         : WARN (No ACPI IVRS table found, IOMMU either disabled in BIOS or not supported by this hardware platform)
 ----
 
+== Image Builder
+
+=== Overview
+
+Red Hat provides pre-crated images of RHEL for use as virtual machines.  This come in a QCOW format.  However, in order to access them for download one needs to have an active Red Hat Enterprise Linux entitlement.  One alternative is to simply build a fresh image using the `Image Builder`.
+
+`Image Builder` is a set of tools to create custom RHEL images in a variety of formats for compatibility with major cloud providers and virtualization technologies available.  We are only going to leverage an existing blueprint, but note that they are easy to extend and customize for your unique requirements.
+
+=== List Blueprints
+
+----
+composer-cli blueprints list
+----
+
+----
+example-atlas
+example-development
+example-http-server
+----
+
+=== Compose a Blueprint
+
+We are going to leverage the `example-http-server` for our purposes.
+
+----
+composer-cli compose start example-http-server qcow2
+----
+
+----
+Compose 812019dd-20e5-4528-a99b-09fbe47ca2d8 added to the queue
+----
+
+
+
+
+
+
+WARNING: I'M STUCK HERE, THE BUILD IS HUNG
+
+
+
 == Deploy A Virtual-Machine with 'virt-install'
 
-Now you are going to leverage a Red Hat pre-built QCOW image to rapidly load a VM with Red Hat Enterprise Linux.
+Now you are ready to leverage the example-http-server and deploy the VM with Red Hat Enterprise Linux.
 
 === Retrieve a QCOW Image
 
