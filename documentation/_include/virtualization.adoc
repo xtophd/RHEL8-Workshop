@@ -55,12 +55,14 @@ This is done with the following simple commands.
 
 You can start by examining the CPU flags (capabilities) advertised by your system.
 
+.[root@workstation]#
 ----
 grep -E 'svm|vmx' /proc/cpuinfo
 ----
 
 You are looking for either the Intel flag (vtx) or the AMD flag (svm).  A more sophisticated command makes it a little easier to determine.
 
+.[root@workstation]#
 ----
 if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "*WARN* Virt NOT Supported"; fi
 ----
@@ -73,40 +75,51 @@ NOTE: Please note that all software has been pre-installed and configured.  Thes
 
 Verifying that yum repos are enabled to install Cockpit and the virtualization tools.
 
+.[root@workstation]#
 ----
 yum repolist
 ----
 
-Make sure rhel-7-server-rpms, rhel-7-server-optional-rpms and rhel-7-server-extras-rpms repos are enabled.
+You will want to ensure rhel-8-baseos-rpms and rhel-8-appstream-rpms are enabled.
 
 Installing Packages for virtualization enablement
 
+.[root@workstation]#
 ----
 yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools
 ----
 
 Installing Packages for webconsole enablement
 
+.[root@workstation]#
 ----
 yum install -y cockpit-machines 
 ----
 
 To make the creating of custom VM images easy, install the Image-Builder tools
 
+.[root@workstation]#
 ----
 yum install -y lorax-composer composer-cli cockpit-composer
 ----
 
 === Enable System Services
 
-----
-# systemctl enable lorax-composer.socket libvirtd
-# systemctl start lorax-composer libvirtd
-----
+If for some reason the webconsole is not enabled, please visit that unit for instructions on installing and configuring webconsole.
 
+To enable the necessary services for this unit:
+
+.[root@workstation]#
+----
+systemctl enable lorax-composer.socket libvirtd
+systemctl start lorax-composer libvirtd
+----
 
 === Verify Virtualization Host Status
 
+One simple command checks various hardware and software configurations for support of virtualization.
+
+.[root@workstation]#
 ----
 virt-host-validate
 ----
