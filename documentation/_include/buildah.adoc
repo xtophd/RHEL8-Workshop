@@ -359,15 +359,12 @@ We will see that this container is based on the Red Hat UBI image.
 Let's look at the ubi8/ubi container that we built this off of and compare the layers section:
 
 .[root@node3 ~]#
-
-[source]
 ----
 skopeo inspect containers-storage:registry.access.redhat.com/ubi8/ubi:latest
 ----
 
 The output of this should be similar to:
 
-[source]
 ----
 {
     "Name": "registry.access.redhat.com/ubi8/ubi",
@@ -407,13 +404,11 @@ The output of this should be similar to:
 }
 ----
 
-and comparing the layers section, we can see that our container has 5 layers whereas the original container only has 4 layers. In this, we can tell that there are differences between these containers.
+and comparing the layers section, we can see that our container has 3 layers whereas the original container only has 2 layers. In this, we can tell that there are differences between these containers.
 
 Pretty neat that we can look inside local containers, but what about containers that are in registries? Skopeo can inspect containers on remote registries without the need to pull the image locally. Let's give that a test:
 
 .[root@node3 ~]#
-
-[source]
 ----
 skopeo inspect --tls-verify=false docker://core.example.com:5000/rhel7.5
 ----
@@ -465,8 +460,6 @@ The above allows us to look at our insecure registry's copy of RHEL 7.5 and will
 Let's run:
 
 .[root@node3 ~]#
-
-[source]
 ----
 podman images
 ----
@@ -488,15 +481,13 @@ localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago    21
 Let's run:
 
 .[root@node3 ~]#
-
-[source]
 ----
 mkdir /root/rhel7.5tarball
 skopeo --tls-verify=false copy docker://core.example.com:5000/rhel7.5 dir:/root/rhel7.5tarball
 ----
 
 You will see output like:
-[source]
+
 ----
 WARN[0000] '--tls-verify' is deprecated, please set this on the specific subcommand
 Getting image source signatures
@@ -513,8 +504,6 @@ Storing signatures
 and now we can do:
 
 .[root@node3 ~]#
-
-[source]
 ----
 cd /root/rhel7.5tarball
 ls -l
@@ -522,7 +511,6 @@ ls -l
 
 and see:
 
-[source]
 ----
 total 76492
 -rw-r--r--. 1 root root 78307258 May  3 13:48 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f
@@ -535,15 +523,12 @@ total 76492
 Inspecting the images, we get:
 
 .[root@node3 ~]#
-
-[source]
 ----
 file 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f
 ----
 
 which shows us:
 
-[source]
 ----
 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f: gzip compressed data, original size 210667520
 ----
@@ -551,8 +536,6 @@ which shows us:
 Let's add a .tar.gz suffix: (I peaked ahead -- inside that gz is a tar!)
 
 .[root@node3 ~]#
-
-[source]
 ----
 mv 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
 tar xvzf 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
@@ -561,8 +544,6 @@ tar xvzf 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
 Once done, we can execute:
 
 .[root@node3 ~]#
-
-[source]
 ----
 ls -l
 ----
