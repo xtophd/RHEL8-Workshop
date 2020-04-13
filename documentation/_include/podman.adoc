@@ -28,7 +28,7 @@ NOTE: You are not required to reference any additional resources for these exerc
 
 == Getting Started
 
-There is a dedicated VM we will use for the container exercises.  From workstation.example.com, you should be able to ssh to node3.example.com as 'root' without any prompts for credentials.
+From workstation.example.com, you should be able to ssh to node3.example.com as 'root' without any prompts for credentials.
 
 .[root@workstation ~]#
 ----
