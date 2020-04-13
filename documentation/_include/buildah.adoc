@@ -308,7 +308,7 @@ Let's take a look at the webserver2:latest container that we just built:
 
 [source]
 ----
-skopeo inspect containers-storage:localhost/website2:latest
+skopeo inspect containers-storage:localhost/webserver2:latest
 ----
 
 This should show us output similar to:
@@ -316,56 +316,53 @@ This should show us output similar to:
 [source]
 ----
 {
-    "Name": "localhost/website2",
-    "Digest": "sha256:4d6973ee11f08293c260c880d41819f1d42e492e5abe6b8e70089428efb16830",
+    "Name": "localhost/webserver2",
+    "Digest": "sha256:15ad1feee74c68a16031b2120793873432572d2592e0818bc4cff9842696b651",
     "RepoTags": [],
-    "Created": "2019-05-02T19:04:59.839714254Z",
+    "Created": "2020-04-13T02:17:40.873320811Z",
     "DockerVersion": "",
     "Labels": {
         "architecture": "x86_64",
         "authoritative-source-url": "registry.access.redhat.com",
-        "build-date": "2019-04-19T06:12:00.059665",
-        "com.redhat.build-host": "cpt-0003.osbs.prod.upshift.rdu2.redhat.com",
-        "com.redhat.component": "httpd24-container",
-        "com.redhat.license_terms": "https://www.redhat.com/licenses/eulas",
-        "description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
+        "build-date": "2020-03-31T14:54:13.907559",
+        "com.redhat.build-host": "cpt-1007.osbs.prod.upshift.rdu2.redhat.com",
+        "com.redhat.component": "ubi8-container",
+        "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI",
+        "description": "The Universal Base Image is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
         "distribution-scope": "public",
-        "io.k8s.description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
-        "io.k8s.display-name": "Apache httpd 2.4",
-        "io.openshift.expose-services": "8080:http,8443:https",
-        "io.openshift.s2i.scripts-url": "image:///usr/libexec/s2i",
-        "io.openshift.tags": "builder,httpd,httpd24",
-        "io.s2i.scripts-url": "image:///usr/libexec/s2i",
-        "maintainer": "SoftwareCollections.org \u003csclorg@redhat.com\u003e",
-        "name": "rhscl/httpd-24-rhel7",
-        "release": "93",
-        "summary": "Platform for running Apache httpd 2.4 or building httpd-based application",
-        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/httpd-24-rhel7/images/2.4-93",
-        "usage": "s2i build https://github.com/sclorg/httpd-container.git --context-dir=examples/sample-test-app/ rhscl/httpd-24-rhel7 sample-server",
-        "vcs-ref": "b0e7348c61f90027df74f25ec5901f07f5131499",
+        "io.k8s.description": "The Universal Base Image is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
+        "io.k8s.display-name": "Red Hat Universal Base Image 8",
+        "io.openshift.expose-services": "",
+        "io.openshift.tags": "base rhel8",
+        "maintainer": "Red Hat, Inc.",
+        "name": "ubi8",
+        "release": "408",
+        "summary": "Provides the latest release of Red Hat Universal Base Image 8.",
+        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8/images/8.1-408",
+        "vcs-ref": "26f36bfa3e3a04c8c866b250924c1aefc34f01c9",
         "vcs-type": "git",
         "vendor": "Red Hat, Inc.",
-        "version": "2.4"
+        "version": "8.1"
     },
     "Architecture": "amd64",
     "Os": "linux",
     "Layers": [
-        "sha256:571dc0d8cede9ec6f1ba7f568bb53f27d377093a241e2f0a0ccc33471e2b91c4",
-        "sha256:7eba55968d66da6d891304d7b99ea09117f2fff9364c3ab02d3cd959b1335c80",
-        "sha256:179c9a960e3bb231448a68cf0d8d9a57fc2227f8c7a57007c698a6f56a061613",
-        "sha256:568a9c98da8c7a3a4a1db36ca95d81fdd4325fb901a282b7c32f69d8077e2431",
-        "sha256:642ad23cb9f28db66ffb50f30c6c86c333de6674f9d7660a627974b04684386f"
+        "sha256:d3ada5af5602bd0da378e4f0144f8fe8bdbe3f5a65f367dd9ebe759756bada68",
+        "sha256:668db11eda933a46ae8030a8643b96088218dae0efeac54bc6dbc88488725c1b",
+        "sha256:d9142adf6c6796bbbccc6065c57508e87138921d3aea0e9fc368f9861606da68"
     ]
 }
 ----
 
-We will see that this container is based on a Red Hat Apache image. Let's look at the httpd-24-rhel7 container that we built this off of and compare the layers section:
+We will see that this container is based on the Red Hat UBI image. 
+
+Let's look at the ubi8/ubi container that we built this off of and compare the layers section:
 
 .[root@node3 ~]#
 
 [source]
 ----
-skopeo inspect containers-storage:core.example.com:5000/httpd-24-rhel7:latest
+skopeo inspect containers-storage:registry.access.redhat.com/ubi8/ubi:latest
 ----
 
 The output of this should be similar to:
@@ -373,44 +370,39 @@ The output of this should be similar to:
 [source]
 ----
 {
-    "Name": "core.example.com:5000/httpd-24-rhel7",
-    "Digest": "sha256:fc5e2d8a2cf507e2a480e069803cffc76c5d83f99fada200ee3ac48cbb7499e6",
+    "Name": "registry.access.redhat.com/ubi8/ubi",
+    "Digest": "sha256:f6648a87c8c52099bacd19b112beb3b65407ae6d3441f9b559ba53c4112c57a4",
     "RepoTags": [],
-    "Created": "2019-04-19T06:13:39.195677Z",
+    "Created": "2020-03-31T14:54:42.119985Z",
     "DockerVersion": "1.13.1",
     "Labels": {
         "architecture": "x86_64",
         "authoritative-source-url": "registry.access.redhat.com",
-        "build-date": "2019-04-19T06:12:00.059665",
-        "com.redhat.build-host": "cpt-0003.osbs.prod.upshift.rdu2.redhat.com",
-        "com.redhat.component": "httpd24-container",
-        "com.redhat.license_terms": "https://www.redhat.com/licenses/eulas",
-        "description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
+        "build-date": "2020-03-31T14:54:13.907559",
+        "com.redhat.build-host": "cpt-1007.osbs.prod.upshift.rdu2.redhat.com",
+        "com.redhat.component": "ubi8-container",
+        "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI",
+        "description": "The Universal Base Image is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
         "distribution-scope": "public",
-        "io.k8s.description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
-        "io.k8s.display-name": "Apache httpd 2.4",
-        "io.openshift.expose-services": "8080:http,8443:https",
-        "io.openshift.s2i.scripts-url": "image:///usr/libexec/s2i",
-        "io.openshift.tags": "builder,httpd,httpd24",
-        "io.s2i.scripts-url": "image:///usr/libexec/s2i",
-        "maintainer": "SoftwareCollections.org \u003csclorg@redhat.com\u003e",
-        "name": "rhscl/httpd-24-rhel7",
-        "release": "93",
-        "summary": "Platform for running Apache httpd 2.4 or building httpd-based application",
-        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/httpd-24-rhel7/images/2.4-93",
-        "usage": "s2i build https://github.com/sclorg/httpd-container.git --context-dir=examples/sample-test-app/ rhscl/httpd-24-rhel7 sample-server",
-        "vcs-ref": "b0e7348c61f90027df74f25ec5901f07f5131499",
+        "io.k8s.description": "The Universal Base Image is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
+        "io.k8s.display-name": "Red Hat Universal Base Image 8",
+        "io.openshift.expose-services": "",
+        "io.openshift.tags": "base rhel8",
+        "maintainer": "Red Hat, Inc.",
+        "name": "ubi8",
+        "release": "408",
+        "summary": "Provides the latest release of Red Hat Universal Base Image 8.",
+        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8/images/8.1-408",
+        "vcs-ref": "26f36bfa3e3a04c8c866b250924c1aefc34f01c9",
         "vcs-type": "git",
         "vendor": "Red Hat, Inc.",
-        "version": "2.4"
+        "version": "8.1"
     },
     "Architecture": "amd64",
     "Os": "linux",
     "Layers": [
-        "sha256:2ed1c0f8e6935361b5a6d4e437524749d6bb60e6eaacc006d47d63518349dee7",
-        "sha256:37611e58fc4c45239111e5c2dc5e8826c9f91758d8e2ce25c31279b67368ba4e",
-        "sha256:ef5d70f606358862f5c5e571088f43a7c8c10976ca481c375d4b4f2a8c800717",
-        "sha256:c634cfc25a1b0a4b90c28dbbfb88b95b1b8c90d3ac9c9e36dbfb39bc4ac72813"
+        "sha256:ee2244abc66ff9c6a4bf50fe19041fec82a95c87d18ee3a3660368cb274927c7",
+        "sha256:befb03b11956169cf23096fc58081ca35034a6545fc37d63605bf0d200fe5eda"
     ]
 }
 ----
