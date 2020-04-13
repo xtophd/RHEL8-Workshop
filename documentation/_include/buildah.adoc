@@ -609,32 +609,11 @@ Examples of how to do these things are available in 'man skopeo'
 
 .[root@node3 ~]#
 ----
-podman kill $(podman ps -q)
+buildah kill --all
 
-podman rm $(podman ps -a -q)
-----
+buildah rm --all
 
-== Exit System
-
-.[root@node3 ~]#
-----
-exit
-----
-
-
-.[root@workstation ~]#
-----
-uname -n
-
-whoami
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-workstation.example.com
-
-root
+buildah rmi --all
 ----
 
 Now you are ready to proceed to the next unit.
