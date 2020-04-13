@@ -51,83 +51,113 @@ Now you are ready to begin your exercises with containers.
 
 === Web Site Version 2.0
 
-In the previous lab on podman, we pulled down the httpd-24-rhel7 container and used an OCIFile to build a container. This was using buildah under the hood, but in this lab, we are going to use buildah directly. Let's get started by creating a working container based off of the httpd-24-rhel7 container:
+In the previous lab on podman, we pulled down the ubi image and used an OCIFile to build a "webserver" container. That process was using buildah under the hood, but in this lab we are going to use buildah directly. Let's get started by creating a new working container based off of the ubi image:
+
+==== Start a Fresh Build
 
 .[root@node3 ~]#
 ----
-buildah from core.example.com:5000/httpd-24-rhel7
+buildah from ubi8/ubi
 ----
 
 .Your output should look like this
 [source]
 ----
-httpd-24-rhel7-working-container
+Getting image source signatures
+Copying blob befb03b11956 done
+Copying blob ee2244abc66f done
+Copying config 8121a9f530 done
+Writing manifest to image destination
+Storing signatures
+ubi-working-container
 ----
 
 This gives us the name of the "working container" and it's this container that we will modify with buildah.
 
+==== Add a Custom File
+
 Let's run:
 
 .[root@node3 ~]#
+----
+echo "Every time you run setenforce 0, you make Dan Walsh weep." > /root/dan-cries.txt
+
+buildah copy ubi-working-container /root/dan-cries.txt /var/www/html/
+----
+
+At this point, you have copied your local `dan-cries.txt` into the root of the webserver and you should see feedback similar to:
 
 [source]
 ----
-echo "Every time you run setenforce 0, you make Dan Walsh weep." > ./test.txt
-buildah copy httpd-24-rhel7-working-container ./test.txt /var/www/html/
-----
-
-At this point, you have copied your local test.txt into the root of the webserver and you should see feedback similar to:
-
-[source]
-----
-2254e08d2191091678d27aca275835cdce7d70cf120d66601750709105fdcd95
+34f1621a22ffd90a2ebbd58eba315089dc2704ac69a3d33d60362422e4ec26a1
 ----
 
 The above is equivalent to the following OCIFile (or Dockerfile):
 
 [source]
 ----
-FROM core.example.com:5000/httpd-24-rhel7
-COPY ./test.txt /var/www/html/
+FROM ubi8/ubi
+COPY /root/dan-cries.txt /var/www/html/
 ----
 
-So that's nice that we can do that with buildah, but let's look at the following example. Go ahead and mount the root filesystem of your container with:
+So it's nice that we can do that with buildah.
+
+But wait there's more!!!
+
+==== Install Packages
+
+We need to install an httpd server in our image, and what better way to do that than a simple `yum install`.
 
 .[root@node3 ~]#
-
-[source]
 ----
-buildah mount httpd-24-rhel7-working-container
+buildah run ubi-working-container yum install -y httpd
+----
+
+==== Configure the Entry Point
+
+Next we set the entry point (command) so when the image deploys it knows what process to launch.
+
+.[root@node3 ~]#
+----
+buildah config --cmd "/usr/sbin/httpd -D FOREGROUND" ubi-working-container
+----
+
+==== Mount the Container Image
+
+Now let us continue to explore and make cutomizations to our image
+
+but let's look at the following example. Go ahead and mount the root filesystem of your container with:
+
+.[root@node3 ~]#
+----
+buildah mount ubi-working-container
 ----
 
 You should see output similar to:
 
 [source]
 ----
-/var/lib/containers/storage/overlay/669b69de30cf8a39eafabccddb6a6e1db7d8d707e6a76c552518f4a8ed716cef/merged
+/var/lib/containers/storage/overlay/3456a159b5b3c9e3056d14b97bde1f0e770500dd1cdd6168c894a52a3b3f12ee/merged
 ----
 
 Do the following (using the path returned by buildah for the cd command):
 
 .[root@node3 ~]#
-
-[source]
 ----
-cd /var/lib/containers/storage/overlay/669b69de30cf8a39eafabccddb6a6e1db7d8d707e6a76c552518f4a8ed716cef/merged
+cd /var/lib/containers/storage/overlay/3456a159b5b3c9e3056d14b97bde1f0e770500dd1cdd6168c894a52a3b3f12ee/merged
 ls -lah ./var/www/html
 ----
 
 and you should see:
 
-[source]
 ----
-total 4.0K
-drwxr-xr-x. 1 importantuser root 22 May  2 14:55 .
-drwxr-xr-x. 1 importantuser root 18 Apr 19 02:13 ..
--rw-r--r--. 1 importantuser root 58 May  2 14:54 test.txt
+total 16K
+drwxr-xr-x. 2 root root 4.0K Apr 12 21:12 .
+drwxr-xr-x. 3 root root 4.0K Apr 12 21:12 ..
+-rw-r--r--. 1 root root   58 Apr 12 21:12 dan-cries.txt
 ----
 
-There is our test.txt! Let's add the following as ./var/www/html/index.html:
+There is our `dan-cries.txt`! Let's add an additional file: ./var/www/html/index.html:
 
 [source]
 ----
@@ -154,11 +184,11 @@ and see:
 
 [source]
 ----
-total 8.0K
-drwxr-xr-x. 1 importantuser root unconfined_u:object_r:container_share_t:s0  40 May  2 15:01 .
-drwxr-xr-x. 1 importantuser root unconfined_u:object_r:container_share_t:s0  18 Apr 19 02:13 ..
--rw-r--r--. 1 root          root unconfined_u:object_r:container_share_t:s0 165 May  2 15:01 index.html
--rw-r--r--. 1 importantuser root unconfined_u:object_r:container_share_t:s0  58 May  2 14:54 test.txt
+total 20K
+drwxr-xr-x. 2 root root system_u:object_r:container_file_t:s0:c60,c544 4.0K Apr 12 21:25 .
+drwxr-xr-x. 3 root root system_u:object_r:container_file_t:s0:c60,c544 4.0K Apr 12 21:12 ..
+-rw-r--r--. 1 root root system_u:object_r:container_file_t:s0:c60,c544   58 Apr 12 21:12 dan-cries.txt
+-rw-r--r--. 1 root root system_u:object_r:container_file_t:s0:c60,c544  164 Apr 12 21:24 index.html
 ----
 
 When you are done making direct changes to the root filesystem of your container, you can run:
@@ -168,7 +198,7 @@ When you are done making direct changes to the root filesystem of your container
 [source]
 ----
 cd /root
-buildah unmount httpd-24-rhel7-working-container
+buildah unmount ubi-working-container
 ----
 
 You should see output similar to:
@@ -178,13 +208,14 @@ You should see output similar to:
 e918debcaabb5820997b1a4969fbd45284adc0a2869d1f22a1bce78f703ff3c6
 ----
 
+
+==== Commit Changes to New Image
+
 Now at this point, we've used buildah to run commands similar to those in an OCIFile and to directly modify the root filesystem of the container. Let's go ahead and commit the working container to an actual container:
 
 .[root@node3 ~]#
-
-[source]
 ----
-buildah commit httpd-24-rhel7-working-container website2
+buildah commit ubi-working-container webserver2
 ----
 
 You should see output similar to:
@@ -192,24 +223,18 @@ You should see output similar to:
 [source]
 ----
 Getting image source signatures
-Skipping fetch of repeat blob sha256:571dc0d8cede9ec6f1ba7f568bb53f27d377093a241e2f0a0ccc33471e2b91c4
-Skipping fetch of repeat blob sha256:7eba55968d66da6d891304d7b99ea09117f2fff9364c3ab02d3cd959b1335c80
-Skipping fetch of repeat blob sha256:179c9a960e3bb231448a68cf0d8d9a57fc2227f8c7a57007c698a6f56a061613
-Skipping fetch of repeat blob sha256:568a9c98da8c7a3a4a1db36ca95d81fdd4325fb901a282b7c32f69d8077e2431
-Copying blob sha256:642ad23cb9f28db66ffb50f30c6c86c333de6674f9d7660a627974b04684386f
- 397 B / 397 B [============================================================] 0s
-Copying config sha256:b5ab9d4956263d63096dfab9581db3cf537a01907f010a7d9f95058902fcc48d
- 4.10 KiB / 4.10 KiB [======================================================] 0s
+Copying blob d3ada5af5602 skipped: already exists
+Copying blob 668db11eda93 skipped: already exists
+Copying blob 0f75b7e04ec6 done
+Copying config a831badcea done
 Writing manifest to image destination
 Storing signatures
-b5ab9d4956263d63096dfab9581db3cf537a01907f010a7d9f95058902fcc48d
+a831badcea41e924fd4a37f98431702142c17a64d06bd5444ac4471c1285be50
 ----
 
 Let's look at our images:
 
 .[root@node3 ~]#
-
-[source]
 ----
 podman images
 ----
@@ -218,12 +243,9 @@ You should see:
 
 [source]
 ----
-REPOSITORY                             TAG      IMAGE ID       CREATED          SIZE
-localhost/website2                     latest   b5ab9d495626   2 minutes ago    323 MB
-localhost/custom_image                 latest   611116f647ab   29 minutes ago   323 MB
-core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   13 days ago      323 MB
-core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago      214 MB
-localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago      214 MB
+REPOSITORY                            TAG      IMAGE ID       CREATED          SIZE
+localhost/webserver2                  latest   a831badcea41   25 seconds ago   240 MB
+registry.access.redhat.com/ubi8/ubi   latest   8121a9f5303b   12 days ago      240 MB
 ----
 
 Now let's run that webserver:
@@ -232,7 +254,7 @@ Now let's run that webserver:
 
 [source]
 ----
-podman run -d -p 8080:8080 website2
+podman run -d -p 8080:80 webserver2
 ----
 
 Now let's test our new webserver:
@@ -262,10 +284,8 @@ t off.
 and:
 
 .[root@node3 ~]#
-
-[source]
 ----
-curl http://localhost:8080/test.txt
+curl http://localhost:8080/dan-cries.txt
 ----
 
 returns:
@@ -277,9 +297,12 @@ Every time you run setenforce 0, you make Dan Walsh weep.
 
 As you can see, all of the changes we made with buildah are active and working in this new container image!
 
+
+
+
 == Inspecting Images with Skopeo
 
-Let's take a look at the website2:latest container that we just built:
+Let's take a look at the webserver2:latest container that we just built:
 
 .[root@node3 ~]#
 
