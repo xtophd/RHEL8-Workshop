@@ -69,6 +69,8 @@ After you install all the required software, there are some additional tools to 
 
 === Installation
 
+NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material.
+
 Verifying that yum repos are enabled to install Cockpit and the virtualization tools.
 
 ----
