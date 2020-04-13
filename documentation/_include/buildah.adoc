@@ -49,11 +49,13 @@ Now you are ready to begin your exercises with containers.
 
 == Build an Image With Buildah
 
-=== Web Site Version 2.0
+=== Web Server Version 2.0
 
-In the previous lab on podman, we pulled down the ubi image and used an OCIFile to build a "webserver" container. That process was using buildah under the hood, but in this lab we are going to use buildah directly. Let's get started by creating a new working container based off of the ubi image:
+In the previous lab on `podman`, we pulled down the ubi image and used an OCIFile to build a "webserver" container image. That process used `buildah` under the hood, but in this lab we are going to use `buildah` directly. 
 
 ==== Start a Fresh Build
+
+Let's get started by creating a new working container based off of the ubi image.
 
 .[root@node3 ~]#
 ----
@@ -72,7 +74,7 @@ Storing signatures
 ubi-working-container
 ----
 
-This gives us the name of the "working container" and it's this container that we will modify with buildah.
+This gives us the name of the "working container" and it is this container image that we will modify with buildah.
 
 ==== Add a Custom File
 
@@ -85,22 +87,22 @@ echo "Every time you run setenforce 0, you make Dan Walsh weep." > /root/dan-cri
 buildah copy ubi-working-container /root/dan-cries.txt /var/www/html/
 ----
 
-At this point, you have copied your local `dan-cries.txt` into the root of the webserver and you should see feedback similar to:
+At this point, you have copied your local `dan-cries.txt` into the the ubi-working-container image.
 
-[source]
+You should see feedback similar to:
+
 ----
 34f1621a22ffd90a2ebbd58eba315089dc2704ac69a3d33d60362422e4ec26a1
 ----
 
-The above is equivalent to the following OCIFile (or Dockerfile):
+The steps you perfromed above is equivalent to the following OCIFile (or Dockerfile):
 
-[source]
 ----
 FROM ubi8/ubi
 COPY /root/dan-cries.txt /var/www/html/
 ----
 
-So it's nice that we can do that with buildah.
+So it's nice that we can do that with buildah, manually.
 
 But wait there's more!!!
 
@@ -124,9 +126,9 @@ buildah config --cmd "/usr/sbin/httpd -D FOREGROUND" ubi-working-container
 
 ==== Mount the Container Image
 
-Now let us continue to explore and make cutomizations to our image
+Now let us continue to explore and make additional cutomizations to our image.
 
-but let's look at the following example. Go ahead and mount the root filesystem of your container with:
+Proceed to mount the root filesystem of your container with:
 
 .[root@node3 ~]#
 ----
@@ -140,7 +142,7 @@ You should see output similar to:
 /var/lib/containers/storage/overlay/3456a159b5b3c9e3056d14b97bde1f0e770500dd1cdd6168c894a52a3b3f12ee/merged
 ----
 
-Do the following (using the path returned by buildah for the cd command):
+Using the long path provided by your mount command, change directories.
 
 .[root@node3 ~]#
 ----
@@ -159,7 +161,6 @@ drwxr-xr-x. 3 root root 4.0K Apr 12 21:12 ..
 
 There is our `dan-cries.txt`! Let's add an additional file: ./var/www/html/index.html:
 
-[source]
 ----
 <html>
 <title>Stop Disabling SELinux</title>
@@ -174,15 +175,12 @@ Seriously, stop disabling SELinux. Learn how to use it before you blindly shut i
 Once you have written that, you should be able to run:
 
 .[root@node3 merged]#
-
-[source]
 ----
 ls -lahZ ./var/www/html/
 ----
 
 and see:
 
-[source]
 ----
 total 20K
 drwxr-xr-x. 2 root root system_u:object_r:container_file_t:s0:c60,c544 4.0K Apr 12 21:25 .
@@ -194,24 +192,19 @@ drwxr-xr-x. 3 root root system_u:object_r:container_file_t:s0:c60,c544 4.0K Apr 
 When you are done making direct changes to the root filesystem of your container, you can run:
 
 .[root@node3 merged]#
-
-[source]
 ----
 cd /root
 buildah unmount ubi-working-container
 ----
 
 You should see output similar to:
-
-[source]
 ----
 e918debcaabb5820997b1a4969fbd45284adc0a2869d1f22a1bce78f703ff3c6
 ----
 
-
 ==== Commit Changes to New Image
 
-Now at this point, we've used buildah to run commands similar to those in an OCIFile and to directly modify the root filesystem of the container. Let's go ahead and commit the working container to an actual container:
+At this point, we've used buildah to run commands and create a container image similar to those in the OCIFile used in the `podman` unit.  Go ahead and commit the working container in to an actual container image:
 
 .[root@node3 ~]#
 ----
@@ -248,6 +241,8 @@ localhost/webserver2                  latest   a831badcea41   25 seconds ago   2
 registry.access.redhat.com/ubi8/ubi   latest   8121a9f5303b   12 days ago      240 MB
 ----
 
+==== Deploy
+
 Now let's run that webserver:
 
 .[root@node3 ~]#
@@ -257,7 +252,9 @@ Now let's run that webserver:
 podman run -d -p 8080:80 webserver2
 ----
 
-Now let's test our new webserver:
+==== Validate
+
+Finally let's test our new webserver:
 
 .[root@node3 ~]#
 
