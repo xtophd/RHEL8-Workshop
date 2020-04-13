@@ -8,6 +8,12 @@
     - name: "SETUP VIRTUALIZATION: cockpit service restart"
       service: name="cockpit.socket" state=started enabled=yes
       
+    - name: "SETUP VIRTUALIZATION: imagebuilder service restart"
+      service: name="lorax-composer" state=started enabled=yes
+      
+    - name: "SETUP VIRTUALIZATION: imagebuilder service restart"
+      service: name="lorax-composer.socket" state=started enabled=yes
+      
     - name: "SETUP VIRTUALIZATION: firewalld service start"
       service: name="firewalld" state=started enabled=yes
       
@@ -16,6 +22,10 @@
       vars:
         ansible_python_interpreter: '/usr/bin/python3'
       
+
+
+systemctl start lorax-composer
+
     - name: "SETUP VIRTUALIZATION: cheat script installs"
       template:
         src: "{{ item.src }}"
