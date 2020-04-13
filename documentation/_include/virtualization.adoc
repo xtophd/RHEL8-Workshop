@@ -17,7 +17,7 @@ endif::[]
 
 NOTE: If you are using the web-console and do not see "Virtual Machines" in the menu, chances are that you need to sign-out and sign-in again.
 
-Provided your hardware is reasonably modern, chances are it supports virtualization.  This unit introduces simple virtualization management using kvm and libvirt.  You will learn how to:
+Provided your hardware is reasonably modern, chances are that it supports virtualization.  This unit introduces simple virtualization management using kvm and libvirt.  You will learn how to:
 
     * Install additional necessary software
     * Enable necessary system services and firewall ports
@@ -26,7 +26,7 @@ Provided your hardware is reasonably modern, chances are it supports virtualizat
 
 == Getting Started
 
-Starting on the host *workstation.example.com*, just make sure you're the root user.
+Starting on the host *workstation*, just make sure you're the root user.  All exercises will be performed on the *workstation* host.
 
 .[root@workstation]#
 ----
@@ -44,16 +44,6 @@ cheat-virt-checkhost.sh
 
 You are now ready to proceed with these exercises.
 
-
-
-
-
-Log into workstation VM as student and then use sudo to gain root priviledges.
-
-----
-sudo -i
-----
-
 === Requirements
 
 First we need to ensure the system being used supports either:
@@ -65,12 +55,14 @@ This is done with the following simple commands.
 
 You can start by examining the CPU flags (capabilities) advertised by your system.
 
+.[root@workstation]#
 ----
 grep -E 'svm|vmx' /proc/cpuinfo
 ----
 
 You are looking for either the Intel flag (vtx) or the AMD flag (svm).  A more sophisticated command makes it a little easier to determine.
 
+.[root@workstation]#
 ----
 if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "*WARN* Virt NOT Supported"; fi
 ----
@@ -79,42 +71,37 @@ After you install all the required software, there are some additional tools to 
 
 === Installation
 
-Verifying that yum repos are enabled to install Cockpit and the virtualization tools.
+NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material.
 
+System needs to be configure with access to the following repos:
+
+  * rhel-8-baseos-rpms
+  * rhel-8-appstream-rpms
+
+.[root@workstation]#
 ----
-yum repolist
-----
-
-Make sure rhel-7-server-rpms, rhel-7-server-optional-rpms and rhel-7-server-extras-rpms repos are enabled.
-
-Installing Packages for virtualization enablement
-
-----
-yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools
-----
-
-Installing Packages for webconsole enablement
-
-----
-yum install -y cockpit-machines 
-----
-
-To make the creating of custom VM images easy, install the Image-Builder tools
-
-----
-yum install -y lorax-composer composer-cli cockpit-composer
+yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools cockpit-machines lorax-composer composer-cli cockpit-composer
 ----
 
 === Enable System Services
 
-----
-# systemctl enable lorax-composer.socket libvirtd
-# systemctl start lorax-composer libvirtd
-----
+NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material.
 
+If for some reason the webconsole is not enabled, please visit that unit for instructions on installing and configuring webconsole.
+
+To enable the necessary services for this unit:
+
+.[root@workstation]#
+----
+systemctl enable lorax-composer.socket libvirtd
+systemctl start lorax-composer libvirtd
+----
 
 === Verify Virtualization Host Status
 
+One simple command checks various hardware and software configurations for support of virtualization.
+
+.[root@workstation]#
 ----
 virt-host-validate
 ----

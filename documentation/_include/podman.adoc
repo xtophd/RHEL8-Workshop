@@ -28,7 +28,7 @@ NOTE: You are not required to reference any additional resources for these exerc
 
 == Getting Started
 
-There is a dedicated VM we will use for the container exercises.  From workstation.example.com, you should be able to ssh to node3.example.com as 'root' without any prompts for credentials.
+From workstation.example.com, you should be able to ssh to node3.example.com as 'root' without any prompts for credentials.
 
 .[root@workstation ~]#
 ----
@@ -602,7 +602,7 @@ RUN yum clean all
 
 RUN echo "The Web Server is Running" > /var/www/html/index.html
 
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["-D", "FOREGROUND"]
 ENTRYPOINT ["/usr/sbin/httpd"]
@@ -612,6 +612,7 @@ Notice a few things about the configuration:
 
   * that our image is based on `ubi8/ubi`
   * the build process will install an additional package `httpd` along with it's dependencies
+  * httpd is configured by default to run on port 80, so that is the port we will expose
   * the build will create a file `/var/www/html/index.html` with the contents "The Web Server is Running".
 
 === Build
@@ -630,31 +631,43 @@ Once this completes, run:
 podman images
 ----
 
-and you should see something like:
+.Your output should look like this
+[source,indent=4]
 ----
-REPOSITORY                                TAG      IMAGE ID       CREATED          SIZE
-localhost/custom_image                    latest   41af4d6affa6   26 minutes ago   323 MB
+REPOSITORY                                    TAG      IMAGE ID       CREATED          SIZE
+localhost/custom_image                        latest   8544c2e4a901   10 minutes ago   273 MB
+localhost/myfavorite                          latest   8121a9f5303b   12 days ago      240 MB
+registry.access.redhat.com/ubi8/ubi           latest   8121a9f5303b   12 days ago      240 MB
+registry.access.redhat.com/ubi8/ubi-minimal   latest   91d23a64fdf2   12 days ago      108 MB
 ----
 
 === Deploy
 
+Time to deploy the image.  A few things to note here:
+
+  * we are going to name the deployment "webserver"
+  * we are connecting localhost port 8080 to port 80 of the deployed container
+  * the deployment is using 'detached' mode
+
 .[root@node3 ~]#
 ----
-podman run -d --name="custom_server" -p 8080:8080 custom_image
+podman run -d --name="webserver" -p 8080:80 custom_image
 ----
 
 === Validation
 
 .[root@node3 ~]#
 ----
-curl localhost:8080/test.txt
+curl http://localhost:8080/
 ----
 
 .Your output should look like this
 [source,indent=4]
 ----
-Custom Server up and running
+The Web Server is Running
 ----
+
+Let us look at the processes running on the host.
 
 .[root@node3 ~]#
 ----
@@ -672,7 +685,19 @@ pgrep -laf httpd
 8717 httpd -D FOREGROUND
 ----
 
-On the host, we see httpd processes on port 8080.  That's good!
+And finally let's look at some networking info.
+
+.[root@node3 ~]#
+----
+netstat -utlpn | grep 8080
+----
+
+.Your output should look like this
+[source,indent=4]
+----
+tcp        0      0 0.0.0.0:8080            0.0.0.0:*               LISTEN      28298/conmon
+----
+
 
 Now let's introduce a commandline utility 'lsns' to check out the namespaces.
 
@@ -685,28 +710,28 @@ lsns
 [source,indent=4]
 ----
         NS TYPE   NPROCS   PID USER   COMMAND
-4026531835 cgroup    111     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
-4026531836 pid       101     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
-4026531837 user      111     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
-4026531838 uts       101     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
-4026531839 ipc       101     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
-4026531840 mnt        96     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531835 cgroup    104     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531836 pid        99     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531837 user      104     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531838 uts        99     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531839 ipc        99     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026531840 mnt        93     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
 4026531860 mnt         1    21 root   kdevtmpfs
-4026531992 net       101     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
-4026532117 mnt         1   598 root   /usr/lib/systemd/systemd-udevd
-4026532197 mnt         1   671 root   /sbin/auditd
-4026532198 mnt         1   700 chrony /usr/sbin/chronyd
-4026532199 mnt         1   730 root   /usr/sbin/NetworkManager --no-daemon
-4026532201 net        10  8662 1001   httpd -D FOREGROUND
-4026532272 mnt        10  8662 1001   httpd -D FOREGROUND
-4026532273 uts        10  8662 1001   httpd -D FOREGROUND
-4026532274 ipc        10  8662 1001   httpd -D FOREGROUND
-4026532275 pid        10  8662 1001   httpd -D FOREGROUND
+4026531992 net        99     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+4026532136 mnt         1   728 root   /usr/lib/systemd/systemd-udevd
+4026532314 mnt         2   950 root   /sbin/auditd
+4026532315 mnt         1   993 chrony /usr/sbin/chronyd
+4026532316 mnt         1  1038 root   /usr/sbin/NetworkManager --no-daemon
+4026532388 net         5 30921 root   /usr/sbin/httpd -D FOREGROUND
+4026532449 mnt         5 30921 root   /usr/sbin/httpd -D FOREGROUND
+4026532450 uts         5 30921 root   /usr/sbin/httpd -D FOREGROUND
+4026532451 ipc         5 30921 root   /usr/sbin/httpd -D FOREGROUND
+4026532452 pid         5 30921 root   /usr/sbin/httpd -D FOREGROUND
 ----
 
 We see that the httpd processes running are using the mnt uts ipc pid and net namespaces.
 
-Since we explored namespaces, we may as well have a look at and discuss the control-groups aligned with our process.
+Since we explored namespaces earlier, we may as well have a look at the control-groups aligned with our process.  
 
 .[root@node3 ~]#
 ----
@@ -716,117 +741,33 @@ systemd-cgls
 .Your output should look like this
 [source,indent=4]
 ----
-├─1 /usr/lib/systemd/systemd --switched-root --system --deserialize 22
-<... SNIP ...>
+...
 └─machine.slice
-  ├─libpod-c76b2199880cc1fb1318953be06be8b2c458cc7ebbd5bb4d74312e96e68c2011.scope
-  │ ├─8662 httpd -D FOREGROUND
-  │ ├─8699 /usr/bin/cat
-  │ ├─8700 /usr/bin/cat
-  │ ├─8701 /usr/bin/cat
-  │ ├─8702 /usr/bin/cat
-  │ ├─8703 httpd -D FOREGROUND
-  │ ├─8704 httpd -D FOREGROUND
-  │ ├─8705 httpd -D FOREGROUND
-  │ ├─8711 httpd -D FOREGROUND
-  │ └─8717 httpd -D FOREGROUND
-  └─libpod-conmon-c76b2199880cc1fb1318953be06be8b2c458cc7ebbd5bb4d74312e96e68c2011.scope
-    └─8651 /usr/libexec/podman/conmon -s -c c76b2199880cc1fb1318953be06be8b2c458cc7ebbd5bb4d74312e96e68c2011 -u c76b2199880cc1fb131>
+  ├─libpod-conmon-c726b2422ba73c0eb904c283a50a66e6e47cb42c3b633075e39f40d268026c6c.scope
+  │ └─30909 /usr/libexec/podman/conmon -s -c c726b2422ba73c0eb904c283a50a66e6e47cb42c3b633075e39f40d26802>
+  └─libpod-c726b2422ba73c0eb904c283a50a66e6e47cb42c3b633075e39f40d268026c6c.scope
+    ├─30921 /usr/sbin/httpd -D FOREGROUND
+    ├─30934 /usr/sbin/httpd -D FOREGROUND
+    ├─30935 /usr/sbin/httpd -D FOREGROUND
+    ├─30936 /usr/sbin/httpd -D FOREGROUND
+    └─30937 /usr/sbin/httpd -D FOREGROUND
 ----
 
 What we can tell is that our container is bound by a cgroup called "machine.slice".  Otherwise, nothing remarkable to discern here.
 
-Take a quick look are the network on the host.
-
-.[root@node3 ~]#
-----
-netstat -tulpn | grep 8080
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-tcp        0      0 0.0.0.0:8080            0.0.0.0:*               LISTEN      8651/conmon
-----
-
-Just pointing out that that there is now a service hanging on port 8080 proxying the network traffic to the container.
-
-Now let us see if the simple web server is working.
-
-.[root@node3 ~]#
-----
-curl localhost:8080/test.txt
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-Server up and running
-----
-
 === Cleanup
 
 .[root@node3 ~]#
 ----
-podman stop web_example
+podman stop webserver
 
-podman rm web_example
-----
+podman rm webserver
 
-
-
-== Exploring Container Security
-
-Now it is time to examine security.  Start be re-launching the container from our last exercise.
-
-=== Standard Strong Security with SELinux
-
-.[root@node3 ~]#
-----
-podman run --name "web_example" -v /var/www/html:/var/www/html -v /usr/sbin:/usr/sbin -d -p 8080:8080 httpd-24-rhel7
-----
-
-Now you will start a shell that inherits the namespaces from 'web_example'.
-
-.[root@node3 ~]#
-----
-podman exec -it web_example bash
-----
-
-.bash-4.2$ 
-----
-echo "Hello From My Container" > /usr/sbin/tryme.txt
-----
-
-You should see:
-
-.bash-4.2$ 
-----
-bash: /usr/sbin/tryme.txt: Permission denied
-----
-
-Now run:
-
-.bash-4.2$ 
-----
-exit
-----
-
-.[root@node3 ~]#
-----
-podman stop web_example
-
-podman rm web_example
-----
-
-
-=== Cleanup
-
-.[root@node3 ~]#
-----
 podman kill --all
 
 podman rm --all
+
+podman rmi --all
 ----
 
 [discrete]
