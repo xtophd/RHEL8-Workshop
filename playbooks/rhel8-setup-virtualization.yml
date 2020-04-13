@@ -6,17 +6,20 @@
       yum: name=qemu-kvm,libvirt,firewalld,virt-install,libvirt-client,libguestfs-tools,wget,cockpit-machines,lorax-composer,composer-cli,cockpit-composer state=installed
 
     - name: "SETUP VIRTUALIZATION: cockpit service restart"
-      service: name="cockpit.socket" state=started enabled=yes
-      
+      service: name="cockpit.socket" enabled=yes
+
+    - name: "SETUP VIRTUALIZATION: imagebuilder socket enabled"
+      service: name="lorax-composer.socket" enabled=yes
+
+    - name: "SETUP VIRTUALIZATION: imagebuilder service restart"
+      service: name="cockpit" state=started enabled=yes
+
     - name: "SETUP VIRTUALIZATION: imagebuilder service restart"
       service: name="lorax-composer" state=started enabled=yes
-      
-    - name: "SETUP VIRTUALIZATION: imagebuilder socket service restart"
-      service: name="lorax-composer.socket" state=started enabled=yes
-      
+
     - name: "SETUP VIRTUALIZATION: firewalld service start"
       service: name="firewalld" state=started enabled=yes
-      
+
     - name: "SETUP VIRTUALIZATION: firewall configuration"
       firewalld: port=9090/tcp permanent=yes immediate=yes state=enabled
       vars:
