@@ -399,55 +399,69 @@ The output of this should be similar to:
 }
 ----
 
-and comparing the layers section, we can see that our container has 3 layers whereas the original container only has 2 layers. In this, we can tell that there are differences between these containers.
+Comparing the layers section, we can see that our container has 3 layers whereas the original container only has 2 layers. In this, we can tell that there are differences between these containers.
 
 Pretty neat that we can look inside local containers, but what about containers that are in registries? Skopeo can inspect containers on remote registries without the need to pull the image locally. Let's give that a test:
 
 .[root@node3 ~]#
 ----
-skopeo inspect --tls-verify=false docker://core.example.com:5000/rhel7.5
+skopeo inspect docker://registry.access.redhat.com/ubi8/ubi-minimal:latest
 ----
 
-The above allows us to look at our insecure registry's copy of RHEL 7.5 and will return this output:
+The above allows us to look at the registry's copy of ubi8/ubi and will return this output:
 
-[source]
 ----
 {
-    "Name": "core.example.com:5000/rhel7.5",
-    "Digest": "sha256:dff4dc848def191bc8fc2185a8ff57b4d4fdbf032457b28286b381bf0238e2c5",
+    "Name": "registry.access.redhat.com/ubi8/ubi-minimal",
+    "Digest": "sha256:df6f9e5d689e4a0b295ff12abc6e2ae2932a1f3e479ae1124ab76cf40c3a8cdd",
     "RepoTags": [
-        "latest"
+        "8.1",
+        "8.0",
+        "8.1-409-source",
+        "8.0-127",
+        "8.0-204",
+        "8.1-398-source",
+        "8.0-213",
+        "8.0-159",
+        "8.1-328",
+        "8.1-398",
+        "8.1-409",
+        "8.1-407-source",
+        "8.1-407",
+        "8.1-279",
+        "latest",
+        "8.0-131"
     ],
-    "Created": "2018-09-19T20:47:02.057298Z",
-    "DockerVersion": "1.12.6",
+    "Created": "2020-03-31T14:52:10.793843Z",
+    "DockerVersion": "1.13.1",
     "Labels": {
         "architecture": "x86_64",
         "authoritative-source-url": "registry.access.redhat.com",
-        "build-date": "2018-09-19T20:46:28.459833",
-        "com.redhat.build-host": "osbs-cpt-003.ocp.osbs.upshift.eng.rdu2.redhat.com",
-        "com.redhat.component": "rhel-server-container",
-        "description": "The Red Hat Enterprise Linux Base image is designed to be a fully supported foundation for your containerized applications. This base image provides your operations and application teams with the packages, language runtimes and tools necessary to run, maintain, and troubleshoot all of your applications. This image is maintained by Red Hat and updated regularly. It is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. When used as the source for all of your containers, only one copy will ever be downloaded and cached in your production environment. Use this image just like you would a regular Red Hat Enterprise Linux distribution. Tools like yum, gzip, and bash are provided by default. For further information on how this image was built look at the /root/anacanda-ks.cfg file.",
+        "build-date": "2020-03-31T14:51:49.719962",
+        "com.redhat.build-host": "cpt-1002.osbs.prod.upshift.rdu2.redhat.com",
+        "com.redhat.component": "ubi8-minimal-container",
+        "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI",
+        "description": "The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
         "distribution-scope": "public",
-        "io.k8s.description": "The Red Hat Enterprise Linux Base image is designed to be a fully supported foundation for your containerized applications. This base image provides your operations and application teams with the packages, language runtimes and tools necessary to run, maintain, and troubleshoot all of your applications. This image is maintained by Red Hat and updated regularly. It is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. When used as the source for all of your containers, only one copy will ever be downloaded and cached in your production environment. Use this image just like you would a regular Red Hat Enterprise Linux distribution. Tools like yum, gzip, and bash are provided by default. For further information on how this image was built look at the /root/anacanda-ks.cfg file.",
-        "io.k8s.display-name": "Red Hat Enterprise Linux 7",
+        "io.k8s.description": "The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
+        "io.k8s.display-name": "Red Hat Universal Base Image 8 Minimal",
         "io.openshift.expose-services": "",
-        "io.openshift.tags": "base rhel7",
+        "io.openshift.tags": "minimal rhel8",
         "maintainer": "Red Hat, Inc.",
-        "name": "rhel7",
-        "release": "433",
-        "summary": "Provides the latest release of Red Hat Enterprise Linux 7 in a fully featured and supported base image.",
-        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhel7/images/7.5-433",
-        "usage": "This image is very generic and does not serve a single use case. Use it as a base to build your own images.",
-        "vcs-ref": "b8a2783c87bd09059fb8ba8a00817734bcb48ac3",
+        "name": "ubi8-minimal",
+        "release": "409",
+        "summary": "Provides the latest release of the minimal Red Hat Universal Base Image 8.",
+        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8-minimal/images/8.1-409",
+        "vcs-ref": "8c3c7acc321ed054dded6e6e13b5c09c043f42dc",
         "vcs-type": "git",
         "vendor": "Red Hat, Inc.",
-        "version": "7.5"
+        "version": "8.1"
     },
     "Architecture": "amd64",
     "Os": "linux",
     "Layers": [
-        "sha256:610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f",
-        "sha256:cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888"
+        "sha256:b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7",
+        "sha256:218f593046abe6e9f194aed3fc2a2ad622065d6800175514dffa55dfce624b56"
     ]
 }
 ----
@@ -459,16 +473,13 @@ Let's run:
 podman images
 ----
 
-and note that rhel7.5 is not in our list:
+and note that ubi8/ubi-minimal is not in our list:
 
 [source]
 ----
-REPOSITORY                             TAG      IMAGE ID       CREATED        SIZE
-localhost/website2                     latest   b5ab9d495626   23 hours ago   323 MB
-localhost/custom_image                 latest   611116f647ab   23 hours ago   323 MB
-core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   2 weeks ago    323 MB
-core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago    214 MB
-localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago    214 MB
+REPOSITORY                            TAG      IMAGE ID       CREATED         SIZE
+localhost/webserver2                  latest   b660ca86ee4b   7 minutes ago   271 MB
+registry.access.redhat.com/ubi8/ubi   latest   8121a9f5303b   12 days ago     240 MB
 ----
 
 === Obtaining tarballs of containers in remote registries for further inspection
@@ -477,21 +488,17 @@ Let's run:
 
 .[root@node3 ~]#
 ----
-mkdir /root/rhel7.5tarball
-skopeo --tls-verify=false copy docker://core.example.com:5000/rhel7.5 dir:/root/rhel7.5tarball
+mkdir /root/ubi-tarball
+skopeo copy docker://registry.access.redhat.com/ubi8/ubi-minimal:latest dir:/root/ubi-tarball
 ----
 
 You will see output like:
 
 ----
-WARN[0000] '--tls-verify' is deprecated, please set this on the specific subcommand
 Getting image source signatures
-Copying blob sha256:610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f
- 74.68 MB / 74.68 MB [======================================================] 2s
-Copying blob sha256:cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888
- 1.32 KB / 1.32 KB [========================================================] 0s
-Copying config sha256:7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411
- 6.52 KB / 6.52 KB [========================================================] 0s
+Copying blob b26afdf22be4 done
+Copying blob 218f593046ab done
+Copying config 91d23a64fd done
 Writing manifest to image destination
 Storing signatures
 ----
@@ -500,95 +507,80 @@ and now we can do:
 
 .[root@node3 ~]#
 ----
-cd /root/rhel7.5tarball
+cd /root/ubi-tarball
 ls -l
 ----
 
 and see:
 
 ----
-total 76492
--rw-r--r--. 1 root root 78307258 May  3 13:48 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f
--rw-r--r--. 1 root root     6680 May  3 13:48 7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411
--rw-r--r--. 1 root root     1350 May  3 13:48 cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888
--rw-r--r--. 1 root root      590 May  3 13:48 manifest.json
--rw-r--r--. 1 root root       33 May  3 13:48 version
+total 33888
+drwxr-xr-x. 2 root root     4096 Apr 13 09:48 .
+dr-xr-x---. 5 root root     4096 Apr 13 09:48 ..
+-rw-r--r--. 1 root root     1529 Apr 13 09:48 218f593046abe6e9f194aed3fc2a2ad622065d6800175514dffa55dfce624b56
+-rw-r--r--. 1 root root     4457 Apr 13 09:48 91d23a64fdf259ffce4181b40ce3dafa982a9e4a76ae6a88c1e662c6166c7324
+-rw-r--r--. 1 root root 34668948 Apr 13 09:48 b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7
+-rw-r--r--. 1 root root      737 Apr 13 09:48 manifest.json
+-rw-r--r--. 1 root root       33 Apr 13 09:48 version
 ----
 
-Inspecting the images, we get:
+Inspecting the images with the `file` command, we discover that these a couple of text file along with a couple of zipped (compressed) tar files.
 
 .[root@node3 ~]#
 ----
-file 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f
+file *
 ----
 
 which shows us:
 
 ----
-610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f: gzip compressed data, original size 210667520
+218f593046abe6e9f194aed3fc2a2ad622065d6800175514dffa55dfce624b56: gzip compressed data, original size 20480
+91d23a64fdf259ffce4181b40ce3dafa982a9e4a76ae6a88c1e662c6166c7324: ASCII text, with very long lines
+b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7: gzip compressed data, original size 108462080
+manifest.json:                                                    ASCII text
+version:                                                          ASCII text
 ----
 
-Let's add a .tar.gz suffix: (I peaked ahead -- inside that gz is a tar!)
+Let's take a test view of the contents of the largest gzip file (examine "original size"):
 
 .[root@node3 ~]#
 ----
-mv 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
-tar xvzf 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
+tar tvzf b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7
 ----
 
-Once done, we can execute:
+The output is going to scroll by rather quickly, but just note that this is a complete filesystem for the container image.  The output below is obivously truncated.
 
-.[root@node3 ~]#
 ----
-ls -l
-----
-
-and see output similar to:
-
-[source]
-----
-total 71584
--rw-r--r--.  1 root root 73273413 May  3 13:48 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
--rw-r--r--.  1 root root     6680 May  3 13:48 7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411
-lrwxrwxrwx.  1 root root        7 Sep 19  2018 bin -> usr/bin
-dr-xr-xr-x.  2 root root        6 Dec 14  2017 boot
--rw-r--r--.  1 root root     1350 May  3 13:48 cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888
-drwxr-xr-x.  2 root root        6 Sep 19  2018 dev
-drwxr-xr-x. 49 root root     4096 Sep 19  2018 etc
-drwxr-xr-x.  2 root root        6 Sep 19  2018 home
-lrwxrwxrwx.  1 root root        7 Sep 19  2018 lib -> usr/lib
-lrwxrwxrwx.  1 root root        9 Sep 19  2018 lib64 -> usr/lib64
--rw-r--r--.  1 root root      590 May  3 13:48 manifest.json
-drwxr-xr-x.  2 root root        6 Dec 14  2017 media
-drwxr-xr-x.  2 root root        6 Dec 14  2017 mnt
-drwxr-xr-x.  2 root root        6 Dec 14  2017 opt
-drwxr-xr-x.  2 root root        6 Sep 19  2018 proc
-dr-xr-x---.  3 root root      154 Sep 19  2018 root
-drwxr-xr-x. 12 root root      145 Sep 19  2018 run
-lrwxrwxrwx.  1 root root        8 Sep 19  2018 sbin -> usr/sbin
-drwxr-xr-x.  2 root root        6 Dec 14  2017 srv
-drwxr-xr-x.  2 root root        6 Sep 19  2018 sys
-drwxrwxrwt.  7 root root      132 Sep 19  2018 tmp
-drwxr-xr-x. 13 root root      155 Sep 19  2018 usr
-drwxr-xr-x. 18 root root      238 Sep 19  2018 var
--rw-r--r--.  1 root root       33 May  3 13:48 version
+dr-xr-xr-x root/root         0 2020-03-31 10:48 ./
+lrwxrwxrwx root/root         0 2018-08-12 05:46 ./lib64 -> usr/lib64
+lrwxrwxrwx root/root         0 2018-08-12 05:46 ./lib -> usr/lib
+drwxr-xr-x root/root         0 2020-03-31 10:48 ./etc/
+drwxr-xr-x root/root         0 2020-03-31 10:48 ./etc/libssh/
+-rw-r--r-- root/root       178 2019-08-05 10:32 ./etc/libssh/libssh_client.config
+-rw-r--r-- root/root       179 2019-08-05 10:32 ./etc/libssh/libssh_server.config
+-rw-r--r-- root/root        22 2019-09-25 14:17 ./etc/issue.net
+-rw-r--r-- root/root      1498 2019-11-28 12:53 ./etc/nsswitch.conf.bak
+-rw-r--r-- root/root        55 2020-03-31 10:47 ./etc/resolv.conf
+drwxr-xr-x root/root         0 2018-08-12 05:46 ./etc/bash_completion.d/
+lrwxrwxrwx root/root         0 2018-09-10 10:14 ./etc/rc0.d -> rc.d/rc0.d
+-rw-r--r-- root/root      9490 2020-03-31 10:48 ./etc/ld.so.cache
+-rw-r--r-- root/root        58 2018-09-10 07:51 ./etc/networks
+-rw-r--r-- root/root      1362 2018-09-10 07:51 ./etc/ethertypes
+...
 ----
 
-At this point, you can go dive into the filesystem and do any analysis you would like. Remember, we pulled this container image direct from the registry without adding it to the list of images available to podman for deployment.
+NOTE: If you are more curious and would like to inspect the details a little further you could pipe the output to `more` or `less` and page through the archive contents.  `tar tvzf b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7 | less`
 
-The other two numeric files provided in the download are a copy of the metadata in text (7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411 in this specific example) and a tarball of any container secrets and the file used to build the container. The following is the output of tar on that file:
+The other two numeric files provided in the image download are:
 
-[source]
-----
-etc/
-etc/yum.repos.d/
-run/
-run/secrets/
-root/
-root/buildinfo/
-root/buildinfo/Dockerfile-rhel7-7.5-433
-----
+  * a copy of the metadata in text 
+  * an additional tarball of any container secrets
+  
+Lastly, a couple of ASCII text files:
 
+  * oci config info used to build the container
+  * version info
+  * manifest info
 
 === Other Uses of Skopeo
 
@@ -604,10 +596,13 @@ Examples of how to do these things are available in 'man skopeo'
 
 .[root@node3 ~]#
 ----
-buildah kill --all
+podman stop --all
+podman rm --all
 
+buildah stop --all
 buildah rm --all
 
+podman rmi --all
 buildah rmi --all
 ----
 
