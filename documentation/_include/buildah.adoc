@@ -93,7 +93,7 @@ You should see feedback similar to:
 34f1621a22ffd90a2ebbd58eba315089dc2704ac69a3d33d60362422e4ec26a1
 ----
 
-The steps you perfromed above is equivalent to the following OCIFile (or Dockerfile):
+The steps you performed above is equivalent to the following OCIFile (or Dockerfile):
 
 ----
 FROM ubi8/ubi
