@@ -73,37 +73,19 @@ After you install all the required software, there are some additional tools to 
 
 NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material.
 
-Verifying that yum repos are enabled to install Cockpit and the virtualization tools.
+System needs to be configure with access to the following repos:
+
+  * rhel-8-baseos-rpms
+  * rhel-8-appstream-rpms
 
 .[root@workstation]#
 ----
-yum repolist
-----
-
-You will want to ensure rhel-8-baseos-rpms and rhel-8-appstream-rpms are enabled.
-
-Installing Packages for virtualization enablement
-
-.[root@workstation]#
-----
-yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools
-----
-
-Installing Packages for webconsole enablement
-
-.[root@workstation]#
-----
-yum install -y cockpit-machines 
-----
-
-To make the creating of custom VM images easy, install the Image-Builder tools
-
-.[root@workstation]#
-----
-yum install -y lorax-composer composer-cli cockpit-composer
+yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools cockpit-machines lorax-composer composer-cli cockpit-composer
 ----
 
 === Enable System Services
+
+NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material.
 
 If for some reason the webconsole is not enabled, please visit that unit for instructions on installing and configuring webconsole.
 
