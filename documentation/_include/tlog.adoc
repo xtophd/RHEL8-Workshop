@@ -27,11 +27,11 @@ Starting on the host *workstation.example.com*, let's ssh over to *node1.example
 ssh node1.example.com
 ----
 
-Now change your effective userid to student using the `su` command.  Don't forget the dash, it's `su - student`.
+Now change your effective userid to cloud-user using the `su` command.  Don't forget the dash, it's `su - cloud-user`.
 
 .[root@node1]#
 ----
-su - student
+su - cloud-user
 ----
 
 Notice the "ATTENTION" banner during your login.  Your session is being recorded!
@@ -51,7 +51,7 @@ ATTENTION! Your session is being recorded!
 Let us now do a few activities worth logging.  You can check out a directory listing, look at the host's _passwd_ and _shadow_ files.  
 Oh wait, you need root priviledges to see the contents of _/etc/shadow_.  You can use sudo for that!  Now exit your shell.
 
-.[student@node1]#
+.[cloud-user@node1]#
 ----
 ls -l /etc
 
@@ -70,32 +70,32 @@ Session logs are configured to record in the system journal by default.  A disti
 
 .[root@node1]#
 ----
-journalctl -o verbose  --output-fields=TLOG_USER,TLOG_REC TLOG_USER=student
+journalctl -o verbose  --output-fields=TLOG_USER,TLOG_REC TLOG_USER=cloud-user
 ----
 
 .You output should look like this
 [source,indent=4]
 ----
 Sat 2019-04-27 21:21:27.852913 EDT [s=bcde42e4c96048c3908657177414e202;i=700;b=b2333248c22a4c5f912a>
-    TLOG_USER=student
+    TLOG_USER=cloud-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
 Sat 2019-04-27 21:21:33.354695 EDT [s=bcde42e4c96048c3908657177414e202;i=701;b=b2333248c22a4c5f912a>
-    TLOG_USER=student
+    TLOG_USER=cloud-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
 Sat 2019-04-27 21:21:43.483301 EDT [s=bcde42e4c96048c3908657177414e202;i=702;b=b2333248c22a4c5f912a>
-    TLOG_USER=student
+    TLOG_USER=cloud-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
 Sat 2019-04-27 21:21:54.193564 EDT [s=bcde42e4c96048c3908657177414e202;i=707;b=b2333248c22a4c5f912a>
-    TLOG_USER=student
+    TLOG_USER=cloud-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
 Sat 2019-04-27 21:21:58.770887 EDT [s=bcde42e4c96048c3908657177414e202;i=70c;b=b2333248c22a4c5f912a>
-    TLOG_USER=student
+    TLOG_USER=cloud-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
 ----
 
 Each one of those entries makes up a chunk of a session recording.  It is by way of searching the system journal and identifying the correct TLOG_REC for a specific session, that you can then play back the session using `tlog-play`.
 
-We have taken the liberty of scripting this "search" to playback the last session log from the user student.
+We have taken the liberty of scripting this "search" to playback the last session log from the user cloud-user.
 
 .[root@node1]#
 ----
