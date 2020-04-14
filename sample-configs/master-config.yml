@@ -145,7 +145,7 @@ ansible_connection = "local"
 virthost  h_pubMAC="00:00:00:00:00:00" h_pubIP="192.168.124.1"
 
 [myBastion]
-workstation   h_pubMAC="2c:c2:60:20:c1:c1" h_pubIP="192.168.124.160" h_hwPROF="kvm_vda" h_rsPROF="bastion"
+workstation   h_pubMAC="2c:c2:60:20:c1:c1" h_pubIP="192.168.124.160" h_hwPROF="kvm_nest_vda" h_rsPROF="bastion"
 
 [myNodes]
 node1    h_pubMAC="2c:c2:60:20:c3:c3" h_pubIP="192.168.124.162" h_hwPROF="kvm_vda" h_rsPROF="rhel8"
