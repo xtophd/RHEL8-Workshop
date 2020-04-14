@@ -54,7 +54,7 @@ Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These
 
 == bcc-tools: tcplife
 
-The tcplife tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes. To run this tool, do:
+The `tcplife` tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes. To run this tool, do:
 
 .[root@node2 ~]#
 ----
@@ -80,7 +80,7 @@ ssh node2.example.com cheat-ebpf-rootkit.sh
 
 This command should run for about 10 seconds and then exit.  
 
-On the *node2* terminal sessions you should now see the output of tcplife similar to:
+On the *node2* terminal sessions you should now see the output of `tcplife` similar to:
 
 .Command Output
 [source,indent=4]
@@ -91,11 +91,11 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 
 Doing the math with my numbers above, my session was open for about 9 seconds and was initiated by IP 10.0.0.10, the workstation.
 
-On the terminal running tcp-life, go ahead and Ctrl-C the process. You should then be returned to the prompt.
+On the terminal running `tcplife`, go ahead and Ctrl-C the process. You should then be returned to the prompt.
 
 == bcc-tools: execsnoop
 
-The execsnoop script monitors all calls to execve() and catches all processes that follow the fork->exec sequence, as well as processes that re-exec() themselves. Processes that fork() but do not exec() won't be caught by this script.
+The `execsnoop` script monitors all calls to execve() and catches all processes that follow the fork->exec sequence, as well as processes that re-exec() themselves. Processes that fork() but do not exec() won't be caught by this script.
 
 To run this script, do:
 
@@ -119,7 +119,7 @@ Now from another workstation terminal, run:
 ssh node2.example.com cheat-ebpf-rootkit.sh
 ----
 
-You can immediately exit your session and return to the workstation. In the execsnoop terminal, you should see output similar to:
+You can immediately exit your session and return to the workstation. In the `execsnoop` terminal, you should see output similar to:
 
 ----
 PCOMM            PID    PPID   RET ARGS
@@ -152,13 +152,13 @@ sleep            28541  28516    0 /usr/bin/sleep 1
 firewall-cmd     28542  28516    0 /usr/bin/firewall-cmd --state
 ----
 
-This shows you all the processes that ran exec during that ssh login, their PID, their parent PID, their return code, and the arguments that were sent to the process. You could keep monitoring this for quite some time to catch potential bad actors on the system.
+This shows you all the processes that ran exec() during that ssh login, their PID, their parent PID, their return code, and the arguments that were sent to the process. You could keep monitoring this for quite some time to catch potential bad actors on the system.
 
-Go to the terminal with execsnoop running and issue a Ctrl-C. This will return you to a prompt. That is the expected behavior.
+Go to the terminal with `execsnoop` running and issue a Ctrl-C. This will return you to a prompt. That is the expected behavior.
 
 == bcc-tools: mountsnoop
 
-Similar in nature to execsnoop, mountsnoop traces the mount() and umount() syscalls, which show which processes are attempting to mount or unmount filesystems.
+Similar in nature to `execsnoop`, `mountsnoop` traces the mount() and umount() syscalls, which show which processes are attempting to mount or unmount filesystems.
 
 To run this script, do:
 
@@ -252,7 +252,7 @@ Now let's try to unmount a filesystem that we should be able to unmount, /dev/sh
 umount /dev/shm
 ----
 
-You should be dropped back to the terminal and see the following in the mountsnoop window:
+You should be dropped back to the terminal and see the following in the `mountsnoop` window:
 
 .Command Output
 [source,indent=4]
@@ -267,7 +267,7 @@ and we now see that this umount succeeded. Now we need to mount /dev/shm back ag
 mount -t tmpfs -o rw,nosuid,nodev,relatime,seclabel tmpfs /dev/shm 
 ----
 
-You should be dropped back to the terminal and see the following in the mountsnoop window:
+You should be dropped back to the terminal and see the following in the `mountsnoop` window:
 
 .Command Output
 [source,indent=4]
@@ -296,9 +296,9 @@ Go to the terminal with `mountsnoop` running and issue a Ctrl-C. This will retur
 
 == bcc-tools: xfsslower
 
-WARNING: Please check which filesystem your host is using with the command `df -T /`.  If you host is configured with ext4, then substitute the command *ext4slower* in place of *xfsslower*.
+WARNING: Please check which filesystem your host is using with the command `df -T /`.  If you host is configured with ext4, then substitute the command `ext4slower` in place of `xfsslower`.
 
-The purpose of the xfsslower tool (also ext4slower and nfsslower) is to show you filesystem operations slower than 10ms. It traces reads, writes, opens, and syncs and then prints out the timestamp of the operation, the process name, the ID, the type of operation, the file offset in kilobytes, the latency of the I/O measured from when it was issued by VFS to the filesystem to when it was completed, and finally, the filename being operated on.
+The purpose of the `xfsslower` tool (also `ext4slower` and `nfsslower`) is to show you filesystem operations slower than 10ms. It traces reads, writes, opens, and syncs and then prints out the timestamp of the operation, the process name, the ID, the type of operation, the file offset in kilobytes, the latency of the I/O measured from when it was issued by VFS to the filesystem to when it was completed, and finally, the filename being operated on.
 
 To run this script, do:
 
@@ -321,7 +321,7 @@ Now in another node2 terminal window, let's run:
 dd if=/dev/urandom of=bigfile bs=1024 count=20000
 ----
 
-This writes out a 20M file called bigfile and should not register on your ext4slower window.
+This writes out a 20M file called bigfile and should not register on your `xfsslower` window.
 
 Now, let's execute the above command in a for loop so that we get more I/O going in parallel:
 
@@ -330,7 +330,7 @@ Now, let's execute the above command in a for loop so that we get more I/O going
 for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
 ----
 
-Now you should see similar output in your ext4slower window:
+Now you should see similar output in your `xfsslower` window:
 
 .Command Output
 [source,indent=4]
@@ -376,11 +376,11 @@ TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 
 So we can see that when writing these files in parallel, we have xfs operations taking longer than 10ms to complete.
 
-Go to the terminal with xfsslower running and issue a Ctrl-C. This will return you to the prompt. That is the expected behavior.
+Go to the terminal with `xfsslower` running and issue a Ctrl-C. This will return you to the prompt. That is the expected behavior.
 
 == bcc-tools: cachestat
 
-The cachestat tool traces kernel page cache functions and prints every five second summaries to aid you in workload characterization.
+The `cachestat` tool traces kernel page cache functions and prints every five second summaries to aid you in workload characterization.
 
 To run this script, do:
 
@@ -398,7 +398,7 @@ You should see the following header print:
    TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
 ----
 
-In another root terminal on node 2, let's flush the cache and then run our dd for loop from the xfsslower section:
+In another root terminal on node 2, let's flush the cache and then run our dd for loop from the `xfsslower` section:
 
 .[root@node2 ~]#
 ----
@@ -406,7 +406,7 @@ echo 3 > /proc/sys/vm/drop_caches
 for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
 ----
 
-In the cachestat window, you should output similar to:
+In the `cachestat` window, you should output similar to:
 
 .Command Output
 [source,indent=4]
@@ -418,7 +418,7 @@ In the cachestat window, you should output similar to:
 
 This shows that we had 901 page cache misses during a five second period while running the above loop, but during that same second, there were 9,821 hits, indicating great performance from the page cache.
 
-Go to the terminal with cachestat running and issue a Ctrl-C. This will end the process with the message "Detaching...". That is the expected behavior.
+Go to the terminal with `cachestat` running and issue a Ctrl-C. This will end the process with the message "Detaching...". That is the expected behavior.
 
 == bcc-tools: trace
 
@@ -444,7 +444,7 @@ Now in another node2 terminal, run:
 cat /etc/fstab
 ----
 
-In the window with trace running, you will see something similar to:
+In the window with `trace` running, you will see something similar to:
 
 .Command Output
 [source,indent=4]
@@ -482,7 +482,7 @@ In the window with trace running, you will see something similar to:
 32559   32559   cat             do_sys_open      b'/etc/fstab'
 ----
 
-Go ahead and Ctrl-C trace and then let's do one more trace, this time, tracing the return values out of trace:
+Go ahead and Ctrl-C `trace` and then let's do one more trace, this time, tracing the return values out of `trace`:
 
 .[root@node2 ~]#
 ----
@@ -497,7 +497,7 @@ Now in another node2 terminal, run:
 cat /etc/fstab
 ----
 
-and in your trace window, you will see output similar to:
+and in your `trace` window, you will see output similar to:
 
 .Command Output
 [source,indent=4]
@@ -536,7 +536,7 @@ PID     TID     COMM            FUNC             -
 32576   32576   cat             do_sys_open      ret: 3
 ----
 
-Go to the terminal with trace running and issue a Ctrl-C. This will end the process and return you to the command line. 
+Go to the terminal with `trace` running and issue a Ctrl-C. This will end the process and return you to the command line. 
 
 There is a lot more that you can do with this tool when you actually need to start tracing what is getting passed into kernel functions and what is being returned by those kernel functions.
 
