@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Retrive TLOG_REC value of last tlog journald entry belonging to user 'student'
+## Retrive TLOG_REC value of last tlog journald entry belonging to user {{ student_username }}
 
 TLOG_REC=`journalctl -o verbose -n 1 --output-fields=TLOG_USER,TLOG_REC TLOG_USER={{ student_username }} | grep TLOG_REC`
 
