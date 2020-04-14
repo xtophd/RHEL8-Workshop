@@ -156,15 +156,15 @@ This shows you all the processes that ran exec during that ssh login, their PID,
 
 Go to the terminal with execsnoop running and issue a Ctrl-C. This will return you to a prompt. That is the expected behavior.
 
-== bcc-tools: opensnoop
+== bcc-tools: mountsnoop
 
-Similar in nature to execsnoop, opensnoop traces the open() syscall, which shows which processes are attempting to open which files.
+Similar in nature to execsnoop, mountsnoop traces the mount() and umount() syscalls, which show which processes are attempting to mount or unmount filesystems.
 
 To run this script, do:
 
 .[root@node2 ~]#
 ----
-/usr/share/bcc/tools/opensnoop 
+/usr/share/bcc/tools/mountsnoop
 ----
 
 You will see a header that prints out like:
@@ -172,68 +172,59 @@ You will see a header that prints out like:
 .Command Output
 [source,indent=4]
 ----
-PID    COMM               FD ERR PATH
+COMM             PID     TID     MNT_NS      CALL
 ----
 
-In a workstation terminal, perform the following steps to connect to node2 as a student:
+In a workstation terminal, perform the following steps to connect to node2 as root:
 
 .[root@workstation ~]#
 ----
 ssh student@node2 
 ----
 
-You probably saw a lot of data go by in the window running opensnoop as there are a lot of files opened during the establishing of an ssh session and the corresponding login activity.
+.[student@node2 ~]$
+----
+sudo -i
+----
 
 Now on node2, let's do:
 
-.[student@node2 ~]$ 
+.[root@node2 ~]$ 
 ----
-cat /etc/fstab
+mount | grep -v cgroup
 ----
 
-You will see a lot of locale data being loaded in addition to /etc/fstab in the opensnoop window like so:
+You should see a list of mounts similar to:
 
 .Command Output
 [source,indent=4]
 ----
-31474  cat                 3   0 /etc/ld.so.cache
-31474  cat                 3   0 /lib64/libc.so.6
-31474  cat                -1   2 /usr/lib/locale/locale-archive
-31474  cat                 3   0 /usr/share/locale/locale.alias
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_IDENTIFICATION
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
-31474  cat                 3   0 /usr/lib64/gconv/gconv-modules.cache
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MEASUREMENT
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TELEPHONE
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TELEPHONE
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_ADDRESS
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_ADDRESS
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NAME
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NAME
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_PAPER
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_PAPER
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MESSAGES
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MONETARY
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MONETARY
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_COLLATE
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_COLLATE
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TIME
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TIME
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NUMERIC
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NUMERIC
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_CTYPE
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_CTYPE
-31474  cat                 3   0 /etc/fstab
+sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime,seclabel)
+proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
+devtmpfs on /dev type devtmpfs (rw,nosuid,seclabel,size=1906392k,nr_inodes=476598,mode=755)
+securityfs on /sys/kernel/security type securityfs (rw,nosuid,nodev,noexec,relatime)
+devpts on /dev/pts type devpts (rw,nosuid,noexec,relatime,seclabel,gid=5,mode=620,ptmxmode=000)
+tmpfs on /run type tmpfs (rw,nosuid,nodev,seclabel,mode=755)
+bpf on /sys/fs/bpf type bpf (rw,nosuid,nodev,noexec,relatime,mode=700)
+configfs on /sys/kernel/config type configfs (rw,relatime)
+/dev/vda1 on / type xfs (rw,relatime,seclabel,attr2,inode64,noquota)
+rpc_pipefs on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw,relatime)
+selinuxfs on /sys/fs/selinux type selinuxfs (rw,relatime)
+systemd-1 on /proc/sys/fs/binfmt_misc type autofs (rw,relatime,fd=40,pgrp=1,timeout=0,minproto=5,maxproto=5,direct,pipe_ino=14994)
+mqueue on /dev/mqueue type mqueue (rw,relatime,seclabel)
+debugfs on /sys/kernel/debug type debugfs (rw,relatime,seclabel)
+hugetlbfs on /dev/hugepages type hugetlbfs (rw,relatime,seclabel,pagesize=2M)
+tmpfs on /run/user/1000 type tmpfs (rw,nosuid,nodev,relatime,seclabel,size=387148k,mode=700,uid=1000,gid=1000)
+tracefs on /sys/kernel/debug/tracing type tracefs (rw,relatime,seclabel)
+pstore on /sys/fs/pstore type pstore (rw,nosuid,nodev,noexec,relatime,seclabel)
+tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev,relatime,seclabel)
 ----
 
-The fourth column is the exit code and you can see that some of these files exit with non-zero codes meaning they don't exist or the user doesn't have appropriate permissions. Let's take a look at /usr/lib/locale/locale-archive:
+Next, let's try to unmount a mount that we can't. For this, we'll pick /, which we see above is an xfs filesystem:
 
-.[student@node2 ~]$ 
+.[root@node2 ~]$ 
 ----
-ls /usr/lib/locale/locale-archive
+umount /
 ----
 
 and we see the following returned:
@@ -241,73 +232,67 @@ and we see the following returned:
 .Command Output
 [source,indent=4]
 ----
-ls: cannot access '/usr/lib/locale/locale-archive': No such file or directory
+umount: /: target is busy.
 ----
 
-Now let's try to cat /etc/shadow as the student user:
-
-.[student@node2 ~]$
-----
-cat /etc/shadow
-----
-
-We see the following returned in opensnoop:
+Taking a look at the terminal running `mountsnoop`, we see:
 
 .Command Output
 [source,indent=4]
 ----
-31480  cat                 3   0 /etc/ld.so.cache
-31480  cat                 3   0 /lib64/libc.so.6
-31480  cat                -1   2 /usr/lib/locale/locale-archive
-31480  cat                 3   0 /usr/share/locale/locale.alias
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_IDENTIFICATION
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
-31480  cat                 3   0 /usr/lib64/gconv/gconv-modules.cache
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MEASUREMENT
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TELEPHONE
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TELEPHONE
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_ADDRESS
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_ADDRESS
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NAME
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NAME
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_PAPER
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_PAPER
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MESSAGES
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MONETARY
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MONETARY
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_COLLATE
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_COLLATE
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TIME
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TIME
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NUMERIC
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NUMERIC
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_CTYPE
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_CTYPE
-31480  cat                -1  13 /etc/shadow
-31480  cat                -1   2 /usr/share/locale/en_US.UTF-8/LC_MESSAGES/libc.mo
-31480  cat                -1   2 /usr/share/locale/en_US.utf8/LC_MESSAGES/libc.mo
-31480  cat                -1   2 /usr/share/locale/en_US/LC_MESSAGES/libc.mo
-31480  cat                -1   2 /usr/share/locale/en.UTF-8/LC_MESSAGES/libc.mo
-31480  cat                -1   2 /usr/share/locale/en.utf8/LC_MESSAGES/libc.mo
-31480  cat                -1   2 /usr/share/locale/en/LC_MESSAGES/libc.mo
+umount           20001   20001   4026531840  umount("/", 0x0) = -EBUSY
 ----
 
-with the key line being:
+This shows us that the mount is busy and cannot be unmounted.
+
+Now let's try to unmount a filesystem that we should be able to unmount, /dev/shm:
+
+.[root@node2 ~]$
+----
+umount /dev/shm
+----
+
+You should be dropped back to the terminal and see the following in the mountsnoop window:
 
 .Command Output
 [source,indent=4]
 ----
-31480  cat                -1  13 /etc/shadow
+umount           20003   20003   4026531840  umount("/dev/shm", 0x0) = 0
 ----
 
-The -13 return code indicates that we did not have permission to open the requested resource.
+and we now see that this umount succeeded. Now we need to mount /dev/shm back again, so let's do that with:
 
-As you can see, this tool is very useful for trying to determine where an application has its configurations or for seeing why an application may be failing.
+.[root@node2 ~]$
+----
+mount -t tmpfs -o rw,nosuid,nodev,relatime,seclabel tmpfs /dev/shm 
+----
 
-Go to the terminal with opensnoop running and issue a Ctrl-C. This will return you to your prompt. That is the expected behavior.
+You should be dropped back to the terminal and see the following in the mountsnoop window:
+
+.Command Output
+[source,indent=4]
+----
+mount            20004   20004   4026531840  mount("tmpfs", "/dev/shm", "tmpfs", MS_NOSUID|MS_NODEV|MS_NOEXEC|MS_SYNCHRONOUS|MS_DIRSYNC|MS_NOATIME|MS_NODIRATIME|MS_MOVE|MS_REC|MS_UNBINDABLE|MS_SLAVE|MS_SHARED|MS_I_VERSION|MS_STRICTATIME|MS_LAZYTIME|MS_NOUSER|0x7f2b30000000, "") = 0
+----
+
+This shows us that the mount succeeded and all the options that were passed into the system call. We can verify that this filesystem is mounted accurately by running:
+
+.[root@node2 ~]$
+----
+mount | grep shm
+----
+
+and we should see output that looks like this:
+
+.Command Output
+[source,indent=4]
+----
+tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev,relatime,seclabel)
+----
+
+As you can see, the `mountsnoop` tool is very useful for seeing what processes are calling the mount and umount system calls and what the results of those calls are.
+
+Go to the terminal with `mountsnoop` running and issue a Ctrl-C. This will return you to your prompt. That is the expected behavior.
 
 == bcc-tools: xfsslower
 
