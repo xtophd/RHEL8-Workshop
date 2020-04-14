@@ -93,7 +93,8 @@ To enable the necessary services for this unit:
 
 .[root@workstation]#
 ----
-systemctl enable lorax-composer.socket libvirtd
+systemctl enable lorax-composer libvirtd
+
 systemctl start lorax-composer libvirtd
 ----
 
@@ -125,9 +126,16 @@ virt-host-validate
 
 === Overview
 
-Red Hat provides pre-crated images of RHEL for use as virtual machines.  This come in a QCOW format.  However, in order to access them for download one needs to have an active Red Hat Enterprise Linux entitlement.  One alternative is to simply build a fresh image using the `Image Builder`.
+Red Hat provides pre-made images of RHEL for use as virtual machines.  This come in a QCOW2 format.
 
-`Image Builder` is a set of tools to create custom RHEL images in a variety of formats for compatibility with major cloud providers and virtualization technologies available.  We are only going to leverage an existing blueprint, but note that they are easy to extend and customize for your unique requirements.
+However, in order to access them for download one needs to have an active Red Hat Enterprise Linux entitlement.  An obvious alternative to downloading an image is to make one.  There are 2 solutions to creating a VM image from scratch:
+
+  * Provision one (via bootable ISO or PXE)
+  * Magically build an image using the Lorax `Image Builder`
+
+`Image Builder` is a set of tools to create custom RHEL images in a variety of formats for compatibility with major cloud providers and virtualization technologies available.  Meaning, you can specify the target platfrom for you vm and create an appropriate image for VMWare, AWS, Openstack, KVM, etc...
+
+We are only going to leverage an existing blueprint, but please note that blueprints are easy to create, extend and customize for your unique requirements.
 
 === List Blueprints
 
@@ -141,6 +149,30 @@ example-atlas
 example-development
 example-http-server
 ----
+
+A nice quick way to determine if the local `Image Builder` can resolve all dependencies for the blueprint is to run  it thorugh a `depsolve`.  Here you can also see a full list of rpms that will be installed on the image.
+
+.[root@workstation]#
+----
+composer-cli blueprints depsolve example-http-server
+----
+
+----
+blueprint: example-http-server v0.0.1
+    acl-2.2.53-1.el8.x86_64
+    apr-1.6.3-9.el8.x86_64
+    apr-util-1.6.1-6.el8.x86_64
+    audit-libs-3.0-0.13.20190507gitf58ec40.el8.x86_64
+    basesystem-11-5.el8.noarch
+    bash-4.4.19-10.el8.x86_64
+    brotli-1.0.6-1.el8.x86_64
+    bzip2-libs-1.0.6-26.el8.x86_64
+    ca-certificates-2018.2.24-6.el8.noarch
+    chkconfig-1.11-1.el8.x86_64
+    coreutils-8.30-6.el8.x86_64
+...
+----
+
 
 === Compose a Blueprint
 
@@ -177,7 +209,7 @@ Now you are ready to leverage the example-http-server and deploy the VM with Red
 
 === Retrieve a QCOW Image
 
-First we need to grab a copy of the image
+First we need to grab a copy of the image and put it in the right place for our platform.
 
 ----
 cd /var/lib/libvirt/images
@@ -211,8 +243,6 @@ virt-install \
   --os-variant rhel8.1
 ----
 
-INFO: If you hop on the Virtual Machines Manager in the Web-Console, you an bring up the VM's Console and watch the deployment.
-
 === Additional CLI Commands
 
 Some additional simple virtual machine management commands
@@ -227,9 +257,11 @@ virsh shutdown vmguest
 
 == Explore VM Management with 'Web-Console'
 
-From th menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary, but one critical feature is available: the console!
+From the menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary when compared the Red Hat Virtualization Manager (RHVM) , but one critical feature is available: the console!
 
 Take some time to explore the capabilities of the Web-Console Machines webui.
+
+Log in to your client (user:root password:redhat) and poke around.  The VM is on a private network and not accessbile from the internet.  You will only be able to access from the webconsole.
 
 == Shutdown Virtual Machines
 
