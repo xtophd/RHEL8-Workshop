@@ -107,11 +107,11 @@ We can see that we have kpatch_4_18_0_147_1_4 now installed and loaded. We have 
 
 == Taking that Scheduled Reboot
 
-Since we're in a lab environment, let's go ahead and reboot this node:
+Since we're in a lab environment, let's go ahead and reboot this node. Due to a bug in this environment, please use `init 6` as directed. Do not use any other reboot methods!
 
 .[root@node2 ~]# 
 ----
-systemctl reboot
+init 6
 ----
 
 When the machine comes back up, we can run `kpatch list` again and see that our kpatches have persisted through the reboot, so we are still protected.
@@ -175,11 +175,11 @@ Installed patch modules:
 kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
 ----
 
-Everything looks as expected here. Let's reboot:
+Everything looks as expected here. Let's reboot. Due to a bug in this environment, please use `init 6` as directed. Do not use any other reboot methods!
 
 .[root@node2 ~]# 
 ----
-systemctl reboot
+init 6
 ----
 
 Upon reboot, we can see that we are running the latest kernel:
