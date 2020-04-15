@@ -386,8 +386,7 @@ To run this script, do:
 
 .[root@node2 ~]#
 ----
-cd /usr/share/bcc/tools
-./cachestat
+/usr/share/bcc/tools/cachestat
 ----
 
 You should see the following header print:
