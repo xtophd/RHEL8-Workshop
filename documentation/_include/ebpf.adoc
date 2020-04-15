@@ -432,8 +432,7 @@ Let's do a simple trace in which we will dynamically trace the do_sys_open() ker
 
 .[root@node2 ~]#
 ----
-cd /usr/share/bcc/tools
-./trace 'p::do_sys_open "%s", arg2'
+/usr/share/bcc/tools/trace 'p::do_sys_open "%s", arg2'
 ----
 
 Now in another node2 terminal, run:
@@ -485,8 +484,7 @@ Go ahead and Ctrl-C `trace` and then let's do one more trace, this time, tracing
 
 .[root@node2 ~]#
 ----
-cd /usr/share/bcc/tools
-./trace 'r::do_sys_open "ret: %d", retval'
+/usr/share/bcc/tools/trace 'r::do_sys_open "ret: %d", retval'
 ----
 
 Now in another node2 terminal, run:
