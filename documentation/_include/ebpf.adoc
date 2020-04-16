@@ -32,6 +32,11 @@ There is a dedicated VM we will use for the container exercises.  From *workstat
 ssh node2.example.com
 ----
 
+.[cloud-user@node2 ~]#
+----
+sudo -i
+----
+
 Verify that you are on the right host for these exercises.
 
 .[root@node2]#

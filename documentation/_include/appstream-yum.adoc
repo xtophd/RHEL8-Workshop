@@ -24,6 +24,11 @@ Starting on the host workstation.example.com, let’s ssh over to node1.example.
 ssh node1.example.com
 ----
 
+.[cloud-user@node1 ~]#
+----
+sudo -i
+----
+
 Verify that you are on the right host for these exercises.
 
 .[root@node1 ~]#
