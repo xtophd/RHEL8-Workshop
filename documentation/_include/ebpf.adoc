@@ -71,11 +71,22 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 
 TIP: Remember that *tmux* is your friend here.  If you have any questions, ask the instructor on how to use it
 
-Now from another workstation terminal session, run:
+Let's open another workstation terminal session. To do that, from tmux, hit `Ctrl+b` then the `"` key. This should split the window in two and give you a new root session on node2. Now you need to run:
+
+.[root@node2 ~]#
+----
+ssh workstation
+----
+.[cloud-user@workstation ~]#
+----
+sudo -i
+----
+
+Now from this workstation terminal session, run:
 
 .[root@workstation ~]#
 ----
-ssh node2.example.com cheat-ebpf-rootkit.sh
+ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"
 ----
 
 This command should run for about 10 seconds and then exit.  
