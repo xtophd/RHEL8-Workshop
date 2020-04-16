@@ -16,7 +16,6 @@ endif::[]
 
 = Web Console
 
-[discrete]
 == Overview
 
 Web Console is a Red Hat Enterprise Linux 8 web-based interface designed for managing and monitoring your local system.  The Web Console can also be extended to manage multiple servers located in your network.
@@ -37,6 +36,26 @@ Features of the Web Console include:
   * more...
 
 The following exercises will walk you through installing and configuring Web Console on RHEL 8. 
+
+== Getting Started
+
+For these exercises, you will be using the host `workstation` as user `root`.
+
+Use `sudo` to elevate your priviledges.
+
+[source,bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
+----
+
+Verify that you are on the right host for these exercises.
+
+[source,bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-webconsole-checkhost.sh*
+----
+
+You are now ready to proceed with these exercises.
 
 == Installation and Configuraiton
 
