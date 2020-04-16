@@ -48,7 +48,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-firewalld-checkhost.sh
+# *cheat-firewalld-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
