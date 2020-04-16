@@ -43,11 +43,11 @@ Now you are ready to begin your exercises with eBPF Tracing.
 
 == Installation
 
-Start by installing the *BPF Compiler Collection* bcc-tools package:
+Start by installing the *BPF Compiler Collection* bcc-tools package and kernel-devel for the running kernel:
 
 .[root@node2 ~]#
 ----
-yum install bcc-tools -y
+yum install bcc-tools kernel-devel-$(uname -r) -y
 ----
 
 Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These all have man pages for them.
