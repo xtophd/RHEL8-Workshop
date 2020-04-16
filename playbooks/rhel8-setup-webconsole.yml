@@ -48,7 +48,7 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-cockpit-checkhost.sh'} 
+        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-webconsole-checkhost.sh'} 
 
 
 
