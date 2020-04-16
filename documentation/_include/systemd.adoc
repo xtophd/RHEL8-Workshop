@@ -15,6 +15,7 @@ endif::[]
 
 = Introduction to systemd
 
+[discrete]
 == Overview
 
 Systemd is the "init" system for RHEL 8 (and 7 for that matter).  It replaces Upstart, the SysV "init" system used in prior releases of RHEL.  Systemd is more than just a facility to bring up user space, it is a system manager that offers:
