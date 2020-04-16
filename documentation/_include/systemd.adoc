@@ -14,6 +14,8 @@ endif::[]
 
 = Introduction to systemd
 
+== Overview
+
 Systemd is the "init" system for RHEL 8 (and 7 for that matter).  It replaces Upstart, the SysV "init" system used in prior releases of RHEL.  Systemd is more than just a facility to bring up user space, it is a system manager that offers:
 
   * service parallelization
@@ -22,14 +24,15 @@ Systemd is the "init" system for RHEL 8 (and 7 for that matter).  It replaces Up
   * track services and child processes via cgroups
   * and much more
 
-
 == Getting Started
 
-Starting on the host *workstation.example.com*, let's ssh over to *node1.example.com*.  No password should be required.
+For this exercise, you will be using the host `node1`
+
+From host `workstation`, you should be able to ssh to `node1` without any prompts for credentials.
 
 .[root@workstation]#
 ----
-ssh node1.example.com
+ssh node1
 ----
 
 Verify that you are on the right host for these exercises.
