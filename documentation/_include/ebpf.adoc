@@ -13,6 +13,8 @@ endif::[]
 
 = BPF Tracing - Observability of System Performance
 
+== Overview
+
 eBPF (The Extended Berkeley Packet Filter) is an in-kernel virtual machine that allows code execution in the kernel space, in a restricted sandbox environment with access to a limited set of functions. There are numerous components shipped by Red Hat that utilize the eBPF virtual machine. Each component is in a different development phase, and thus not all components are currently fully supported. Those that are not supported are avaialable as a *Technology Preview* and are not intended for production use.For information on Red Hat scope of support for Technology Preview features, see: link:https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope]
 
 In this unit, we will be focusing on the kernel tracing offering shipped as bcc-tools (BPF Compiler Collection Tools). There are just over 100 tools shipped in this package. A few things of note:
@@ -25,34 +27,41 @@ TIP: Now is a great time to use the multi session capability of *tmux*.  Using `
 
 == Getting Started
 
-There is a dedicated VM we will use for the container exercises.  From *workstation.example.com*, you should be able to ssh to *node2.example.com* as 'root' without any prompts for credentials.
+== Getting Started
 
-.[root@workstation ~]#
+For these exercises, you will be using the host `node2` as user `root`.
+
+From host `workstation`, ssh to `node2`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node2.example.com
+$ *ssh node2*
 ----
 
-.[cloud-user@node2 ~]#
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-sudo -i
+$ *sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-ebpf-checkhost.sh
+# *cheat-ebpf-checkhost.sh*
 ----
 
-Now you are ready to begin your exercises with eBPF Tracing.
+You are now ready to proceed with these exercises.
 
 == Installation
 
 Start by installing the *BPF Compiler Collection* bcc-tools package and kernel-devel for the running kernel:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum install bcc-tools kernel-devel-$(uname -r) -y
+# *yum install bcc-tools kernel-devel-$(uname -r) -y*
 ----
 
 Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These all have man pages for them.
@@ -62,8 +71,9 @@ Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These
 The `tcplife` tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes. To run this tool, do:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-/usr/share/bcc/tools/tcplife
+# */usr/share/bcc/tools/tcplife*
 ----
 
 Wait for this to get started and you'll see the following header print out:
@@ -79,19 +89,21 @@ TIP: Remember that *tmux* is your friend here.  If you have any questions, ask t
 Let's open another workstation terminal session. To do that, from tmux, hit `Ctrl+b` then the `"` key. This should split the window into two panes and give you a new root session on node2. Now you need to run:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh workstation
+$ *ssh workstation*
 ----
 .[cloud-user@workstation ~]#
 ----
-sudo -i
+$ *sudo -i*
 ----
 
 Now from this workstation terminal session, run:
 
 .[root@workstation ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"
+# *ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"*
 ----
 
 This command should run for about 10 seconds and then exit.  
@@ -118,6 +130,7 @@ The `execsnoop` script monitors all calls to execve() and catches all processes 
 To run this script, do:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 /usr/share/bcc/tools/execsnoop
 ----
@@ -133,6 +146,7 @@ PCOMM            PID    PPID   RET ARGS
 Now from another workstation terminal, run:
 
 .[root@workstation ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"
 ----
@@ -181,6 +195,7 @@ Similar in nature to `execsnoop`, `mountsnoop` traces the mount() and umount() s
 To run this script, do:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 /usr/share/bcc/tools/mountsnoop
 ----
@@ -196,6 +211,7 @@ COMM             PID     TID     MNT_NS      CALL
 In a workstation terminal, perform the following steps to connect to node2 as root:
 
 .[root@workstation ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 ssh node2 
 ----
@@ -208,6 +224,7 @@ sudo -i
 Now on node2, let's do:
 
 .[root@node2 ~]$ 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 mount | grep -v cgroup
 ----
@@ -241,6 +258,7 @@ tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev,relatime,seclabel)
 Next, let's try to unmount a mount that we can't. For this, we'll pick /, which we see above is an xfs filesystem:
 
 .[root@node2 ~]$ 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 umount /
 ----
@@ -266,6 +284,7 @@ This shows us that the mount is busy and cannot be unmounted.
 Now let's try to unmount a filesystem that we should be able to unmount, /dev/shm:
 
 .[root@node2 ~]$
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 umount /dev/shm
 ----
@@ -281,6 +300,7 @@ umount           20003   20003   4026531840  umount("/dev/shm", 0x0) = 0
 and we now see that this umount succeeded. Now we need to mount /dev/shm back again, so let's do that with:
 
 .[root@node2 ~]$
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 mount -t tmpfs -o rw,nosuid,nodev,relatime,seclabel tmpfs /dev/shm 
 ----
@@ -296,6 +316,7 @@ mount            20004   20004   4026531840  mount("tmpfs", "/dev/shm", "tmpfs",
 This shows us that the mount succeeded and all the options that were passed into the system call. We can verify that this filesystem is mounted accurately by running:
 
 .[root@node2 ~]$
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 mount | grep shm
 ----
@@ -321,6 +342,7 @@ The purpose of the `xfsslower` tool (also `ext4slower` and `nfsslower`) is to sh
 To run this script, do:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 /usr/share/bcc/tools/xfsslower
 ----
@@ -335,6 +357,7 @@ TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 Now in another node2 terminal window, let's run:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 dd if=/dev/urandom of=bigfile bs=1024 count=20000
 ----
@@ -344,6 +367,7 @@ This writes out a 20M file called bigfile and should not register on your `xfssl
 Now, let's execute the above command in a for loop so that we get more I/O going in parallel:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
 ----
@@ -403,6 +427,7 @@ The `cachestat` tool traces kernel page cache functions and prints every five se
 To run this script, do:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 /usr/share/bcc/tools/cachestat
 ----
@@ -418,6 +443,7 @@ You should see the following header print:
 In another root terminal on node 2, let's flush the cache and then run our dd for loop from the `xfsslower` section:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 echo 3 > /proc/sys/vm/drop_caches
 for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
@@ -442,6 +468,7 @@ Go to the terminal with `cachestat` running and issue a Ctrl-C. This will end th
 This tool is a swiss army knife allowing you to specify functions to trace and messages to be printed when certain conditions are met. You can read more about this by running:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 man 8 trace
 ----
@@ -449,6 +476,7 @@ man 8 trace
 Let's do a simple trace in which we will dynamically trace the do_sys_open() kernel function and print the names of the files opened. Run this with:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 /usr/share/bcc/tools/trace 'p::do_sys_open "%s", arg2'
 ----
@@ -456,6 +484,7 @@ Let's do a simple trace in which we will dynamically trace the do_sys_open() ker
 Now in another node2 terminal, run:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cat /etc/fstab
 ----
@@ -501,6 +530,7 @@ In the window with `trace` running, you will see something similar to:
 Go ahead and Ctrl-C `trace` and then let's do one more trace, this time, tracing the return values out of `trace`:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 /usr/share/bcc/tools/trace 'r::do_sys_open "ret: %d", retval'
 ----
@@ -508,6 +538,7 @@ Go ahead and Ctrl-C `trace` and then let's do one more trace, this time, tracing
 Now in another node2 terminal, run:
 
 .[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cat /etc/fstab
 ----
@@ -556,9 +587,7 @@ You may also now type `exit` in one of your tmux panes to return to having just 
 
 There is a lot more that you can do with this tool when you actually need to start tracing what is getting passed into kernel functions and what is being returned by those kernel functions.
 
-[discrete]
 == Additional Resources
-
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
 
