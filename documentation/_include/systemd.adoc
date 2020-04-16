@@ -263,13 +263,13 @@ This time we'll use systemctl to create the drop-in and notify systemd of the ch
 `systemctl edit` allows inserting the content for the drop-in and also handles the `systemctl daemon-reload` automatically.
 
 .[root@node1]#
-[source,bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-systemctl edit mariadb
+# *systemctl edit mariadb*
 ----
 
 .Type the following using the editor:
-[source,indent=4]
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
 [Service]
 Restart=always
