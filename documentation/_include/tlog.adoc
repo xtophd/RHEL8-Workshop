@@ -27,6 +27,12 @@ Starting on the host *workstation.example.com*, let's ssh over to *node1.example
 ssh node1.example.com
 ----
 
+.[cloud-user@node1 ~]#
+----
+sudo -i
+----
+
+
 Now change your effective userid to cloud-user using the `su` command.  Don't forget the dash, it's `su - cloud-user`.
 
 .[root@node1]#

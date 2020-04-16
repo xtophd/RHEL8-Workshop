@@ -25,6 +25,11 @@ There is a dedicated VM we will use for the container exercises. From workstatio
 ssh node2.example.com
 ----
 
+.[cloud-user@node2 ~]#
+----
+sudo -i
+----
+
 
 == Installing a kpatch
 

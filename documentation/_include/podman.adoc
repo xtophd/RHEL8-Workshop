@@ -26,6 +26,11 @@ From host `workstation`, you should be able to ssh to `node3` without any prompt
 ssh node3
 ----
 
+.[cloud-user@node3 ~]#
+----
+sudo -i
+----
+
 Verify that you are on the right host for these exercises.
 
 .[root@node3 ~]#

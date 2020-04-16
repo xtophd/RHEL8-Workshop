@@ -33,6 +33,11 @@ For the first part of this lab we will be using node2.  As the user _root_ on ho
 ssh node2.example.com
 ----
 
+.[cloud-user@node2 ~]#
+----
+sudo -i
+----
+
 Verify that you are on the right host for these exercises.
 
 .[root@node2 ~]#
