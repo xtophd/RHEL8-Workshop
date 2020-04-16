@@ -1,7 +1,10 @@
 ---
 - hosts: node1
   tasks:
-        
+
+    - name: "SETUP SYSTEMD: yum install LAMP packages"
+      yum: name=httpd,mariadb,mariadb-server state=installed
+
     - name: "SETUP SYSTEMD: cheat script installs"
       template:
         src: "{{ item.src }}"
