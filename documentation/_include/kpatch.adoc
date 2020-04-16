@@ -110,7 +110,7 @@ kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
 
 We can see that we have kpatch_4_18_0_147_1_4 now installed and loaded. We have these protections effective immediately and without having to reboot. We can now schedule a reboot for a time that is convenient for us. 
 
-== Taking that Scheduled Reboot
+== Taking that Scheduled Reboot (NEED TO REMOVE / REVISE)
 
 Since we're in a lab environment, let's go ahead and reboot this node. Due to a bug in this environment, please use `init 6` as directed. Do not use any other reboot methods!
 
