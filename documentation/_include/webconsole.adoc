@@ -53,7 +53,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-webconsole-checkhost.sh*
+# *cheat-cockpit-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
