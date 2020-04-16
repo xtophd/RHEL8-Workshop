@@ -100,29 +100,20 @@ systemd has a concept similar to SysV init runlevels, called targets.  systemd w
 
 Let's view the current default target.
 
-.[root@node1]#
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# systemctl get-default
-----
+# *systemctl get-default*
 
-.Command Output
-[source,indent=4]
-----
 multi-user.target
 ----
 
 === Services
 As mentioned above, systemd has another concept called a service.  A service is a type of unit which defines the traditional daemon or process.  Now let us look at what services are running on the system:
 
-.[root@node1]#
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# systemctl -t service
-----
+# *systemctl -t service*
 
-
-.Command Output
-[source,indent=4]
-----
 UNIT                               LOAD   ACTIVE SUB     DESCRIPTION                     
 auditd.service                     loaded active running Security Auditing Service       
 chronyd.service                    loaded active running NTP client/server               
@@ -135,14 +126,10 @@ firewalld.service                  loaded active running firewalld - dynamic fir
 
 Next let's view all of the services available (ie: everything installed, running or not) on the system. The following command is similar to the older chkconfig --list as it will show both enabled and disabled services:
 
-.[root@node1]#
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# systemctl list-unit-files -t service
-----
+# *systemctl list-unit-files -t service*
 
-.Command Output
-[source,indent=4]
-----
 UNIT FILE                                   STATE   
 arp-ethers.service                          disabled
 auditd.service                              enabled 
@@ -160,20 +147,32 @@ The state will  be enabled, disabled, static, or masked.  Static indicates that 
 
 === Installing a LAMP stack
 
-Now that we have a good idea of what’s installed on our system, let’s get a basic lamp stack up and running.  If you prefer not to type all of these commands, there's a cheat script below to save you some time.
+Now that we have a good idea of what’s installed on our system, let’s get a basic lamp stack up and running.  If you prefer not to type all of these commands, there is a cheat script below to save you some time.
 
-.[root@node1]#
-----
-yum install -y httpd mariadb-server mariadb 
+Let us install some packages.
 
-systemctl enable --now httpd mariadb
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *yum install -y httpd mariadb-server mariadb*
+
+...snip ...
+Package httpd-2.4.37-16.module+el8.1.0+4134+e6bad0ed.x86_64 is already installed.
+Package mariadb-server-3:10.3.17-1.module+el8.1.0+3974+90eded84.x86_64 is already installe
+d.
+Package mariadb-3:10.3.17-1.module+el8.1.0+3974+90eded84.x86_64 is already installed.
+Dependencies resolved.
+Nothing to do.
+Complete!
+----
+
+Now it's time to enable the relevant system services.
 
 NOTE: The "enable --now" syntax was introduced in a recent release of RHEL 7 and of course now in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
 
-.Command Output
-[source,indent=4]
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *systemctl enable --now httpd mariadb*
+
 Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
 Created symlink /etc/systemd/system/mysql.service → /usr/lib/systemd/system/mariadb.service.
 Created symlink /etc/systemd/system/mysqld.service → /usr/lib/systemd/system/mariadb.service.
@@ -182,14 +181,10 @@ Created symlink /etc/systemd/system/multi-user.target.wants/mariadb.service → 
 
 Now let's check the status.  You should see two separate sections in the output, one for httpd and one for mariadb.
 
-.[root@node1]#
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
-systemctl status httpd mariadb
-----
+# *systemctl status httpd mariadb*
 
-.Command Output
-[source,indent=4]
-----
 ● httpd.service - The Apache HTTP Server
    Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
    Active: active (running) since Wed 2019-05-01 21:37:54 EDT; 12s ago
@@ -206,16 +201,18 @@ systemctl status httpd mariadb
 
 Last but not least, you need to enable a firewall port.
 
-.[root@node1]#
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
-firewall-cmd --add-service=http
+# *firewall-cmd --add-service=http*
+
+success
 ----
 
 So as promised, here is a cheat script that performs all of the above steps.
 
-.[root@node1]#
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-systemd-lamp.sh
+# *cheat-systemd-lamp.sh*
 ----
 
 
@@ -233,17 +230,13 @@ While the defaults for unit files won’t need to be altered most of the time, t
 
 Create a drop-in configuration file to extend the default httpd.service unit
 
-[discrete]
 ==== Modify httpd
 
 .[root@node1]#
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cheat-systemd-httpdconfig.sh
-----
 
-.Command Output
-[source,indent=4]
-----
 # Contents of /etc/systemd/system/httpd.service.d/50-httpd.conf
 [Service]
 Restart=always
@@ -252,10 +245,11 @@ OOMScoreAdjust=-1000
 
 Notify systemd of the changes.
 
-.[root@node1]#
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
-systemctl daemon-reload
-systemctl status httpd
+# *systemctl daemon-reload*
+
+# *systemctl status httpd*
 ----
 
 .Command Output
@@ -288,6 +282,7 @@ Similar to what you did in the last step, extend the mariadb.service unit with R
 This time we'll use systemctl to create the drop-in and notify systemd of the changes.
 
 .[root@node1]#
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
 systemctl edit mariadb
 ----
@@ -301,10 +296,14 @@ Restart=always
 
 Save and quit the editor, and view the unit
 
-.[root@node1]#
+[source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
-systemctl cat mariadb
-systemctl status mariadb
+# *systemctl cat mariadb*
+----
+
+[source,bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *systemctl status mariadb*
 ----
 
 Notice that `systemctl edit` allows inserting the content for the drop-in and also handles the `systemctl daemon-reload` automatically. Also notice that `systemctl cat` is a quick and easy way to view the contents of a unit & and it's drop-ins.
