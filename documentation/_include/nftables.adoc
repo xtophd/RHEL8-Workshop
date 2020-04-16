@@ -1,5 +1,6 @@
 :sectnums:
 :sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -14,7 +15,9 @@ endif::[]
 
 = Introducing NFTables
 
-In Red Hat Enterprise Linux 8 the network security dynamic duo Firewalld and Nftables make their new team debut.
+== Overview
+
+In Red Hat Enterprise Linux 8 the network security dynamic duo Firewalld and NFTables make their new team debut.
 
 NFTables _(replacing IPTables)_ is a new subsystem of the Linux kernel which provides filtering and classification of network packets, datagrams, or frames. This software provides a new in-kernel packet classification framework that is based on a network-specific Virtual Machine (VM) and a new nft userspace command line tool.
 
@@ -22,43 +25,41 @@ The default firewall management tool in continues to be firewalld _(firewall-cmd
 
 NOTE: For 99% of all use cases the firewalld tools are the best choice.  For this lab however we are trying to introduce `nft` and demonstrate some differences to the former `iptables`.
 
-
-
 == Getting Started
 
-For the first part of this lab we will be using node2.  As the user _root_ on host *workstation.example.com* you should ssh to *node2.example.com*.  You should not be prompted for a password.
+For these exercises, you will be using the host `node2` as user `root`.
 
-.[root@workstation]#
+From host `workstation`, ssh to `node2`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node2.example.com
+$ *ssh node2*
 ----
 
-.[cloud-user@node2 ~]#
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-sudo -i
+$ *sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-.[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cheat-nftables-checkhost.sh
 ----
 
-You are now ready to begin your exercises.
+You are now ready to proceed with these exercises.
 
 == nft Fundamentals
 
 Using nft, show the current state of the network tables.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft list tables
-----
+# *nft list tables*
 
-.Command Output
-[source,indent=4]
-----
 table ip filter
 table ip6 filter
 table bridge filter
@@ -78,14 +79,10 @@ table ip6 firewalld
 
 Using nft, show the current state of the network chains.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft list chains
-----
+# *nft list chains*
 
-.Command Output
-[source,indent=4]
-----
 table ip filter {
         chain INPUT {
                 type filter hook input priority 0; policy accept;
@@ -104,21 +101,17 @@ NOTE: The output for this can be VERY long.  You can optionally use `nft list ch
 
 == Add Single Rule
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft insert rule ip filter INPUT tcp dport http accept
+# *nft insert rule ip filter INPUT tcp dport http accept*
 ----
 
 Verify the rule change.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft list table ip filter -n -a
-----
+# *nft list table ip filter -n -a*
 
-.Command Output
-[source,indent=4]
-----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy accept;
@@ -139,21 +132,17 @@ Remember the rule handle, we will use it next to delete the rule
 
 == Delete Single Rule
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft delete rule filter INPUT handle 4
+# *nft delete rule filter INPUT handle 4*
 ----
 
 Verify the rule change.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft list table ip filter -n -a 
-----
+# *nft list table ip filter -n -a *
 
-.Command Output
-[source,indent=4]
-----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy accept;
@@ -172,21 +161,17 @@ table ip filter { # handle 1
 
 == Add Multiple Rules at Once
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft insert rule ip filter INPUT tcp dport { ssh, http, https, 8181 } accept
+# *nft insert rule ip filter INPUT tcp dport { ssh, http, https, 8181 } accept*
 ----
 
 Verify the new rules.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft list table ip filter -n -a
-----
+# *nft list table ip filter -n -a*
 
-.Command Output
-[source,indent=4]
-----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy accept;
@@ -209,22 +194,17 @@ WARNING: DO NOT do this step unless you successfully completed "Add Multiple Rul
 
 Set the INPUT chain default policy to drop all traffic not specifically accepted.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft add chain ip filter INPUT { type filter hook input priority 0\; policy drop\; }
+# *nft add chain ip filter INPUT { type filter hook input priority 0\; policy drop\; }*
 ----
 
 Verify Increased Security
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft list table ip filter -n -a
-----
+# *nft list table ip filter -n -a*
 
-
-.Command Output
-[source,indent=4]
-----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy drop;
@@ -245,21 +225,17 @@ table ip filter { # handle 1
 
 Remove rules added during this exercise.  We begin by setting the INPUT chain default policy to accept all traffic.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft add chain ip filter INPUT { type filter hook input priority 0\; policy accept\; }
+# *nft add chain ip filter INPUT { type filter hook input priority 0\; policy accept\; }*
 ----
 
 Now find the handle and remove the rule currently allowing access for SSH, HTTP, HTTPS, and 8181
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft list table ip filter -n -a
-----
+# *nft list table ip filter -n -a*
 
-.Command Output
-[source,indent=4]
-----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy accept;
@@ -278,23 +254,19 @@ table ip filter { # handle 1
 
 In the output above, we determine the handle for our rule is '6'.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft delete rule filter INPUT handle 6
+# *nft delete rule filter INPUT handle 6*
 ----
 
 NOTE: You can also use the 'flush' option to clear an entire table: `nft flush table ip filter`
 
 Verify that everything is back to normal
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-nft list table ip filter -n -a
-----
+# *nft list table ip filter -n -a*
 
-.Command Output
-[source,indent=4]
-----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy accept;
