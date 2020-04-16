@@ -71,7 +71,7 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 
 TIP: Remember that *tmux* is your friend here.  If you have any questions, ask the instructor on how to use it
 
-Let's open another workstation terminal session. To do that, from tmux, hit `Ctrl+b` then the `"` key. This should split the window in two and give you a new root session on node2. Now you need to run:
+Let's open another workstation terminal session. To do that, from tmux, hit `Ctrl+b` then the `"` key. This should split the window into two panes and give you a new root session on node2. Now you need to run:
 
 .[root@node2 ~]#
 ----
@@ -102,6 +102,8 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 
 Doing the math with my numbers above, my session was open for about 9 seconds and was initiated by IP 10.0.0.10, the workstation.
 
+To switch back to the pane running `tcplife`, hit `Ctrl+b` and then press `o`. You can use this shortcut to switch between panes at any time with tmux.
+
 On the terminal running `tcplife`, go ahead and Ctrl-C the process. You should then be returned to the prompt.
 
 == bcc-tools: execsnoop
@@ -127,7 +129,7 @@ Now from another workstation terminal, run:
 
 .[root@workstation ~]#
 ----
-ssh node2.example.com cheat-ebpf-rootkit.sh
+ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"
 ----
 
 You can immediately exit your session and return to the workstation. In the `execsnoop` terminal, you should see output similar to:
@@ -190,10 +192,10 @@ In a workstation terminal, perform the following steps to connect to node2 as ro
 
 .[root@workstation ~]#
 ----
-ssh student@node2 
+ssh node2 
 ----
 
-.[student@node2 ~]$
+.[cloud-user@node2 ~]$
 ----
 sudo -i
 ----
@@ -545,6 +547,7 @@ PID     TID     COMM            FUNC             -
 ----
 
 Go to the terminal with `trace` running and issue a Ctrl-C. This will end the process and return you to the command line. 
+You may also now type `exit` in one of your tmux panes to return to having just one pane visible.
 
 There is a lot more that you can do with this tool when you actually need to start tracing what is getting passed into kernel functions and what is being returned by those kernel functions.
 
