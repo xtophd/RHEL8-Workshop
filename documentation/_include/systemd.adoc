@@ -281,6 +281,8 @@ Similar to what you did in the last step, extend the mariadb.service unit with R
 
 This time we'll use systemctl to create the drop-in and notify systemd of the changes.
 
+`systemctl edit` allows inserting the content for the drop-in and also handles the `systemctl daemon-reload` automatically.
+
 .[root@node1]#
 [source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -295,6 +297,8 @@ Restart=always
 ----
 
 Save and quit the editor, and view the unit
+
+`systemctl cat` is a quick and easy way to view the contents of a unit & and it's drop-ins.
 
 [source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -340,8 +344,6 @@ Restart=always
    CGroup: /system.slice/mariadb.service
            └─28642 /usr/libexec/mysqld --basedir=/usr
 ----
-
-Notice that `systemctl edit` allows inserting the content for the drop-in and also handles the `systemctl daemon-reload` automatically. Also notice that `systemctl cat` is a quick and easy way to view the contents of a unit & and it's drop-ins.
 
 == Additional Resources
 
