@@ -179,7 +179,7 @@ We had this information from the previous command, but to be more specific let's
 ----
 # *firewall-cmd --zone=public --list-interfaces*
 
-ens3
+eth0
 ----
 
 Get a list of services configured on the public zone.
