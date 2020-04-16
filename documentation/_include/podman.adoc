@@ -15,24 +15,15 @@ endif::[]
 
 In this unit, we will get familiar with Containers and the podman CLI.  
 
-[discrete]
-== Additional Reference Materials
-
-
-NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
-
-    * link:https://www.redhat.com/en/blog/introducing-red-hat-universal-base-image[Introducing the Red Hat Universal Base Image - Scott McCarty]
-    * link:https://developers.redhat.com/blog/2019/04/25/podman-basics-cheat-sheet/[Podman Basics Cheat Sheet - Doug Tidwell]
-    * link:https://developers.redhat.com/blog/2018/11/20/buildah-podman-containers-without-daemons/[Containers without daemons: Podman and Buildah available in RHEL 7.6 and RHEL 8 Beta - Tom Sweeney]
-
-
 == Getting Started
 
-From workstation.example.com, you should be able to ssh to node3.example.com as 'root' without any prompts for credentials.
+For this exercise, you will be using the host `node3`.
+
+From host `workstation`, you should be able to ssh to `node3` without any prompts for credentials.
 
 .[root@workstation ~]#
 ----
-ssh node3.example.com
+ssh node3
 ----
 
 Verify that you are on the right host for these exercises.
@@ -769,6 +760,13 @@ podman rm --all
 
 podman rmi --all
 ----
+
+[discrete]
+== Additional Reference Materials
+
+    * link:https://www.redhat.com/en/blog/introducing-red-hat-universal-base-image[Introducing the Red Hat Universal Base Image - Scott McCarty]
+    * link:https://developers.redhat.com/blog/2019/04/25/podman-basics-cheat-sheet/[Podman Basics Cheat Sheet - Doug Tidwell]
+    * link:https://developers.redhat.com/blog/2018/11/20/buildah-podman-containers-without-daemons/[Containers without daemons: Podman and Buildah available in RHEL 7.6 and RHEL 8 Beta - Tom Sweeney]
 
 [discrete]
 == End of Unit
