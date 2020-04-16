@@ -299,11 +299,46 @@ Save and quit the editor, and view the unit
 [source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *systemctl cat mariadb*
+
+...snip...
+# Restart crashed server only, on-failure would also restart, for example, when
+# my.cnf contains unknown option
+Restart=on-abort
+RestartSec=5s
+
+UMask=007
+
+# Give a reasonable amount of time for the server to start up/shut down
+TimeoutSec=300
+
+# Place temp files in a secure directory, not /tmp
+PrivateTmp=true
+
+# /etc/systemd/system/mariadb.service.d/override.conf
+[Service]
+Restart=always
 ----
 
 [source,bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *systemctl status mariadb*
+
+● mariadb.service - MariaDB 10.3 database server
+   Loaded: loaded (/usr/lib/systemd/system/mariadb.service; enabled; vendor preset: disab>
+  Drop-In: /etc/systemd/system/mariadb.service.d
+           └─override.conf
+   Active: active (running) since Thu 2020-04-16 13:10:45 EDT; 9s ago
+     Docs: man:mysqld(8)
+           https://mariadb.com/kb/en/library/systemd/
+  Process: 28674 ExecStartPost=/usr/libexec/mysql-check-upgrade (code=exited, status=0/SU>
+  Process: 28325 ExecStartPre=/usr/libexec/mysql-prepare-db-dir mariadb.service (code=exi>
+  Process: 28300 ExecStartPre=/usr/libexec/mysql-check-socket (code=exited, status=0/SUCC>
+ Main PID: 28642 (mysqld)
+   Status: "Taking your SQL requests now..."
+    Tasks: 30 (limit: 23999)
+   Memory: 84.5M
+   CGroup: /system.slice/mariadb.service
+           └─28642 /usr/libexec/mysqld --basedir=/usr
 ----
 
 Notice that `systemctl edit` allows inserting the content for the drop-in and also handles the `systemctl daemon-reload` automatically. Also notice that `systemctl cat` is a quick and easy way to view the contents of a unit & and it's drop-ins.
