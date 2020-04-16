@@ -44,14 +44,14 @@ For these exercises, you will be using the host `workstation` as user `root`.
 
 Use `sudo` to elevate your priviledges.
 
-[source,bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 $ *sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-[source,bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *cheat-webconsole-checkhost.sh*
 ----
