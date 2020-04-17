@@ -108,7 +108,7 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 
 Doing the math with my numbers above, my session was open for about 9 seconds and was initiated by IP 10.0.0.10, the workstation.
 
-On the terminal running `tcplife`, go ahead and Ctrl-C the process. You should then be returned to the prompt.
+In the `tcplife` terminal, issue a Ctrl-C and this will return you to a prompt.
 
 == bcc-tools: execsnoop
 
@@ -283,7 +283,7 @@ This shows us that the mount succeeded and all the options that were passed into
 
 As you can see, the `mountsnoop` tool is very useful for seeing what processes are calling the mount and umount system calls and what the results of those calls are.
 
-Still in the `mountsnoop` terminal, issue a Ctrl-C and you will return to your prompt.
+In the `mountsnoop` terminal, issue a Ctrl-C and this will return you to a prompt.
 
 == bcc-tools: xfsslower
 
@@ -365,7 +365,7 @@ TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 
 So we can see that when writing these files in parallel, we have xfs operations taking longer than 10ms to complete.
 
-Go to the terminal with `xfsslower` running and issue a Ctrl-C. This will return you to the prompt. That is the expected behavior.
+In the `xfsslower` terminal, issue a Ctrl-C and this will return you to a prompt.
 
 == bcc-tools: cachestat
 
@@ -408,38 +408,34 @@ In the `cachestat` window, you should output similar to:
 
 This shows that we had 901 page cache misses during a five second period while running the above loop, but during that same second, there were 9,821 hits, indicating great performance from the page cache.
 
-Go to the terminal with `cachestat` running and issue a Ctrl-C. This will end the process with the message "Detaching...". That is the expected behavior.
+In the `cachestat` terminal, issue a Ctrl-C and this will return you to a prompt.
 
 == bcc-tools: trace
 
 This tool is a swiss army knife allowing you to specify functions to trace and messages to be printed when certain conditions are met. You can read more about this by running:
 
-.[root@node2 ~]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-man 8 trace
+# *man 8 trace*
 ----
 
 Let's do a simple trace in which we will dynamically trace the do_sys_open() kernel function and print the names of the files opened. Run this with:
 
-.[root@node2 ~]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-/usr/share/bcc/tools/trace 'p::do_sys_open "%s", arg2'
+# */usr/share/bcc/tools/trace 'p::do_sys_open "%s", arg2'*
 ----
 
 Now in another node2 terminal, run:
 
-.[root@node2 ~]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cat /etc/fstab
+# *cat /etc/fstab*
 ----
 
 In the window with `trace` running, you will see something similar to:
 
-.Command Output
-[source,indent=4]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 32559   32559   cat             do_sys_open      b'/etc/ld.so.cache'
 32559   32559   cat             do_sys_open      b'/lib64/libc.so.6'
@@ -476,24 +472,21 @@ In the window with `trace` running, you will see something similar to:
 
 Go ahead and Ctrl-C `trace` and then let's do one more trace, this time, tracing the return values out of `trace`:
 
-.[root@node2 ~]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-/usr/share/bcc/tools/trace 'r::do_sys_open "ret: %d", retval'
+# */usr/share/bcc/tools/trace 'r::do_sys_open "ret: %d", retval'*
 ----
 
 Now in another node2 terminal, run:
 
-.[root@node2 ~]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cat /etc/fstab
+# *cat /etc/fstab*
 ----
 
 and in your `trace` window, you will see output similar to:
 
-.Command Output
-[source,indent=4]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 PID     TID     COMM            FUNC             -
 32576   32576   cat             do_sys_open      ret: 3
