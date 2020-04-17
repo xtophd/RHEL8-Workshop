@@ -76,7 +76,7 @@ From the bottom up, here is a basic explanation of the layered technology stack 
                     loopback
 |===
 
-=== LVM CLI Toolbox
+== LVM CLI Toolbox
 
 [options="header"]
 |===
