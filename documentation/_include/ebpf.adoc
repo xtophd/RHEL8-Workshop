@@ -68,7 +68,9 @@ Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These
 
 The `tcplife` tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes. To run this tool, do:
 
-.node2 terminal
+[discrete]
+==== Primary Terminal
+
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # */usr/share/bcc/tools/tcplife*
@@ -76,7 +78,11 @@ The `tcplife` tool monitors tcp connections on the system and measures the amoun
 PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 ----
 
-In you second terminal, establish yourself as user `root` on `workstation`.
+[discrete]
+==== Second Terminal
+
+  * host: *workstation*
+  * user: *root*
 
 Run the following command:
 
@@ -87,6 +93,9 @@ Run the following command:
 ----
 
 This command should run for about 10 seconds and then exit.  
+
+[discrete]
+==== Primary Terminal
 
 In the `tcplife` terminal, you should now see output similar to:
 
