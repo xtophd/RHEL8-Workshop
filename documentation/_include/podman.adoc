@@ -51,7 +51,6 @@ You are now ready to proceed with these exercises.
 
 Now have a look at the general container information.
 
-.[root@node3 ~]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *podman info*
@@ -272,12 +271,7 @@ Check out 'podman info' one more time and you should notice a few changes.
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *podman info*
-----
 
-.Your output should look like this
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
 host:
   BuildahVersion: 1.9.0
   Conmon:
