@@ -26,7 +26,7 @@ In this unit, we will be focusing on the kernel tracing offering shipped as bcc-
 
 == Getting Started
 
-For these exercises, you will primarily be using the host `node2` as user `root`.  However, some exercises will need a second teminal session connected to `workstation`.
+For these exercises, you will primarily be using the host `node2` as user `root`.  However, these exercises do REQUIRE a second teminal session to run commands on other hosts.  Please pay careful attention to what commands to run on different hosts.
 
 TIP: Now is a great time to use the multi session capability of *tmux*.  Use `Ctrl-b "` to create another session with a split screen.  Cycle the active session back and forth with `CTRL-b n` (next) and `CTRL-b p` (previous).
 
@@ -114,6 +114,9 @@ On the terminal running `tcplife`, go ahead and Ctrl-C the process. You should t
 
 The `execsnoop` script monitors all calls to execve() and catches all processes that follow the fork->exec sequence, as well as processes that re-exec() themselves. Processes that fork() but do not exec() won't be caught by this script.
 
+[discrete]
+==== Primary Terminal
+
 Continuing on host `node2`, to run `execsnoop` as follows:
 
 .node2 terminal
@@ -124,16 +127,24 @@ Continuing on host `node2`, to run `execsnoop` as follows:
 PCOMM            PID    PPID   RET ARGS
 ----
 
-Again, in you second terminal as user `root` on `workstation`, run the following:
+[discrete]
+==== Secondary Terminal
+
+In your second terminal, establish yourself as described below and then run the following command:
+
+  * host: *workstation*
+  * user: *root*
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"*
 ----
 
+[discrete]
+==== Primary Terminal
+
 In the `execsnoop` terminal, you should see output similar to:
 
-.execsnoop output
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
 PCOMM            PID    PPID   RET ARGS
@@ -174,9 +185,11 @@ In the `execsnoop` terminal, issue a Ctrl-C and this will return you to a prompt
 
 Similar in nature to `execsnoop`, `mountsnoop` traces the mount() and umount() syscalls, which show which processes are attempting to mount or unmount filesystems.
 
+[discrete]
+==== Primary Terminal
+
 To run this script, execute the following on `node2`:
 
-.node2 terminal
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # */usr/share/bcc/tools/mountsnoop*
@@ -184,7 +197,15 @@ To run this script, execute the following on `node2`:
 COMM             PID     TID     MNT_NS      CALL
 ----
 
-*PAY ATTENTION!!!* This time in you second terminal as user `root` on host `node2`.
+[discrete]
+==== Secondary Terminal
+
+*PAY ATTENTION!!! USING A DIFFERENT HOST*
+
+In your second terminal, establish yourself as described below and then run the following command:
+
+  * host: *node2*
+  * user: *root*
 
 Let's try to unmount a mount that we know cannot be unmounted. For this, we'll pick the root filesystem '/'.
 
@@ -195,6 +216,9 @@ Let's try to unmount a mount that we know cannot be unmounted. For this, we'll p
 umount: /: target is busy.
 ----
 
+[discrete]
+==== Primary Terminal
+
 Taking a look at the terminal running `mountsnoop`, we see:
 
 [source,options="nowrap",subs="{markup-in-source}"]
@@ -203,6 +227,9 @@ umount           20001   20001   4026531840  umount("/", 0x0) = -EBUSY
 ----
 
 This shows us that the mount is busy and cannot be unmounted.
+
+[discrete]
+==== Secondary Terminal
 
 Now let's try to unmount a filesystem that we should be able to unmount.  But before doing so, look at the mount options to ensure we can restore it correctly.  On `node2` run the following:
 
@@ -220,15 +247,20 @@ Now proceed to umount `/dev/shm` on `node2`
 # *umount /dev/shm*
 ----
 
-You should be dropped back to the terminal and see the following in the `mountsnoop` window:
+[discrete]
+==== Primary Terminal
 
-.mountsnoop output
-[bash,options="nowrap",subs="{markup-in-source}"]
+Back to the `mountsnoop` terminal and you should see the following:
+
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 umount           20003   20003   4026531840  umount("/dev/shm", 0x0) = 0
 ----
 
-You now see that this umount succeeded. 
+The umount command succeeded. 
+
+[discrete]
+==== Secondary Terminal
 
 Proceed to restore the /dev/shm mount as follows:
 
@@ -237,10 +269,12 @@ Proceed to restore the /dev/shm mount as follows:
 # *mount -t tmpfs -o rw,nosuid,nodev,relatime,seclabel tmpfs /dev/shm*
 ----
 
-You should be dropped back to the terminal and see the following in the `mountsnoop` window:
+[discrete]
+==== Primary Terminal
 
-.mountsnoop output
-[bash,options="nowrap",subs="{markup-in-source}"]
+Finally, back to the `mountsnoop` terminal and you should see the following:
+
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 mount            20004   20004   4026531840  mount("tmpfs", "/dev/shm", "tmpfs", MS_NOSUID|MS_NODEV|MS_NOEXEC|MS_SYNCHRONOUS|MS_DIRSYNC|MS_NOATIME|MS_NODIRATIME|MS_MOVE|MS_REC|MS_UNBINDABLE|MS_SLAVE|MS_SHARED|MS_I_VERSION|MS_STRICTATIME|MS_LAZYTIME|MS_NOUSER|0x7f2b30000000, "") = 0
 ----
@@ -249,7 +283,7 @@ This shows us that the mount succeeded and all the options that were passed into
 
 As you can see, the `mountsnoop` tool is very useful for seeing what processes are calling the mount and umount system calls and what the results of those calls are.
 
-Go to the terminal with `mountsnoop` running and issue a Ctrl-C. This will return you to your prompt.
+Still in the `mountsnoop` terminal, issue a Ctrl-C and you will return to your prompt.
 
 == bcc-tools: xfsslower
 
