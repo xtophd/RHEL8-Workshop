@@ -64,6 +64,10 @@ Start by installing the *BPF Compiler Collection* (bcc-tools) and kernel-devel p
 
 Now, we have a lot of interesting tools installed in /usr/share/bcc/tools along with accompanying man pages.
 
+
+
+
+
 == bcc-tools: tcplife
 
 The `tcplife` tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes.
@@ -109,6 +113,10 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 Doing the math with my numbers above, my session was open for about 9 seconds and was initiated by IP 10.0.0.10, the workstation.
 
 In the `tcplife` terminal, issue a Ctrl-C and this will return you to a prompt.
+
+
+
+
 
 == bcc-tools: execsnoop
 
@@ -180,6 +188,10 @@ This shows you all the processes that ran exec() during that ssh login, their PI
 
 In the `execsnoop` terminal, issue a Ctrl-C and this will return you to a prompt.
 
+
+
+
+
 == bcc-tools: mountsnoop
 
 Similar in nature to `execsnoop`, `mountsnoop` traces the mount() and umount() syscalls, which show which processes are attempting to mount or unmount filesystems.
@@ -187,7 +199,7 @@ Similar in nature to `execsnoop`, `mountsnoop` traces the mount() and umount() s
 [discrete]
 ==== Primary Terminal
 
-To run this script, execute the following on `node2`:
+To run this tool, execute the following and give it a couple of seconds to get set up:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -284,6 +296,10 @@ As you can see, the `mountsnoop` tool is very useful for seeing what processes a
 
 In the `mountsnoop` terminal, issue a Ctrl-C and this will return you to a prompt.
 
+
+
+
+
 == bcc-tools: xfsslower
 
 WARNING: Please check which filesystem your host is using with the command `df -T /`.  If you host is configured with ext4, then substitute the command `ext4slower` in place of `xfsslower`.
@@ -293,7 +309,7 @@ The purpose of the `xfsslower` tool (also `ext4slower` and `nfsslower`) is to sh
 [discrete]
 ==== Primary Terminal
 
-To run this script, execute the following on `node2`:
+To run this tool, execute the following and give it a couple of seconds to get set up:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -375,39 +391,48 @@ So we can see that when writing these files in parallel, we have xfs operations 
 
 In the `xfsslower` terminal, issue a Ctrl-C and this will return you to a prompt.
 
+
+
+
+
 == bcc-tools: cachestat
 
 The `cachestat` tool traces kernel page cache functions and prints every five second summaries to aid you in workload characterization.
 
-To run this script, do:
+[discrete]
+==== Primary Terminal
 
-.[root@node2 ~]#
+To run this tool, execute the following and give it a couple of seconds to get set up:
+
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-/usr/share/bcc/tools/cachestat
-----
+# */usr/share/bcc/tools/cachestat*
 
-You should see the following header print:
-
-.Command Output
-[source,indent=4]
-----
    TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
 ----
 
-In another root terminal on node 2, let's flush the cache and then run our dd for loop from the `xfsslower` section:
+[discrete]
+==== Secondary Terminal
 
-.[root@node2 ~]#
+In your second terminal, establish yourself as described below and then run the following command:
+
+  * host: *node2*
+  * user: *root*
+
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-echo 3 > /proc/sys/vm/drop_caches
-for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
+# *echo 3 > /proc/sys/vm/drop_caches*
+# *for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done*
 ----
+
+This flushes the cache and then runs a series of `dd` commands to create some I/O.
+
+[discrete]
+==== Primary Terminal
 
 In the `cachestat` window, you should output similar to:
 
-.Command Output
-[source,indent=4]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
    TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
        0        0        0        0            0        154
@@ -418,6 +443,10 @@ This shows that we had 901 page cache misses during a five second period while r
 
 In the `cachestat` terminal, issue a Ctrl-C and this will return you to a prompt.
 
+
+
+
+
 == bcc-tools: trace
 
 This tool is a swiss army knife allowing you to specify functions to trace and messages to be printed when certain conditions are met. You can read more about this by running:
@@ -427,21 +456,35 @@ This tool is a swiss army knife allowing you to specify functions to trace and m
 # *man 8 trace*
 ----
 
-Let's do a simple trace in which we will dynamically trace the do_sys_open() kernel function and print the names of the files opened. Run this with:
+Let's do a simple trace in which we will dynamically trace the do_sys_open() kernel function and print the names of the files opened. 
+
+[discrete]
+==== Primary Terminal
+
+To run this tool, execute the following and give it a couple of seconds to get set up:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # */usr/share/bcc/tools/trace 'p::do_sys_open "%s", arg2'*
 ----
 
-Now in another node2 terminal, run:
+[discrete]
+==== Secondary Terminal
+
+In your second terminal, establish yourself as described below and then run the following command:
+
+  * host: *node2*
+  * user: *root*
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *cat /etc/fstab*
 ----
 
-In the window with `trace` running, you will see something similar to:
+[discrete]
+==== Primary Terminal
+
+In the `trace` terminal, you will see something similar to:
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -485,14 +528,18 @@ Go ahead and Ctrl-C `trace` and then let's do one more trace, this time, tracing
 # */usr/share/bcc/tools/trace 'r::do_sys_open "ret: %d", retval'*
 ----
 
-Now in another node2 terminal, run:
+[discrete]
+==== Secondary Terminal
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *cat /etc/fstab*
 ----
 
-and in your `trace` window, you will see output similar to:
+[discrete]
+==== Primary Terminal
+
+In the `trace` terminal, you will see something similar to:
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -531,6 +578,7 @@ PID     TID     COMM            FUNC             -
 ----
 
 Go to the terminal with `trace` running and issue a Ctrl-C. This will end the process and return you to the command line. 
+
 You may also now type `exit` in one of your tmux panes to return to having just one pane visible.
 
 There is a lot more that you can do with this tool when you actually need to start tracing what is getting passed into kernel functions and what is being returned by those kernel functions.
