@@ -70,7 +70,7 @@ eed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 
 pke avx512_vnni md_clear arch_capabilities
 ----
 
-You are looking for either the Intel flag (vtx) or the AMD flag (svm).  A more sophisticated command makes it a little easier to determine.
+You are looking for either the Intel flag (vmx) or the AMD flag (svm).  A more sophisticated command makes it a little easier to determine.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
