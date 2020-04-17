@@ -73,12 +73,15 @@ The `tcplife` tool monitors tcp connections on the system and measures the amoun
 
 To run this tool, execute the following and give it a couple of seconds to get set up:
 
+====
+Primary Terminal
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # */usr/share/bcc/tools/tcplife*
 
 PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 ----
+====
 
 [discrete]
 ==== Secondary Terminal
