@@ -73,7 +73,7 @@ You are looking for either the Intel flag (vmx) or the AMD flag (svm).  A more s
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "*WARN* Virt NOT Supported"; fi*
+# *if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "!!WARN!! Virt NOT Supported"; fi*
 
 Virt Supported
 ----
