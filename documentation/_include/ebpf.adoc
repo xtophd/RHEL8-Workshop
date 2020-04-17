@@ -86,7 +86,7 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
   * host: *workstation*
   * user: *root*
 
-In your second terminal establish yourself as described above, then run the following command:
+In your second terminal, establish yourself as described above and then run the following command:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
