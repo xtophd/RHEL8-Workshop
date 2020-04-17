@@ -101,6 +101,19 @@ We need to install an httpd server in our image, and what better way to do that 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *buildah run ubi-working-container yum install -y httpd*
+
+...SNIP...
+Installed:
+  httpd-2.4.37-16.module+el8.1.0+4134+e6bad0ed.x86_64
+  apr-util-bdb-1.6.1-6.el8.x86_64
+  apr-util-openssl-1.6.1-6.el8.x86_64
+  mailcap-2.1.48-3.el8.noarch
+  redhat-logos-httpd-81.1-1.el8.noarch
+  apr-util-1.6.1-6.el8.x86_64
+  httpd-tools-2.4.37-16.module+el8.1.0+4134+e6bad0ed.x86_64
+  apr-1.6.3-9.el8.x86_64
+  mod_http2-1.11.3-3.module+el8.1.0+4134+e6bad0ed.x86_64
+  httpd-filesystem-2.4.37-16.module+el8.1.0+4134+e6bad0ed.noarch
 ----
 
 === Configure the Entry Point
