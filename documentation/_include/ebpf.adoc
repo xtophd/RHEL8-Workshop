@@ -100,7 +100,6 @@ This command should run for about 10 seconds and then exit.
 
 In the `tcplife` terminal, you should now see output similar to:
 
-.tcplife output
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
 PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
