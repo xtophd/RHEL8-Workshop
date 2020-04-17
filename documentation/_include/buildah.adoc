@@ -130,7 +130,6 @@ Using the long path provided by your mount command, change directories.
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *cd /var/lib/containers/storage/overlay/3456a159b5b3c9e3056d14b97bde1f0e770500dd1cdd6168c894a52a3b3f12ee/merged*
-
 # *ls -lah ./var/www/html*
 
 total 16K
@@ -144,7 +143,6 @@ There is our `dan-cries.txt`! Let's add an additional file:
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *cp /var/tmp/buildah-index.html ./var/www/html/index.html*
-
 # *cat ./var/www/html/index.html*
 
 <html>
@@ -230,8 +228,7 @@ Finally let's test our new webserver:
 <title>Stop Disabling SELinux</title>
 <body>
 <p>
-Seriously, stop disabling SELinux. Learn how to use it before you blindly shut i
-t off.
+Seriously, stop disabling SELinux. Learn how to use it before you blindly shut it off.
 </p>
 </body>
 </html>
