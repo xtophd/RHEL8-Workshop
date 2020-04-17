@@ -55,7 +55,6 @@ This is done with the following simple commands.
 
 You can start by examining the CPU flags (capabilities) advertised by your system.
 
-.[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *grep -E 'svm|vmx' /proc/cpuinfo*
