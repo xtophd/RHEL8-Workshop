@@ -58,15 +58,25 @@ You can start by examining the CPU flags (capabilities) advertised by your syste
 .[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-grep -E 'svm|vmx' /proc/cpuinfo
+# *grep -E 'svm|vmx' /proc/cpuinfo*
+
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 c
+lflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good
+ nopl xtopology cpuid tsc_known_freq pni pclmulqdq *vmx* ssse3 fma cx16 pcid sse4_1 sse4_2 x2
+apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnow
+prefetch invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi flexpriority ept
+ vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx avx512f avx512dq rds
+eed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 arat pku os
+pke avx512_vnni md_clear arch_capabilities
 ----
 
 You are looking for either the Intel flag (vtx) or the AMD flag (svm).  A more sophisticated command makes it a little easier to determine.
 
-.[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "*WARN* Virt NOT Supported"; fi
+# *if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "*WARN* Virt NOT Supported"; fi*
+
+Virt Supported
 ----
 
 After you install all the required software, there are some additional tools to provide more detailed reporting on system capabilities.
@@ -80,10 +90,9 @@ System needs to be configure with access to the following repos:
   * rhel-8-baseos-rpms
   * rhel-8-appstream-rpms
 
-.[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools cockpit-machines lorax-composer composer-cli cockpit-composer
+# *yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools cockpit-machines lorax-composer composer-cli cockpit-composer*
 ----
 
 === Enable System Services
@@ -94,25 +103,21 @@ If for some reason the webconsole is not enabled, please visit that unit for ins
 
 To enable the necessary services for this unit:
 
-.[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-systemctl enable lorax-composer libvirtd
+# *systemctl enable lorax-composer libvirtd*
 
-systemctl start lorax-composer libvirtd
+# *systemctl start lorax-composer libvirtd*
 ----
 
 === Verify Virtualization Host Status
 
 One simple command checks various hardware and software configurations for support of virtualization.
 
-.[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-virt-host-validate
-----
+# *virt-host-validate*
 
-----
   QEMU: Checking for hardware virtualization                                 : PASS
   QEMU: Checking if device /dev/kvm exists                                   : PASS
   QEMU: Checking if device /dev/kvm is accessible                            : PASS
@@ -144,13 +149,10 @@ We are only going to leverage an existing blueprint, but please note that bluepr
 
 === List Blueprints
 
-.[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-composer-cli blueprints list
-----
+# *composer-cli blueprints list*
 
-----
 example-atlas
 example-development
 example-http-server
@@ -158,13 +160,10 @@ example-http-server
 
 A nice quick way to determine if the local `Image Builder` can resolve all dependencies for the blueprint is to run  it thorugh a `depsolve`.  Here you can also see a full list of rpms that will be installed on the image.
 
-.[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-composer-cli blueprints depsolve example-http-server
-----
+# *composer-cli blueprints depsolve example-http-server*
 
-----
 blueprint: example-http-server v0.0.1
     acl-2.2.53-1.el8.x86_64
     apr-1.6.3-9.el8.x86_64
@@ -177,7 +176,7 @@ blueprint: example-http-server v0.0.1
     ca-certificates-2018.2.24-6.el8.noarch
     chkconfig-1.11-1.el8.x86_64
     coreutils-8.30-6.el8.x86_64
-...
+...SNIP...
 ----
 
 
@@ -185,33 +184,27 @@ blueprint: example-http-server v0.0.1
 
 We are going to leverage the `example-http-server` for our purposes.
 
-.[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-composer-cli compose start example-http-server qcow2
-----
+# *composer-cli compose start example-http-server qcow2*
 
-----
 Compose 812019dd-20e5-4528-a99b-09fbe47ca2d8 added to the queue
 ----
 
-.[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-composer-cli compose status
+# *composer-cli compose status*
 ----
 
-.[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-composer-cli compose list
+# *composer-cli compose list*
+
+812019dd-20e5-4528-a99b-09fbe47ca2d8 *FINISHED* example-http-server 0.0.1 qcow2
 ----
 
 It may take a few minutes, but eventually you should see a "FINISHED" status
 
-----
-812019dd-20e5-4528-a99b-09fbe47ca2d8 FINISHED example-http-server 0.0.1 qcow2
-----
 
 == Deploy A Virtual-Machine with 'virt-install'
 
@@ -223,11 +216,11 @@ First we need to grab a copy of the image and put it in the right place for our 
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd /var/lib/libvirt/images
+# *cd /var/lib/libvirt/images*
 
-composer-cli compose image 812019dd-20e5-4528-a99b-09fbe47ca2d8
+# *composer-cli compose image 812019dd-20e5-4528-a99b-09fbe47ca2d8*
 
-mv *.qcow2 vmguest.qcow2
+# *mv *.qcow2 vmguest.qcow2*
 ----
 
 === Modify the QCOW Image
@@ -236,7 +229,7 @@ Now you need to set a root password in the image
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-virt-customize -a vmguest.qcow2 --root-password password:redhat --uninstall cloud-init
+# *virt-customize -a vmguest.qcow2 --root-password password:redhat --uninstall cloud-init*
 ----
 
 === Deploy the QCOW Image
