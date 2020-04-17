@@ -8,17 +8,18 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-
 :toc:
 :toclevels: 1
-
 
 = LVM and VDO : Storage Management and Data Optimization
 
 == Overview
 
+A Logical Volume Manager is a software layer on top of physical hard disks and partitions, which creates an abstraction of continuity and ease-of-use for managing the lifecycle of those devices (ie: addition, removal, replacement, repartitioning, backup, etc).
 
+Over the years, the role of LVM has expanded greatly to include data redundancy (RAID), compression, deduplication, and more...
 
+These exercises will help you get familiar with the basic concepts of LVM and also introduce deduplication with the Virtual Data Optimizer (VDO).
 
 == Getting Started
 
