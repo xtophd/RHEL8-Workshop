@@ -1,5 +1,6 @@
 :sectnums:
 :sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -15,52 +16,49 @@ endif::[]
 
 == Overview
 
-In this unit, we will get familiar with Buildah and Skopeo.  
-
 NOTE: These exercises are an extension of the `podman` unit and although not required, it is strongly encourage that you complete that unit first.
 
+In this unit, we will continue to work with containers and get familiar with `Buildah` and `Skopeo`.  
 
 == Getting Started
 
-From workstation.example.com, you should be able to ssh to node3.example.com as 'root' without any prompts for credentials.
+For these exercises, you will be using the host `node3` as user `root`.
 
-.[root@workstation ~]#
+From host `workstation`, ssh to `node3`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node3.example.com
+$ *ssh node1*
 ----
 
-.[cloud-user@node3 ~]#
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-sudo -i
+$ *sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-buildah-checkhost.sh
+# *cheat-buildah-checkhost.sh*
 ----
 
-Now you are ready to extend your knowledge of containers with buildah and skopeo.
+You are now ready to proceed with these exercises.
 
-== Build an Image With Buildah
+== Create a Container Image With Buildah
 
-=== Web Server Version 2.0
+In the previous lab on `podman`, we pulled down the ubi image and used an OCIFile to build a "webserver" container image. That process used `buildah` under the hood, but in this lab we are going to use `buildah` directly to create a similar image manually, step by step.
 
-In the previous lab on `podman`, we pulled down the ubi image and used an OCIFile to build a "webserver" container image. That process used `buildah` under the hood, but in this lab we are going to use `buildah` directly to create a similar image manually.
-
-==== Start a Fresh Build
+=== Start a Fresh Build
 
 Let's get started by creating a new working container based off of the ubi image.
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-buildah from ubi8/ubi
-----
+# *buildah from ubi8/ubi*
 
-.Your output should look like this
-[source]
-----
 Getting image source signatures
 Copying blob befb03b11956 done
 Copying blob ee2244abc66f done
@@ -72,24 +70,18 @@ ubi-working-container
 
 This gives us the name of the "working container" and it is this container image that we will modify with buildah.
 
-==== Add a Custom File
+=== Add a Custom File
 
 Let's run:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-echo "Every time you run setenforce 0, you make Dan Walsh weep." > /root/dan-cries.txt
+# *buildah copy ubi-working-container /var/tmp/buildah-dan-cries.txt /var/www/html/dan-cries.txt*
 
-buildah copy ubi-working-container /root/dan-cries.txt /var/www/html/
+34f1621a22ffd90a2ebbd58eba315089dc2704ac69a3d33d60362422e4ec26a1
 ----
 
 At this point, you have copied your local `dan-cries.txt` into the the ubi-working-container image.
-
-You should see feedback similar to:
-
-----
-34f1621a22ffd90a2ebbd58eba315089dc2704ac69a3d33d60362422e4ec26a1
-----
 
 The steps you performed above is equivalent to the following OCIFile (or Dockerfile):
 
@@ -102,62 +94,59 @@ So it's nice that we can do that with buildah, manually.
 
 But wait there's more!!!
 
-==== Install Packages
+=== Install Additional Packages
 
 We need to install an httpd server in our image, and what better way to do that than a simple `yum install`.
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-buildah run ubi-working-container yum install -y httpd
+# *buildah run ubi-working-container yum install -y httpd*
 ----
 
-==== Configure the Entry Point
+=== Configure the Entry Point
 
 Next we set the entry point (command) so when the image deploys it knows what process to launch.
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-buildah config --cmd "/usr/sbin/httpd -D FOREGROUND" ubi-working-container
+# *buildah config --cmd "/usr/sbin/httpd -D FOREGROUND" ubi-working-container*
 ----
 
-==== Mount the Container Image
+=== Validate the Container Image
 
-Now let us continue to explore and make additional cutomizations to our image.
+Now let us take a peek at our image and validate some of our changes.
 
 Proceed to mount the root filesystem of your container with:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-buildah mount ubi-working-container
-----
+# *buildah mount ubi-working-container*
 
-You should see output similar to:
-
-[source]
-----
 /var/lib/containers/storage/overlay/3456a159b5b3c9e3056d14b97bde1f0e770500dd1cdd6168c894a52a3b3f12ee/merged
 ----
 
 Using the long path provided by your mount command, change directories.
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd /var/lib/containers/storage/overlay/3456a159b5b3c9e3056d14b97bde1f0e770500dd1cdd6168c894a52a3b3f12ee/merged
-ls -lah ./var/www/html
-----
+# *cd /var/lib/containers/storage/overlay/3456a159b5b3c9e3056d14b97bde1f0e770500dd1cdd6168c894a52a3b3f12ee/merged*
 
-and you should see:
+# *ls -lah ./var/www/html*
 
-----
 total 16K
 drwxr-xr-x. 2 root root 4.0K Apr 12 21:12 .
 drwxr-xr-x. 3 root root 4.0K Apr 12 21:12 ..
 -rw-r--r--. 1 root root   58 Apr 12 21:12 dan-cries.txt
 ----
 
-There is our `dan-cries.txt`! Let's add an additional file: ./var/www/html/index.html:
+There is our `dan-cries.txt`! Let's add an additional file:
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *cp /var/tmp/buildah-index.html ./var/www/html/index.html*
+
+# *cat ./var/www/html/index.html*
+
 <html>
 <title>Stop Disabling SELinux</title>
 <body>
@@ -168,16 +157,12 @@ Seriously, stop disabling SELinux. Learn how to use it before you blindly shut i
 </html>
 ----
 
-Once you have written that, you should be able to run:
+Let us just double check contents of the httpd docroot one last time:
 
-.[root@node3 merged]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ls -lahZ ./var/www/html/
-----
+# *ls -lahZ ./var/www/html/*
 
-and see:
-
-----
 total 20K
 drwxr-xr-x. 2 root root system_u:object_r:container_file_t:s0:c60,c544 4.0K Apr 12 21:25 .
 drwxr-xr-x. 3 root root system_u:object_r:container_file_t:s0:c60,c544 4.0K Apr 12 21:12 ..
@@ -187,14 +172,11 @@ drwxr-xr-x. 3 root root system_u:object_r:container_file_t:s0:c60,c544 4.0K Apr 
 
 When you are done making direct changes to the root filesystem of your container, you can run:
 
-.[root@node3 merged]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd /root
-buildah unmount ubi-working-container
-----
+# *cd /root*
+# *buildah unmount ubi-working-container*
 
-You should see output similar to:
-----
 e918debcaabb5820997b1a4969fbd45284adc0a2869d1f22a1bce78f703ff3c6
 ----
 
@@ -202,15 +184,10 @@ e918debcaabb5820997b1a4969fbd45284adc0a2869d1f22a1bce78f703ff3c6
 
 At this point, we've used buildah to run commands and create a container image similar to those in the OCIFile used in the `podman` unit.  Go ahead and commit the working container in to an actual container image:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-buildah commit ubi-working-container webserver2
-----
+# *buildah commit ubi-working-container webserver2*
 
-You should see output similar to:
-
-[source]
-----
 Getting image source signatures
 Copying blob d3ada5af5602 skipped: already exists
 Copying blob 668db11eda93 skipped: already exists
@@ -223,15 +200,10 @@ a831badcea41e924fd4a37f98431702142c17a64d06bd5444ac4471c1285be50
 
 Let's look at our images:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-podman images
-----
+# *podman images*
 
-You should see:
-
-[source]
-----
 REPOSITORY                            TAG      IMAGE ID       CREATED          SIZE
 localhost/webserver2                  latest   a831badcea41   25 seconds ago   240 MB
 registry.access.redhat.com/ubi8/ubi   latest   8121a9f5303b   12 days ago      240 MB
@@ -241,28 +213,19 @@ registry.access.redhat.com/ubi8/ubi   latest   8121a9f5303b   12 days ago      2
 
 Now let's run that webserver:
 
-.[root@node3 ~]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-podman run -d -p 8080:80 webserver2
+# *podman run -d -p 8080:80 webserver2*
 ----
 
 ==== Validate
 
 Finally let's test our new webserver:
 
-.[root@node3 ~]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-curl http://localhost:8080/
-----
+# *curl http://localhost:8080/*
 
-returns:
-
-[source]
-----
 <html>
 <title>Stop Disabling SELinux</title>
 <body>
@@ -276,38 +239,23 @@ t off.
 
 and:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-curl http://localhost:8080/dan-cries.txt
-----
+# *curl http://localhost:8080/dan-cries.txt*
 
-returns:
-
-[source]
-----
 Every time you run setenforce 0, you make Dan Walsh weep.
 ----
 
 As you can see, all of the changes we made with buildah are active and working in this new container image!
 
-
-
-
 == Inspecting Images with Skopeo
 
 Let's take a look at the webserver2:latest container that we just built:
 
-.[root@node3 ~]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-skopeo inspect containers-storage:localhost/webserver2:latest
-----
+# *skopeo inspect containers-storage:localhost/webserver2:latest*
 
-This should show us output similar to:
-
-[source]
-----
 {
     "Name": "localhost/webserver2",
     "Digest": "sha256:15ad1feee74c68a16031b2120793873432572d2592e0818bc4cff9842696b651",
@@ -351,14 +299,10 @@ We will see that this container is based on the Red Hat UBI image.
 
 Let's look at the ubi8/ubi container that we built this off of and compare the layers section:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-skopeo inspect containers-storage:registry.access.redhat.com/ubi8/ubi:latest
-----
+# *skopeo inspect containers-storage:registry.access.redhat.com/ubi8/ubi:latest*
 
-The output of this should be similar to:
-
-----
 {
     "Name": "registry.access.redhat.com/ubi8/ubi",
     "Digest": "sha256:f6648a87c8c52099bacd19b112beb3b65407ae6d3441f9b559ba53c4112c57a4",
@@ -401,14 +345,10 @@ Comparing the layers section, we can see that our container has 3 layers whereas
 
 Pretty neat that we can look inside local containers, but what about containers that are in registries? Skopeo can inspect containers on remote registries without the need to pull the image locally. Let's give that a test:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-skopeo inspect docker://registry.access.redhat.com/ubi8/ubi-minimal:latest
-----
+# *skopeo inspect docker://registry.access.redhat.com/ubi8/ubi-minimal:latest*
 
-The above allows us to look at the registry's copy of ubi8/ubi and will return this output:
-
-----
 {
     "Name": "registry.access.redhat.com/ubi8/ubi-minimal",
     "Digest": "sha256:df6f9e5d689e4a0b295ff12abc6e2ae2932a1f3e479ae1124ab76cf40c3a8cdd",
@@ -464,35 +404,30 @@ The above allows us to look at the registry's copy of ubi8/ubi and will return t
 }
 ----
 
-Let's run:
+The above allows us to look at the registry's copy of ubi8/ubi.
 
-.[root@node3 ~]#
-----
-podman images
-----
+Next let's run:
 
-and note that ubi8/ubi-minimal is not in our list:
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *podman images*
+
 REPOSITORY                            TAG      IMAGE ID       CREATED         SIZE
 localhost/webserver2                  latest   b660ca86ee4b   7 minutes ago   271 MB
 registry.access.redhat.com/ubi8/ubi   latest   8121a9f5303b   12 days ago     240 MB
 ----
 
+Notice that ubi8/ubi-minimal is not local to our registry. Skopeo provided that inspection completely remotely.
+
 === Obtaining tarballs of containers in remote registries for further inspection
 
 Let's run:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-mkdir /root/ubi-tarball
-skopeo copy docker://registry.access.redhat.com/ubi8/ubi-minimal:latest dir:/root/ubi-tarball
-----
+# *mkdir /root/ubi-tarball*
+# *skopeo copy docker://registry.access.redhat.com/ubi8/ubi-minimal:latest dir:/root/ubi-tarball*
 
-You will see output like:
-
-----
 Getting image source signatures
 Copying blob b26afdf22be4 done
 Copying blob 218f593046ab done
@@ -503,15 +438,11 @@ Storing signatures
 
 and now we can do:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd /root/ubi-tarball
-ls -l
-----
+# *cd /root/ubi-tarball*
+# *ls -l*
 
-and see:
-
-----
 total 33888
 drwxr-xr-x. 2 root root     4096 Apr 13 09:48 .
 dr-xr-x---. 5 root root     4096 Apr 13 09:48 ..
@@ -524,14 +455,10 @@ dr-xr-x---. 5 root root     4096 Apr 13 09:48 ..
 
 Inspecting the images with the `file` command, we discover that these a couple of text file along with a couple of zipped (compressed) tar files.
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-file *
-----
+# *file **
 
-which shows us:
-
-----
 218f593046abe6e9f194aed3fc2a2ad622065d6800175514dffa55dfce624b56: gzip compressed data, original size 20480
 91d23a64fdf259ffce4181b40ce3dafa982a9e4a76ae6a88c1e662c6166c7324: ASCII text, with very long lines
 b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7: gzip compressed data, original size 108462080
@@ -541,14 +468,10 @@ version:                                                          ASCII text
 
 Let's take a test view of the contents of the largest gzip file (examine "original size"):
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-tar tvzf b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7
-----
+# *tar tvzf b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7*
 
-The output is going to scroll by rather quickly, but just note that this is a complete filesystem for the container image.  The output below is obivously truncated.
-
-----
 dr-xr-xr-x root/root         0 2020-03-31 10:48 ./
 lrwxrwxrwx root/root         0 2018-08-12 05:46 ./lib64 -> usr/lib64
 lrwxrwxrwx root/root         0 2018-08-12 05:46 ./lib -> usr/lib
@@ -564,8 +487,10 @@ lrwxrwxrwx root/root         0 2018-09-10 10:14 ./etc/rc0.d -> rc.d/rc0.d
 -rw-r--r-- root/root      9490 2020-03-31 10:48 ./etc/ld.so.cache
 -rw-r--r-- root/root        58 2018-09-10 07:51 ./etc/networks
 -rw-r--r-- root/root      1362 2018-09-10 07:51 ./etc/ethertypes
-...
+... SNIP...
 ----
+
+The output is going to scroll by rather quickly, but just note that this is a complete filesystem for the container image.
 
 NOTE: If you are more curious and would like to inspect the details a little further you could pipe the output to `more` or `less` and page through the archive contents.  `tar tvzf b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7 | less`
 
@@ -592,16 +517,16 @@ Examples of how to do these things are available in 'man skopeo'
 
 === Cleanup
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-podman stop --all
-podman rm --all
+# *podman stop --all*
+# *podman rm --all*
 
-buildah stop --all
-buildah rm --all
+# *buildah stop --all*
+# *buildah rm --all*
 
-podman rmi --all
-buildah rmi --all
+# *podman rmi --all*
+# *buildah rmi --all*
 ----
 
 [discrete]
