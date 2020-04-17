@@ -28,7 +28,7 @@ From host `workstation`, ssh to `node3`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-$ *ssh node1*
+$ *ssh node3*
 ----
 
 Use `sudo` to elevate your priviledges.
