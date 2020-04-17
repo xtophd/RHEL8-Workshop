@@ -55,14 +55,14 @@ You are now ready to proceed with these exercises.
 
 == Installation
 
-Start by installing the *BPF Compiler Collection* bcc-tools package and kernel-devel for the running kernel:
+Start by installing the *BPF Compiler Collection* (bcc-tools) and kernel-devel packages for the installed kernel:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *yum install bcc-tools kernel-devel-$(uname -r) -y*
 ----
 
-Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These all have man pages for them.
+Now, we have a lot of interesting tools installed in /usr/share/bcc/tools along with accompanying man pages.
 
 == bcc-tools: tcplife
 
