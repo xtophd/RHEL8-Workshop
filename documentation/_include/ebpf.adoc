@@ -56,7 +56,6 @@ You are now ready to proceed with these exercises.
 
 Start by installing the *BPF Compiler Collection* bcc-tools package and kernel-devel for the running kernel:
 
-.node2 terminal
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *yum install bcc-tools kernel-devel-$(uname -r) -y*
@@ -66,10 +65,12 @@ Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These
 
 == bcc-tools: tcplife
 
-The `tcplife` tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes. To run this tool, do:
+The `tcplife` tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes.
 
 [discrete]
 ==== Primary Terminal
+
+To run this tool, execute the following and give it a couple of seconds to get set up:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -84,9 +85,8 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
   * host: *workstation*
   * user: *root*
 
-Run the following command:
+In your second terminal establish yourself as described above, then run the following command:
 
-.workstation terminal
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"*
