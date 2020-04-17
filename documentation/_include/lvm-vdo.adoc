@@ -17,7 +17,38 @@ endif::[]
 
 == Overview
 
-=== Why use Logical Volume Management?
+
+
+
+== Getting Started
+
+For these exercises, you will be using the host `node3` as user `root`.
+
+From host `workstation`, ssh to `node3`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *ssh node3*
+----
+
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
+----
+
+Verify that you are on the right host for these exercises.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-vdo-checkhost.sh*
+----
+
+You are now ready to proceed with these exercises.
+
+
+== Why use Logical Volume Management?
 
 * Flexibility
 * Grow, shrink or relocate your data/filesystems
