@@ -55,16 +55,16 @@ This is done with the following simple commands.
 
 You can start by examining the CPU flags (capabilities) advertised by your system.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 # *grep -E 'svm|vmx' /proc/cpuinfo*
 
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 c
-lflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good
- nopl xtopology cpuid tsc_known_freq pni pclmulqdq *vmx* ssse3 fma cx16 pcid sse4_1 sse4_2 x2
-apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnow
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 
+clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good
+nopl xtopology cpuid tsc_known_freq pni pclmulqdq *vmx* ssse3 fma cx16 pcid sse4_1 sse4_2 
+x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnow
 prefetch invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi flexpriority ept
- vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx avx512f avx512dq rds
+vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx avx512f avx512dq rds
 eed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 arat pku os
 pke avx512_vnni md_clear arch_capabilities
 ----
