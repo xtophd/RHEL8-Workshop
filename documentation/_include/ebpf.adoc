@@ -73,15 +73,12 @@ The `tcplife` tool monitors tcp connections on the system and measures the amoun
 
 To run this tool, execute the following and give it a couple of seconds to get set up:
 
-====
-._primary terminal_
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # */usr/share/bcc/tools/tcplife*
 
 PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 ----
-====
 
 [discrete]
 ==== Secondary Terminal
@@ -294,7 +291,10 @@ WARNING: Please check which filesystem your host is using with the command `df -
 
 The purpose of the `xfsslower` tool (also `ext4slower` and `nfsslower`) is to show you filesystem operations slower than  a particular threshold, that defaults to 10ms. It traces reads, writes, opens, and syncs and then prints out the timestamp of the operation, the process name, the ID, the type of operation, the file offset in kilobytes, the latency of the I/O measured from when it was issued by VFS to the filesystem to when it was completed, and finally, the filename being operated on.
 
-To run this script, do:
+[discrete]
+==== Primary Terminal
+
+To run this script, execute the following on `node2`:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -304,28 +304,34 @@ Tracing xfs operations slower than 10 ms
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 ----
 
-Now in another node2 terminal window, let's run:
+[discrete]
+==== Secondary Terminal
 
-.[root@node2 ~]#
+In your second terminal, establish yourself as described below and then run the following command:
+
+  * host: *node2*
+  * user: *root*
+
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-dd if=/dev/urandom of=bigfile bs=1024 count=20000
+# *dd if=/dev/urandom of=bigfile bs=1024 count=20000*
 ----
 
 This writes out a 20M file called bigfile and should not register on your `xfsslower` window.
 
 Now, let's execute the above command in a for loop so that we get more I/O going in parallel:
 
-.[root@node2 ~]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
+# *for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done*
 ----
+
+[discrete]
+==== Primary Terminal
 
 Now you should see similar output in your `xfsslower` window:
 
-.Command Output
-[source,indent=4]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 20:44:43 b'dd'          32446  W 1024    778        44.11 b'bigfile1'
