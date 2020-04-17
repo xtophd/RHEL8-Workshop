@@ -124,6 +124,14 @@ Time to pull a container from our local repository.
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *podman pull ubi8/ubi*
+
+Trying to pull registry.access.redhat.com/ubi8/ubi...Getting image source signatures
+Copying blob ee2244abc66f done
+Copying blob befb03b11956 done
+Copying config 8121a9f530 done
+Writing manifest to image destination
+Storing signatures
+8121a9f5303be173ae054b7032613d5917d953d7353ff0540d692b2eaa089fbe
 ----
 
 Have a looks at the image list now.
