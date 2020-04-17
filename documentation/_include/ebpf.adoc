@@ -81,7 +81,7 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 ----
 
 [discrete]
-==== Second Terminal
+==== Secondary Terminal
 
   * host: *workstation*
   * user: *root*
