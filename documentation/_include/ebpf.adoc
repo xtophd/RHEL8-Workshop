@@ -119,7 +119,6 @@ The `execsnoop` script monitors all calls to execve() and catches all processes 
 
 Continuing on host `node2`, to run `execsnoop` as follows:
 
-.node2 terminal
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # */usr/share/bcc/tools/execsnoop*
