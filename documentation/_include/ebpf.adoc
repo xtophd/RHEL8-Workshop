@@ -73,9 +73,8 @@ The `tcplife` tool monitors tcp connections on the system and measures the amoun
 
 To run this tool, execute the following and give it a couple of seconds to get set up:
 
-.sample
 ====
-.Primary Terminal
+._primary terminal_
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # */usr/share/bcc/tools/tcplife*
