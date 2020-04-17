@@ -83,10 +83,10 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 [discrete]
 ==== Secondary Terminal
 
+In your second terminal, establish yourself as described below and then run the following command:
+
   * host: *workstation*
   * user: *root*
-
-In your second terminal, establish yourself as described above and then run the following command:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
