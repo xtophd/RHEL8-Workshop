@@ -110,122 +110,21 @@ kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
 
 We can see that we have kpatch_4_18_0_147_1_4 now installed and loaded. We have these protections effective immediately and without having to reboot. We can now schedule a reboot for a time that is convenient for us. 
 
-== Taking that Scheduled Reboot (NEED TO REMOVE / REVISE)
+== Taking that Scheduled Reboot 
 
-Since we're in a lab environment, let's go ahead and reboot this node. Due to a bug in this environment, please use `init 6` as directed. Do not use any other reboot methods!
+Kernel live patching is all about letting you schedule your reboots and not having to take downtime. We aren't actually going to reboot our lab machines, but I'd like to spend a moment discussing what happens when you reboot.
 
-.[root@node2 ~]# 
-----
-init 6
-----
+If you reboot without installing a new kernel, you will boot back into the default kernel and if that one has kpatches, they will get loaded. Effectively, this means that your kpatch stack will persist.
 
-When the machine comes back up, we can run `kpatch list` again and see that our kpatches have persisted through the reboot, so we are still protected.
+If you do update the kernel prior to rebooting, on the next reboot, you'll boot into the default kernel (which is now the new one) and thus your regularly running kernel should have the needed fixes without having any kpatches enabled.
 
-.[root@workstation ~]# 
-----
-ssh node2
-----
+At that point, kpatch list would look something like this:
 
-.[root@node2 ~]# 
-----
-kpatch list
-----
-
-Output should look like:
-----
-Loaded patch modules:
-kpatch_4_18_0_147_1_4 [enabled]
-
-Installed patch modules:
-kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
-----
-
-Now, let's actually update the kernel and reboot:
-
-.[root@node2 ~]# 
-----
-yum update kernel -y
-----
-
-Output should look similar to:
-----
-Updating Subscription Management repositories.
-...
-----
-
-.[root@node2 ~]# 
-----
-rpm -q kernel
-----
-
-Output should look like:
-----
-kernel-4.18.0-147.el8.x86_64
-kernel-4.18.0-147.5.1.el8_1.x86_64
-----
-
-We see now that we have the updated kernel. Let's look at the output of `kpatch list`:
-
-.[root@node2 ~]# 
-----
-kpatch list
-----
-
-Output should look like:
-----
-Loaded patch modules:
-kpatch_4_18_0_147_1_4 [enabled]
-
-Installed patch modules:
-kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
-----
-
-Everything looks as expected here. Let's reboot. Due to a bug in this environment, please use `init 6` as directed. Do not use any other reboot methods!
-
-.[root@node2 ~]# 
-----
-init 6
-----
-
-Upon reboot, we can see that we are running the latest kernel:
-
-.[root@workstation ~]# 
-----
-ssh node2
-----
-
-.[root@node2 ~]# 
-----
-rpm -q kernel
-----
-
-Output should look like:
-----
-kernel-4.18.0-147.el8.x86_64
-kernel-4.18.0-147.5.1.el8_1.x86_64
-----
-
-.[root@node2 ~]# 
-----
-uname -r
-----
-
-Output should look like:
-----
-4.18.0-147.5.1.el8_1.x86_64
-----
-
-If we do `kpatch list` again, we will see that there are no loaded patch modules, but we do still have the kpatches for 4.18.0-147 installed. These can be removed if desired.
-
-.[root@node2 ~]# 
-----
-kpatch list
-----
-
-Output should look like:
 ----
 Loaded patch modules:
 
 Installed patch modules:
 kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
 ----
+
+Note that while we have installed patch modules, none of them are actually loaded.
