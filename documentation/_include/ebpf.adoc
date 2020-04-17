@@ -466,6 +466,8 @@ To run this tool, execute the following and give it a couple of seconds to get s
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # */usr/share/bcc/tools/trace 'p::do_sys_open "%s", arg2'*
+
+PID     TID     COMM            FUNC             -
 ----
 
 [discrete]
@@ -534,6 +536,8 @@ Go ahead and Ctrl-C `trace` and then let's do one more trace, this time, tracing
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *cat /etc/fstab*
+
+PID     TID     COMM            FUNC             -
 ----
 
 [discrete]
