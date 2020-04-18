@@ -9,7 +9,6 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-
 :toc:
 :toclevels: 1
 
@@ -72,15 +71,16 @@ Creating a new boot entry begins with a boom `profile`.
 ----
 # *boom profile create --from-host --uname-pattern el8*
 
-Created profile with os_id e6f881a:
-  OS ID: "e6f881ae3f8a2e010375fb840bb4f386b330db6e",
+Created profile with os_id f44fb52:
+  OS ID: "f44fb528ff8360ad67e2fe0274750b838da0bd6a",
   Name: "Red Hat Enterprise Linux", Short name: "rhel",
-  Version: "8.0 (Ootpa)", Version ID: "8.0",
+  Version: "8.1 (Ootpa)", Version ID: "8.1",
   UTS release pattern: "el8",
   Kernel pattern: "/vmlinuz-%{version}", Initramfs pattern: "/initramfs-%{version}.img",
   Root options (LVM2): "rd.lvm.lv=%{lvm_root_lv}",
   Root options (BTRFS): "rootflags=%{btrfs_subvolume}",
-  Options: "root=%{root_device} ro %{root_opts}"
+  Options: "root=%{root_device} ro %{root_opts}",
+  Title: "%{os_name} %{os_version_id} (%{version})"
 ----
 
 Verify that the boom profile was created by the previous command.
@@ -90,7 +90,7 @@ Verify that the boom profile was created by the previous command.
 # *boom profile list*
 
 OsID    Name                     OsVersion
-e6f881a Red Hat Enterprise Linux 8.0 (Ootpa)
+f44fb52 Red Hat Enterprise Linux 8.1 (Ootpa)
 ----
 
 == Create GRUB Entry
@@ -99,18 +99,16 @@ Now to create a boot entry for grub which utilizes the snapshot as the boot volu
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-boom create --title "Alternate Kernel Params" --rootlv rhel/root_snapshot
+# *boom create --title "Alt Kernel Parms" --root-device /dev/vda1*
 
-WARNING - Boom grub2 script missing from '/etc/grub.d'
-WARNING - Boom configuration not found in grub.cfg
-WARNING - Run 'grub2-mkconfig > /boot/grub2/grub.cfg' to enable
-Created entry with boot_id 85e739d:
-  title root LV snapshot
-  machine-id e988045b45b04b11b84741d6a568861b
-  version 4.18.0-67.el8.x86_64
-  linux /vmlinuz-4.18.0-67.el8.x86_64
-  initrd /initramfs-4.18.0-67.el8.x86_64.img
-  options root=/dev/rhel/root_snapshot ro rd.lvm.lv=rhel/root_snapshot
+WARNING - Boom grub2 integration is disabled in '/boot/../etc/default/boom'
+Created entry with boot_id 40d2351:
+  title Alt Kernel Parms
+  machine-id 298b11e40a1e46a5a1ce834b845cc51b
+  version 4.18.0-147.el8.x86_64
+  linux /vmlinuz-4.18.0-147.el8.x86_64
+  initrd /initramfs-4.18.0-147.el8.x86_64.img
+  options root=/dev/vda1 ro
 ----
 
 Take a look at currently configured boom-boot entries.
@@ -120,23 +118,31 @@ Take a look at currently configured boom-boot entries.
 # *boom entry list*
 
 BootID  Version                  Name                     RootDevice
-85e739d 4.18.0-67.el8.x86_64     Red Hat Enterprise Linux /dev/rhel/root_snapshot
+40d2351 4.18.0-147.el8.x86_64    Red Hat Enterprise Linux /dev/vda1
+----
+
+Add custom kernel option
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *boom entry edit 40d2351 --os-options "custom_val"*
 ----
 
 Show details about our boom-boot entry.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *boom entry show 85e739d*
+# *boom entry show 40d2351*
 
-Boot Entry (boot_id=85e739d)
-  title root LV snapshot
-  machine-id e988045b45b04b11b84741d6a568861b
-  version 4.18.0-67.el8.x86_64
-  linux /vmlinuz-4.18.0-67.el8.x86_64
-  initrd /initramfs-4.18.0-67.el8.x86_64.img
-  options root=/dev/rhel/root_snapshot ro rd.lvm.lv=rhel/root_snapshot
+Boot Entry (boot_id=40d2351)
+  title Alt Kernel Parms
+  machine-id 298b11e40a1e46a5a1ce834b845cc51b
+  version 4.18.0-147.el8.x86_64
+  linux /vmlinuz-4.18.0-147.el8.x86_64
+  initrd /initramfs-4.18.0-147.el8.x86_64.img
+  options root=/dev/vda1 ro
 ----
+
 
 == Reboot to Alternate Entry
 
