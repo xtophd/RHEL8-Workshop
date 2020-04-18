@@ -63,14 +63,6 @@ The following set of instructions will install Boom.
 
 That was easy!
 
-== Determine Root Device
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-grep -o '\broot=[^ ]*'
-----
-
-
 
 == Create Profile
 
@@ -104,11 +96,43 @@ f44fb52 Red Hat Enterprise Linux 8.1 (Ootpa)
 
 == Create GRUB Entry
 
-Now to create a boot entry for grub which utilizes the snapshot as the boot volume.
+Now to create a boot entry for grub which utilizes the same boot environment as the current system, but with a few
+added kernel parameters.
+
+== Determine Root Device
+
+First we need to determine the root device.  We can do this by inspecting the current kernel's boot commandline.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *boom create --title "Alt Kernel Parms" --root-device /dev/vda1*
+# *cat /proc/cmdline*
+
+
+----
+
+We can futher isolate the undesired parameters with a simple grep.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+grep -o '\broot=[^ ]*'
+
+
+----
+
+To automate this process and reduce the chance of errors, you've been provided with
+a cheat-script.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *eval $(grep -o '\broot=[^ ]*' /proc/cmdline)*
+
+# *if `lvs ${root}` ; then \
+    boom create --title "Alt Kernel Parms" --root-lv ${root};
+   else
+    boom create --title "Alt Kernel Parms" --root-device ${root};
+  fi*
+----
+
 
 WARNING - Boom grub2 integration is disabled in '/boot/../etc/default/boom'
 Created entry with boot_id 40d2351:
