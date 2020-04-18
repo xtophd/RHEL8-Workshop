@@ -143,22 +143,22 @@ Session logs are configured to record in the system journal by default.  A disti
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *journalctl -o verbose  --output-fields=TLOG_USER,TLOG_REC TLOG_USER=cloud-user*
+# *journalctl -o verbose  --output-fields=TLOG_USER,TLOG_REC TLOG_USER=other-user*
 
 Sat 2019-04-27 21:21:27.852913 EDT [s=bcde42e4c96048c3908657177414e202;i=700;b=b2333248c22a4c5f912a>
-    TLOG_USER=cloud-user
+    TLOG_USER=other-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
 Sat 2019-04-27 21:21:33.354695 EDT [s=bcde42e4c96048c3908657177414e202;i=701;b=b2333248c22a4c5f912a>
-    TLOG_USER=cloud-user
+    TLOG_USER=other-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
 Sat 2019-04-27 21:21:43.483301 EDT [s=bcde42e4c96048c3908657177414e202;i=702;b=b2333248c22a4c5f912a>
-    TLOG_USER=cloud-user
+    TLOG_USER=other-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
 Sat 2019-04-27 21:21:54.193564 EDT [s=bcde42e4c96048c3908657177414e202;i=707;b=b2333248c22a4c5f912a>
-    TLOG_USER=cloud-user
+    TLOG_USER=other-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
 Sat 2019-04-27 21:21:58.770887 EDT [s=bcde42e4c96048c3908657177414e202;i=70c;b=b2333248c22a4c5f912a>
-    TLOG_USER=cloud-user
+    TLOG_USER=other-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
 ----
 
