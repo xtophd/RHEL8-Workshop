@@ -97,16 +97,12 @@ Next, see what disks/block devices are present, create a pool, create a filesyst
 ----
 # *sfdisk -s*
 
-/dev/vda:  10485760 // <1>
+/dev/vda:  31457280
 /dev/vdb:   5242880
 /dev/vdc:   5242880
-/dev/mapper/rhel-root:   8384512
-/dev/mapper/rhel-swap:   1048576
-/dev/sdd:   5242880
-/dev/sdc:   5242880
-/dev/sda:   5242880
-/dev/sdb:   5242880
-total: 51376128 blocks
+/dev/vdd:   5242880
+/dev/vde:   5242880
+total: 52428800 blocks
 ----
 
 WARNING: REMEMBER - DON'T USE /dev/vda!!!
@@ -147,10 +143,10 @@ Now create a filesystem, a directory mount point, and mount the filesystem:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *stratis fs*
+# *stratis fs list*
 
-Pool Name   Name      Used      Device                        UUID                         	 
-summitpool  summitfs  546 MiB   /stratis/summitpool/summitfs  9d92786138bb4fd6867c45610dcebd1f
+Pool Name   Name      Used     Created            Device                        UUID
+summitpool  summitfs  546 MiB  Apr 18 2020 09:15  /stratis/summitpool/summitfs  095fb4891a5743d0a589217071ff71dc
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
@@ -159,22 +155,23 @@ summitpool  summitfs  546 MiB   /stratis/summitpool/summitfs  9d92786138bb4fd686
 # *mount /stratis/summitpool/summitfs /summitdir*
 # *df -h*
 
-Filesystem                                Size  Used Avail Use% Mounted on
-devtmpfs                                  1.9G     0  1.9G   0% /dev
-tmpfs                                     1.9G     0  1.9G   0% /dev/shm
-tmpfs                                     1.9G  8.5M  1.9G   1% /run
-tmpfs                                     1.9G     0  1.9G   0% /sys/fs/cgroup
-/dev/mapper/rhel-root                     8.0G  1.3G  6.8G  16% /
-/dev/vda1                                1014M  163M  852M  17% /boot
-tmpfs                                     379M     0  379M   0% /run/user/1000
-/dev/mapper/stratis-1f68[truncated]ed1f   1.0T  7.2G 1017G   1% /summitdir
+Filesystem                                 Size  Used Avail Use% Mounted on
+devtmpfs                                   1.9G     0  1.9G   0% /dev
+tmpfs                                      1.9G     0  1.9G   0% /dev/shm
+tmpfs                                      1.9G   17M  1.9G   1% /run
+tmpfs                                      1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/vda1                                  30G  2.4G   28G   8% /
+tmpfs                                      379M     0  379M   0% /run/user/1000
+/dev/mapper/stratis-1-3e8e[_truncated_]71dc  1.0T  7.2G 1017G   1% /summitdir
 ----
+
+The actual space used by a filesystem can be shown using the `stratis fs list` command as shown above.  Notice how the summitdur filesystem has a virtual size of 1T.  If the data in a filesystem actually approaches its virtual size, Stratis will automatically grow the filesystem.
+
+== Create Mount Point
 
 Now make sure the filesystem will mount at boot time by adding the following line to the end of the /etc/fstab file:
 
-	UUID=<the-uuid-unique-to-the-new-filesystem>  /summitdir  xfs  defaults  0  0
-
-If you are comfortable with an editor, you can type it in or cut and paste using the UUID from the output of “stratis fs”.   If not, you can use a cheat-script we prepared for you.
+INFO: If you are comfortable with an editor, you can type it in or cut and paste using the UUID from the output of “stratis fs”.   If not, you can use a cheat-script we prepared for you.
 
 ./etc/fstab
 [source,options="nowrap",subs="{markup-in-source}"]
@@ -203,6 +200,15 @@ Verify that the /etc/fstab entry is correct by unmounting and mounting the files
 # *umount /summitdir*
 # *mount /summitdir*
 # *df -h*
+
+Filesystem                                 Size  Used Avail Use% Mounted on
+devtmpfs                                   1.9G     0  1.9G   0% /dev
+tmpfs                                      1.9G     0  1.9G   0% /dev/shm
+tmpfs                                      1.9G   17M  1.9G   1% /run
+tmpfs                                      1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/vda1                                  30G  2.4G   28G   8% /
+tmpfs                                      379M     0  379M   0% /run/user/1000
+/dev/mapper/stratis-1-3e8e[_truncated_]71dc  1.0T  7.2G 1017G   1% /summitdir
 ----
 
 == Add Cache Device
