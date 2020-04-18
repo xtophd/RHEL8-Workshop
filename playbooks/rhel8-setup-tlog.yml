@@ -7,7 +7,17 @@
       
     - name: "USER create and/or reset users"
       user: name="other-user"
-            
+
+    - name: "Sudo Configuration"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0600
+      with_items:
+        - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/oher-user
+
     - name: "SETUP TLOG: config file installs"
       template:
         src: "{{ item.src }}"
