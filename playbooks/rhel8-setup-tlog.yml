@@ -9,6 +9,8 @@
       user: name="other-user"
 
     - name: "Sudo Configuration"
+      vars:
+        student_username: "other-user"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -16,7 +18,7 @@
         group: root
         mode: 0600
       with_items:
-        - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/oher-user
+        - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/other-user'}
 
     - name: "SETUP TLOG: config file installs"
       template:
