@@ -1,5 +1,6 @@
 :sectnums:
 :sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -14,6 +15,8 @@ endif::[]
 
 = Stratis : Storage Management Made Easy
 
+== Overview
+
 WARNING: Stratis is considered *Technology Preview* and is not intended for production use.  For information on Red Hat scope of support for Technology Preview features, see: link:https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope]
 
 Stratis is a command-line tool to create, modify, and destroy Stratis pools, and the filesystems allocated from the pool.  Stratis creates a pool from one or more block devices (blockdevs), and then enables multiple filesystems to be created from the pool.
@@ -22,55 +25,55 @@ Instead of an entirely in-kernel approach like ZFS or Btrfs, Stratis uses a hybr
 
 == Getting Started
 
-Starting on the host *workstation.example.com*, let's ssh over to *node2.example.com*.  No password should be required.
+For these exercises, you will be using the host `node2` as user `root`.
 
-.[root@workstation]#
+From host `workstation`, ssh to `node2`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node2.example.com
+$ *ssh node2*
 ----
 
-.[cloud-user@node2 ~]#
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-sudo -i
+$ *sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-.[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-stratis-checkhost.sh
+# *cheat-stratis-checkhost.sh*
 ----
 
-You are now ready to begin your exercises.
+You are now ready to proceed with these exercises.
 
 == Installation & Configuration
 
 Install the required packages - this will pull in several Python related dependencies.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum install -y stratisd stratis-cli
+# *yum install -y stratisd stratis-cli*
 ----
 
 Next we need to enable the `stratisd` service
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-systemctl enable --now stratisd
+# *systemctl enable --now stratisd*
 ----
 
 NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
 
 Finally check the service status.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-systemctl status stratisd
-----
+# *systemctl status stratisd*
 
-Your output should look like this.  (You can press "q" or CTRL+C to exit the status output)
-
-[source,indent=4]
 ● stratisd.service - A daemon that manages a pool of block devices to create flexible file systems
    Loaded: loaded (/usr/lib/systemd/system/stratisd.service; enabled; vendor preset: enabled)
    Active: active (running) since Sat 2019-04-27 18:41:52 EDT; 10s ago
@@ -81,9 +84,8 @@ Your output should look like this.  (You can press "q" or CTRL+C to exit the sta
    CGroup: /system.slice/stratisd.service
        	└─9562 /usr/libexec/stratisd --debug
 
-[source,indent=4]
 Apr 27 18:41:52 node2.example.com systemd[1]: Started A daemon that manages a pool of block devices to create flexible file systems.
-
+----
 
 == Create Storage Pool
 
@@ -91,13 +93,10 @@ WARNING: /dev/vda is the system disk, DO NOT use it in any of the stratis comman
 
 Next, see what disks/block devices are present, create a pool, create a filesystem in the pool, and mount the filesystem.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-sfdisk -s
-----
+# *sfdisk -s*
 
-[source,indent=4]
-----
 /dev/vda:  10485760 // <1>
 /dev/vdb:   5242880
 /dev/vdc:   5242880
@@ -109,33 +108,28 @@ sfdisk -s
 /dev/sdb:   5242880
 total: 51376128 blocks
 ----
-<1> REMEMBER - DON'T USE VDA!!!
 
-.[root@node2]#
-----
-stratis pool create summitpool /dev/vdb /dev/vdc
-----
+WARNING: REMEMBER - DON'T USE /dev/vda!!!
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-stratis pool list
+# *stratis pool create summitpool /dev/vdb /dev/vdc*
 ----
 
-[source,indent=4]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *stratis pool list*
+
 Name      	Total Physical Size  Total Physical Used
 summitpool                 10 GiB               56 MiB
 ----
 
 Check the status of the block devices
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-stratis blockdev list
-----
+# *stratis blockdev list*
 
-[source,indent=4]
-----
 Pool Name   Device Node     Physical Size   State  Tier
 summitpool  /dev/vdb                5 GiB  In-use  Data
 summitpool  /dev/vdc                5 GiB  In-use  Data
@@ -146,31 +140,25 @@ summitpool  /dev/vdc                5 GiB  In-use  Data
 Now create a filesystem, a directory mount point, and mount the filesystem:
 (note that “fs” can optionally be written out as “filesystem”)
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-stratis fs create summitpool summitfs
-----
-
-.[root@node2]#
-----
-stratis fs
+# *stratis fs create summitpool summitfs*
 ----
 
-[source,indent=4]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *stratis fs*
+
 Pool Name   Name      Used      Device                        UUID                         	 
 summitpool  summitfs  546 MiB   /stratis/summitpool/summitfs  9d92786138bb4fd6867c45610dcebd1f
 ----
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-mkdir /summitdir
-mount /stratis/summitpool/summitfs /summitdir
-df -h
-----
+# *mkdir /summitdir*
+# *mount /stratis/summitpool/summitfs /summitdir*
+# *df -h*
 
-[source,indent=4]
-----
 Filesystem                                Size  Used Avail Use% Mounted on
 devtmpfs                                  1.9G     0  1.9G   0% /dev
 tmpfs                                     1.9G     0  1.9G   0% /dev/shm
@@ -188,12 +176,13 @@ Now make sure the filesystem will mount at boot time by adding the following lin
 
 If you are comfortable with an editor, you can type it in or cut and paste using the UUID from the output of “stratis fs”.   If not, you can use a cheat-script we prepared for you.
 
-[source,indent=4]
+./etc/fstab
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 UUID=<the-uuid-unique-to-the-new-filesystem>  /summitdir  xfs  defaults  0  0
 ----
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cheat-stratis-fstab.sh
 ----
@@ -209,70 +198,58 @@ echo "UUID=${UUID} /summitdir xfs defaults 0 0" >> /etc/fstab
 
 Verify that the /etc/fstab entry is correct by unmounting and mounting the filesytem one last time.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-umount /summitdir
-mount /summitdir
-df -h
+# *umount /summitdir*
+# *mount /summitdir*
+# *df -h*
 ----
 
 == Add Cache Device
 
 Stratis also makes it easy to add cache devices.  For example, say the filesystem we just created runs into some I/O performance issues.  You bought an SSD (solid state disk) and need to configure it into the system to act as a high speed cache.  Use the following commands to add the drive (/dev/sda) and check its status:
 
-
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-stratis pool add-cache summitpool  /dev/sda
-----
-
-
-.[root@node2]#
-----
-stratis blockdev
+# *stratis pool add-cache summitpool  /dev/vdd*
 ----
 
-[source,indent=4]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *stratis blockdev*
+
 Pool Name	Device Node    Physical Size   State   Tier
-summitpool   /dev/sda                5 GiB  In-use  Cache
 summitpool   /dev/vdb                5 GiB  In-use   Data
 summitpool   /dev/vdc                5 GiB  In-use   Data
+summitpool   /dev/vdd                5 GiB  In-use  Cache
 ----
 
 == Grow Storage Pool
 
 Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summitfs” filesystem is growing close to the physical space in “summitpool”, adding an additional disk/block device is done using:
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-stratis pool add-data summitpool /dev/sdb
-----
-
-
-.[root@node2]#
-----
-stratis blockdev
+# *stratis pool add-data summitpool /dev/vde*
 ----
 
-[source,indent=4]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *stratis blockdev*
+
 Pool Name    Device Node    Physical Size   State   Tier
-summitpool   /dev/sda               5 GiB  In-use  Cache
-summitpool   /dev/sdb               5 GiB  In-use   Data
 summitpool   /dev/vdb               5 GiB  In-use   Data
 summitpool   /dev/vdc               5 GiB  In-use   Data
+summitpool   /dev/vdd               5 GiB  In-use  Cache
+summitpool   /dev/vde               5 GiB  In-use   Data
 ----
 
 Verify that the pool shows the additional space, and that the amount used is now in a safe range.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-stratis pool
-----
+# *stratis pool*
 
-[source,indent=4]
-----
 Name          Total Physical Size   Total Physical Used
 summitpool                 15 GiB               606 MiB
 ----
