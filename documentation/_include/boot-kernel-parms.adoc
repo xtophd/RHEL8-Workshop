@@ -63,6 +63,15 @@ The following set of instructions will install Boom.
 
 That was easy!
 
+== Determine Root Device
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+grep -o '\broot=[^ ]*'
+----
+
+
+
 == Create Profile
 
 Creating a new boot entry begins with a boom `profile`.
