@@ -5,6 +5,9 @@
     - name: "SETUP TLOG: yum install packages"
       yum: name=tlog,cockpit-session-recording state=installed
       
+    - name: "USER create and/or reset users"
+      user: name="other-user"
+            
     - name: "SETUP TLOG: config file installs"
       template:
         src: "{{ item.src }}"
