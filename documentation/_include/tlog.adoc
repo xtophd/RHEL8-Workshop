@@ -1,5 +1,6 @@
 :sectnums:
 :sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -8,80 +9,98 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-
 :toc:
 :toclevels: 1
 
 = Session Recording with Tlog
 
+== Overview
+
 Tlog is a terminal I/O recording and playback package for Linux.  The session logs retain all the passed data and timing.  Sessions are recorded in JSON format as to eventually deliver the data to a storage service _(such as Elasticsearch)_ where it can be searched, queried and be played back.
 
 If you have successfully run the RHEL 8 lab preparation playbook, then node1.example.com has already been properly configured for session logging.  What follows are some basic exercises to demonstrate how this facility functions.
 
+== Getting Started
+
+For these exercises, you will be using the host `node1` as user `root`.
+
+From host `workstation`, ssh to `node1`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *ssh node1*
+----
+
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
+----
+
+Verify that you are on the right host for these exercises.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-tlog-checkhost.sh*
+----
+
+You are now ready to proceed with these exercises.
+
 == Creating a Session Log
 
-Starting on the host *workstation.example.com*, let's ssh over to *node1.example.com*.  No password should be required.
+The system has been configured with an additional non-priviledged user called `other-user`.  Run the following command to change to the `other-user`.
 
-.[root@workstation]#
-----
-ssh node1.example.com
-----
+NOTE: The command is 'su' + 'dash' + 'other-user'.  Don't forget the dash!
 
-.[cloud-user@node1 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-sudo -i
-----
-
-
-Now change your effective userid to cloud-user using the `su` command.  Don't forget the dash, it's `su - cloud-user`.
-
-.[root@node1]#
-----
-su - cloud-user
-----
-
-Notice the "ATTENTION" banner during your login.  Your session is being recorded!
-
-.Your output should look like this
-[source,indent=4]
-----
-# ---------------
-#  Host FQDN : node1.example.com
-# OS Version : RedHat 8.0
-# ---------------
-Last login: Sat Apr 27 19:55:02 2019 from 10.0.0.10
+# *su - other-user*
 
 ATTENTION! Your session is being recorded!
 ----
 
-Let us now do a few activities worth logging.  You can check out a directory listing, look at the host's _passwd_ and _shadow_ files.  
-Oh wait, you need root priviledges to see the contents of _/etc/shadow_.  You can use sudo for that!  Now exit your shell.
+You should have gotten a message when connecting to node1 that the session is being recorded.
 
-.[cloud-user@node1]#
+Now to do a few activities worth logging.  You can check out a directory listing, look at the host's _passwd_ and _shadow_ files.  
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ls -l /etc
+$ *ls -l /etc*
+----
 
-cat /etc/passwd
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *cat /etc/passwd*
+----
 
-cat /etc/shadow
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *cat /etc/shadow*
+----
 
-sudo cat /etc/shadow
+Oh wait, you need root priviledges to see the contents of _/etc/shadow_.  You can use sudo for that!
 
-exit
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo cat /etc/shadow*
+----
+
+We are done with our limited nafarious activities, so proceed to `exit`
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *exit*
 ----
 
 == Session Play Back
 
 Session logs are configured to record in the system journal by default.  A distinct advantage to this approach is that session recordings are also augmented with meta data which includes: user, session-id, host-id and a log-message-id.  Let's have a look.
 
-.[root@node1]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-journalctl -o verbose  --output-fields=TLOG_USER,TLOG_REC TLOG_USER=cloud-user
-----
+# *journalctl -o verbose  --output-fields=TLOG_USER,TLOG_REC TLOG_USER=cloud-user*
 
-.You output should look like this
-[source,indent=4]
-----
 Sat 2019-04-27 21:21:27.852913 EDT [s=bcde42e4c96048c3908657177414e202;i=700;b=b2333248c22a4c5f912a>
     TLOG_USER=cloud-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
@@ -103,9 +122,9 @@ Each one of those entries makes up a chunk of a session recording.  It is by way
 
 We have taken the liberty of scripting this "search" to playback the last session log from the user cloud-user.
 
-.[root@node1]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-tlog-playback.sh
+# *cheat-tlog-playback.sh*
 ----
 
 Once you hit enter on the above command, you will see a note that "Playback Started..." and again when "Playback Finished...".  Be patient until it completes and your root prompt returns.
@@ -114,7 +133,7 @@ Once you hit enter on the above command, you will see a note that "Playback Star
 ====
 _Native command(s) to playback last tlog_
 ----
-myTLOG=`journalctl -o verbose -n 1 --output-fields=TLOG_USER,TLOG_REC TLOG_USER=student | grep TLOG_REC`
+myTLOG=`journalctl -o verbose -n 1 --output-fields=TLOG_USER,TLOG_REC TLOG_USER=other-user | grep TLOG_REC`
 
 tlog-play -r journal -M ${myTLOG}
 ----
@@ -138,8 +157,8 @@ Here is what the config file looks like _/etc/sssd/conf.d/sssd-session-recording
 
 [session_recording]
 scope = all
-users = student
-groups = student
+users = other-user
+groups = other-user
 ----
 
 And lastly, how to reload systemd and restart the service.
