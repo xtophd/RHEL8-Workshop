@@ -60,23 +60,53 @@ NOTE: The command is 'su' + 'dash' + 'other-user'.  Don't forget the dash!
 ATTENTION! Your session is being recorded!
 ----
 
-You should have gotten a message when connecting to node1 that the session is being recorded.
+You should have gotten a message when switching to `other-user` that the session is being recorded.
 
 Now to do a few activities worth logging.  You can check out a directory listing, look at the host's _passwd_ and _shadow_ files.  
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 $ *ls -l /etc*
+
+-rw-r--r--.  1 root root       68 Apr 17 22:19 shells
+drwxr-xr-x.  2 root root     4096 Apr 17 21:54 skel
+-rw-r--r--.  1 root root      138 Sep 12  2019 sos.conf
+drwxr-xr-x.  3 root root     4096 Apr 17 21:58 ssh
+drwxr-xr-x.  2 root root     4096 Apr 17 21:55 ssl
+drwx------.  4 sssd sssd     4096 Apr 17 21:55 sssd
+-rw-r--r--.  1 root root       48 Apr 17 22:21 subgid
+-rw-r--r--.  1 root root       24 Apr 17 22:19 subgid-
+-rw-r--r--.  1 root root       48 Apr 17 22:21 subuid
+-rw-r--r--.  1 root root       24 Apr 17 22:19 subuid-
+-rw-r-----.  1 root root     1786 Aug 16  2019 sudo.conf
+-r--r-----.  1 root root     4328 Aug 16  2019 sudoers
+...SNIP...
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 $ *cat /etc/passwd*
+
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+operator:x:11:0:operator:/root:/sbin/nologin
+games:x:12:100:games:/usr/games:/sbin/nologin
+ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+...SNIP...
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 $ *cat /etc/shadow*
+
+cat: /etc/shadow: Permission denied
 ----
 
 Oh wait, you need root priviledges to see the contents of _/etc/shadow_.  You can use sudo for that!
@@ -84,6 +114,20 @@ Oh wait, you need root priviledges to see the contents of _/etc/shadow_.  You ca
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 $ *sudo cat /etc/shadow*
+
+root:$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70:18370:0:99999:7:::
+bin:*:17988:0:99999:7:::
+daemon:*:17988:0:99999:7:::
+adm:*:17988:0:99999:7:::
+lp:*:17988:0:99999:7:::
+sync:*:17988:0:99999:7:::
+shutdown:*:17988:0:99999:7:::
+halt:*:17988:0:99999:7:::
+mail:*:17988:0:99999:7:::
+operator:*:17988:0:99999:7:::
+games:*:17988:0:99999:7:::
+ftp:*:17988:0:99999:7:::
+...SNIP...
 ----
 
 We are done with our limited nafarious activities, so proceed to `exit`
