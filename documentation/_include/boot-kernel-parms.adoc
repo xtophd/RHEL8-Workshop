@@ -125,7 +125,7 @@ Add custom kernel option
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *boom entry edit 40d2351 --os-options "custom_val"*
+# *boom entry edit 40d2351 --add-opts "custom_val=yes"*
 ----
 
 Show details about our boom-boot entry.
