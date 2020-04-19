@@ -129,13 +129,25 @@ We can futher isolate the undesired parameters with a simple grep.
 root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c
 ----
 
-Now we need to get to device (or lvm) path.  Although this logic is not complicated, it's not really the focus of this exercise.  You can inspect the cheat-script for further details.
+NOTE: In this scenario, the boot devie is listed by a UUID.  Depending on the lab environment, you could see a logical volume name or a physcial device path.
 
-Run the provided cheat-script.
+Now we need to get to the actual device (or lvm) path.  Although this logic is not complicated, it's not really the focus of this exercise, so you've been provided another cheat-script.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *cheat-boom-mkentry.sh*
+
+Determining root device...
+UUID reduction if necessary...
+Creating GRUB2 entry...
+WARNING - Boom grub2 integration is disabled in '/boot/../etc/default/boom'
+Created entry with boot_id 68e7454:
+  title Alt Kernel Parms
+  machine-id 32600c89b8024c5a8746ffaa551f10e2
+  version 4.18.0-147.el8.x86_64
+  linux /vmlinuz-4.18.0-147.el8.x86_64
+  initrd /initramfs-4.18.0-147.el8.x86_64.img
+  options root=/dev/vda1 ro
 ----
 
 [NOTE]
@@ -151,7 +163,7 @@ else
   rootdev="${root}"
 fi
 
-if /usr/sbin/lvs -q ${rootdev} ; then 
+if /usr/sbin/lvs -q ${rootdev} 2>/dev/null ; then 
   boom create --title "Alt Kernel Parms" --rootlv ${rootdev}
 else
   boom create --title "Alt Kernel Parms" --root-device ${rootdev}
