@@ -17,9 +17,9 @@
         - {src: 'cheat-boom-mkprofile.j2', dest: '/usr/local/bin/cheat-boom-mkprofile.sh'} 
         - {src: 'cheat-boom-mkentry.j2', dest: '/usr/local/bin/cheat-boom-mkentry.sh'} 
         - {src: 'cheat-boom-snap-addstorage.j2', dest: '/usr/local/bin/cheat-boom-addstorage.sh'} 
-        - {src: 'cheat-boom-snap-mksnap.j2', dest: '/usr/local/bin/cheat-boom-snapshot.sh'} 
-        - {src: 'cheat-boom-snap-mkentry.j2', dest: '/usr/local/bin/cheat-boom-mkentry-snap.sh'} 
-        - {src: 'cheat-boom-snap-lvreport.j2', dest: '/usr/local/bin/cheat-boom-lvreport.sh'} 
-        - {src: 'cheat-boom-snap-importantstuff.j2', dest: '/usr/local/bin/cheat-boom-importantstuff.sh'} 
+        - {src: 'cheat-boom-snap-mksnap.j2', dest: '/usr/local/bin/cheat-boom-mksnap.sh'} 
+        - {src: 'cheat-boom-snap-mkentry.j2', dest: '/usr/local/bin/cheat-boom-snap.sh'} 
+        - {src: 'cheat-boom-snap-lvreport.j2', dest: '/usr/local/bin/cheat-boom-snap-lvreport.sh'} 
+        - {src: 'cheat-boom-snap-importantstuff.j2', dest: '/usr/local/bin/cheat-boom-snap-importantstuff.sh'} 
         - {src: 'cheat-boom-grublist.j2', dest: '/usr/local/bin/cheat-boom-grublist.sh'} 
         
