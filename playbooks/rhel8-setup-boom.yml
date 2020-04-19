@@ -16,6 +16,7 @@
         - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-boom-checkhost.sh'} 
         - {src: 'cheat-boom-snapshot.j2', dest: '/usr/local/bin/cheat-boom-snapshot.sh'} 
         - {src: 'cheat-boom-mkgrub.j2', dest: '/usr/local/bin/cheat-boom-mkgrub.sh'} 
+        - {src: 'cheat-boom-mkentry.j2', dest: '/usr/local/bin/cheat-boom-mkgrub.sh'} 
         - {src: 'cheat-boom-mkprofile.j2', dest: '/usr/local/bin/cheat-boom-mkprofile.sh'} 
         - {src: 'cheat-boom-lvreport.j2', dest: '/usr/local/bin/cheat-boom-lvreport.sh'} 
         - {src: 'cheat-boom-addstorage.j2', dest: '/usr/local/bin/cheat-boom-addstorage.sh'} 
