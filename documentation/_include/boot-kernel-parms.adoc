@@ -86,7 +86,7 @@ Created profile with os_id f44fb52:
 
 [NOTE]
 ====
-_Native command(s) to make grub entry_
+_Native command(s) to make boom profile_
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *boom profile create --from-host --uname-pattern el8*
