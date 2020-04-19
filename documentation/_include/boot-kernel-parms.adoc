@@ -124,7 +124,7 @@ We can futher isolate the undesired parameters with a simple grep.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *grep -o '\broot=[^ ]*' /proc/cmdline*
+# *grep -o '\broot=[^ ]**' /proc/cmdline*
 
 root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c
 ----
