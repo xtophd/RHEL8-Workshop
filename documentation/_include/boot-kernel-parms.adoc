@@ -91,6 +91,7 @@ _Native command(s) to make grub entry_
 ----
 # *boom profile create --from-host --uname-pattern el8*
 ----
+====
 
 Verify that the boom profile was created by the previous command.
 
