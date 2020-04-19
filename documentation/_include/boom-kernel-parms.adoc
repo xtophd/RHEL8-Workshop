@@ -155,19 +155,11 @@ Created entry with boot_id 68e7454:
 _Native command(s) to make grub entry_
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-eval $(grep -o '\broot=[^ ]*' /proc/cmdline)
+# Command will be one of the following
 
-if [[ "${root}" =~ ^UUID=(.*) ]] ; then 
-  rootdev=`blkid -U ${BASH_REMATCH[1]}`
-else
-  rootdev="${root}"
-fi
+boom create --title "Alt Kernel Parms" --rootlv <VG>/<LV>
 
-if /usr/sbin/lvs -q ${rootdev} 2>/dev/null ; then 
-  boom create --title "Alt Kernel Parms" --rootlv ${rootdev}
-else
-  boom create --title "Alt Kernel Parms" --root-device ${rootdev}
-fi
+boom create --title "Alt Kernel Parms" --root-device <ROOT-DEVICE>
 ----
 ====
 
