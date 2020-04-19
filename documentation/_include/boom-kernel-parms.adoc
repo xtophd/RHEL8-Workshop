@@ -89,7 +89,7 @@ Created profile with os_id f44fb52:
 _Native command(s) to make boom profile_
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *boom profile create --from-host --uname-pattern el8*
+*boom profile create --from-host --uname-pattern el8*
 ----
 ====
 
@@ -155,11 +155,11 @@ Created entry with boot_id 68e7454:
 _Native command(s) to make grub entry_
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# Command will be one of the following
+# For LVM base root
+*boom create --title "Alt Kernel Parms" --rootlv <VG>/<LV>*
 
-boom create --title "Alt Kernel Parms" --rootlv <VG>/<LV>
-
-boom create --title "Alt Kernel Parms" --root-device <ROOT-DEVICE>
+# For block device base root
+*boom create --title "Alt Kernel Parms" --root-device <ROOT-DEVICE>*
 ----
 ====
 
