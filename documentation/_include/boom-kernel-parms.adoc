@@ -173,13 +173,6 @@ BootID  Version                  Name                     RootDevice
 40d2351 4.18.0-147.el8.x86_64    Red Hat Enterprise Linux /dev/vda1
 ----
 
-Finally, add custom kernel options to mimic some OS boot customization.
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *boom entry edit 40d2351 --add-opts "custom_val=yes"*
-----
-
 Show details about our boom-boot entry.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
@@ -195,6 +188,31 @@ Boot Entry (boot_id=40d2351)
   options root=/dev/vda1 ro
 ----
 
+== Delete Grub Entry
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *boom entry delete 40d2351*
+----
+
+== Create Grub Entry with Custom Options
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-boom-mkentry-custom.sh*
+
+Determining root device...
+UUID reduction if necessary...
+Creating GRUB2 entry...
+WARNING - Boom grub2 integration is disabled in '/boot/../etc/default/boom'
+Created entry with boot_id 68e7454:
+  title Alt Kernel Parms
+  machine-id 32600c89b8024c5a8746ffaa551f10e2
+  version 4.18.0-147.el8.x86_64
+  linux /vmlinuz-4.18.0-147.el8.x86_64
+  initrd /initramfs-4.18.0-147.el8.x86_64.img
+  options root=/dev/vda1 ro custom_value=true
+----
 
 == Reboot to Alternate Entry
 
