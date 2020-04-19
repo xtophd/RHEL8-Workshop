@@ -7,14 +7,6 @@
 #
 # This logic appears to work until proven otherwise
 
-
-# For the workshop, we need to be prepared for 3 possibilities
-#   root disk is specified by UUID
-#   root disk is a LVM
-#   root disk is a block device
-#
-# This logic appears to work until proven otherwise
-
 echo "Determining root device..."
 
 eval $(grep -o '\broot=[^ ]*' /proc/cmdline)
