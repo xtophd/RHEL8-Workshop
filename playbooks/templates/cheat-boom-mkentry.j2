@@ -7,7 +7,6 @@
 #
 # This logic appears to work until proven otherwise
 
-
 echo "Determining root device..."
 
 eval $(grep -o '\broot=[^ ]*' /proc/cmdline)
@@ -24,15 +23,20 @@ echo "Creating GRUB2 entry..."
 
 if /usr/sbin/lvs -q ${rootdev} 2>/dev/null ; then
 
-  rootvg=`lvs -o vg_name --noheadings ${rootdev} | awk '{print $1}'`
-  rootlv=`lvs -o lv_name --noheadings ${rootdev} | awk '{print $1}'`
+  rootvg=`lvs -o vg_name --noheadings ${rootdev} 2>/dev/null | awk '{print $1}'`
+  rootlv=`lvs -o lv_name --noheadings ${rootdev} 2>/dev/null | awk '{print $1}'`
 
-  cmd="boom create --title 'RHEL 8 Workshop' --root-lv ${rootvg}/${rootlv}"
+  echo ""
+  echo "DEBUG: boom create --title 'RHEL 8 Workshop' --root-lv ${rootvg}/${rootlv}"
+  echo ""
+
+  boom create --title 'RHEL 8 Workshop' --root-lv ${rootvg}/${rootlv}
+
 else
 
-  cmd="boom create --title 'RHEL 8 Workshop' --root-device ${rootdev}"
+  echo ""
+  echo "DEBUG: boom create --title 'RHEL 8 Workshop' --root-device ${rootdev}"
+  echo ""
+
+  boom create --title 'RHEL 8 Workshop' --root-device ${rootdev}
 fi
-
-echo "${cmd}"
-
-${cmd}
