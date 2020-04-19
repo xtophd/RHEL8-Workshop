@@ -122,9 +122,9 @@ ole=ttyS0,115200n8 no_timer_check net.ifnames=0 crashkernel=auto
 
 We can futher isolate the undesired parameters with a simple grep.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
-# *grep -o '\broot=[^ ]**' /proc/cmdline*
+# grep -o '\broot=[^ ]*' /proc/cmdline
 
 root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c
 ----
