@@ -124,25 +124,23 @@ a cheat-script.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *eval $(grep -o '\broot=[^ ]*' /proc/cmdline)*
-
-# *if `lvs ${root}` ; then \
-    boom create --title "Alt Kernel Parms" --root-lv ${root};
-   else
-    boom create --title "Alt Kernel Parms" --root-device ${root};
-  fi*
+# cheat-boom-mkentry.sh
 ----
 
-
-WARNING - Boom grub2 integration is disabled in '/boot/../etc/default/boom'
-Created entry with boot_id 40d2351:
-  title Alt Kernel Parms
-  machine-id 298b11e40a1e46a5a1ce834b845cc51b
-  version 4.18.0-147.el8.x86_64
-  linux /vmlinuz-4.18.0-147.el8.x86_64
-  initrd /initramfs-4.18.0-147.el8.x86_64.img
-  options root=/dev/vda1 ro
+[NOTE]
+====
+_Native command(s) to make grub entry_
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+eval $(grep -o '\broot=[^ ]*' /proc/cmdline)*
+
+if /usr/sbin/lvs -q ${root} ; then 
+  boom create --title "Alt Kernel Parms" --rootlv ${root}
+else
+  boom create --title "Alt Kernel Parms" --root-device ${root}
+fi
+----
+====
 
 Take a look at currently configured boom-boot entries.
 
