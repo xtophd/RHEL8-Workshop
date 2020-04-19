@@ -26,10 +26,10 @@ if /usr/sbin/lvs -q ${rootdev} 2>/dev/null ; then
   rootvg=`lvs -o vg_name --noheadings ${rootdev} | awk '{print $1}'`
   rootlv=`lvs -o lv_name --noheadings ${rootdev} | awk '{print $1}'`
 
-  boom create --title "Alt Kernel Parms" --root-lv ${rootvg}/${rootlv}
+  boom create --title "RHEL 8 Workshop" --root-lv ${rootvg}/${rootlv}
 
 else
 
-  boom create --title "Alt Kernel Parms" --root-device ${rootdev}
+  boom create --title "RHE: 8 Workshop" --root-device ${rootdev}
 
 fi
