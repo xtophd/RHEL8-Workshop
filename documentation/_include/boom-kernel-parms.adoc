@@ -266,7 +266,11 @@ Wahoo! You are done.  If you have any questions, please ask.
 
 == Additional Resources
 
-    * link:https://systemd.io/BOOT_LOADER_SPECIFICATION.html[Boot Loader Specification]
+  * link:https://github.com/bmr-cymru/boom[Boom project page] 
+  * link:https://github.com/bmr-cymru/snapshot-boot-docs[Boot to snapshot documentation] 
+  * link:https://systemd.io/BOOT_LOADER_SPECIFICATION[BootLoader Specification] 
+  * link:https://www.sourceware.org/lvm2/[LVM2 resource page] 
+  * link:http://sources.redhat.com/dm/[Device-mapper resource page] 
 
 [discrete]
 == End of Unit
