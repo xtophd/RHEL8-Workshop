@@ -70,7 +70,7 @@ Creating a new boot entry begins with a boom `profile`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *boom profile create --from-host --uname-pattern el8*
+# *cheat-boom-mkprofile.sh*
 
 Created profile with os_id f44fb52:
   OS ID: "f44fb528ff8360ad67e2fe0274750b838da0bd6a",
@@ -82,6 +82,14 @@ Created profile with os_id f44fb52:
   Root options (BTRFS): "rootflags=%{btrfs_subvolume}",
   Options: "root=%{root_device} ro %{root_opts}",
   Title: "%{os_name} %{os_version_id} (%{version})"
+----
+
+[NOTE]
+====
+_Native command(s) to make grub entry_
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *boom profile create --from-host --uname-pattern el8*
 ----
 
 Verify that the boom profile was created by the previous command.
@@ -99,7 +107,7 @@ f44fb52 Red Hat Enterprise Linux 8.1 (Ootpa)
 Now to create a boot entry for grub which utilizes the same boot environment as the current system, but with a few
 added kernel parameters.
 
-== Determine Root Device
+=== Determine Root Device
 
 First we need to determine the root device.  We can do this by inspecting the current kernel's boot commandline.
 
@@ -107,7 +115,7 @@ First we need to determine the root device.  We can do this by inspecting the cu
 ----
 # *cat /proc/cmdline*
 
-BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-4.18.0-147.el8.x86_64 root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c ro console=ttyS0 cons
+BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-4.18.0-147.el8.x86_64 _root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c_ ro console=ttyS0 cons
 ole=ttyS0,115200n8 no_timer_check net.ifnames=0 crashkernel=auto
 ----
 
@@ -115,17 +123,18 @@ We can futher isolate the undesired parameters with a simple grep.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-grep -o '\broot=[^ ]*' /proc/cmdline
+# *grep -o '\broot=[^ ]*' /proc/cmdline*
 
 root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c
 ----
 
-To automate this process and reduce the chance of errors, you've been provided with
-a cheat-script.
+Now we need to get to device (or lvm) path.  Although this logic is not complicated, it's not really the focus of this exercise.  You can inspect the cheat-script for further details.
+
+Run the provided cheat-script.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# cheat-boom-mkentry.sh
+# *cheat-boom-mkentry.sh*
 ----
 
 [NOTE]
@@ -159,7 +168,7 @@ BootID  Version                  Name                     RootDevice
 40d2351 4.18.0-147.el8.x86_64    Red Hat Enterprise Linux /dev/vda1
 ----
 
-Add custom kernel option
+Finally, add custom kernel options to mimic some OS boot customization.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
