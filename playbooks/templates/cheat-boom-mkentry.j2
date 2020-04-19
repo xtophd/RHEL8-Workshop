@@ -7,6 +7,7 @@
 #
 # This logic appears to work until proven otherwise
 
+
 echo "Determining root device..."
 
 eval $(grep -o '\broot=[^ ]*' /proc/cmdline)
@@ -26,10 +27,12 @@ if /usr/sbin/lvs -q ${rootdev} 2>/dev/null ; then
   rootvg=`lvs -o vg_name --noheadings ${rootdev} | awk '{print $1}'`
   rootlv=`lvs -o lv_name --noheadings ${rootdev} | awk '{print $1}'`
 
-  boom create --title "RHEL 8 Workshop" --root-lv ${rootvg}/${rootlv}
-
+  cmd="boom create --title 'RHEL 8 Workshop' --root-lv ${rootvg}/${rootlv}"
 else
 
-  boom create --title "RHE: 8 Workshop" --root-device ${rootdev}
-
+  cmd="boom create --title 'RHEL 8 Workshop' --root-device ${rootdev}"
 fi
+
+echo "${cmd}"
+
+${cmd}
