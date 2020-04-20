@@ -14,6 +14,8 @@ endif::[]
 
 = Kernel Live Patching - Plan your reboots!
 
+== Overview
+
 Red Hat Enterprise Linux offers kernel live patching, a solution to patch your running kernel without rebooting or restarting any processes. In this lab, we'll explore this solution, which ships in the form of "kpatches" that can be managed with the "kpatch" tool.
 
 == Getting Started
@@ -47,24 +49,26 @@ You are now ready to proceed with these exercises.
 
 Let's start by looking at the current kernel version:
 
-.[root@node2 ~]# rpm -q kernel
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *rpm -q kernel*
+
 kernel-4.18.0-147.el8.x86_64
 ----
 
-.[root@node2 ~]# uname -r
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *uname -r*
+
 4.18.0-147.el8.x86_64
 ----
 
 Here we can see that we are running the 4.18.0-147 kernel. Now we install all kpatches for our kernel:
 
-.[root@node2 ~]# 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum install "kpatch-patch = $(uname -r)" -y
-----
-Output should look similar to:
-----
+# *yum install "kpatch-patch = $(uname -r)" -y*
+
 Updating Subscription Management repositories.
 ...
 ----
@@ -73,14 +77,10 @@ Note that kpatches are cumulative, so you cannot pick and choose a specific set 
 
 Further, if you'd like to look at which CVEs are included by the kpatch installed on the system, you can do:
 
-.[root@node2 ~]# 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-rpm -qi --changelog kpatch-patch-4_18_0-147
-----
+# *rpm -qi --changelog kpatch-patch-4_18_0-147*
 
-and you will get output similar to:
-
-----
 Name        : kpatch-patch-4_18_0-147
 Version     : 1
 Release     : 4.el8
@@ -106,13 +106,10 @@ Install Date: Wed 26 Feb 2020 08:43:23 PM EST
 
 This tells us that we are now protected against CVE-2018-12207 and CVE-2019-11135. Let's check `kpatch list`:
 
-.[root@node2 ~]# 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-kpatch list
-----
+# *kpatch list*
 
-Output should look like:
-----
 Loaded patch modules:
 kpatch_4_18_0_147_1_4 [enabled]
 
@@ -140,3 +137,15 @@ kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
 ----
 
 Note that while we have installed patch modules, none of them are actually loaded.
+
+== Additional Resources
+
+  * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/kernel_administration_guide/applying_patches_with_kernel_live_patching[Applying Patches with Kernel Live Patching]
+  
+[discrete]
+== End of Unit
+
+////
+Always end files with a blank line to avoid include problems.
+////
+
