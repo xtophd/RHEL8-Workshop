@@ -204,6 +204,9 @@ Boot Entry (boot_id=40d2351)
 Determining root device...
 UUID reduction if necessary...
 Creating GRUB2 entry...
+
+DEBUG: boom create --title 'RHEL 8 Workshop' --root-device /dev/vda1 custom_value=true
+
 WARNING - Boom grub2 integration is disabled in '/boot/../etc/default/boom'
 Created entry with boot_id 68e7454:
   title Alt Kernel Parms
@@ -253,7 +256,7 @@ kernelopts=root=/dev/mapper/rhel-root_snapshot ro crashkernel=auto resume=/dev/m
 boot_success=0
 ----
 
-We will now reset our host and boot the snapshot Logical Volume.
+We will now reset our host and boot with the alternate kernel arguments.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -264,13 +267,14 @@ We will now reset our host and boot the snapshot Logical Volume.
 
 Once the host is back online, ssh to back to `node3` and verify that the alternate kernel parameters are active.
 
-.[root@workstation]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *cat /proc/cmdline*
+
+BOOT_IMAGE=(hd0,msdos1)/vmlinuz-4.18.0-147.el8.x86_64 root=/dev/vg_rhel/root ro rd.lvm.lv=vg_rhel/root *custom_value=true*
 ----
 
-
+Confirm that the custom key-value is now part of the kernel boot options.
 
 Wahoo! You are done.  If you have any questions, please ask.
 
