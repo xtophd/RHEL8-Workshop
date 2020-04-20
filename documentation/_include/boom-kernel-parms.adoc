@@ -137,13 +137,17 @@ Now we need to get to the actual device (or lvm) path.  Although this logic is n
 ----
 # *cheat-boom-mkentry.sh*
 
+
 Determining root device...
 UUID reduction if necessary...
 Creating GRUB2 entry...
+
+DEBUG: boom create --title 'RHEL 8 Workshop' --root-device /dev/vda1
+
 WARNING - Boom grub2 integration is disabled in '/boot/../etc/default/boom'
-Created entry with boot_id 68e7454:
-  title Alt Kernel Parms
-  machine-id 32600c89b8024c5a8746ffaa551f10e2
+Created entry with boot_id : 40d2351
+  title RHEL 8 Workshop
+  machine-id 4739d97a827c41e2a71d911afb7941af
   version 4.18.0-147.el8.x86_64
   linux /vmlinuz-4.18.0-147.el8.x86_64
   initrd /initramfs-4.18.0-147.el8.x86_64.img
@@ -205,12 +209,13 @@ Determining root device...
 UUID reduction if necessary...
 Creating GRUB2 entry...
 
-DEBUG: boom create --title 'RHEL 8 Workshop' --root-device /dev/vda1 custom_value=true
+DEBUG: boom create --title 'RHEL 8 Workshop' --root-device /dev/vda1 -a custom
+_value=true
 
 WARNING - Boom grub2 integration is disabled in '/boot/../etc/default/boom'
-Created entry with boot_id 68e7454:
-  title Alt Kernel Parms
-  machine-id 32600c89b8024c5a8746ffaa551f10e2
+Created entry with boot_id a07736e:
+  title RHEL 8 Workshop
+  machine-id 4739d97a827c41e2a71d911afb7941af
   version 4.18.0-147.el8.x86_64
   linux /vmlinuz-4.18.0-147.el8.x86_64
   initrd /initramfs-4.18.0-147.el8.x86_64.img
@@ -223,9 +228,9 @@ WARNING: If possible, bring up the virtual machine console for node3 before proc
 
 Before reboot, there are 2 options to invoke the right loader at restart:
   . enter the GRUB menu and select at boot time
-  . use grub-set-default to preselect which one to load
+  . use grub-set-default to pre-select which one to load by default
   
-We are going to opt for preselect since it's just easier.  Use the following cheat to inspect 
+We are going to opt for pre-select since it's easier to script.  Use the following cheat to inspect 
 the currently configured GRUB menu options.
 
 .[root@node3]#
@@ -233,16 +238,16 @@ the currently configured GRUB menu options.
 ----
 # *cheat-boom-grublist.sh*
 
-0  title="root LV snapshot"
-1  title="Red Hat Enterprise Linux (4.18.0-67.el8.x86_64) 8.0 (Ootpa)"
-2  title="Red Hat Enterprise Linux (0-rescue-e988045b45b04b11b84741d6a568861b) 8.0 (Ootpa)"
+     0  title="Red Hat Enterprise Linux (4.18.0-147.el8.x86_64) 8.1 (Ootpa)"
+     1  title="Red Hat Enterprise Linux (0-rescue-84047b4cff36437eb8209baa78d1ef3c) 8.1 (Ootpa)"
+     2  title="RHEL 8 Workshop"
 ----
 
-We want to reboot to our snapshot, so in this case we use '0'.
+We want to reboot to our "RHEL 8 Workshop", so in this case we use '2'.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *grub2-set-default 0*
+# *grub2-set-default s*
 ----
 
 Verify that the parameters stuck.  Notice that "saved_entry=0", that's what we want.
