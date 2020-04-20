@@ -129,7 +129,10 @@ If you do update the kernel prior to rebooting, on the next reboot, you'll boot 
 
 At that point, kpatch list would look something like this:
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *kpatch list*
+
 Loaded patch modules:
 
 Installed patch modules:
