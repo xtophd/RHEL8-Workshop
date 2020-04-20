@@ -1,5 +1,6 @@
 :sectnums:
-:sectnumlevels: 2
+:sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -17,19 +18,30 @@ Red Hat Enterprise Linux offers kernel live patching, a solution to patch your r
 
 == Getting Started
 
+For these exercises, you will be using the host `node2` as user `root`.
 
-There is a dedicated VM we will use for the container exercises. From workstation.example.com, you should be able to ssh to node2.example.com as 'root' without any prompts for credentials.
+From host `workstation`, ssh to `node2`.
 
-.[root@workstation ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node2.example.com
-----
-
-.[cloud-user@node2 ~]#
-----
-sudo -i
+$ *ssh node2*
 ----
 
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
+----
+
+Verify that you are on the right host for these exercises.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-kpatch-checkhost.sh*
+----
+
+You are now ready to proceed with these exercises.
 
 == Installing a kpatch
 
