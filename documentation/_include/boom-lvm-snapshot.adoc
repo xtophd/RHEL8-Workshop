@@ -73,7 +73,7 @@ In order to support LVM snapshots on the root volume, we need to:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-addstorage.sh
+cheat-boom-snap-addstorage.sh
 ----
 
 [NOTE]
@@ -129,7 +129,7 @@ The next set of instructions will create a file and a userID that we will remove
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-importantstuff.sh
+cheat-boom-snap-importantstuff.sh
 ----
 
 [NOTE]
@@ -163,7 +163,7 @@ Now that we have created some important data, it's time to create a snapshot of 
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-snapshot.sh
+cheat-boom-snap-mksnap.sh
 ----
 
 [NOTE]
@@ -179,7 +179,7 @@ Let us take a quick look at what we just did.
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-lvreport.sh
+cheat-boom-snap-lvreport.sh
 ----
 
 [NOTE]
@@ -259,7 +259,7 @@ Analyze the snapshot data and we see that there is now a measurable difference.
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-lvreport.sh
+cheat-boom-snap-lvreport.sh
 ----
 
 .Command Output
@@ -338,7 +338,7 @@ Now to create a boot entry for grub which utilizes the snapshot as the boot volu
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-mkgrub.sh
+cheat-boom-snap-mkentry.sh
 ----
 
 [NOTE]
