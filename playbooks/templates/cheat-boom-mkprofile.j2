@@ -1,5 +1,28 @@
 #!/bin/bash
 
-echo "Creating BOOM profile"
+# For the workshop, we need to be prepared for 3 possibilities
+#   root disk is specified by UUID
+#   root disk is a LVM
+#   root disk is a block device
+#
+# NOTE: There is unexpected behavior when root disk is UUID, it's missing /boot in paths.
+#       So we adjust the profile for now.
 
-boom profile create --from-host --uname-pattern el8
+echo "Determining root device..."
+
+eval $(grep -o '\broot=[^ ]*' /proc/cmdline)
+
+if [[ "${root}" =~ ^UUID=(.*) ]] ; then
+  echo "Creating BOOM profile with tweaks (UUID disk)..."
+  boom profile create \
+    --kernel-pattern="/boot/vmlinuz-%{version}" \
+    --initramfs-pattern="/boot/initramfs-%{version}.img" \
+    --from-host \
+    --uname-pattern el8
+
+else
+  echo "Creating default BOOM profile"
+  boom profile create \
+    --from-host \
+    --uname-pattern el8
+fi
