@@ -243,6 +243,22 @@ the currently configured GRUB menu options.
      2  title="RHEL 8 Workshop"
 ----
 
+Let us now inspect the GRUB configuration for `RHEL 8 Workshop`, which in this example is entry #2. 
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *grubby --info=2*
+index=2
+kernel="/boot/vmlinuz-4.18.0-147.el8.x86_64"
+args="ro custom_value=true"
+root="/dev/vda1"
+initrd="/boot/initramfs-4.18.0-147.el8.x86_64.img"
+title="RHEL 8 Workshop"
+id="44d81e936d7e445797933e8cbc199cea-b8f0549-4.18.0-147.el8.x86_64"
+----
+
+WARNING: *DO NOT PROCEED TO REBOOT* unless both `kernel=` and `initrd=` include the path `/boot/<filename>`.
+
 We want to reboot to our "RHEL 8 Workshop", so in this case we use '2'.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
