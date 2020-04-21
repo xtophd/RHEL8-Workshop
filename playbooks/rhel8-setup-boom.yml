@@ -4,6 +4,11 @@
   
     - name: "SETUP BOOM: yum install packages"
       yum: name=boom-boot state=installed
+
+    - name: "PREP-SSHKEYS: known_hosts {{ student_username }} file permissions"
+      file:
+        path: "/boot/loader/entries/84047b4cff36437eb8209baa78d1ef3c-0-rescue.conf"
+        state: absent
       
     - name: "SETUP BOOM: cheat file installs"
       template:

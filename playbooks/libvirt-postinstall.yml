@@ -42,6 +42,7 @@
       redhat_subscription:
         state: present
         auto_attach: yes
+        force_register: yes
         username: "{{ rhsm_username.user_input }}"
         password: "{{ rhsm_password.user_input }}"
   
