@@ -238,7 +238,6 @@ Before reboot, there are 2 options to invoke the right loader at restart:
 We are going to opt for pre-select since it's easier to script.  Use the following cheat to inspect 
 the currently configured GRUB menu options.
 
-.[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *cheat-boom-grublist.sh*
