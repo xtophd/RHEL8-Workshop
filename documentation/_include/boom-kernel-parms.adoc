@@ -164,10 +164,10 @@ _Native command(s) to make grub entry_
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # For LVM base root
-*boom create --title "Alt Kernel Parms" --rootlv <VG>/<LV>*
+*boom create --title "RHEL 8 Workshop" --rootlv <VG>/<LV>*
 
 # For block device base root
-*boom create --title "Alt Kernel Parms" --root-device <ROOT-DEVICE>*
+*boom create --title "RHEL 8 Workshop" --root-device <ROOT-DEVICE>*
 ----
 ====
 
@@ -243,15 +243,14 @@ the currently configured GRUB menu options.
 # *cheat-boom-grublist.sh*
 
      0  title="Red Hat Enterprise Linux (4.18.0-147.el8.x86_64) 8.1 (Ootpa)"
-     1  title="Red Hat Enterprise Linux (0-rescue-84047b4cff36437eb8209baa78d1ef3c) 8.1 (Ootpa)"
-     2  title="RHEL 8 Workshop"
+     1  title="RHEL 8 Workshop"
 ----
 
-Let us now inspect the GRUB configuration for `RHEL 8 Workshop`, which in this example is entry #2. 
+Let us now inspect the GRUB configuration for `RHEL 8 Workshop`, which in this example is entry #1. 
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *grubby --info=2*
+# *grubby --info=1*
 index=2
 kernel="/boot/vmlinuz-4.18.0-147.el8.x86_64"
 args="ro custom_value=true"
@@ -263,20 +262,20 @@ id="44d81e936d7e445797933e8cbc199cea-b8f0549-4.18.0-147.el8.x86_64"
 
 WARNING: *DO NOT PROCEED TO REBOOT* unless both `kernel=` and `initrd=` include the path `/boot/<filename>`.
 
-We want to reboot to our "RHEL 8 Workshop", so again in this example the entry is #2.
+We want to reboot to our "RHEL 8 Workshop", so again in this example the entry is #1.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *grub2-set-default 2*
+# *grub2-set-default 1*
 ----
 
-Verify that the parameters stuck.  Notice that "saved_entry=0", that's what we want.
+Verify that the parameters stuck.  Notice that "saved_entry=1", that's what we want.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *grub2-editenv list*
 
-saved_entry=0
+saved_entry=1
 kernelopts=root=/dev/mapper/rhel-root_snapshot ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet
 boot_success=0
 ----
