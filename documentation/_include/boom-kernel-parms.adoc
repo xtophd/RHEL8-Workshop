@@ -134,7 +134,7 @@ We can futher isolate the undesired parameters with a simple grep.
 root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c
 ----
 
-NOTE: In this scenario, the boot devie is listed by a UUID.  Depending on the lab environment, you could see a logical volume name or a physcial device path.
+NOTE: In this scenario, the boot device is listed by a UUID.  Depending on the lab environment, you could see a logical volume name or a physcial device path.
 
 Now we need to get to the actual device (or lvm) path.  Although this logic is not complicated, it's not really the focus of this exercise, so you've been provided another cheat-script.
 
