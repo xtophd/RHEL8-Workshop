@@ -74,6 +74,7 @@ Creating a new boot entry begins with a boom `profile`.
 
 Determining root device...
 Creating BOOM profile with tweaks (UUID disk)...
+
 Created profile with os_id f44fb52:
   OS ID: "f44fb528ff8360ad67e2fe0274750b838da0bd6a",
   Name: "Red Hat Enterprise Linux", Short name: "rhel",
