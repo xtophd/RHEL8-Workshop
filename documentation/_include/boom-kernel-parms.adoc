@@ -72,24 +72,28 @@ Creating a new boot entry begins with a boom `profile`.
 ----
 # *cheat-boom-mkprofile.sh*
 
+Determining root device...
+Creating BOOM profile with tweaks (UUID disk)...
 Created profile with os_id f44fb52:
   OS ID: "f44fb528ff8360ad67e2fe0274750b838da0bd6a",
   Name: "Red Hat Enterprise Linux", Short name: "rhel",
   Version: "8.1 (Ootpa)", Version ID: "8.1",
   UTS release pattern: "el8",
-  Kernel pattern: "/vmlinuz-%{version}", Initramfs pattern: "/initramfs-%{version}.img",
+  Kernel pattern: "/boot/vmlinuz-%{version}", Initramfs pattern: "/boot/initramfs-%{version}.img",
   Root options (LVM2): "rd.lvm.lv=%{lvm_root_lv}",
   Root options (BTRFS): "rootflags=%{btrfs_subvolume}",
   Options: "root=%{root_device} ro %{root_opts}",
   Title: "%{os_name} %{os_version_id} (%{version})"
 ----
 
+INFO: In this example, the root disk is identified by a UUID.  As a result, `boom` will incorrectly identify the paths to the kernel and initiramfs when creating the grub entry.  To avoid this current problem (bug?), we tweak the boom profile to add `/boot` to the paths.
+
 [NOTE]
 ====
 _Native command(s) to make boom profile_
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-*boom profile create --from-host --uname-pattern el8*
+*boom profile create --from-host --uname-pattern el8* [--kernel-pattern="/boot/vmlinuz-%{version}" --initramfs-pattern="/boot/initramfs-%{version}.img"
 ----
 ====
 
