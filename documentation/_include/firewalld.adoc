@@ -359,11 +359,7 @@ Thus, there is one more step.  Save our current active configuration to the perm
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *firewall-cmd --zone=public --list-all --permanent*
-----
 
-.Command Output
-[source,indent=4]
-----
 public
   target: default
   icmp-block-inversion: no
