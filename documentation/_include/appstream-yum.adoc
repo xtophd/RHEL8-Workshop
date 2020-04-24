@@ -112,13 +112,9 @@ Once we’ve installed that, we will see:
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *yum module list | grep postgresql*
-----
 
-.Command Output
-[source,indent=4]
-----
-postgresql           9.6 [e]      client, server [d] [i]                   PostgreSQL server and client module                                         
-postgresql           10 [d]       client, server [d]                       PostgreSQL server and client module                                         
+postgresql           9.6 [e]      client, server [d] [i]                   PostgreSQL server and client module
+postgresql           10 [d]       client, server [d]                       PostgreSQL server and client module
 postgresql           12           client, server                           PostgreSQL server and client module     
 ----
 
