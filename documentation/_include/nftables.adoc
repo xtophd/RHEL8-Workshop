@@ -21,7 +21,7 @@ In Red Hat Enterprise Linux 8 the network security dynamic duo Firewalld and NFT
 
 NFTables _(replacing IPTables)_ is a new subsystem of the Linux kernel which provides filtering and classification of network packets, datagrams, or frames. This software provides a new in-kernel packet classification framework that is based on a network-specific Virtual Machine (VM) and a new nft userspace command line tool.
 
-The default firewall management tool in continues to be firewalld _(firewall-cmd)_, which gained support for nftables with version 0.6.0.
+The default firewall management tool in RHEL 8 continues to be firewalld _(firewall-cmd)_, which gained support for nftables with version 0.6.0.
 
 NOTE: For 99% of all use cases the firewalld tools are the best choice.  For this lab however we are trying to introduce `nft` and demonstrate some differences to the former `iptables`.
 
