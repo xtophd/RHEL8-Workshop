@@ -220,19 +220,19 @@ On the workstation, as root, run:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cd ~/RHEL8-Workshop/config*
+# *cd ~/RHEL8-Workshop*
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ansible-playbook ../playbooks/appstream-pgsql.yml*
+# *ansible-playbook -i config/rhel8-workshop playbooks/appstream-pgsql.yml*
 ----
 
 then:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ansible rhel8 -o -a "rpm -q postgresql-server"*
+# *ansible-playbook -i config/rhel8-workshop -o -a "rpm -q postgresql-server"*
 ----
 
 You should have postgresql-server 10.6 on node1 and 9.6 on node3 and no
