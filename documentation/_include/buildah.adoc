@@ -532,7 +532,6 @@ Examples of how to do these things are available in 'man skopeo'
 # *podman stop --all*
 # *podman rm --all*
 
-# *buildah stop --all*
 # *buildah rm --all*
 
 # *podman rmi --all*
