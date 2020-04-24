@@ -292,7 +292,9 @@ public
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-firewall-cmd --runtime-to-permanent
+# *firewall-cmd --runtime-to-permanent*
+
+success
 ----
 
 NOTE: you could have also passed the *--permanent* flag to the original command as follows `firewall-cmd --permanent --add-service={http,https}`
@@ -300,7 +302,7 @@ NOTE: you could have also passed the *--permanent* flag to the original command 
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-firewall-cmd --zone=public --list-all --permanent
+# *firewall-cmd --zone=public --list-all --permanent*
 
 public
   target: default
@@ -500,6 +502,8 @@ Since the httpd service is already active, all we really need to do is reload fi
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *firewall-cmd --reload*
+
+success
 ----
 
 === Verification
