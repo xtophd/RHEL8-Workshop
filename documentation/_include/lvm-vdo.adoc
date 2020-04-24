@@ -250,8 +250,8 @@ Let us take a look at the logical volume.  Notice a few things:
 
   * we added `seg_size` to the options to report segment size
   * the logical volume is comprised of 2 devices (vdb, vdc)
-  * the first segment is copletely used at 5g
-  * the second segement is almost used, but has some space remaining
+  * the first segment is completely used at 5g
+  * the second segment is almost used, but has some space remaining
   * Over all, the volume group has approximately 500mb remaining
 
 [bash,options="nowrap",subs="{markup-in-source}"]
