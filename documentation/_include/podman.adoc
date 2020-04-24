@@ -666,7 +666,7 @@ What we can tell is that our container is bound by a cgroup called "machine.slic
 
 # *podman rm --all*
 
-# *podman rmi --all*
+# *podman rmi --all --force*
 ----
 
 [discrete]
