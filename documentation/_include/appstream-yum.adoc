@@ -83,7 +83,7 @@ Complete!
 ----
 
 But let’s say that our application teams have a dependency on 9.6 but we
-want to move to RHEL 8. With the app stream, we can do this. Let's do this next exercise on node3.example.com. 
+want to move to RHEL 8. With the app stream, we can do this. Let's do this next exercise on node3. 
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -94,10 +94,10 @@ Then:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ssh node3.example.com*
+# *ssh node3*
 ----
 
-On node3.example.com, let’s now run:
+On node3, let’s now run:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -112,13 +112,9 @@ Once we’ve installed that, we will see:
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *yum module list | grep postgresql*
-----
 
-.Command Output
-[source,indent=4]
-----
-postgresql           9.6 [e]      client, server [d] [i]                   PostgreSQL server and client module                                         
-postgresql           10 [d]       client, server [d]                       PostgreSQL server and client module                                         
+postgresql           9.6 [e]      client, server [d] [i]                   PostgreSQL server and client module
+postgresql           10 [d]       client, server [d]                       PostgreSQL server and client module
 postgresql           12           client, server                           PostgreSQL server and client module     
 ----
 
@@ -211,7 +207,6 @@ You may now switch back to the workstation:
 App Stream operations can be performed in ansible with the dnf module,
 like such:
 
-
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
 - name: install the postgresql 9.6 stream with the client profile.
@@ -220,37 +215,29 @@ like such:
     state: present
 ----
 
-On the workstation, as root, run:
+A sample of a dnf based playbook for this cluster is provided on the workstation host.
+
+As user `root` on the host `workstation`, run the following:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cd ~/RHEL8-Workshop/config*
+# *cd ~/RHEL8-Workshop*
+
+# *ansible-playbook -i config/rhel8-workshop playbooks/appstream-pgsql.yml*
 ----
+
+Then to verify, you can use an ansible adhoc command to check your work.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ansible-playbook ../playbooks/appstream-pgsql.yml*
+# *ansible rhel8 -i config/rhel8-workshop -o -a "rpm -q postgresql-server"*
 ----
 
-then:
+You should have:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *ansible rhel8 -o -a "rpm -q postgresql-server"*
-----
-
-You should have postgresql-server 10.6 on node1 and 9.6 on node3 and no
-postgresql-server on node2.
-
-and:
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *ansible rhel8 -o -a "rpm -q postgresql"*
-----
-
-You should have postgresql 10.6 on nodes 1 and 2 and postgresql 9.6 on
-node3.
+  * postgresql-server 10.6 on node1
+  * postgresql-server 9.6 on node3 
+  * and no postgresql-server on node2.
 
 == Additional Resources
 
