@@ -235,6 +235,8 @@ Then to verify, you can use an ansible adhoc command to check your work.
 # *ansible rhel8 -i config/rhel8-workshop -o -a "rpm -q postgresql-server"*
 ----
 
+NOTEL: You will get an error from node2, since postgresql-server was not installed there
+
 You should have:
 
   * postgresql-server 10.6 on node1
