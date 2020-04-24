@@ -207,7 +207,6 @@ You may now switch back to the workstation:
 App Stream operations can be performed in ansible with the dnf module,
 like such:
 
-
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
 - name: install the postgresql 9.6 stream with the client profile.
@@ -216,37 +215,29 @@ like such:
     state: present
 ----
 
-On the workstation, as root, run:
+A sample of a dnf based playbook for this cluster is provided on the workstation host.
+
+As user `root` on the host `workstation`, run the following:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *cd ~/RHEL8-Workshop*
-----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
 # *ansible-playbook -i config/rhel8-workshop playbooks/appstream-pgsql.yml*
 ----
 
-then:
+Then to verify, you can use an ansible adhoc command to check your work.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ansible-playbook -i config/rhel8-workshop -o -a "rpm -q postgresql-server"*
+# *ansible rhel8 -i config/rhel8-workshop -o -a "rpm -q postgresql-server"*
 ----
 
-You should have postgresql-server 10.6 on node1 and 9.6 on node3 and no
-postgresql-server on node2.
+You should have:
 
-and:
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *ansible rhel8 -o -a "rpm -q postgresql"*
-----
-
-You should have postgresql 10.6 on nodes 1 and 2 and postgresql 9.6 on
-node3.
+  * postgresql-server 10.6 on node1
+  * postgresql-server 9.6 on node3 
+  * and no postgresql-server on node2.
 
 == Additional Resources
 
