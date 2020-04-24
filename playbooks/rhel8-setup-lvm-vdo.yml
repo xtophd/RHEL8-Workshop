@@ -3,6 +3,9 @@
 - hosts: node3
   tasks:
 
+    - name: "SETUP LVM-VDO: yum install vdo"
+      yum: name=vdo state=installed
+
     - name: "SETUP LVM-VDO: cheat script installs"
       template:
         src: "{{ item.src }}"
