@@ -237,9 +237,9 @@ Create a drop-in configuration file to extend the default httpd.service unit
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-systemd-httpdconfig.sh
+# *cheat-systemd-httpdconfig.sh*
 
-# Contents of /etc/systemd/system/httpd.service.d/50-httpd.conf
+Contents of /etc/systemd/system/httpd.service.d/50-httpd.conf
 [Service]
 Restart=always
 OOMScoreAdjust=-1000
