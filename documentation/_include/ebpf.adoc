@@ -194,7 +194,7 @@ In the `execsnoop` terminal, issue a Ctrl-C and this will return you to a prompt
 
 == bcc-tools: mountsnoop
 
-Similar in nature to `execsnoop`, `mountsnoop` traces the mount() and umount() syscalls, which show which processes are attempting to mount or unmount filesystems.
+Similar in nature to `execsnoop`, `mountsnoop` traces the mount() and umount() syscalls which show processes that are attempting to mount (or unmount) filesystems.
 
 [discrete]
 ==== Primary Terminal
