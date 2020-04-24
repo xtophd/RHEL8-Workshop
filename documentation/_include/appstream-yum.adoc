@@ -97,6 +97,8 @@ Then:
 # *ssh node3*
 ----
 
+INFO: You may need to `sudo -i` to elevate your priviledges.  Just make sure you're the `root` user.
+
 On node3, let’s now run:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
