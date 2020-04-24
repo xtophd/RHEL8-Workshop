@@ -49,6 +49,16 @@ Verify that you are on the right host for these exercises.
 
 You are now ready to proceed with these exercises.
 
+== Installation & Configuration
+
+Install the required packages - this will pull in several related dependencies.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *yum install -y vdo*
+----
+
+That's it!  All LVM components are a standard part of RHEL.  Only the vdo kmod and related utilities need to be installed.
 
 == Why use Logical Volume Management?
 
