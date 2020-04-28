@@ -313,7 +313,7 @@ for i in /mnt/lab2/* ; do echo "${i}" ; cp -rf /usr/share/locale $i ; done
 
 The prevoius command should have copied approximately 100MB in 100 folders yielding about 10G of traditional fielsystem consumption.
 
-=== Examine You Work
+=== Examine Your Work
 
 Let us now check some statistics.  
 
