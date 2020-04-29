@@ -104,6 +104,8 @@ NOTE: If the presenter (or partner) has some slides to show, this is a good plac
   ** _Subject to change, please refer to:_ https://access.redhat.com/support/policy/updates/errata[Red Hat Enterprise Linux Life Cycle]
   * RHEL 8 Release cadence is now a predictable 6 month cycle
   ** RHEL 8.1 was released Nov 5, 2019
+  ** RHEL 8.1 was released April 28, 2019
+  
   
 ==== General Information
 
@@ -111,7 +113,7 @@ NOTE: If the presenter (or partner) has some slides to show, this is a good plac
   * System Compiler: GCC 8.2, LLVM 6.0
   * Hardware Architectures: Intel/AMD 64-bit, IBM Power LE, IBM z Systems, ARM 64-bit
   * Default File System: XFS
-  * Package Management: Yum v4
+  * Package Management: Yum v4 (dnf)
   * Time Sync: Chrony
   * Networking: Network Manager
 
