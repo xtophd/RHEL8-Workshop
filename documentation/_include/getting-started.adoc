@@ -3,6 +3,7 @@
 :doctype: book
 :sectnums:
 :sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
