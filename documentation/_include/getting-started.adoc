@@ -21,29 +21,29 @@ Using the connection information and credentials provided by the instructor, get
 
 *tmux* is a very handy utilty for terminal session management.  If for any reason you lose connectivity or your session is terminated, *tmux* will preserve your session and allow you to reconnect.  There are MANY other features provided by this utility.  Some of them are listed in the primary document section titled *Quick Overview of tmux*.
 
-.[cloud-user@workstation ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-tmux
+$ tmux
 ----
 
 == Become the root user
 
 In order to execute the environment preparation, we need to become the administrative user 'root'.
 
-.[cloud-user@workstation ~]$ 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-sudo -i
+$ sudo -i
 ----
 
 == Download the Workshop project from GitHub
 
 WARNING: It is very likely that your instructor (or the automated deployment system) has already performed this step.  Do NOT delete and clone a new project directory if it already exists.
 
-.[root@workstation ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd ~
+# cd ~
     
-git clone https://github.com/xtophd/RHEL8-Workshop
+# git clone https://github.com/xtophd/RHEL8-Workshop
 ----
 
 == Update the Workshop
@@ -52,11 +52,12 @@ NOTE: This step is not needed if you just cloned the workshop, but if recent bug
 
 Here is how to refresh the workshop with the latest updates.
 
-.[root@workstation ~]#
-----
-cd ~/RHEL8-Workshop
 
-git pull
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# cd ~/RHEL8-Workshop
+
+# git pull
 ----
 
 == Configure the Workshop
@@ -65,11 +66,11 @@ WARNING: It is likely that your instructor (or the automated deployment system) 
 
 Copy the default configuration (ansible inventory) to the config directory.
 
-.[root@workstation ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd ~/RHEL8-Workshop
+# cd ~/RHEL8-Workshop
 
-cp ./sample-configs/rhel8-workshop ./config
+# cp ./sample-configs/rhel8-workshop ./config
 ----
 
 == Run the Prep Script
@@ -80,11 +81,11 @@ NOTE: If you run the deployment playbooks from the web console shell, you will b
 
 Now we will run the playbooks that will set up the workshop.
 
-.[root@workstation RHEL8-Workshop]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd ~/RHEL8-Workshop
+# cd ~/RHEL8-Workshop
 
-bash prepare-rhel8-workshop.sh
+# bash prepare-rhel8-workshop.sh
 ----
 
 The preparation script will run for approximately 5 to 7 minutes on a fresh deployment.
