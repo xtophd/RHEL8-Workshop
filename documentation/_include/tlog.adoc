@@ -200,7 +200,7 @@ Here is what the config file looks like _/etc/sssd/conf.d/sssd-session-recording
 # /etc/sssd/conf.d/sssd-session-recording.conf
 
 [session_recording]
-scope = all
+scope = some
 users = other-user
 groups = other-user
 ----
