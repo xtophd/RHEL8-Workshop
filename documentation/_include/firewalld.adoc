@@ -166,12 +166,12 @@ public
   interfaces: eth0
 ----
 
-We see 2 zones:
+You may a one or more 2 zones depending on the deployed host and it's configuration:
 
   * `public` zone on interface `eth0`
   * `libvirt` zone on interface `virbr0`
   
-NOTE: This host is also utilized for virtualization exercises later in this workshop, thus the virtual bridge `libvirt` and interface `virbr0` exist.
+NOTE:  In this sample output, the virtual bridge `libvirt` is created and managed by libvirtd.  It is possible that your system will not the libvirt zone.  For our purposes, we are only interested in the public zone and the interface `eth0`.
 
 We had this information from the previous command, but to be more specific let's just list the physical interfaces associated with the public zone.
 
