@@ -324,7 +324,7 @@ Physical volume "/dev/vdd" successfully created.
 Physical volume "/dev/vde" successfully created.
 ----
 
-=== Volumge Group Creation
+=== Volume Group Creation
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
