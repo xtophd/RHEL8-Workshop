@@ -12,7 +12,7 @@ endif::[]
 :toc:
 :toclevels: 1
 
-= Boom
+= Boom (with kernel parameters)
 
 == Overview
 
