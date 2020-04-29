@@ -1,9 +1,14 @@
 ---
-- hosts: node3.example.com
+- hosts: node3
   tasks:
   
     - name: "SETUP BOOM: yum install packages"
       yum: name=boom-boot state=installed
+
+    - name: "PREP-SSHKEYS: known_hosts {{ student_username }} file permissions"
+      file:
+        path: "/boot/loader/entries/84047b4cff36437eb8209baa78d1ef3c-0-rescue.conf"
+        state: absent
       
     - name: "SETUP BOOM: cheat file installs"
       template:
@@ -14,11 +19,13 @@
         mode: 0744
       with_items:
         - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-boom-checkhost.sh'} 
-        - {src: 'cheat-boom-snapshot.j2', dest: '/usr/local/bin/cheat-boom-snapshot.sh'} 
-        - {src: 'cheat-boom-mkgrub.j2', dest: '/usr/local/bin/cheat-boom-mkgrub.sh'} 
         - {src: 'cheat-boom-mkprofile.j2', dest: '/usr/local/bin/cheat-boom-mkprofile.sh'} 
-        - {src: 'cheat-boom-lvreport.j2', dest: '/usr/local/bin/cheat-boom-lvreport.sh'} 
-        - {src: 'cheat-boom-addstorage.j2', dest: '/usr/local/bin/cheat-boom-addstorage.sh'} 
-        - {src: 'cheat-boom-importantstuff.j2', dest: '/usr/local/bin/cheat-boom-importantstuff.sh'} 
+        - {src: 'cheat-boom-mkentry.j2', dest: '/usr/local/bin/cheat-boom-mkentry.sh'} 
+        - {src: 'cheat-boom-mkentry-custom.j2', dest: '/usr/local/bin/cheat-boom-mkentry-custom.sh'} 
+        - {src: 'cheat-boom-snap-addstorage.j2', dest: '/usr/local/bin/cheat-boom-addstorage.sh'} 
+        - {src: 'cheat-boom-snap-mksnap.j2', dest: '/usr/local/bin/cheat-boom-mksnap.sh'} 
+        - {src: 'cheat-boom-snap-mkentry.j2', dest: '/usr/local/bin/cheat-boom-snap.sh'} 
+        - {src: 'cheat-boom-snap-lvreport.j2', dest: '/usr/local/bin/cheat-boom-snap-lvreport.sh'} 
+        - {src: 'cheat-boom-snap-importantstuff.j2', dest: '/usr/local/bin/cheat-boom-snap-importantstuff.sh'} 
         - {src: 'cheat-boom-grublist.j2', dest: '/usr/local/bin/cheat-boom-grublist.sh'} 
         

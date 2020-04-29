@@ -1,0 +1,318 @@
+:sectnums:
+:sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+:toc:
+:toclevels: 1
+
+= Boom
+
+== Overview
+
+BOOM is a boot manager for Linux systems that support the 'BootLoader Specification' for boot entry configuration (ie: RHEL8 with GRUB2). It simplifies the creation of new or modified boot entries: for example, to boot snapshot images of the system created using LVM.
+
+BOOM does not modify the existing boot loader configuration, and *only inserts* additional entries. The existing configuration is maintained, and any distribution integration, such as kernel installation and update scripts, continue to function as before.
+
+BOOM also has a simple command-line interface (CLI) and API.
+
+The object of this exercise is quite simple.  We care going to create an alternative boot entry which 
+will load the same kernel with a few additional detectable parameters.
+
+== Getting Started
+
+For these exercises, you will be using the host `node3` as user `root`.
+
+From host `workstation`, ssh to `node3`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *ssh node3*
+----
+
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
+----
+
+Verify that you are on the right host for these exercises.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-boom-checkhost.sh*
+----
+
+You are now ready to proceed with these exercises.
+
+== Installation
+
+The following set of instructions will install Boom.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *yum install -y boom-boot*
+----
+
+That was easy!
+
+
+== Create Profile
+
+Creating a new boot entry begins with a boom `profile`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-boom-mkprofile.sh*
+
+Determining root device...
+Creating BOOM profile with tweaks (UUID disk)...
+
+Created profile with os_id f44fb52:
+  OS ID: "f44fb528ff8360ad67e2fe0274750b838da0bd6a",
+  Name: "Red Hat Enterprise Linux", Short name: "rhel",
+  Version: "8.1 (Ootpa)", Version ID: "8.1",
+  UTS release pattern: "el8",
+  Kernel pattern: "/boot/vmlinuz-%{version}", Initramfs pattern: "/boot/initramfs-%{version}.img",
+  Root options (LVM2): "rd.lvm.lv=%{lvm_root_lv}",
+  Root options (BTRFS): "rootflags=%{btrfs_subvolume}",
+  Options: "root=%{root_device} ro %{root_opts}",
+  Title: "%{os_name} %{os_version_id} (%{version})"
+----
+
+NOTE: In this example, the root disk is identified by a UUID.  As a result, `boom` will incorrectly identify the paths to the kernel and initiramfs when creating the grub entry.  To avoid this current problem (bug?), we tweak the boom profile to add `/boot` to the paths.
+
+[NOTE]
+====
+_Native command(s) to make boom profile_
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+*boom profile create --from-host --uname-pattern el8* [--kernel-pattern="/boot/vmlinuz-%{version}" --initramfs-pattern="/boot/initramfs-%{version}.img"
+----
+====
+
+Verify that the boom profile was created by the previous command.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *boom profile list*
+
+OsID    Name                     OsVersion
+f44fb52 Red Hat Enterprise Linux 8.1 (Ootpa)
+----
+
+== Create GRUB Entry
+
+Now to create a boot entry for grub which utilizes the same boot environment as the current system, but with a few
+added kernel parameters.
+
+=== Determine Root Device
+
+First we need to determine the root device.  We can do this by inspecting the current kernel's boot commandline.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cat /proc/cmdline*
+
+BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-4.18.0-147.el8.x86_64 *root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c* ro console=ttyS0 cons
+ole=ttyS0,115200n8 no_timer_check net.ifnames=0 crashkernel=auto
+----
+
+We can futher isolate the undesired parameters with a simple grep.
+
+[bash,options="nowrap"]
+----
+# grep -o '\broot=[^ ]*' /proc/cmdline
+
+root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c
+----
+
+NOTE: In this scenario, the boot device is listed by a UUID.  Depending on the lab environment, you could see a logical volume name or a physcial device path.
+
+Now we need to get to the actual device (or lvm) path.  Although this logic is not complicated, it's not really the focus of this exercise, so you've been provided another cheat-script.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-boom-mkentry.sh*
+
+
+Determining root device...
+UUID reduction if necessary...
+Creating GRUB2 entry...
+
+DEBUG: boom create --title 'RHEL 8 Workshop' --root-device /dev/vda1
+
+WARNING - Boom grub2 integration is disabled in '/boot/../etc/default/boom'
+Created entry with boot_id : 40d2351
+  title RHEL 8 Workshop
+  machine-id 4739d97a827c41e2a71d911afb7941af
+  version 4.18.0-147.el8.x86_64
+  linux /vmlinuz-4.18.0-147.el8.x86_64
+  initrd /initramfs-4.18.0-147.el8.x86_64.img
+  options root=/dev/vda1 ro
+----
+
+[NOTE]
+====
+_Native command(s) to make grub entry_
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# For LVM base root
+*boom create --title "RHEL 8 Workshop" --rootlv <VG>/<LV>*
+
+# For block device base root
+*boom create --title "RHEL 8 Workshop" --root-device <ROOT-DEVICE>*
+----
+====
+
+Take a look at currently configured boom-boot entries.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *boom entry list*
+
+BootID  Version                  Name                     RootDevice
+40d2351 4.18.0-147.el8.x86_64    Red Hat Enterprise Linux /dev/vda1
+----
+
+Show details about our boom-boot entry.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *boom entry show 40d2351*
+
+Boot Entry (boot_id=40d2351)
+  title Alt Kernel Parms
+  machine-id 298b11e40a1e46a5a1ce834b845cc51b
+  version 4.18.0-147.el8.x86_64
+  linux /vmlinuz-4.18.0-147.el8.x86_64
+  initrd /initramfs-4.18.0-147.el8.x86_64.img
+  options root=/dev/vda1 ro
+----
+
+== Delete Grub Entry
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *boom entry delete 40d2351*
+----
+
+== Create Grub Entry with Custom Options
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-boom-mkentry-custom.sh*
+
+Determining root device...
+UUID reduction if necessary...
+Creating GRUB2 entry...
+
+DEBUG: boom create --title 'RHEL 8 Workshop' --root-device /dev/vda1 -a custom
+_value=true
+
+WARNING - Boom grub2 integration is disabled in '/boot/../etc/default/boom'
+Created entry with boot_id a07736e:
+  title RHEL 8 Workshop
+  machine-id 4739d97a827c41e2a71d911afb7941af
+  version 4.18.0-147.el8.x86_64
+  linux /vmlinuz-4.18.0-147.el8.x86_64
+  initrd /initramfs-4.18.0-147.el8.x86_64.img
+  options root=/dev/vda1 ro custom_value=true
+----
+
+== Reboot to Alternate Entry
+
+WARNING: If possible, bring up the virtual machine console for node3 before proceeding.  
+
+Before reboot, there are 2 options to invoke the right loader at restart:
+  . enter the GRUB menu and select at boot time
+  . use grub-set-default to pre-select which one to load by default
+  
+We are going to opt for pre-select since it's easier to script.  Use the following cheat to inspect 
+the currently configured GRUB menu options.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-boom-grublist.sh*
+
+     0  title="Red Hat Enterprise Linux (4.18.0-147.el8.x86_64) 8.1 (Ootpa)"
+     1  title="RHEL 8 Workshop"
+----
+
+Let us now inspect the GRUB configuration for `RHEL 8 Workshop`, which in this example is entry #1. 
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *grubby --info=1*
+index=2
+kernel="/boot/vmlinuz-4.18.0-147.el8.x86_64"
+args="ro custom_value=true"
+root="/dev/vda1"
+initrd="/boot/initramfs-4.18.0-147.el8.x86_64.img"
+title="RHEL 8 Workshop"
+id="44d81e936d7e445797933e8cbc199cea-b8f0549-4.18.0-147.el8.x86_64"
+----
+
+WARNING: *DO NOT PROCEED TO REBOOT* unless both `kernel=` and `initrd=` include the path `/boot/<filename>`.
+
+We want to reboot to our "RHEL 8 Workshop", so again in this example the entry is #1.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *grub2-set-default 1*
+----
+
+Verify that the parameters stuck.  Notice that "saved_entry=1", that's what we want.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *grub2-editenv list*
+
+saved_entry=1
+kernelopts=root=/dev/mapper/rhel-root_snapshot ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet
+boot_success=0
+----
+
+We will now reset our host and boot with the alternate kernel arguments.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *reboot*
+----
+
+=== Confirm Previous State of Host
+
+Once the host is back online, ssh to back to `node3` and verify that the alternate kernel parameters are active.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cat /proc/cmdline*
+
+BOOT_IMAGE=(hd0,msdos1)/vmlinuz-4.18.0-147.el8.x86_64 root=/dev/vg_rhel/root ro rd.lvm.lv=vg_rhel/root *custom_value=true*
+----
+
+Confirm that the custom key-value is now part of the kernel boot options.
+
+Wahoo! You are done.  If you have any questions, please ask.
+
+== Additional Resources
+
+  * link:https://github.com/bmr-cymru/boom[Boom project page] 
+  * link:https://github.com/bmr-cymru/snapshot-boot-docs[Boot to snapshot documentation] 
+  * link:https://systemd.io/BOOT_LOADER_SPECIFICATION[BootLoader Specification] 
+  * link:https://www.sourceware.org/lvm2/[LVM2 resource page] 
+  * link:http://sources.redhat.com/dm/[Device-mapper resource page] 
+
+[discrete]
+== End of Unit
+
+////
+Always end files with a blank line to avoid include problems.
+////

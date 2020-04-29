@@ -1,5 +1,6 @@
 :sectnums:
-:sectnumlevels: 2
+:sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -11,75 +12,99 @@ endif::[]
 :toc:
 :toclevels: 1
 
-= eBPF - The Extended Berkeley Packet Filter
+= BPF Tracing - Observability of System Performance
 
-WARNING: eBPF is considered *Technology Preview* and is not intended for production use.  For information on Red Hat scope of support for Technology Preview features, see: link:https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope]
+== Overview
 
-In this unit, we will get familiar with eBPF. eBPF stands for Extended Berkeley Packet Filter and is effectively an in-kernel virtual machine upon which several applications have been built. To date, these applications center around working with the network stack (eXpress Data Path, Traffic Control) and also offering efficient kernel tracing (BPF Compiler Collection). In today's lab, we will be focusing on the kernel tracing aspect of eBPF.
+eBPF (The Extended Berkeley Packet Filter) is an in-kernel virtual machine that allows code execution in the kernel space, in a restricted sandbox environment with access to a limited set of functions. There are numerous components shipped by Red Hat that utilize the eBPF virtual machine. Each component is in a different development phase, and thus not all components are currently fully supported. Those that are not supported are available as a *Technology Preview* and are not intended for production use.For information on Red Hat scope of support for Technology Preview features, see: link:https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope]
 
-TIP: Now is a great time to use the multi session capability of *tmux*.  Using `Ctrl-b c` create another session.  You can now cycle back and forth between them with `CTRL-b n` (next) and `CTRL-b p` (previous).  Just make sure you are the user *root* on *workstation.example.com* in order to sucessfully run the rootkit script.
+In this unit, we will be focusing on the kernel tracing offering shipped as bcc-tools (BPF Compiler Collection Tools). There are just over 100 tools shipped in this package. A few things of note:
+
+     * All of these tools live in `/usr/share/bcc/tools`.
+     * These tools must run as the root user as any eBPF program can read kernel data. As such, injecting eBPF bytecode as a regular user is not allowed in RHEL 8.
+     * Each tool has a man page to view the man page, run `man <tool name>`. These man pages include descriptions of the tools, provide the options that can be called and have information on the expected overhead of the specific tool.
 
 == Getting Started
 
-There is a dedicated VM we will use for the container exercises.  From *workstation.example.com*, you should be able to ssh to *node2.example.com* as 'root' without any prompts for credentials.
+For these exercises, you will primarily be using the host `node2` as user `root`.  However, these exercises do REQUIRE a second terminal session to run commands on other hosts.  Please pay careful attention to what commands to run on different hosts.
 
-.[root@workstation ~]#
+TIP: Now is a great time to use the multi session capability of *tmux*.  Use `Ctrl-b "` to create another session with a split screen.  Cycle the active session back and forth with `CTRL-b n` (next) and `CTRL-b p` (previous).
+
+From host `workstation`, ssh to `node2`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node2.example.com
+$ *ssh node2*
+----
+
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-.[root@node2]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-ebpf-checkhost.sh
+# *cheat-ebpf-checkhost.sh*
 ----
 
-Now you are ready to begin your exercises with eBPF Tracing.
+You are now ready to proceed with these exercises.
 
 == Installation
 
-Start by installing the *BPF Compiler Collection* bcc-tools package:
+Start by installing the *BPF Compiler Collection* (bcc-tools) and kernel-devel packages for the installed kernel:
 
-.[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum install bcc-tools -y
+# *yum install bcc-tools kernel-devel-$(uname -r) -y*
 ----
 
-Now, we have a lot of interesting tools installed in /usr/share/bcc/tools. These all have man pages for them.
+Now, we have a lot of interesting tools installed in /usr/share/bcc/tools along with accompanying man pages.
+
+
+
+
 
 == bcc-tools: tcplife
 
-The tcplife tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes. To run this tool, do:
+The `tcplife` tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes.
 
-.[root@node2 ~]#
-----
-/usr/share/bcc/tools/tcplife
-----
+[discrete]
+==== Primary Terminal
 
-Wait for this to get started and you'll see the following header print out:
+To run this tool, execute the following and give it a couple of seconds to get set up:
 
-.Command Output
-[source,indent=4]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# */usr/share/bcc/tools/tcplife*
+
 PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 ----
 
-TIP: Remember that *tmux* is your friend here.  If you have any questions, ask the instructor on how to use it
+[discrete]
+==== Secondary Terminal
 
-Now from another workstation terminal session, run:
+In your second terminal, establish yourself as described below and then run the following command:
 
-.[root@workstation ~]#
+  * host: *workstation*
+  * user: *root*
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node2.example.com cheat-ebpf-rootkit.sh
+# *ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"*
 ----
 
 This command should run for about 10 seconds and then exit.  
 
-On the *node2* terminal sessions you should now see the output of tcplife similar to:
+[discrete]
+==== Primary Terminal
 
-.Command Output
-[source,indent=4]
+In the `tcplife` terminal, you should now see output similar to:
+
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 28478 sshd       10.0.0.12       22    10.0.0.10       33514    14     2 9091.95
@@ -87,49 +112,47 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 
 Doing the math with my numbers above, my session was open for about 9 seconds and was initiated by IP 10.0.0.10, the workstation.
 
-On the terminal running tcp-life, go ahead and Ctrl-C the process. You will see a python traceback that looks like:
+In the `tcplife` terminal, issue a Ctrl-C and this will return you to a prompt.
 
-.Command Output
-[source,indent=4]
-----
-^CTraceback (most recent call last):
-  File "./tcplife", line 506, in <module>
-    b.perf_buffer_poll()
-  File "/usr/lib/python3.6/site-packages/bcc/__init__.py", line 1216, in perf_buffer_poll
-    lib.perf_reader_poll(len(readers), readers, timeout)
-KeyboardInterrupt
-----
 
-This is safe to ignore and the expected behavior of a Ctrl-C on this process.
+
+
 
 == bcc-tools: execsnoop
 
-The execsnoop script monitors all calls to execve() and catches all processes that follow the fork->exec sequence, as well as processes that re-exec() themselves. Processes that fork() but do not exec() won't be caught by this script.
+The `execsnoop` script monitors all calls to execve() and catches all processes that follow the fork->exec sequence, as well as processes that re-exec() themselves. Processes that fork() but do not exec() won't be caught by this script.
 
-To run this script, do:
+[discrete]
+==== Primary Terminal
 
-.[root@node2 ~]#
+Continuing on host `node2`, to run `execsnoop` as follows:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-/usr/share/bcc/tools/execsnoop
-----
+# */usr/share/bcc/tools/execsnoop*
 
-You will see a header print that looks like:
-
-.Command Output
-[source,indent=4]
-----
 PCOMM            PID    PPID   RET ARGS
 ----
 
-Now from another workstation terminal, run:
+[discrete]
+==== Secondary Terminal
 
-.[root@workstation ~]#
+In your second terminal, establish yourself as described below and then run the following command:
+
+  * host: *workstation*
+  * user: *root*
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node2.example.com cheat-ebpf-rootkit.sh
+# *ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"*
 ----
 
-You can immediately exit your session and return to the workstation. In the execsnoop terminal, you should see output similar to:
+[discrete]
+==== Primary Terminal
 
+In the `execsnoop` terminal, you should see output similar to:
+
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 PCOMM            PID    PPID   RET ARGS
 sshd             28512  749      0 /usr/sbin/sshd -D -oCiphers=aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr,aes256-cbc,aes128-gcm@openssh.com,aes128-ctr,aes128-cb -oMACs=hmac-sha2-256-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2- -oGSSAPIKexAlgorithms=gss-gex-sha1-,gss-group14-sha1- -oKexAlgorithms=curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-excha -oHostKeyAlgorithms=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha2-nis -oPubkeyAcceptedKeyTypes=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha -R
@@ -161,203 +184,169 @@ sleep            28541  28516    0 /usr/bin/sleep 1
 firewall-cmd     28542  28516    0 /usr/bin/firewall-cmd --state
 ----
 
-This shows you all the processes that ran exec during that ssh login, their PID, their parent PID, their return code, and the arguments that were sent to the process. You could keep monitoring this for quite some time to catch potential bad actors on the system.
+This shows you all the processes that ran exec() during that ssh login, their PID, their parent PID, their return code, and the arguments that were sent to the process. You could keep monitoring this for quite some time to catch potential bad actors on the system.
 
-Go to the terminal with execsnoop running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+In the `execsnoop` terminal, issue a Ctrl-C and this will return you to a prompt.
 
-== bcc-tools: opensnoop
 
-Similar in nature to execsnoop, opensnoop traces the open() syscall, which shows which processes are attempting to open which files.
 
-To run this script, do:
 
-.[root@node2 ~]#
+
+== bcc-tools: mountsnoop
+
+Similar in nature to `execsnoop`, `mountsnoop` traces the mount() and umount() syscalls which show processes that are attempting to mount (or unmount) filesystems.
+
+[discrete]
+==== Primary Terminal
+
+To run this tool, execute the following and give it a couple of seconds to get set up:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-/usr/share/bcc/tools/opensnoop
-----
+# */usr/share/bcc/tools/mountsnoop*
 
-You will see a header that prints out like:
-
-.Command Output
-[source,indent=4]
-----
-PID    COMM               FD ERR PATH
-----
-
-In a workstation terminal, perform the following steps to connect to node2 as a student:
-
-.[root@workstation ~]#
-----
-ssh student@node2 
+COMM             PID     TID     MNT_NS      CALL
 ----
 
-You probably saw a lot of data go by in the window running opensnoop as there are a lot of files opened during the establishing of an ssh session and the corresponding login activity.
+[discrete]
+==== Secondary Terminal
 
-Now on node2, let's do:
+*PAY ATTENTION!!! USING A DIFFERENT HOST*
 
-.[student@node2 ~]$ 
+In your second terminal, establish yourself as described below and then run the following command:
+
+  * host: *node2*
+  * user: *root*
+
+Let's try to unmount a mount that we know cannot be unmounted. For this, we'll pick the root filesystem '/'.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cat /etc/fstab
-----
+# *umount /*
 
-You will see a lot of locale data being loaded in addition to /etc/fstab in the opensnoop window like so:
-
-.Command Output
-[source,indent=4]
-----
-31474  cat                 3   0 /etc/ld.so.cache
-31474  cat                 3   0 /lib64/libc.so.6
-31474  cat                -1   2 /usr/lib/locale/locale-archive
-31474  cat                 3   0 /usr/share/locale/locale.alias
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_IDENTIFICATION
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
-31474  cat                 3   0 /usr/lib64/gconv/gconv-modules.cache
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MEASUREMENT
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TELEPHONE
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TELEPHONE
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_ADDRESS
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_ADDRESS
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NAME
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NAME
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_PAPER
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_PAPER
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MESSAGES
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MONETARY
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MONETARY
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_COLLATE
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_COLLATE
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TIME
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TIME
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NUMERIC
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NUMERIC
-31474  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_CTYPE
-31474  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_CTYPE
-31474  cat                 3   0 /etc/fstab
+umount: /: target is busy.
 ----
 
-The fourth column is the exit code and you can see that some of these files exit with non-zero codes meaning they don't exist or the user doesn't have appropriate permissions. Let's take a look at /usr/lib/locale/locale-archive:
+[discrete]
+==== Primary Terminal
 
-.[student@node2 ~]$ 
-----
-ls /usr/lib/locale/locale-archive
-----
+Taking a look at the terminal running `mountsnoop`, we see:
 
-and we see the following returned:
-
-.Command Output
-[source,indent=4]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
-ls: cannot access '/usr/lib/locale/locale-archive': No such file or directory
+umount           20001   20001   4026531840  umount("/", 0x0) = -EBUSY
 ----
 
-Now let's try to cat /etc/shadow as the student user:
+This shows us that the mount is busy and cannot be unmounted.
 
-.[student@node2 ~]$
-----
-cat /etc/shadow
-----
+[discrete]
+==== Secondary Terminal
 
-We see the following returned in opensnoop:
+Now let's try to unmount a filesystem that we should be able to unmount.  But before doing so, look at the mount options to ensure we can restore it correctly.  On `node2` run the following:
 
-.Command Output
-[source,indent=4]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-31480  cat                 3   0 /etc/ld.so.cache
-31480  cat                 3   0 /lib64/libc.so.6
-31480  cat                -1   2 /usr/lib/locale/locale-archive
-31480  cat                 3   0 /usr/share/locale/locale.alias
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_IDENTIFICATION
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_IDENTIFICATION
-31480  cat                 3   0 /usr/lib64/gconv/gconv-modules.cache
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MEASUREMENT
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MEASUREMENT
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TELEPHONE
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TELEPHONE
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_ADDRESS
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_ADDRESS
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NAME
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NAME
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_PAPER
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_PAPER
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MESSAGES
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_MONETARY
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_MONETARY
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_COLLATE
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_COLLATE
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_TIME
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_TIME
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_NUMERIC
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_NUMERIC
-31480  cat                -1   2 /usr/lib/locale/en_US.UTF-8/LC_CTYPE
-31480  cat                 3   0 /usr/lib/locale/en_US.utf8/LC_CTYPE
-31480  cat                -1  13 /etc/shadow
-31480  cat                -1   2 /usr/share/locale/en_US.UTF-8/LC_MESSAGES/libc.mo
-31480  cat                -1   2 /usr/share/locale/en_US.utf8/LC_MESSAGES/libc.mo
-31480  cat                -1   2 /usr/share/locale/en_US/LC_MESSAGES/libc.mo
-31480  cat                -1   2 /usr/share/locale/en.UTF-8/LC_MESSAGES/libc.mo
-31480  cat                -1   2 /usr/share/locale/en.utf8/LC_MESSAGES/libc.mo
-31480  cat                -1   2 /usr/share/locale/en/LC_MESSAGES/libc.mo
+# *grep /dev/shm /proc/mounts*
+
+tmpfs /dev/shm tmpfs *rw,seclabel,nosuid,nodev,relatime* 0 0
 ----
 
-with the key line being:
+Now proceed to umount `/dev/shm` on `node2`
 
-.Command Output
-[source,indent=4]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-31480  cat                -1  13 /etc/shadow
+# *umount /dev/shm*
 ----
 
-The -13 return code indicates that we did not have permission to open the requested resource.
+[discrete]
+==== Primary Terminal
 
-As you can see, this tool is very useful for trying to determine where an application has its configurations or for seeing why an application may be failing.
+Back to the `mountsnoop` terminal and you should see the following:
 
-Go to the terminal with opensnoop running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+[source,options="nowrap",subs="{markup-in-source}"]
+----
+umount           20003   20003   4026531840  umount("/dev/shm", 0x0) = 0
+----
+
+The umount command succeeded. 
+
+[discrete]
+==== Secondary Terminal
+
+Proceed to restore the /dev/shm mount as follows:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *mount -t tmpfs -o rw,nosuid,nodev,relatime,seclabel tmpfs /dev/shm*
+----
+
+[discrete]
+==== Primary Terminal
+
+Finally, back to the `mountsnoop` terminal and you should see the following:
+
+[source,options="nowrap",subs="{markup-in-source}"]
+----
+mount            20004   20004   4026531840  mount("tmpfs", "/dev/shm", "tmpfs", MS_NOSUID|MS_NODEV|MS_NOEXEC|MS_SYNCHRONOUS|MS_DIRSYNC|MS_NOATIME|MS_NODIRATIME|MS_MOVE|MS_REC|MS_UNBINDABLE|MS_SLAVE|MS_SHARED|MS_I_VERSION|MS_STRICTATIME|MS_LAZYTIME|MS_NOUSER|0x7f2b30000000, "") = 0
+----
+
+This shows us that the mount succeeded and all the options that were passed into the system call.
+
+As you can see, the `mountsnoop` tool is very useful for seeing what processes are calling the mount and umount system calls and what the results of those calls are.
+
+In the `mountsnoop` terminal, issue a Ctrl-C and this will return you to a prompt.
+
+
+
+
 
 == bcc-tools: xfsslower
 
-WARNING: Please check which filesystem your host is using with the command `df -T /`.  If you host is configured with ext4, then substitute the command *ext4slower* in place of *xfsslower*.
+WARNING: Please verify the filesystem your host is using with the command `df -T /`.  If your host is configured with ext4, then substitute the command `ext4slower` in place of `xfsslower`.
 
-The purpose of the xfsslower tool (also ext4slower and nfsslower) is to show you filesystem operations slower than 10ms. It traces reads, writes, opens, and syncs and then prints out the timestamp of the operation, the process name, the ID, the type of operation, the file offset in kilobytes, the latency of the I/O measured from when it was issued by VFS to the filesystem to when it was completed, and finally, the filename being operated on.
+The purpose of the `xfsslower` tool (also `ext4slower` and `nfsslower`) is to show you filesystem operations slower than  a particular threshold, that defaults to 10ms. It traces reads, writes, opens, and syncs and then prints out the timestamp of the operation, the process name, the ID, the type of operation, the file offset in kilobytes, the latency of the I/O measured from when it was issued by VFS to the filesystem to when it was completed, and finally, the filename being operated on.
 
-To run this script, do:
+[discrete]
+==== Primary Terminal
 
-.[root@node2 ~]#
+To run this tool, execute the following and give it a couple of seconds to get set up:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-/usr/share/bcc/tools/xfsslower
-----
+# */usr/share/bcc/tools/xfsslower*
 
-.Command Output
-[source,indent=4]
-----
-Tracing XFS operations slower than 10 ms
+Tracing xfs operations slower than 10 ms
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 ----
 
-Now in another node2 terminal window, let's run:
+[discrete]
+==== Secondary Terminal
 
-.[root@node2 ~]#
+In your second terminal, establish yourself as described below and then run the following command:
+
+  * host: *node2*
+  * user: *root*
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-dd if=/dev/urandom of=bigfile bs=1024 count=20000
+# *dd if=/dev/urandom of=bigfile bs=1024 count=20000*
 ----
 
-This writes out a 20M file called bigfile and should not register on your xfsslower window.
+This writes out a 20M file called bigfile and should not register on your `xfsslower` window.
 
 Now, let's execute the above command in a for loop so that we get more I/O going in parallel:
 
-.[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
+# *for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done*
 ----
 
-Now you should see similar output in your xfsslower window:
+[discrete]
+==== Primary Terminal
 
-.Command Output
-[source,indent=4]
+Now you should see similar output in your `xfsslower` window:
+
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 20:44:43 b'dd'          32446  W 1024    778        44.11 b'bigfile1'
@@ -400,77 +389,106 @@ TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 
 So we can see that when writing these files in parallel, we have xfs operations taking longer than 10ms to complete.
 
-Go to the terminal with xfsslower running and issue a Ctrl-C. This will end the process with a python traceback. That is the expected behavior.
+In the `xfsslower` terminal, issue a Ctrl-C and this will return you to a prompt.
+
+
+
+
 
 == bcc-tools: cachestat
 
-The cachestat tool traces kernel page cache functions and prints per-second summaries to aid you in workload characterization.
+The `cachestat` tool traces kernel page cache functions and prints every five second summaries to aid you in workload characterization.
 
-To run this script, do:
+[discrete]
+==== Primary Terminal
 
-.[root@node2 ~]#
+To run this tool, execute the following and give it a couple of seconds to get set up:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd /usr/share/bcc/tools
-./cachestat
-----
+# */usr/share/bcc/tools/cachestat*
 
-You should see the following header print:
-
-.Command Output
-[source,indent=4]
-----
    TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
 ----
 
-In another root terminal on node 2, run our dd for loop from the xfsslower section:
+[discrete]
+==== Secondary Terminal
 
-.[root@node2 ~]#
+In your second terminal, establish yourself as described below and then run the following command:
+
+  * host: *node2*
+  * user: *root*
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done
+# *echo 3 > /proc/sys/vm/drop_caches*
+# *for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done*
 ----
 
-In the cachestat window, you should output similar to:
+This flushes the cache and then runs a series of `dd` commands to create some I/O.
 
-.Command Output
-[source,indent=4]
+[discrete]
+==== Primary Terminal
+
+In the `cachestat` window, you should output similar to:
+
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
    TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
-    1135        0     1135        0            5       1464
-    9852       31     9821        0            5       1464
+       0        0        0        0            0        154
+   14773      901    13872    44133            1        200
 ----
 
-This shows that we had 31 page cache misses while running the above loop, but during that same second, there were 9,821 hits, indicating great performance from the page cache.
+This shows that we had 901 page cache misses during a five second period while running the above loop, but during that same second, there were 9,821 hits, indicating great performance from the page cache.
 
-Go to the terminal with cachestat running and issue a Ctrl-C. This will end the process with the message "Detaching...". That is the expected behavior.
+In the `cachestat` terminal, issue a Ctrl-C and this will return you to a prompt.
+
+
+
+
 
 == bcc-tools: trace
 
 This tool is a swiss army knife allowing you to specify functions to trace and messages to be printed when certain conditions are met. You can read more about this by running:
 
-.[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-man 8 trace
-----
-
-Let's do a simple trace in which we will dynamically trace the do_sys_open() kernel function and print the names of the files opened. Run this with:
-
-.[root@node2 ~]#
-----
-cd /usr/share/bcc/tools
-./trace 'p::do_sys_open "%s", arg2'
+# *man 8 trace*
 ----
 
-Now in another node2 terminal, run:
+Let's do a simple trace in which we will dynamically trace the do_sys_open() kernel function and print the names of the files opened. 
 
-.[root@node2 ~]#
+[discrete]
+==== Primary Terminal
+
+To run this tool, execute the following and give it a couple of seconds to get set up:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cat /etc/fstab
+# */usr/share/bcc/tools/trace 'p::do_sys_open "%s", arg2'*
+
+PID     TID     COMM            FUNC             -
 ----
 
-In the window with trace running, you will see something similar to:
+[discrete]
+==== Secondary Terminal
 
-.Command Output
-[source,indent=4]
+In your second terminal, establish yourself as described below and then run the following command:
+
+  * host: *node2*
+  * user: *root*
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cat /etc/fstab*
+----
+
+[discrete]
+==== Primary Terminal
+
+In the `trace` terminal, you will see something similar to:
+
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 32559   32559   cat             do_sys_open      b'/etc/ld.so.cache'
 32559   32559   cat             do_sys_open      b'/lib64/libc.so.6'
@@ -505,25 +523,29 @@ In the window with trace running, you will see something similar to:
 32559   32559   cat             do_sys_open      b'/etc/fstab'
 ----
 
-Go ahead and Ctrl-C trace and then let's do one more trace, this time, tracing the return values out of trace:
+Go ahead and Ctrl-C `trace` and then let's do one more trace, this time, tracing the return values out of `trace`:
 
-.[root@node2 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd /usr/share/bcc/tools
-./trace 'r::do_sys_open "ret: %d", retval'
-----
-
-Now in another node2 terminal, run:
-
-.[root@node2 ~]#
-----
-cat /etc/fstab
+# */usr/share/bcc/tools/trace 'r::do_sys_open "ret: %d", retval'*
 ----
 
-and in your trace window, you will see output similar to:
+[discrete]
+==== Secondary Terminal
 
-.Command Output
-[source,indent=4]
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cat /etc/fstab*
+
+PID     TID     COMM            FUNC             -
+----
+
+[discrete]
+==== Primary Terminal
+
+In the `trace` terminal, you will see something similar to:
+
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 PID     TID     COMM            FUNC             -
 32576   32576   cat             do_sys_open      ret: 3
@@ -559,25 +581,26 @@ PID     TID     COMM            FUNC             -
 32576   32576   cat             do_sys_open      ret: 3
 ----
 
-Go to the terminal with trace running and issue a Ctrl-C. This will end the process and return you to the command line. 
+Go to the terminal with `trace` running and issue a Ctrl-C. This will end the process and return you to the command line. 
+
+You may also now type `exit` in one of your tmux panes to return to having just one pane visible.
 
 There is a lot more that you can do with this tool when you actually need to start tracing what is getting passed into kernel functions and what is being returned by those kernel functions.
 
-[discrete]
 == Additional Resources
-
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
 
-    * link:https://developers.redhat.com/blog/tag/ebpf/[eBPF blogs on Red Hat Developer (covering the networking aspect)]
-    * link:https://access.redhat.com/articles/3550581[Kernel Tracing Using eBPF]
+    * link:https://www.redhat.com/en/blog/bcc-tools-brings-dynamic-kernel-tracing-red-hat-enterprise-linux-81[bcc-tools brings dynamic kernel tracing to Red Hat Enterprise Linux 8.1]
+    * link:https://www.redhat.com/en/blog/why-networkmanager-talking-staticredhatcom-find-out-bcc-tools[Why is NetworkManager talking to static.redhat.com? Find out with bcc-tools!]   
+    * link:https://lab.redhat.com/ebpf-tracing[Performance observability in practice with bcc-tools: A lab on lab.redhat.com]
     * link:http://www.brendangregg.com/ebpf.html[Linux Extended BPF (eBPF Tracing Tools) - Brendan Gregg]
+    * link:https://github.com/xdp-project/xdp-tutorial[Upstream XDP Tutorial (eXpress Data Path networking is tech preview in RHEL 8.2.)]
+    * link:https://developers.redhat.com/blog/tag/ebpf/[eBPF blogs on Red Hat Developer (covering the networking aspect)]
 
 [discrete]
 == End of Unit
 
-link:../RHEL8-Workshop.adoc#toc[Return to TOC]
-
 ////
-Always end files with a blank line to avoid include problems.
+Alway end files with a blank line to avoid include problems.
 ////

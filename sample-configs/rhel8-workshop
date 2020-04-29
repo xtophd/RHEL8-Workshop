@@ -1,0 +1,37 @@
+[all:vars]
+myLocation = "Boston"
+myDomain = "example.com"
+
+student_username = "cloud-user"
+
+ansible_become          = True
+ansible_become_user     = root
+ansible_become_ask_pass = False
+
+[workstation:vars]
+myExample = "Sample Parameter"
+
+#[core]
+#core.example.com
+
+[workstation]
+workstation
+
+[nodes]
+node1
+node2
+node3
+
+[rhel8]
+node1
+node2
+node3
+
+[legacy_db_server]
+node3
+
+[new_db_server]
+node1
+
+[new_db_clients]
+node2

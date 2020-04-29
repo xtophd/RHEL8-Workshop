@@ -1,5 +1,6 @@
 :sectnums:
-:sectnumlevels: 2
+:sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -11,126 +12,152 @@ endif::[]
 :toc:
 :toclevels: 1
 
-= Building with Buildah and Inspecting with Skopeo!
+= Container Dev with Buildah and Skopeo
 
+== Overview
 
-WARNING: You must complete the Podman unit before proceeding.
+NOTE: These exercises are an extension of the `podman` unit and although not required, it is strongly encourage that you complete that unit first.
 
-In this unit, we will get familiar with Buildah and Skopeo!
+In this unit, we will continue to work with containers and get familiar with `Buildah` and `Skopeo`.  
 
-[discrete]
-== Additional Reference Materials
+== Getting Started
 
+For these exercises, you will be using the host `node3` as user `root`.
 
-NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
+From host `workstation`, ssh to `node3`.
 
-    * link:https://www.redhat.com/en/blog/introducing-red-hat-universal-base-image?sc_cid=701f2000000txokAAA&utm_source=bambu&utm_medium=social&utm_campaign=abm[Introducing the Red Hat Universal Base Image - Scott McCarty]
-    * link:https://developers.redhat.com/blog/2018/11/20/buildah-podman-containers-without-daemons/[Containers without daemons: Podman and Buildah available in RHEL 7.6 and RHEL 8 Beta - Tom Sweeney]
-    * link:https://linuxhandbook.com/buildah-basics/[Getting Started with Buildah - Servesha]
-
-
-== Connect to Host
-
-There is a dedicated VM we will use for the container exercises.  From *workstation.example.com*, you should be able to ssh to *node3.example.com* as 'root' without any prompts for credentials.
-
-.[root@workstation ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node3.example.com
+$ *ssh node3*
+----
+
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-.[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-buildah-checkhost.sh
-----
-
-Now you are ready to begin your exercises with containers.
-
-== Build an Image With Buildah
-
-=== Web Site Version 2.0
-
-In the previous lab on podman, we pulled down the httpd-24-rhel7 container and used an OCIFile to build a container. This was using buildah under the hood, but in this lab, we are going to use buildah directly. Let's get started by creating a working container based off of the httpd-24-rhel7 container:
-
-.[root@node3 ~]#
-----
-buildah from core.example.com:5000/httpd-24-rhel7
+# *cheat-buildah-checkhost.sh*
 ----
 
-.Your output should look like this
-[source]
+You are now ready to proceed with these exercises.
+
+== Create a Container Image With Buildah
+
+In the previous lab on `podman`, we pulled down the ubi image and used an OCIFile to build a "webserver" container image. That process used `buildah` under the hood, but in this lab we are going to use `buildah` directly to create a similar image manually, step by step.
+
+=== Start a Fresh Build
+
+Let's get started by creating a new working container based off of the ubi image.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-httpd-24-rhel7-working-container
+# *buildah from ubi8/ubi*
+
+Getting image source signatures
+Copying blob befb03b11956 done
+Copying blob ee2244abc66f done
+Copying config 8121a9f530 done
+Writing manifest to image destination
+Storing signatures
+ubi-working-container
 ----
 
-This gives us the name of the "working container" and it's this container that we will modify with buildah.
+This gives us the name of the "working container" and it is this container image that we will modify with buildah.
+
+=== Add a Custom File
 
 Let's run:
 
-.[root@node3 ~]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-echo "Every time you run setenforce 0, you make Dan Walsh weep." > ./test.txt
-buildah copy httpd-24-rhel7-working-container ./test.txt /var/www/html/
-----
+# *buildah copy ubi-working-container /var/tmp/buildah-dan-cries.txt /var/www/html/dan-cries.txt*
 
-At this point, you have copied your local test.txt into the root of the webserver and you should see feedback similar to:
-
-[source]
-----
-2254e08d2191091678d27aca275835cdce7d70cf120d66601750709105fdcd95
+34f1621a22ffd90a2ebbd58eba315089dc2704ac69a3d33d60362422e4ec26a1
 ----
 
-The above is equivalent to the following OCIFile (or Dockerfile):
+At this point, you have copied your local `dan-cries.txt` into the the ubi-working-container image.
 
-[source]
+The steps you performed above is equivalent to the following OCIFile (or Dockerfile):
+
 ----
-FROM core.example.com:5000/httpd-24-rhel7
-COPY ./test.txt /var/www/html/
-----
-
-So that's nice that we can do that with buildah, but let's look at the following example. Go ahead and mount the root filesystem of your container with:
-
-.[root@node3 ~]#
-
-[source]
-----
-buildah mount httpd-24-rhel7-working-container
+FROM ubi8/ubi
+COPY /root/dan-cries.txt /var/www/html/
 ----
 
-You should see output similar to:
+So it's nice that we can do that with buildah, manually.
 
-[source]
+But wait there's more!!!
+
+=== Install Additional Packages
+
+We need to install an httpd server in our image, and what better way to do that than a simple `yum install`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-/var/lib/containers/storage/overlay/669b69de30cf8a39eafabccddb6a6e1db7d8d707e6a76c552518f4a8ed716cef/merged
+# *buildah run ubi-working-container yum install -y httpd*
+
+...SNIP...
+Installed:
+  httpd-2.4.37-16.module+el8.1.0+4134+e6bad0ed.x86_64
+  apr-util-bdb-1.6.1-6.el8.x86_64
+  apr-util-openssl-1.6.1-6.el8.x86_64
+  mailcap-2.1.48-3.el8.noarch
+  redhat-logos-httpd-81.1-1.el8.noarch
+  apr-util-1.6.1-6.el8.x86_64
+  httpd-tools-2.4.37-16.module+el8.1.0+4134+e6bad0ed.x86_64
+  apr-1.6.3-9.el8.x86_64
+  mod_http2-1.11.3-3.module+el8.1.0+4134+e6bad0ed.x86_64
+  httpd-filesystem-2.4.37-16.module+el8.1.0+4134+e6bad0ed.noarch
 ----
 
-Do the following (using the path returned by buildah for the cd command):
+=== Configure the Entry Point
 
-.[root@node3 ~]#
+Next we set the entry point (command) so when the image deploys it knows what process to launch.
 
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd /var/lib/containers/storage/overlay/669b69de30cf8a39eafabccddb6a6e1db7d8d707e6a76c552518f4a8ed716cef/merged
-ls -lah ./var/www/html
-----
-
-and you should see:
-
-[source]
-----
-total 4.0K
-drwxr-xr-x. 1 importantuser root 22 May  2 14:55 .
-drwxr-xr-x. 1 importantuser root 18 Apr 19 02:13 ..
--rw-r--r--. 1 importantuser root 58 May  2 14:54 test.txt
+# *buildah config --cmd "/usr/sbin/httpd -D FOREGROUND" ubi-working-container*
 ----
 
-There is our test.txt! Let's add the following as ./var/www/html/index.html:
+=== Validate the Container Image
 
-[source]
+Now let us take a peek at our image and validate some of our changes.
+
+Proceed to mount the root filesystem of your container with:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *buildah mount ubi-working-container*
+
+/var/lib/containers/storage/overlay/3456a159b5b3c9e3056d14b97bde1f0e770500dd1cdd6168c894a52a3b3f12ee/merged
+----
+
+Using the long path provided by your mount command, change directories.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cd /var/lib/containers/storage/overlay/3456a159b5b3c9e3056d14b97bde1f0e770500dd1cdd6168c894a52a3b3f12ee/merged*
+# *ls -lah ./var/www/html*
+
+total 16K
+drwxr-xr-x. 2 root root 4.0K Apr 12 21:12 .
+drwxr-xr-x. 3 root root 4.0K Apr 12 21:12 ..
+-rw-r--r--. 1 root root   58 Apr 12 21:12 dan-cries.txt
+----
+
+There is our `dan-cries.txt`! Let's add an additional file:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cp /var/tmp/buildah-index.html ./var/www/html/index.html*
+# *cat ./var/www/html/index.html*
+
 <html>
 <title>Stop Disabling SELinux</title>
 <body>
@@ -141,119 +168,80 @@ Seriously, stop disabling SELinux. Learn how to use it before you blindly shut i
 </html>
 ----
 
-Once you have written that, you should be able to run:
+Let us just double check contents of the httpd docroot one last time:
 
-.[root@node3 merged]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ls -lahZ ./var/www/html/
-----
+# *ls -lahZ ./var/www/html/*
 
-and see:
-
-[source]
-----
-total 8.0K
-drwxr-xr-x. 1 importantuser root unconfined_u:object_r:container_share_t:s0  40 May  2 15:01 .
-drwxr-xr-x. 1 importantuser root unconfined_u:object_r:container_share_t:s0  18 Apr 19 02:13 ..
--rw-r--r--. 1 root          root unconfined_u:object_r:container_share_t:s0 165 May  2 15:01 index.html
--rw-r--r--. 1 importantuser root unconfined_u:object_r:container_share_t:s0  58 May  2 14:54 test.txt
+total 20K
+drwxr-xr-x. 2 root root system_u:object_r:container_file_t:s0:c60,c544 4.0K Apr 12 21:25 .
+drwxr-xr-x. 3 root root system_u:object_r:container_file_t:s0:c60,c544 4.0K Apr 12 21:12 ..
+-rw-r--r--. 1 root root system_u:object_r:container_file_t:s0:c60,c544   58 Apr 12 21:12 dan-cries.txt
+-rw-r--r--. 1 root root system_u:object_r:container_file_t:s0:c60,c544  164 Apr 12 21:24 index.html
 ----
 
 When you are done making direct changes to the root filesystem of your container, you can run:
 
-.[root@node3 merged]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd /root
-buildah unmount httpd-24-rhel7-working-container
-----
+# *cd /root*
+# *buildah unmount ubi-working-container*
 
-You should see output similar to:
-
-[source]
-----
 e918debcaabb5820997b1a4969fbd45284adc0a2869d1f22a1bce78f703ff3c6
 ----
 
-Now at this point, we've used buildah to run commands similar to those in an OCIFile and to directly modify the root filesystem of the container. Let's go ahead and commit the working container to an actual container:
+==== Commit Changes to New Image
 
-.[root@node3 ~]#
+At this point, we've used buildah to run commands and create a container image similar to those in the OCIFile used in the `podman` unit.  Go ahead and commit the working container in to an actual container image:
 
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-buildah commit httpd-24-rhel7-working-container website2
-----
+# *buildah commit ubi-working-container webserver2*
 
-You should see output similar to:
-
-[source]
-----
 Getting image source signatures
-Skipping fetch of repeat blob sha256:571dc0d8cede9ec6f1ba7f568bb53f27d377093a241e2f0a0ccc33471e2b91c4
-Skipping fetch of repeat blob sha256:7eba55968d66da6d891304d7b99ea09117f2fff9364c3ab02d3cd959b1335c80
-Skipping fetch of repeat blob sha256:179c9a960e3bb231448a68cf0d8d9a57fc2227f8c7a57007c698a6f56a061613
-Skipping fetch of repeat blob sha256:568a9c98da8c7a3a4a1db36ca95d81fdd4325fb901a282b7c32f69d8077e2431
-Copying blob sha256:642ad23cb9f28db66ffb50f30c6c86c333de6674f9d7660a627974b04684386f
- 397 B / 397 B [============================================================] 0s
-Copying config sha256:b5ab9d4956263d63096dfab9581db3cf537a01907f010a7d9f95058902fcc48d
- 4.10 KiB / 4.10 KiB [======================================================] 0s
+Copying blob d3ada5af5602 skipped: already exists
+Copying blob 668db11eda93 skipped: already exists
+Copying blob 0f75b7e04ec6 done
+Copying config a831badcea done
 Writing manifest to image destination
 Storing signatures
-b5ab9d4956263d63096dfab9581db3cf537a01907f010a7d9f95058902fcc48d
+a831badcea41e924fd4a37f98431702142c17a64d06bd5444ac4471c1285be50
 ----
 
 Let's look at our images:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *podman images*
 
-[source]
-----
-podman images
+REPOSITORY                            TAG      IMAGE ID       CREATED          SIZE
+localhost/webserver2                  latest   a831badcea41   25 seconds ago   240 MB
+registry.access.redhat.com/ubi8/ubi   latest   8121a9f5303b   12 days ago      240 MB
 ----
 
-You should see:
-
-[source]
-----
-REPOSITORY                             TAG      IMAGE ID       CREATED          SIZE
-localhost/website2                     latest   b5ab9d495626   2 minutes ago    323 MB
-localhost/custom_image                 latest   611116f647ab   29 minutes ago   323 MB
-core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   13 days ago      323 MB
-core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago      214 MB
-localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago      214 MB
-----
+==== Deploy
 
 Now let's run that webserver:
 
-.[root@node3 ~]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-podman run -d -p 8080:8080 website2
+# *podman run -d -p 8080:80 webserver2*
 ----
 
-Now let's test our new webserver:
+==== Validate
 
-.[root@node3 ~]#
+Finally let's test our new webserver:
 
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-curl http://localhost:8080/
-----
+# *curl http://localhost:8080/*
 
-returns:
-
-[source]
-----
 <html>
 <title>Stop Disabling SELinux</title>
 <body>
 <p>
-Seriously, stop disabling SELinux. Learn how to use it before you blindly shut i
-t off.
+Seriously, stop disabling SELinux. Learn how to use it before you blindly shut it off.
 </p>
 </body>
 </html>
@@ -261,17 +249,10 @@ t off.
 
 and:
 
-.[root@node3 ~]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-curl http://localhost:8080/test.txt
-----
+# *curl http://localhost:8080/dan-cries.txt*
 
-returns:
-
-[source]
-----
 Every time you run setenforce 0, you make Dan Walsh weep.
 ----
 
@@ -279,325 +260,260 @@ As you can see, all of the changes we made with buildah are active and working i
 
 == Inspecting Images with Skopeo
 
-Let's take a look at the website2:latest container that we just built:
+Let's take a look at the webserver2:latest container that we just built:
 
-.[root@node3 ~]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-skopeo inspect containers-storage:localhost/website2:latest
-----
+# *skopeo inspect containers-storage:localhost/webserver2:latest*
 
-This should show us output similar to:
-
-[source]
-----
 {
-    "Name": "localhost/website2",
-    "Digest": "sha256:4d6973ee11f08293c260c880d41819f1d42e492e5abe6b8e70089428efb16830",
+    "Name": "localhost/webserver2",
+    "Digest": "sha256:15ad1feee74c68a16031b2120793873432572d2592e0818bc4cff9842696b651",
     "RepoTags": [],
-    "Created": "2019-05-02T19:04:59.839714254Z",
+    "Created": "2020-04-13T02:17:40.873320811Z",
     "DockerVersion": "",
     "Labels": {
         "architecture": "x86_64",
         "authoritative-source-url": "registry.access.redhat.com",
-        "build-date": "2019-04-19T06:12:00.059665",
-        "com.redhat.build-host": "cpt-0003.osbs.prod.upshift.rdu2.redhat.com",
-        "com.redhat.component": "httpd24-container",
-        "com.redhat.license_terms": "https://www.redhat.com/licenses/eulas",
-        "description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
+        "build-date": "2020-03-31T14:54:13.907559",
+        "com.redhat.build-host": "cpt-1007.osbs.prod.upshift.rdu2.redhat.com",
+        "com.redhat.component": "ubi8-container",
+        "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI",
+        "description": "The Universal Base Image is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
         "distribution-scope": "public",
-        "io.k8s.description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
-        "io.k8s.display-name": "Apache httpd 2.4",
-        "io.openshift.expose-services": "8080:http,8443:https",
-        "io.openshift.s2i.scripts-url": "image:///usr/libexec/s2i",
-        "io.openshift.tags": "builder,httpd,httpd24",
-        "io.s2i.scripts-url": "image:///usr/libexec/s2i",
-        "maintainer": "SoftwareCollections.org \u003csclorg@redhat.com\u003e",
-        "name": "rhscl/httpd-24-rhel7",
-        "release": "93",
-        "summary": "Platform for running Apache httpd 2.4 or building httpd-based application",
-        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/httpd-24-rhel7/images/2.4-93",
-        "usage": "s2i build https://github.com/sclorg/httpd-container.git --context-dir=examples/sample-test-app/ rhscl/httpd-24-rhel7 sample-server",
-        "vcs-ref": "b0e7348c61f90027df74f25ec5901f07f5131499",
+        "io.k8s.description": "The Universal Base Image is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
+        "io.k8s.display-name": "Red Hat Universal Base Image 8",
+        "io.openshift.expose-services": "",
+        "io.openshift.tags": "base rhel8",
+        "maintainer": "Red Hat, Inc.",
+        "name": "ubi8",
+        "release": "408",
+        "summary": "Provides the latest release of Red Hat Universal Base Image 8.",
+        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8/images/8.1-408",
+        "vcs-ref": "26f36bfa3e3a04c8c866b250924c1aefc34f01c9",
         "vcs-type": "git",
         "vendor": "Red Hat, Inc.",
-        "version": "2.4"
+        "version": "8.1"
     },
     "Architecture": "amd64",
     "Os": "linux",
     "Layers": [
-        "sha256:571dc0d8cede9ec6f1ba7f568bb53f27d377093a241e2f0a0ccc33471e2b91c4",
-        "sha256:7eba55968d66da6d891304d7b99ea09117f2fff9364c3ab02d3cd959b1335c80",
-        "sha256:179c9a960e3bb231448a68cf0d8d9a57fc2227f8c7a57007c698a6f56a061613",
-        "sha256:568a9c98da8c7a3a4a1db36ca95d81fdd4325fb901a282b7c32f69d8077e2431",
-        "sha256:642ad23cb9f28db66ffb50f30c6c86c333de6674f9d7660a627974b04684386f"
+        "sha256:d3ada5af5602bd0da378e4f0144f8fe8bdbe3f5a65f367dd9ebe759756bada68",
+        "sha256:668db11eda933a46ae8030a8643b96088218dae0efeac54bc6dbc88488725c1b",
+        "sha256:d9142adf6c6796bbbccc6065c57508e87138921d3aea0e9fc368f9861606da68"
     ]
 }
 ----
 
-We will see that this container is based on a Red Hat Apache image. Let's look at the httpd-24-rhel7 container that we built this off of and compare the layers section:
+We will see that this container is based on the Red Hat UBI image. 
 
-.[root@node3 ~]#
+Let's look at the ubi8/ubi container that we built this off of and compare the layers section:
 
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-skopeo inspect containers-storage:core.example.com:5000/httpd-24-rhel7:latest
-----
+# *skopeo inspect containers-storage:registry.access.redhat.com/ubi8/ubi:latest*
 
-The output of this should be similar to:
-
-[source]
-----
 {
-    "Name": "core.example.com:5000/httpd-24-rhel7",
-    "Digest": "sha256:fc5e2d8a2cf507e2a480e069803cffc76c5d83f99fada200ee3ac48cbb7499e6",
+    "Name": "registry.access.redhat.com/ubi8/ubi",
+    "Digest": "sha256:f6648a87c8c52099bacd19b112beb3b65407ae6d3441f9b559ba53c4112c57a4",
     "RepoTags": [],
-    "Created": "2019-04-19T06:13:39.195677Z",
+    "Created": "2020-03-31T14:54:42.119985Z",
     "DockerVersion": "1.13.1",
     "Labels": {
         "architecture": "x86_64",
         "authoritative-source-url": "registry.access.redhat.com",
-        "build-date": "2019-04-19T06:12:00.059665",
-        "com.redhat.build-host": "cpt-0003.osbs.prod.upshift.rdu2.redhat.com",
-        "com.redhat.component": "httpd24-container",
-        "com.redhat.license_terms": "https://www.redhat.com/licenses/eulas",
-        "description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
+        "build-date": "2020-03-31T14:54:13.907559",
+        "com.redhat.build-host": "cpt-1007.osbs.prod.upshift.rdu2.redhat.com",
+        "com.redhat.component": "ubi8-container",
+        "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI",
+        "description": "The Universal Base Image is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
         "distribution-scope": "public",
-        "io.k8s.description": "Apache httpd 2.4 available as container, is a powerful, efficient, and extensible web server. Apache supports a variety of features, many implemented as compiled modules which extend the core functionality. These can range from server-side programming language support to authentication schemes. Virtual hosting allows one Apache installation to serve many different Web sites.",
-        "io.k8s.display-name": "Apache httpd 2.4",
-        "io.openshift.expose-services": "8080:http,8443:https",
-        "io.openshift.s2i.scripts-url": "image:///usr/libexec/s2i",
-        "io.openshift.tags": "builder,httpd,httpd24",
-        "io.s2i.scripts-url": "image:///usr/libexec/s2i",
-        "maintainer": "SoftwareCollections.org \u003csclorg@redhat.com\u003e",
-        "name": "rhscl/httpd-24-rhel7",
-        "release": "93",
-        "summary": "Platform for running Apache httpd 2.4 or building httpd-based application",
-        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhscl/httpd-24-rhel7/images/2.4-93",
-        "usage": "s2i build https://github.com/sclorg/httpd-container.git --context-dir=examples/sample-test-app/ rhscl/httpd-24-rhel7 sample-server",
-        "vcs-ref": "b0e7348c61f90027df74f25ec5901f07f5131499",
+        "io.k8s.description": "The Universal Base Image is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
+        "io.k8s.display-name": "Red Hat Universal Base Image 8",
+        "io.openshift.expose-services": "",
+        "io.openshift.tags": "base rhel8",
+        "maintainer": "Red Hat, Inc.",
+        "name": "ubi8",
+        "release": "408",
+        "summary": "Provides the latest release of Red Hat Universal Base Image 8.",
+        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8/images/8.1-408",
+        "vcs-ref": "26f36bfa3e3a04c8c866b250924c1aefc34f01c9",
         "vcs-type": "git",
         "vendor": "Red Hat, Inc.",
-        "version": "2.4"
+        "version": "8.1"
     },
     "Architecture": "amd64",
     "Os": "linux",
     "Layers": [
-        "sha256:2ed1c0f8e6935361b5a6d4e437524749d6bb60e6eaacc006d47d63518349dee7",
-        "sha256:37611e58fc4c45239111e5c2dc5e8826c9f91758d8e2ce25c31279b67368ba4e",
-        "sha256:ef5d70f606358862f5c5e571088f43a7c8c10976ca481c375d4b4f2a8c800717",
-        "sha256:c634cfc25a1b0a4b90c28dbbfb88b95b1b8c90d3ac9c9e36dbfb39bc4ac72813"
+        "sha256:ee2244abc66ff9c6a4bf50fe19041fec82a95c87d18ee3a3660368cb274927c7",
+        "sha256:befb03b11956169cf23096fc58081ca35034a6545fc37d63605bf0d200fe5eda"
     ]
 }
 ----
 
-and comparing the layers section, we can see that our container has 5 layers whereas the original container only has 4 layers. In this, we can tell that there are differences between these containers.
+Comparing the layers section, we can see that our container has 3 layers whereas the original container only has 2 layers. In this, we can tell that there are differences between these containers.
 
 Pretty neat that we can look inside local containers, but what about containers that are in registries? Skopeo can inspect containers on remote registries without the need to pull the image locally. Let's give that a test:
 
-.[root@node3 ~]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-skopeo inspect --tls-verify=false docker://core.example.com:5000/rhel7.5
-----
+# *skopeo inspect docker://registry.access.redhat.com/ubi8/ubi-minimal:latest*
 
-The above allows us to look at our insecure registry's copy of RHEL 7.5 and will return this output:
-
-[source]
-----
 {
-    "Name": "core.example.com:5000/rhel7.5",
-    "Digest": "sha256:dff4dc848def191bc8fc2185a8ff57b4d4fdbf032457b28286b381bf0238e2c5",
+    "Name": "registry.access.redhat.com/ubi8/ubi-minimal",
+    "Digest": "sha256:df6f9e5d689e4a0b295ff12abc6e2ae2932a1f3e479ae1124ab76cf40c3a8cdd",
     "RepoTags": [
-        "latest"
+        "8.1",
+        "8.0",
+        "8.1-409-source",
+        "8.0-127",
+        "8.0-204",
+        "8.1-398-source",
+        "8.0-213",
+        "8.0-159",
+        "8.1-328",
+        "8.1-398",
+        "8.1-409",
+        "8.1-407-source",
+        "8.1-407",
+        "8.1-279",
+        "latest",
+        "8.0-131"
     ],
-    "Created": "2018-09-19T20:47:02.057298Z",
-    "DockerVersion": "1.12.6",
+    "Created": "2020-03-31T14:52:10.793843Z",
+    "DockerVersion": "1.13.1",
     "Labels": {
         "architecture": "x86_64",
         "authoritative-source-url": "registry.access.redhat.com",
-        "build-date": "2018-09-19T20:46:28.459833",
-        "com.redhat.build-host": "osbs-cpt-003.ocp.osbs.upshift.eng.rdu2.redhat.com",
-        "com.redhat.component": "rhel-server-container",
-        "description": "The Red Hat Enterprise Linux Base image is designed to be a fully supported foundation for your containerized applications. This base image provides your operations and application teams with the packages, language runtimes and tools necessary to run, maintain, and troubleshoot all of your applications. This image is maintained by Red Hat and updated regularly. It is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. When used as the source for all of your containers, only one copy will ever be downloaded and cached in your production environment. Use this image just like you would a regular Red Hat Enterprise Linux distribution. Tools like yum, gzip, and bash are provided by default. For further information on how this image was built look at the /root/anacanda-ks.cfg file.",
+        "build-date": "2020-03-31T14:51:49.719962",
+        "com.redhat.build-host": "cpt-1002.osbs.prod.upshift.rdu2.redhat.com",
+        "com.redhat.component": "ubi8-minimal-container",
+        "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI",
+        "description": "The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
         "distribution-scope": "public",
-        "io.k8s.description": "The Red Hat Enterprise Linux Base image is designed to be a fully supported foundation for your containerized applications. This base image provides your operations and application teams with the packages, language runtimes and tools necessary to run, maintain, and troubleshoot all of your applications. This image is maintained by Red Hat and updated regularly. It is designed and engineered to be the base layer for all of your containerized applications, middleware and utilities. When used as the source for all of your containers, only one copy will ever be downloaded and cached in your production environment. Use this image just like you would a regular Red Hat Enterprise Linux distribution. Tools like yum, gzip, and bash are provided by default. For further information on how this image was built look at the /root/anacanda-ks.cfg file.",
-        "io.k8s.display-name": "Red Hat Enterprise Linux 7",
+        "io.k8s.description": "The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
+        "io.k8s.display-name": "Red Hat Universal Base Image 8 Minimal",
         "io.openshift.expose-services": "",
-        "io.openshift.tags": "base rhel7",
+        "io.openshift.tags": "minimal rhel8",
         "maintainer": "Red Hat, Inc.",
-        "name": "rhel7",
-        "release": "433",
-        "summary": "Provides the latest release of Red Hat Enterprise Linux 7 in a fully featured and supported base image.",
-        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/rhel7/images/7.5-433",
-        "usage": "This image is very generic and does not serve a single use case. Use it as a base to build your own images.",
-        "vcs-ref": "b8a2783c87bd09059fb8ba8a00817734bcb48ac3",
+        "name": "ubi8-minimal",
+        "release": "409",
+        "summary": "Provides the latest release of the minimal Red Hat Universal Base Image 8.",
+        "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8-minimal/images/8.1-409",
+        "vcs-ref": "8c3c7acc321ed054dded6e6e13b5c09c043f42dc",
         "vcs-type": "git",
         "vendor": "Red Hat, Inc.",
-        "version": "7.5"
+        "version": "8.1"
     },
     "Architecture": "amd64",
     "Os": "linux",
     "Layers": [
-        "sha256:610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f",
-        "sha256:cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888"
+        "sha256:b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7",
+        "sha256:218f593046abe6e9f194aed3fc2a2ad622065d6800175514dffa55dfce624b56"
     ]
 }
 ----
 
-Let's run:
+The above allows us to look at the registry's copy of ubi8/ubi.
 
-.[root@node3 ~]#
+Next let's run:
 
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-podman images
+# *podman images*
+
+REPOSITORY                            TAG      IMAGE ID       CREATED         SIZE
+localhost/webserver2                  latest   b660ca86ee4b   7 minutes ago   271 MB
+registry.access.redhat.com/ubi8/ubi   latest   8121a9f5303b   12 days ago     240 MB
 ----
 
-and note that rhel7.5 is not in our list:
-
-[source]
-----
-REPOSITORY                             TAG      IMAGE ID       CREATED        SIZE
-localhost/website2                     latest   b5ab9d495626   23 hours ago   323 MB
-localhost/custom_image                 latest   611116f647ab   23 hours ago   323 MB
-core.example.com:5000/httpd-24-rhel7   latest   0f1cb8c3c29b   2 weeks ago    323 MB
-core.example.com:5000/ubi              latest   c096c0dc7247   2 weeks ago    214 MB
-localhost/myfavorite                   latest   c096c0dc7247   2 weeks ago    214 MB
-----
+Notice that ubi8/ubi-minimal is not local to our registry. Skopeo provided that inspection completely remotely.
 
 === Obtaining tarballs of containers in remote registries for further inspection
 
 Let's run:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *mkdir /root/ubi-tarball*
+# *skopeo copy docker://registry.access.redhat.com/ubi8/ubi-minimal:latest dir:/root/ubi-tarball*
 
-[source]
-----
-mkdir /root/rhel7.5tarball
-skopeo --tls-verify=false copy docker://core.example.com:5000/rhel7.5 dir:/root/rhel7.5tarball
-----
-
-You will see output like:
-[source]
-----
-WARN[0000] '--tls-verify' is deprecated, please set this on the specific subcommand
 Getting image source signatures
-Copying blob sha256:610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f
- 74.68 MB / 74.68 MB [======================================================] 2s
-Copying blob sha256:cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888
- 1.32 KB / 1.32 KB [========================================================] 0s
-Copying config sha256:7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411
- 6.52 KB / 6.52 KB [========================================================] 0s
+Copying blob b26afdf22be4 done
+Copying blob 218f593046ab done
+Copying config 91d23a64fd done
 Writing manifest to image destination
 Storing signatures
 ----
 
 and now we can do:
 
-.[root@node3 ~]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd /root/rhel7.5tarball
-ls -l
-----
+# *cd /root/ubi-tarball*
+# *ls -l*
 
-and see:
-
-[source]
-----
-total 76492
--rw-r--r--. 1 root root 78307258 May  3 13:48 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f
--rw-r--r--. 1 root root     6680 May  3 13:48 7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411
--rw-r--r--. 1 root root     1350 May  3 13:48 cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888
--rw-r--r--. 1 root root      590 May  3 13:48 manifest.json
--rw-r--r--. 1 root root       33 May  3 13:48 version
+total 33888
+drwxr-xr-x. 2 root root     4096 Apr 13 09:48 .
+dr-xr-x---. 5 root root     4096 Apr 13 09:48 ..
+-rw-r--r--. 1 root root     1529 Apr 13 09:48 218f593046abe6e9f194aed3fc2a2ad622065d6800175514dffa55dfce624b56
+-rw-r--r--. 1 root root     4457 Apr 13 09:48 91d23a64fdf259ffce4181b40ce3dafa982a9e4a76ae6a88c1e662c6166c7324
+-rw-r--r--. 1 root root 34668948 Apr 13 09:48 b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7
+-rw-r--r--. 1 root root      737 Apr 13 09:48 manifest.json
+-rw-r--r--. 1 root root       33 Apr 13 09:48 version
 ----
 
-Inspecting the images, we get:
+Inspecting the images with the `file` command, we discover that these a couple of text file along with a couple of zipped (compressed) tar files.
 
-.[root@node3 ~]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-file 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f
-----
+# *file **
 
-which shows us:
-
-[source]
-----
-610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f: gzip compressed data, original size 210667520
+218f593046abe6e9f194aed3fc2a2ad622065d6800175514dffa55dfce624b56: gzip compressed data, original size 20480
+91d23a64fdf259ffce4181b40ce3dafa982a9e4a76ae6a88c1e662c6166c7324: ASCII text, with very long lines
+b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7: gzip compressed data, original size 108462080
+manifest.json:                                                    ASCII text
+version:                                                          ASCII text
 ----
 
-Let's add a .tar.gz suffix: (I peaked ahead -- inside that gz is a tar!)
+Let's take a test view of the contents of the largest gzip file (examine "original size"):
 
-.[root@node3 ~]#
-
-[source]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-mv 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
-tar xvzf 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
-----
+# *tar tvzf b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7*
 
-Once done, we can execute:
-
-.[root@node3 ~]#
-
-[source]
-----
-ls -l
-----
-
-and see output similar to:
-
-[source]
-----
-total 71584
--rw-r--r--.  1 root root 73273413 May  3 13:48 610a5431dd245b77764e5d75b832fbca851ed570b1c42bce9c714c3ba147861f.tar.gz
--rw-r--r--.  1 root root     6680 May  3 13:48 7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411
-lrwxrwxrwx.  1 root root        7 Sep 19  2018 bin -> usr/bin
-dr-xr-xr-x.  2 root root        6 Dec 14  2017 boot
--rw-r--r--.  1 root root     1350 May  3 13:48 cf34c53464e2338149074d94dc278ff376502bc359dc42046e6a60be47729888
-drwxr-xr-x.  2 root root        6 Sep 19  2018 dev
-drwxr-xr-x. 49 root root     4096 Sep 19  2018 etc
-drwxr-xr-x.  2 root root        6 Sep 19  2018 home
-lrwxrwxrwx.  1 root root        7 Sep 19  2018 lib -> usr/lib
-lrwxrwxrwx.  1 root root        9 Sep 19  2018 lib64 -> usr/lib64
--rw-r--r--.  1 root root      590 May  3 13:48 manifest.json
-drwxr-xr-x.  2 root root        6 Dec 14  2017 media
-drwxr-xr-x.  2 root root        6 Dec 14  2017 mnt
-drwxr-xr-x.  2 root root        6 Dec 14  2017 opt
-drwxr-xr-x.  2 root root        6 Sep 19  2018 proc
-dr-xr-x---.  3 root root      154 Sep 19  2018 root
-drwxr-xr-x. 12 root root      145 Sep 19  2018 run
-lrwxrwxrwx.  1 root root        8 Sep 19  2018 sbin -> usr/sbin
-drwxr-xr-x.  2 root root        6 Dec 14  2017 srv
-drwxr-xr-x.  2 root root        6 Sep 19  2018 sys
-drwxrwxrwt.  7 root root      132 Sep 19  2018 tmp
-drwxr-xr-x. 13 root root      155 Sep 19  2018 usr
-drwxr-xr-x. 18 root root      238 Sep 19  2018 var
--rw-r--r--.  1 root root       33 May  3 13:48 version
+dr-xr-xr-x root/root         0 2020-03-31 10:48 ./
+lrwxrwxrwx root/root         0 2018-08-12 05:46 ./lib64 -> usr/lib64
+lrwxrwxrwx root/root         0 2018-08-12 05:46 ./lib -> usr/lib
+drwxr-xr-x root/root         0 2020-03-31 10:48 ./etc/
+drwxr-xr-x root/root         0 2020-03-31 10:48 ./etc/libssh/
+-rw-r--r-- root/root       178 2019-08-05 10:32 ./etc/libssh/libssh_client.config
+-rw-r--r-- root/root       179 2019-08-05 10:32 ./etc/libssh/libssh_server.config
+-rw-r--r-- root/root        22 2019-09-25 14:17 ./etc/issue.net
+-rw-r--r-- root/root      1498 2019-11-28 12:53 ./etc/nsswitch.conf.bak
+-rw-r--r-- root/root        55 2020-03-31 10:47 ./etc/resolv.conf
+drwxr-xr-x root/root         0 2018-08-12 05:46 ./etc/bash_completion.d/
+lrwxrwxrwx root/root         0 2018-09-10 10:14 ./etc/rc0.d -> rc.d/rc0.d
+-rw-r--r-- root/root      9490 2020-03-31 10:48 ./etc/ld.so.cache
+-rw-r--r-- root/root        58 2018-09-10 07:51 ./etc/networks
+-rw-r--r-- root/root      1362 2018-09-10 07:51 ./etc/ethertypes
+... SNIP...
 ----
 
-At this point, you can go dive into the filesystem and do any analysis you would like. Remember, we pulled this container image direct from the registry without adding it to the list of images available to podman for deployment.
+The output is going to scroll by rather quickly, but just note that this is a complete filesystem for the container image.
 
-The other two numeric files provided in the download are a copy of the metadata in text (7b875638cfd87edc473e80774d979a8ddd555e13c6f33db9b712b5d4be244411 in this specific example) and a tarball of any container secrets and the file used to build the container. The following is the output of tar on that file:
+NOTE: If you are more curious and would like to inspect the details a little further you could pipe the output to `more` or `less` and page through the archive contents.  `tar tvzf b26afdf22be4e9c30220796780a297b91549a3b3041b6fdcbda71bf48a6912e7 | less`
 
-[source]
-----
-etc/
-etc/yum.repos.d/
-run/
-run/secrets/
-root/
-root/buildinfo/
-root/buildinfo/Dockerfile-rhel7-7.5-433
-----
+The other two numeric files provided in the image download are:
 
+  * a copy of the metadata in text 
+  * an additional tarball of any container secrets
+  
+Lastly, a couple of ASCII text files:
+
+  * oci config info used to build the container
+  * version info
+  * manifest info
 
 === Other Uses of Skopeo
 
@@ -611,42 +527,28 @@ Examples of how to do these things are available in 'man skopeo'
 
 === Cleanup
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-podman kill $(podman ps -q)
+# *podman stop --all*
+# *podman rm --all*
 
-podman rm $(podman ps -a -q)
-----
+# *buildah rm --all*
 
-== Exit System
-
-.[root@node3 ~]#
-----
-exit
+# *podman rmi --all*
+# *buildah rmi --all*
 ----
 
+[discrete]
+== Additional Reference Materials
 
-.[root@workstation ~]#
-----
-uname -n
+NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
 
-whoami
-----
-
-.Your output should look like this
-[source,indent=4]
-----
-workstation.example.com
-
-root
-----
-
-Now you are ready to proceed to the next unit.
+    * link:https://www.redhat.com/en/blog/introducing-red-hat-universal-base-image?sc_cid=701f2000000txokAAA&utm_source=bambu&utm_medium=social&utm_campaign=abm[Introducing the Red Hat Universal Base Image - Scott McCarty]
+    * link:https://developers.redhat.com/blog/2018/11/20/buildah-podman-containers-without-daemons/[Containers without daemons: Podman and Buildah available in RHEL 7.6 and RHEL 8 Beta - Tom Sweeney]
+    * link:https://linuxhandbook.com/buildah-basics/[Getting Started with Buildah - Servesha]
 
 [discrete]
 == End of Unit
-
-link:../RHEL8-Workshop.adoc#toc[Return to TOC]
 
 ////
 Always end files with a blank line to avoid include problems.

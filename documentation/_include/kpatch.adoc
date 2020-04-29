@@ -1,0 +1,154 @@
+:sectnums:
+:sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+:toc:
+:toclevels: 1
+
+= Kernel Live Patching - Plan your reboots!
+
+== Overview
+
+Red Hat Enterprise Linux offers kernel live patching, a solution to patch your running kernel without rebooting or restarting any processes. In this lab, we'll explore this solution, which ships in the form of "kpatches" that can be managed with the "kpatch" tool.
+
+== Getting Started
+
+For these exercises, you will be using the host `node2` as user `root`.
+
+From host `workstation`, ssh to `node2`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *ssh node2*
+----
+
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
+----
+
+Verify that you are on the right host for these exercises.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-kpatch-checkhost.sh*
+----
+
+You are now ready to proceed with these exercises.
+
+== Installing a kpatch
+
+Let's start by looking at the current kernel version:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *rpm -q kernel*
+
+kernel-4.18.0-147.el8.x86_64
+----
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *uname -r*
+
+4.18.0-147.el8.x86_64
+----
+
+Here we can see that we are running the 4.18.0-147 kernel. Now we install all kpatches for our kernel:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *yum install "kpatch-patch = $(uname -r)" -y*
+
+Updating Subscription Management repositories.
+...
+----
+
+Note that kpatches are cumulative, so you cannot pick and choose a specific set of patches. You must take all fixes shipped by kpatches. At this time, kpatches are limited to security vulnerabilities. For a list of which kpatches are available and which vulnerabilities they address by CVE, please see: <https://access.redhat.com/articles/4499631>
+
+Further, if you'd like to look at which CVEs are included by the kpatch installed on the system, you can do:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *rpm -qi --changelog kpatch-patch-4_18_0-147*
+
+Name        : kpatch-patch-4_18_0-147
+Version     : 1
+Release     : 4.el8
+Architecture: x86_64
+Install Date: Wed 26 Feb 2020 08:43:23 PM EST
+....
+* Tue Dec 03 2019 Joe Lawrence <joe.lawrence@redhat.com> [1-4.el8]
+- hw: [incomplete fix] Machine Check Error on Page Size Change (IFU) [1779250] {CVE-2018-12207}
+
+* Mon Nov 18 2019 Josh Poimboeuf <jpoimboe@redhat.com> [1-3.el8]
+- Fix sysfs reporting for MDS-affected systems [1766986] {CVE-2019-11135}
+
+* Sun Nov 17 2019 Josh Poimboeuf <jpoimboe@redhat.com> [1-2.el8]
+- Fix IFU bug bit conflict [1766987] {CVE-2018-12207}
+
+* Fri Nov 15 2019 Joe Lawrence <joe.lawrence@redhat.com> [1-1.el8]
+- hw: Machine Check Error on Page Size Change (IPU) [1766987] {CVE-2018-12207}
+- hw: TSX Asynchronous Abort Side channel attack [1766986] {CVE-2019-11135}
+
+* Thu Oct 17 2019 Joe Lawrence <joe.lawrence@redhat.com> [0-0.el8]
+- An empty patch to subscribe to kpatch stream for kernel-4.18.0-147.el8 [1762443]
+----
+
+This tells us that we are now protected against CVE-2018-12207 and CVE-2019-11135. Let's check `kpatch list`:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *kpatch list*
+
+Loaded patch modules:
+kpatch_4_18_0_147_1_4 [enabled]
+
+Installed patch modules:
+kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
+----
+
+We can see that we have kpatch_4_18_0_147_1_4 now installed and loaded. We have these protections effective immediately and without having to reboot. We can now schedule a reboot for a time that is convenient for us. 
+
+== Taking that Scheduled Reboot 
+
+Kernel live patching is all about letting you schedule your reboots and not having to take downtime. We aren't actually going to reboot our lab machines, but I'd like to spend a moment discussing what happens when you reboot.
+
+If you reboot without installing a new kernel, you will boot back into the default kernel and if that one has kpatches, they will get loaded. Effectively, this means that your kpatch stack will persist.
+
+If you do update the kernel prior to rebooting, on the next reboot, you'll boot into the default kernel (which is now the new one) and thus your regularly running kernel should have the needed fixes without having any kpatches enabled.
+
+At that point, kpatch list would look something like this:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *kpatch list*
+
+Loaded patch modules:
+
+Installed patch modules:
+kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
+----
+
+Note that while we have installed patch modules, none of them are actually loaded.
+
+== Additional Resources
+
+  * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/kernel_administration_guide/applying_patches_with_kernel_live_patching[Applying Patches with Kernel Live Patching]
+  
+[discrete]
+== End of Unit
+
+////
+Always end files with a blank line to avoid include problems.
+////
+

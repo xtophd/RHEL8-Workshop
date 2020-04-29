@@ -1,5 +1,5 @@
 ---
-- hosts: node2.example.com
+- hosts: node2
   tasks:
   
     - name: "SETUP EBPF: yum install bcc-tools"

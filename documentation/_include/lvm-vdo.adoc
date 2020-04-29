@@ -1,5 +1,6 @@
 :sectnums:
 :sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -8,16 +9,58 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-
 :toc:
 :toclevels: 1
-
 
 = LVM and VDO : Storage Management and Data Optimization
 
 == Overview
 
-=== Why use Logical Volume Management?
+A Logical Volume Manager is a software layer on top of physical hard disks and partitions, which creates an abstraction of continuity and ease-of-use for managing the lifecycle of those devices (ie: addition, removal, replacement, repartitioning, backup, etc).
+
+Over the years, the role of LVM has expanded greatly to include data redundancy (RAID), compression, deduplication, and more...
+
+These exercises will help you get familiar with the basic concepts of LVM and also introduce deduplication with the Virtual Data Optimizer (VDO).
+
+== Getting Started
+
+For these exercises, you will be using the host `node3` as user `root`.
+
+From host `workstation`, ssh to `node3`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *ssh node3*
+----
+
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
+----
+
+Verify that you are on the right host for these exercises.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-vdo-checkhost.sh*
+----
+
+You are now ready to proceed with these exercises.
+
+== Installation & Configuration
+
+Install the required packages - this will pull in several related dependencies.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *yum install -y vdo*
+----
+
+That's it!  All LVM components are a standard part of RHEL.  Only the vdo kmod and related utilities need to be installed.
+
+== Why use Logical Volume Management?
 
 * Flexibility
 * Grow, shrink or relocate your data/filesystems
@@ -45,7 +88,7 @@ From the bottom up, here is a basic explanation of the layered technology stack 
                     loopback
 |===
 
-=== LVM CLI Toolbox
+== LVM CLI Toolbox
 
 [options="header"]
 |===
@@ -105,51 +148,57 @@ We will begin with a simple linear volume (concatination).
 
 Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-umount /mnt/lab*
+# *umount /mnt/lab**
 
-vgremove -ff vg_lab
+# *vgremove -ff vg_lab*
 
-pvremove /dev/vd{b..e}
+# *pvremove /dev/vd{b..e}*
 
-wipefs -a /dev/vd{b..e}
+# *wipefs -a /dev/vd{b..e}*
 
-partprobe
+# *partprobe*
 ----
 
 === Physical Volume Creation
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-pvcreate /dev/vdb
+# *pvcreate /dev/vdb*
 ----
 
 === Volume Group (Pool) Creation
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-vgcreate vg_lab /dev/vdb
+# *vgcreate vg_lab /dev/vdb*
 ----
 
 === Logical Volume Creation
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-lvcreate -y -n lab1 -l 95%FREE vg_lab
+# *lvcreate -y -n lab1 -l 95%FREE vg_lab*
 ----
 
 === Make and Mount Filesystem
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-mkfs -t ext4 /dev/vg_lab/lab1
+# *mkfs -t ext4 /dev/vg_lab/lab1*
 
-mkdir -p /mnt/lab1
-mount /dev/vg_lab/lab1 /mnt/lab1
+# *mkdir -p /mnt/lab1*
+# *mount /dev/vg_lab/lab1 /mnt/lab1*
 ----
 
 NOTE: If this were going to be a persistent filesystem, you would also need to add an entry to `etc/fstab`.
 
 === Examine Your Work
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-lvs
+# *lvs*
 
   LV     VG      Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
   lab1   vg_lab  -wi-ao---- <4.75g
@@ -160,29 +209,33 @@ lvs
   var    vg_rhel -wi-ao---- <3.91g
 ----
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-lvs vg_lab/lab1
+# *lvs vg_lab/lab1*
 
   LV   VG     Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
   lab1 vg_lab -wi-ao---- <4.75g
 ----
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-lvs -o lv_name,lv_size,lv_attr,segtype,devices vg_lab/lab1
+# *lvs -o lv_name,lv_size,lv_attr,segtype,devices vg_lab/lab1*
 
   LV   LSize  Attr       Type   Devices
   lab1 <4.75g -wi-ao---- linear /dev/vdb(0)
 ----
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-lvs --units g -o +devices vg_lab/lab1
+# *lvs --units g -o +devices vg_lab/lab1*
 
   LV   VG     Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert Devices
   lab1 vg_lab -wi-ao---- 4.75g                                                     /dev/vdb(0)
 ----
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-df /mnt/lab1
+# *df /mnt/lab1*
 
 Filesystem              1K-blocks  Used Available Use% Mounted on
 /dev/mapper/vg_lab-lab1   4832912 19448   4548248   1% /mnt/lab1
@@ -190,14 +243,15 @@ Filesystem              1K-blocks  Used Available Use% Mounted on
 
 == Extend and Resize a Linear Volume
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-pvcreate /dev/vdc
+# *pvcreate /dev/vdc*
 
-vgextend vg_lab /dev/vdc
+# *vgextend vg_lab /dev/vdc*
 
-lvresize -l 95%VG /dev/vg_lab/lab1
+# *lvresize -l 95%VG /dev/vg_lab/lab1*
 
-resize2fs /dev/vg_lab/lab1
+# *resize2fs /dev/vg_lab/lab1*
 ----
 
 === Examine Your Work
@@ -206,20 +260,22 @@ Let us take a look at the logical volume.  Notice a few things:
 
   * we added `seg_size` to the options to report segment size
   * the logical volume is comprised of 2 devices (vdb, vdc)
-  * the first segment is copletely used at 5g
-  * the second segement is almost used, but has some space remaining
+  * the first segment is completely used at 5g
+  * the second segment is almost used, but has some space remaining
   * Over all, the volume group has approximately 500mb remaining
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-lvs -o vg_name,vg_free,lv_name,lv_size,seg_size,segtype,devices vg_lab/lab1
+# *lvs -o vg_name,vg_free,lv_name,lv_size,seg_size,segtype,devices vg_lab/lab1*
 
   VG     VFree   LV   LSize  SSize  Type   Devices
   vg_lab 508.00m lab1 <9.50g <5.00g linear /dev/vdb(0)
   vg_lab 508.00m lab1 <9.50g  4.50g linear /dev/vdc(0)
 ----
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-df /mnt/lab1
+# *df /mnt/lab1*
 
 Filesystem              1K-blocks  Used Available Use% Mounted on
 /dev/mapper/vg_lab-lab1   9735476 21840   9249360   1% /mnt/lab1
@@ -239,58 +295,64 @@ We will be leveraging devices /dev/vd{b..e}.  As before, we will cleanup up prio
 
 Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-umount /mnt/lab*
+# *umount /mnt/lab**
 
-vdo stop --all
+# *vdo stop --all*
 
-vdo remove --all --force
+# *vdo remove --all --force*
 
-vgremove -ff vg_lab
+# *vgremove -ff vg_lab*
 
-pvremove /dev/vd{b..e}
+# *pvremove /dev/vd{b..e}*
 
-wipefs -a /dev/vd{b..e}
+# *wipefs -a /dev/vd{b..e}*
 
-partprobe
+# *partprobe*
 ----
 
 === Physical Volume Creation
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
- pvcreate /dev/vd{b..e}
+# *pvcreate /dev/vd{b..e}*
  
-  Physical volume "/dev/vdb" successfully created.
-  Physical volume "/dev/vdc" successfully created.
-  Physical volume "/dev/vdd" successfully created.
-  Physical volume "/dev/vde" successfully created.
+Physical volume "/dev/vdb" successfully created.
+Physical volume "/dev/vdc" successfully created.
+Physical volume "/dev/vdd" successfully created.
+Physical volume "/dev/vde" successfully created.
 ----
 
-=== Volumge Group Creation
+=== Volume Group Creation
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-vgcreate vg_lab /dev/vd{b..e}
+# *vgcreate vg_lab /dev/vd{b..e}*
 
-  Volume group "vg_lab" successfully created
+Volume group "vg_lab" successfully created
 ----
 
 === Logical Volume Creation
 
 This time, we are going to use all four disks to create a mirrored set of striped disks.  Otherwise known as RAID10
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-lvcreate -y --type raid10 -m1 -i 2 -n lv_raid10 -l 95%FREE vg_lab
+# *lvcreate -y --type raid10 -m1 -i 2 -n lv_raid10 -l 95%FREE vg_lab*
 ----
 
 === Add VDO Deduplication
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-vdo create --name=lab2 --device=/dev/vg_lab/lv_raid10 --vdoLogicalSize=30G
+# *vdo create --name=lab2 --device=/dev/vg_lab/lv_raid10 --vdoLogicalSize=30G*
 
-mkfs.xfs -K /dev/mapper/lab2
+# *mkfs.xfs -K /dev/mapper/lab2*
 
-mkdir /mnt/lab2
+# *mkdir /mnt/lab2*
 
-mount /dev/mapper/lab2 /mnt/lab2
+# *mount /dev/mapper/lab2 /mnt/lab2*
 ----
 
 NOTE: To make the mount persistent across reboots, you would still need to either add a systemd unit to mount the filesystem, or add an entry to /etc/fstab.
@@ -299,16 +361,18 @@ NOTE: To make the mount persistent across reboots, you would still need to eithe
 
 Let us now populate the filesystem with some content.  Create a bunch of random subdirectories in our new filesystems with the following command.
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-for i in {1..100} ; do mktemp -d /mnt/lab2/XXXXXX ; done
+# *for i in {1..100} ; do mktemp -d /mnt/lab2/XXXXXX ; done*
 ----
 
 Now we will copy the same content into each of the folders as follows.
 
 NOTE: This could take a few minutes.
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-for i in /mnt/lab2/* ; do echo "${i}" ; cp -rf /usr/share/locale $i ; done
+# for i in /mnt/lab2/* ; do echo "${i}" ; cp -rf /usr/share/locale $i ; done
 ----
 
 The prevoius command should have copied approximately 100MB in 100 folders yielding about 10G of traditional fielsystem consumption.
@@ -317,13 +381,13 @@ The prevoius command should have copied approximately 100MB in 100 folders yield
 
 Let us now check some statistics.  
 
-.[root@workstation]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-du -sh /mnt/lab2
+# *du -sh /mnt/lab2*
 
-df /mnt/lab2
+# *df /mnt/lab2*
 
-vdostats --human-readable
+# *vdostats --human-readable*
 ----
 
 So in summary, we built a 30GB filesystem that only has 10GB of actual physical disk capacity.  We then copied 10GB of data into the filesystem, but after deduplication `vdostats --human-readbale` should reflect something near 4GB of available plysical space.
@@ -354,8 +418,6 @@ Red Hat Documentation
 
 [discrete]
 == End of Unit
-
-link:../RHEL8-Workshop.adoc#toc[Return to TOC]
 
 ////
 Always end files with a blank line to avoid include problems.

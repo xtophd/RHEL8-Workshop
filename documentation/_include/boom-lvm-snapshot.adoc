@@ -1,5 +1,6 @@
 :sectnums:
 :sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -14,6 +15,8 @@ endif::[]
 
 = Boom
 
+== Overview
+
 BOOM is a boot manager for Linux systems that support the 'BootLoader Specification' for boot entry configuration (ie: RHEL8 with GRUB2). It simplifies the creation of new or modified boot entries: for example, to boot snapshot images of the system created using LVM.
 
 BOOM does not modify the existing boot loader configuration, and *only inserts* additional entries. The existing configuration is maintained, and any distribution integration, such as kernel installation and update scripts, continue to function as before.
@@ -22,29 +25,38 @@ BOOM also has a simple command-line interface (CLI) and API.
 
 == Getting Started
 
-Starting on the host *workstation.example.com*, let's ssh over to *node3.example.com*.  No password should be required.
+For these exercises, you will be using the host `node3` as user `root`.
 
-.[root@workstation]#
+From host `workstation`, ssh to `node3`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node3.example.com
+$ *ssh node3*
+----
+
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-.[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-checkhost.sh
+# *cheat-boom-checkhost.sh*
 ----
 
-Now you are ready to begin
+You are now ready to proceed with these exercises.
 
 == Installation
 
 The following set of instructions will install Boom.
 
-.[root@node3]# 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum install -y boom-boot
+# *yum install -y boom-boot*
 ----
 
 That was easy!
@@ -59,9 +71,9 @@ In order to support LVM snapshots on the root volume, we need to:
   
   The following command will take care of all of these steps for you.  The individual steps are also outlined below.
 
-.[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-addstorage.sh
+cheat-boom-snap-addstorage.sh
 ----
 
 [NOTE]
@@ -115,8 +127,9 @@ Extending volume group 'rhel' with /dev/vdb1
 The next set of instructions will create a file and a userID that we will remove and recover as part of this exercise:
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-importantstuff.sh
+cheat-boom-snap-importantstuff.sh
 ----
 
 [NOTE]
@@ -148,8 +161,9 @@ importantuser:x:1001:1001::/home/importantuser:/bin/bash
 Now that we have created some important data, it's time to create a snapshot of our system.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-snapshot.sh
+cheat-boom-snap-mksnap.sh
 ----
 
 [NOTE]
@@ -163,8 +177,9 @@ lvcreate -s rhel/root -n root_snapshot -L 10G
 Let us take a quick look at what we just did.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-lvreport.sh
+cheat-boom-snap-lvreport.sh
 ----
 
 [NOTE]
@@ -203,6 +218,7 @@ Since we have made no real changes to our system, the percentage of the "excepti
 Now we are going to remove the “importantfile” file and “importantuser” userID.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 rm -f /root/importantfile 
 userdel importantuser
@@ -211,6 +227,7 @@ userdel importantuser
 What the heck, let's anti up and delete some more stuff.  Who needs documentation anyway!
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 rm -rf /usr/share/man
 rm -rf /usr/share/doc
@@ -220,6 +237,7 @@ rm -rf /usr/share/GeoIP
 Confirm that our changes were effective
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cat /root/importantfile
 
@@ -239,8 +257,9 @@ cat: /root/importantfile: No such file or directory
 Analyze the snapshot data and we see that there is now a measurable difference.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-lvreport.sh
+cheat-boom-snap-lvreport.sh
 ----
 
 .Command Output
@@ -272,6 +291,7 @@ Time to boot our host using the snapshot value, inspect the host to verify our d
 Create a boom profile.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cheat-boom-mkprofile.sh
 ----
@@ -301,6 +321,7 @@ Created profile with os_id e6f881a:
 Verify that the boom profile was created by the previous command.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 boom profile list
 ----
@@ -315,8 +336,9 @@ e6f881a Red Hat Enterprise Linux 8.0 (Ootpa)
 Now to create a boot entry for grub which utilizes the snapshot as the boot volume.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-mkgrub.sh
+cheat-boom-snap-mkentry.sh
 ----
 
 [NOTE]
@@ -345,6 +367,7 @@ Created entry with boot_id 85e739d:
 Take a look at currently configured boom-boot entries.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 boom entry list
 ----
@@ -360,6 +383,7 @@ BootID  Version                  Name                     RootDevice
 Show details about our boom-boot entry.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 boom entry show 85e739d
 ----
@@ -389,6 +413,7 @@ Before reboot, there are 2 options to invoke the right loader at restart:
 We are going to opt for preselect since it's just easier.  Use the following cheat to inspect the currently configured GRUB menu options.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cheat-boom-grublist.sh
 ----
@@ -404,6 +429,7 @@ cheat-boom-grublist.sh
 We want to reboot to our snapshot, so in this case we use '0'.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 grub2-set-default 0
 ----
@@ -411,6 +437,7 @@ grub2-set-default 0
 Verify that the parameters stuck
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 grub2-editenv list
 ----
@@ -428,6 +455,7 @@ boot_success=0
 We will now reset our host and boot the snapshot Logical Volume.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 reboot
 ----
@@ -437,11 +465,13 @@ reboot
 Once the host is back online, ssh to back to *node3.example.com* and verify that the “importantfile” and “importantuser” exist in the backup snapshot:
 
 .[root@workstation]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 ssh root@node3.example.com
 ----
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 df /
 ----
@@ -456,6 +486,7 @@ Filesystem                     1K-blocks    Used Available Use% Mounted on
 Let's find our data.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cat /root/importantfile
 
@@ -479,6 +510,7 @@ WARNING: Bring up the virtual machine console for node3 before proceeding.
 We will now reboot node3 virtual machine again into rescue mode and return the host to it's previous state.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cheat-boom-grublist.sh
 ----
@@ -494,6 +526,7 @@ cheat-boom-grublist.sh
 We want to reboot to recuse mode, so in this case we use '2'.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 grub2-set-default 2
 ----
@@ -501,6 +534,7 @@ grub2-set-default 2
 Let's go...
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 reboot
 ----
@@ -508,11 +542,13 @@ reboot
 Once the host is back online, ssh to back to *node3.example.com*.
 
 .[root@workstation]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 ssh root@node3.example.com
 ----
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 df /
 
@@ -526,7 +562,10 @@ The output shows that we are no longer mounted to the snapshot volume, and we AR
 ----
 Filesystem            1K-blocks    Used Available Use% Mounted on
 /dev/mapper/rhel-root   8374272 1230660   7143612  15% /
+----
 
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
 .[root@node3 ~]# cat /proc/cmdline
 BOOT_IMAGE=(hd0,msdos1)/vmlinuz-0-rescue-e988045b45b04b11b84741d6a568861b root=/dev/mapper/rhel-root ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet
 ----
@@ -534,6 +573,7 @@ BOOT_IMAGE=(hd0,msdos1)/vmlinuz-0-rescue-e988045b45b04b11b84741d6a568861b root=/
 Time return the host back to it's previous state.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 lvconvert --merge /dev/rhel/root_snapshot
 ----
@@ -552,6 +592,7 @@ Last few steps and we will be done.
 Set grub to boot default OS again.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cheat-boom-grublist.sh
 ----
@@ -567,11 +608,13 @@ cheat-boom-grublist.sh
 This time we want entry '1'.
 
 .[root@node3]# 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 grub2-set-default 1
 ----
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 reboot
 ----
@@ -581,11 +624,13 @@ reboot
 We have now returned the host to it's previous state (ie: the moment we created the snapshot with boom). Let's make sure everything is where we expect.
 
 .[root@workstation ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 ssh root@node3.example.com
 ----
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cat /root/importantfile
 
@@ -601,6 +646,7 @@ This is an important file!!
 Last piece of information.  Since the "snapshot" was merged back into it's "origin", the snapshot itself is now gone.  You can confirm this by running "lvs" and noting that the root_snapshot is missing.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 lvs
 ----
@@ -608,6 +654,7 @@ lvs
 Thus our boom-boot entry points to a non-existent volume.  Here are the final commands to clean everything up.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 boom entry list
 ----
@@ -622,6 +669,7 @@ BootID  Version                  Name                     RootDevice
 Make note of the BootID and use it in the next command.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 boom entry delete 85e739d
 ----
@@ -629,6 +677,7 @@ boom entry delete 85e739d
 Double check the grub configuration.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 cheat-boom-grublist.sh
 ----
@@ -645,6 +694,7 @@ Note that the snapshot entry has been removed.
 Make sure grub is configured to boot the entry.
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 grub2-editenv list
 ----
@@ -660,6 +710,7 @@ boot_success=0
 Whoops!  That's not right
 
 .[root@node3]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 grub2-set-default 0
 ----
@@ -672,8 +723,6 @@ Wahoo! You are done.  If you have any questions, please ask.
 
 [discrete]
 == End of Unit
-
-link:../RHEL8-Workshop.adoc#toc[Return to TOC]
 
 ////
 Always end files with a blank line to avoid include problems.

@@ -1,7 +1,7 @@
 :sectnums:
 :sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 :imagesdir: ./_images
-
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -17,7 +17,7 @@ endif::[]
 
 NOTE: If you are using the web-console and do not see "Virtual Machines" in the menu, chances are that you need to sign-out and sign-in again.
 
-Provided your hardware is reasonably modern, chances are it supports virtualization.  This unit introduces simple virtualization management using kvm and libvirt.  You will learn how to:
+Provided your hardware is reasonably modern, chances are that it supports virtualization.  This unit introduces simple virtualization management using kvm and libvirt.  You will learn how to:
 
     * Install additional necessary software
     * Enable necessary system services and firewall ports
@@ -26,33 +26,23 @@ Provided your hardware is reasonably modern, chances are it supports virtualizat
 
 == Getting Started
 
-Starting on the host *workstation.example.com*, just make sure you're the root user.
+For these exercises, you will be using the host `workstation` as user `root`.
 
-.[root@workstation]#
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-id
-
-uid=0(root) gid=0(root) groups=0(root)
+$ *sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-.[root@workstation ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-virt-checkhost.sh
+# *cheat-virt-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
-
-
-
-
-
-Log into workstation VM as student and then use sudo to gain root priviledges.
-
-----
-sudo -i
-----
 
 === Requirements
 
@@ -65,61 +55,68 @@ This is done with the following simple commands.
 
 You can start by examining the CPU flags (capabilities) advertised by your system.
 
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
-grep -E 'svm|vmx' /proc/cpuinfo
+# *grep -E 'svm|vmx' /proc/cpuinfo*
+
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 
+clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good
+nopl xtopology cpuid tsc_known_freq pni pclmulqdq *vmx* ssse3 fma cx16 pcid sse4_1 sse4_2 
+x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnow
+prefetch invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi flexpriority ept
+vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx avx512f avx512dq rds
+eed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 arat pku os
+pke avx512_vnni md_clear arch_capabilities
 ----
 
-You are looking for either the Intel flag (vtx) or the AMD flag (svm).  A more sophisticated command makes it a little easier to determine.
+You are looking for either the Intel flag (vmx) or the AMD flag (svm).  A more sophisticated command makes it a little easier to determine.
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "*WARN* Virt NOT Supported"; fi
+# *if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "WARNING!! Virt NOT Supported"; fi*
+
+Virt Supported
 ----
 
 After you install all the required software, there are some additional tools to provide more detailed reporting on system capabilities.
 
 === Installation
 
-Verifying that yum repos are enabled to install Cockpit and the virtualization tools.
+NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material.
 
+System needs to be configure with access to the following repos:
+
+  * rhel-8-baseos-rpms
+  * rhel-8-appstream-rpms
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum repolist
-----
-
-Make sure rhel-7-server-rpms, rhel-7-server-optional-rpms and rhel-7-server-extras-rpms repos are enabled.
-
-Installing Packages for virtualization enablement
-
-----
-yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools
-----
-
-Installing Packages for webconsole enablement
-
-----
-yum install -y cockpit-machines 
-----
-
-To make the creating of custom VM images easy, install the Image-Builder tools
-
-----
-yum install -y lorax-composer composer-cli cockpit-composer
+# *yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools cockpit-machines lorax-composer composer-cli cockpit-composer*
 ----
 
 === Enable System Services
 
-----
-# systemctl enable lorax-composer.socket libvirtd
-# systemctl start lorax-composer libvirtd
-----
+NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material.
 
+If for some reason the webconsole is not enabled, please visit that unit for instructions on installing and configuring webconsole.
+
+To enable the necessary services for this unit:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *systemctl enable lorax-composer libvirtd*
+
+# *systemctl start lorax-composer libvirtd*
+----
 
 === Verify Virtualization Host Status
 
-----
-virt-host-validate
-----
+One simple command checks various hardware and software configurations for support of virtualization.
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
+# *virt-host-validate*
+
   QEMU: Checking for hardware virtualization                                 : PASS
   QEMU: Checking if device /dev/kvm exists                                   : PASS
   QEMU: Checking if device /dev/kvm is accessible                            : PASS
@@ -134,63 +131,143 @@ virt-host-validate
   QEMU: Checking for device assignment IOMMU support                         : WARN (No ACPI IVRS table found, IOMMU either disabled in BIOS or not supported by this hardware platform)
 ----
 
+== Image Builder
+
+=== Overview
+
+Red Hat provides pre-made images of RHEL for use as virtual machines.  This come in a QCOW2 format.
+
+However, in order to access them for download one needs to have an active Red Hat Enterprise Linux entitlement.  An obvious alternative to downloading an image is to make one.  There are 2 solutions to creating a VM image from scratch:
+
+  * Provision one (via bootable ISO or PXE)
+  * Magically build an image using the Lorax `Image Builder`
+
+`Image Builder` is a set of tools to create custom RHEL images in a variety of formats for compatibility with major cloud providers and virtualization technologies available.  Meaning, you can specify the target platfrom for you vm and create an appropriate image for VMWare, AWS, Openstack, KVM, etc...
+
+We are only going to leverage an existing blueprint, but please note that blueprints are easy to create, extend and customize for your unique requirements.
+
+=== List Blueprints
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *composer-cli blueprints list*
+
+example-atlas
+example-development
+example-http-server
+----
+
+A nice quick way to determine if the local `Image Builder` can resolve all dependencies for the blueprint is to run  it thorugh a `depsolve`.  Here you can also see a full list of rpms that will be installed on the image.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *composer-cli blueprints depsolve example-http-server*
+
+blueprint: example-http-server v0.0.1
+    acl-2.2.53-1.el8.x86_64
+    apr-1.6.3-9.el8.x86_64
+    apr-util-1.6.1-6.el8.x86_64
+    audit-libs-3.0-0.13.20190507gitf58ec40.el8.x86_64
+    basesystem-11-5.el8.noarch
+    bash-4.4.19-10.el8.x86_64
+    brotli-1.0.6-1.el8.x86_64
+    bzip2-libs-1.0.6-26.el8.x86_64
+    ca-certificates-2018.2.24-6.el8.noarch
+    chkconfig-1.11-1.el8.x86_64
+    coreutils-8.30-6.el8.x86_64
+...SNIP...
+----
+
+
+=== Compose a Blueprint
+
+We are going to leverage the `example-http-server` for our purposes.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *composer-cli compose start example-http-server qcow2*
+
+Compose 812019dd-20e5-4528-a99b-09fbe47ca2d8 added to the queue
+----
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *composer-cli compose status*
+----
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *composer-cli compose list*
+
+812019dd-20e5-4528-a99b-09fbe47ca2d8 *FINISHED* example-http-server 0.0.1 qcow2
+----
+
+It may take a few minutes, but eventually you should see a "FINISHED" status
+
+
 == Deploy A Virtual-Machine with 'virt-install'
 
-Now you are going to leverage a Red Hat pre-built QCOW image to rapidly load a VM with Red Hat Enterprise Linux.
+Now you are ready to leverage the example-http-server and deploy the VM with Red Hat Enterprise Linux.
 
 === Retrieve a QCOW Image
 
-First we need to grab a copy of the image
+First we need to grab a copy of the image and put it in the right place for our platform.
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cd /var/lib/libvirt/images
+# *cd /var/lib/libvirt/images*
 
-wget -O rhel-8.1-x86_64-kvm.qcow2 http://core.example.com/images/rhel-8.1-x86_64-kvm.qcow2
+# *composer-cli compose image 812019dd-20e5-4528-a99b-09fbe47ca2d8*
+
+# *mv *.qcow2 vmguest.qcow2*
 ----
 
 === Modify the QCOW Image
 
 Now you need to set a root password in the image
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-virt-customize -a rhel-8.1-x86_64-kvm.qcow2 --root-password password:redhat --uninstall cloud-init
+# *virt-customize -a vmguest.qcow2 --root-password password:redhat --uninstall cloud-init*
 ----
 
 === Deploy the QCOW Image
 
 Finally it's time to launch the VM
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-virt-install \
-  --import \
-  --name vmguest-01 \
-  --memory 2048 \
-  --vcpus 1 \
-  --disk /var/lib/libvirt/images/rhel-8.1-x86_64-kvm.qcow2 \
-  --graphics vnc \
-  --noautoconsole\
-  --os-variant rhel8.1
+# *virt-install \
+   --import \
+   --name vmguest \
+   --memory 2048 \
+   --vcpus 1 \
+   --disk /var/lib/libvirt/images/vmguest.qcow2 \
+   --graphics vnc \
+   --noautoconsole\
+   --os-variant rhel8.1*
 ----
-
-INFO: If you hop on the Virtual Machines Manager in the Web-Console, you an bring up the VM's Console and watch the deployment.
 
 === Additional CLI Commands
 
 Some additional simple virtual machine management commands
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-virsh list
-virsh list --all
+# *virsh list*
+# *virsh list --all*
 
-virsh start vmguest-01
-virsh shutdown vmguest-01
+# *virsh start vmguest*
+# *virsh shutdown vmguest*
 ----
 
 == Explore VM Management with 'Web-Console'
 
-From th menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary, but one critical feature is available: the console!
+From the menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary when compared the Red Hat Virtualization Manager (RHVM) , but one critical feature is available: the console!
 
 Take some time to explore the capabilities of the Web-Console Machines webui.
+
+Log in to your client (user:root password:redhat) and poke around.  The VM is on a private network and not accessbile from the internet.  You will only be able to access from the webconsole.
 
 == Shutdown Virtual Machines
 
@@ -198,10 +275,10 @@ WARN: It is IMPORTANT to stop or delete the deployed VMs
 
 Using either the CLI (or the Web-Console), be sure to shutdown the VM(s) you deployed to ensure additional workshop exercises perform reasonably.
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-virsh list --all
-
-virsh shutdown vmguest-01
+# *virsh list --all*
+# *virsh shutdown vmguest*
 ----
 
 == Additional Resources
@@ -216,8 +293,6 @@ Cockpit Project Page
 
 [discrete]
 == End of Unit
-
-link:../RHEL8-Workshop.adoc#toc[Return to TOC]
 
 ////
 Always end files with a blank line to avoid include problems.

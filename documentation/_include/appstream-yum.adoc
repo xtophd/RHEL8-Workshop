@@ -1,5 +1,6 @@
 :sectnums:
 :sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -14,90 +15,95 @@ endif::[]
 
 = Application Streams
 
-== Choosing an appstream module on RHEL 8.
+== Overview
 
+== Getting Started
 
-Starting on the host workstation.example.com, let’s ssh over to node1.example.com. No password should be required.
+For these exercises, you will be using the host `node1` as user `root`.
 
-.[root@workstation RHEL8-Workshop]#
+From host `workstation`, ssh to `node1`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node1.example.com
+$ *ssh node1*
+----
+
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-.[root@node1 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-appstream-checkhost.sh
+# *cheat-appstream-checkhost.sh*
 ----
+
+You are now ready to proceed with these exercises.
+
+== Choosing an appstream module on RHEL 8.
 
 Determine what modules are available.
 
-.[root@node1 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum module list | grep postgresql
+# *yum module list | grep postgresql*
+
+postgresql           9.6         client, server [d]                       PostgreSQL server and client module
+postgresql           10 [d]      client, server [d]                       PostgreSQL server and client module
+postgresql           12          client, server                           PostgreSQL server and client module
 ----
 
-We see that we have:
-
-[source,indent=4]
-----
-postgresql           10 [d]      client, server [d]          PostgreSQL server and client module
-postgresql           9.6         client, server [d]          PostgreSQL server and client module
-----
-
-This means that I can pick either the postgresql 10 stream (the default)
-or the 9.6 stream. This enables me to use whichever postgresql best fits my needs. In the future as new postgresql versions come out, they
+This means that I can pick either the postgresql 10 stream (the default), the 9.6 stream, or the 12 stream. This enables me to use whichever postgresql best fits my needs. In the future as new postgresql versions come out, they
 can be added as different streams that I can change to as well.
 Switching streams is not supported. App Stream allows us to be more in
 control with userspace than any previous version of RHEL.
 
 On your new RHEL 8 system, if you do:
 
-.[root@node1 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum install -y postgresql-server
-----
+# *yum install -y postgresql-server*
 
-you will get:
-
-.Command Output
-[source,indent=4]
-----
 ...<SNIP>...
   Installing       : postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64            3/3
   Running scriptlet: postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64            3/3
-  Verifying        : libpq-10.5-1.el8.x86_64                                             1/3
+  Verifying        : libpq-12.1-3.el8.x86_64                                             1/3
   Verifying        : postgresql-10.6-1.module+el8+2469+5ecd5aae.x86_64                   2/3
   Verifying        : postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64            3/3
 
 Installed:
-  postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64      libpq-10.5-1.el8.x86_64
+  postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64      libpq-12.1-3.el8.x86_64
   postgresql-10.6-1.module+el8+2469+5ecd5aae.x86_64
 
 Complete!
 ----
 
 But let’s say that our application teams have a dependency on 9.6 but we
-want to move to RHEL 8. With the app stream, we can do this. Let's do this next exercise on node3.example.com. 
+want to move to RHEL 8. With the app stream, we can do this. Let's do this next exercise on node3. 
 
-.[root@node1 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-exit
+# *exit*
 ----
 
 Then:
 
-.[root@workstation RHEL8-Workshop]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ssh node3.example.com
+# *ssh node3*
 ----
 
-On node3.example.com, let’s now run:
+INFO: You may need to `sudo -i` to elevate your priviledges.  Just make sure you're the `root` user.
 
-.[root@node3 ~]#
+On node3, let’s now run:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum module install -y postgresql:9.6/server
+# *yum module install -y postgresql:9.6/server*
 ----
 
 The above command tells yum to install the server profile for postgresql
@@ -105,16 +111,13 @@ in the 9.6 version.
 
 Once we’ve installed that, we will see:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum module list | grep postgresql
-----
+# *yum module list | grep postgresql*
 
-.Command Output
-[source,indent=4]
-----
-postgresql               10 [d]          client, server [d]                           PostgreSQL server and client module
-postgresql               9.6 [e]         client, server [d] [i]                       PostgreSQL server and client module
+postgresql           9.6 [e]      client, server [d] [i]                   PostgreSQL server and client module
+postgresql           10 [d]       client, server [d]                       PostgreSQL server and client module
+postgresql           12           client, server                           PostgreSQL server and client module     
 ----
 
 The [e] by 9.6 means enabled. The [i] by server means installed.
@@ -124,31 +127,34 @@ system.
 The server profile installs both the server and the client. If we just
 wanted the client, we could remove the server profile:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum module remove -y postgresql:9.6/server
+# *yum module remove -y postgresql:9.6/server*
 ----
 
 and install only the client:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum module install -y postgresql:9.6/client
+# *yum module install -y postgresql:9.6/client*
 ----
 
-We would then see:
+Now let's inspect what yum tells us about the postgresql modules:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum module list | grep postgresql
+# *yum module list | grep postgresql*
 ----
 
 .Command Output
 [source,indent=4]
 ----
-postgresql               10 [d]          client, server [d]                           PostgreSQL server and client module
-postgresql               9.6 [e]         client [i], server [d]                       PostgreSQL server and client module
+postgresql           9.6 [e]      client [i], server [d]                   PostgreSQL server and client module                                         
+postgresql           10 [d]       client, server [d]                       PostgreSQL server and client module                                         
+postgresql           12           client, server                           PostgreSQL server and client module     
 ----
+
+This shows us that the 9.6 stream is enabled and the client is installed, but the server is not. If the server were installed, it too would have a [i] in the output.
 
 == Disabling application streams
 
@@ -158,37 +164,27 @@ just installed postgresql. We don’t want to have another database on the
 same machine and we see app stream profiles for mysql and mariadb. Let’s
 disable these:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum module disable mariadb mysql -y
+# *yum module disable mariadb mysql -y*
 ----
 
 Now when we do yum module list, we will see:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum module list | grep -e mariadb -e mysql
-----
+# *yum module list | grep -e mariadb -e mysql*
 
-.Command Output
-[source,indent=4]
-----
 mariadb                  10.3 [d][x]     client, server [d], galera                   MariaDB Module
 mysql                    8.0 [d][x]      client, server [d]                           MySQL Module
 ----
 
 The [x] stands for disabled. When we run:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum install mariadb -y
-----
+# *yum install mariadb -y*
 
-we get:
-
-.Command Output
-[source,indent=4]
-----
 No match for argument: mariadb
 Error: Unable to find a match
 ----
@@ -196,16 +192,16 @@ Error: Unable to find a match
 To re-enable these app streams and allow the packages to be installed,
 the command is:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-yum module enable mariadb mysql -y
+# *yum module enable mariadb mysql -y*
 ----
 
 You may now switch back to the workstation:
 
-.[root@node3 ~]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-exit
+# *exit*
 ----
 
 == Ansible automation with App Stream
@@ -213,7 +209,7 @@ exit
 App Stream operations can be performed in ansible with the dnf module,
 like such:
 
-[source,yaml]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 - name: install the postgresql 9.6 stream with the client profile.
   dnf:
@@ -221,49 +217,41 @@ like such:
     state: present
 ----
 
-On the workstation, as root, run:
+A sample of a dnf based playbook for this cluster is provided on the workstation host.
 
-.[root@workstation ~]#
-----
-cd ~/RHEL8-Workshop/config
-----
+As user `root` on the host `workstation`, run the following:
 
-.[root@workstation config]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ansible-playbook ../playbooks/appstream-pgsql.yml
-----
+# *cd ~/RHEL8-Workshop*
 
-then:
-
-.[root@workstation config]#
-----
-ansible rhel8 -o -a "rpm -q postgresql-server"
+# *ansible-playbook -i config/rhel8-workshop playbooks/appstream-pgsql.yml*
 ----
 
-You should have postgresql-server 10.6 on node1 and 9.6 on node3 and no
-postgresql-server on node2.
+Then to verify, you can use an ansible adhoc command to check your work.
 
-and:
-
-.[root@workstation config]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-ansible rhel8 -o -a "rpm -q postgresql"
+# *ansible rhel8 -i config/rhel8-workshop -o -a "rpm -q postgresql-server"*
 ----
 
-You should have postgresql 10.6 on nodes 1 and 2 and postgresql 9.6 on
-node3.
+NOTE: You will get an error from node2, since postgresql-server was not installed there
+
+You should have:
+
+  * postgresql-server 10.6 on node1
+  * postgresql-server 9.6 on node3 
+  * and no postgresql-server on node2.
 
 == Additional Resources
 
 Red Hat Documentation
 
-    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/installing_managing_and_removing_user_space_components/index[INSTALLING, MANAGING, AND REMOVING USER SPACE COMPONENTS]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/installing_managing_and_removing_user-space_components/index[RHEL 8 Documentation: Installing, Managing, and Removing User Space Components]
     
 
 [discrete]
 == End of Unit
-
-link:../RHEL8-Workshop.adoc#toc[Return to TOC]
 
 ////
 Always end files with a blank line to avoid include problems.

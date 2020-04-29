@@ -1,10 +1,25 @@
 ---
-- hosts: node1.example.com
+- hosts: node1
   tasks:
   
     - name: "SETUP TLOG: yum install packages"
       yum: name=tlog,cockpit-session-recording state=installed
       
+    - name: "USER create and/or reset users"
+      user: name="other-user"
+
+    - name: "Sudo Configuration"
+      vars:
+        student_username: "other-user"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0600
+      with_items:
+        - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/other-user'}
+
     - name: "SETUP TLOG: config file installs"
       template:
         src: "{{ item.src }}"

@@ -1,0 +1,48 @@
+
+## ------------------------------
+## KVM/Libvirt Config Options
+##
+##     Parameters for the Virtual Machine Host (libvirt)
+##
+
+##
+## Profile: NAT bridge
+##
+
+g_kvmhost_ip:   "192.168.124.1"
+g_http_port:    "8008"
+g_cockpit_port: "9090"
+
+kvm_postinstall: "../playbooks/libvirt-postinstall.yml"
+
+kvm_cfg: 
+
+  enable_nested_virt: true
+  
+  http_port:    "{{ g_http_port }}"
+  cockpit_port: "{{ g_cockpit_port }}"
+ 
+  qcow_dir:     "/home/virt-images"
+  ks_url:       "http://{{ g_kvmhost_ip }}:{{ g_http_port }}/ks.cfg"
+
+  network:
+    name:       "virbr-{{ g_clusterName }}"
+    bridge:     "virbr-{{ g_clusterName }}"
+    fwd_type:   "nat"
+    dev:        "eno1"
+    ipv4:
+      addr:     "{{ g_kvmhost_ip }}/{{ g_pubPREFIX }}"
+      nm:       "{{ g_pubNM }}"
+
+  iso:
+    dir:        "/var/www/html/iso"
+    name:       "rhel-8.1-x86_64-dvd.iso"
+    mount:      "/var/www/html/repo"
+
+  repo:
+    repo1 : 
+      name: "rhel-8-baseos-rpms"
+      url:  "http://{{ g_kvmhost_ip }}:{{ g_http_port }}/repo/BaseOS"
+    repo2 : 
+      name: "rhel-8-appstream-rpms"
+      url:  "http://{{ g_kvmhost_ip }}:{{ g_http_port }}/repo/AppStream"

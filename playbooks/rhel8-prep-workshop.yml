@@ -1,13 +1,16 @@
 - hosts: all
   tasks:
   
-    - name: "TEMPLATE modify /etc/motd"
+    - name: "PREP: template /etc/motd"
       template:
         src: motd-generic.j2
         dest: /etc/motd
         owner: root
         group: root
         mode: 0644  
+
+    - name: "PREP: yum install tmux"
+      yum: name=tmux state=installed
 
     - name: "SERVICE disable and stop unwanted services"
       service: 
@@ -27,7 +30,10 @@
       user: name="{{ item.name }}" password="{{ item.password }}"
       with_items:
         - {name: 'root', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
-        - {name: 'student', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
+        - {name: '{{ student_username }}', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
+
+    - name: "USER modification"
+      user: name="{{ student_username }}" groups="wheel"
 
     - name: "Sudo Configuration"
       template:
@@ -38,8 +44,9 @@
         mode: 0600
       with_items:
         - {src: 'sudoers.j2', dest: '/etc/sudoers.d/rhel8-workshop'}
+        - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ student_username }}'}
 
-
+- import_playbook: rhel8-prep-sshkeys.yml
 - import_playbook: rhel8-setup-wayland.yml
 - import_playbook: rhel8-setup-appstreams.yml
 - import_playbook: rhel8-setup-systemd.yml
@@ -47,9 +54,14 @@
 - import_playbook: rhel8-setup-nftables.yml
 - import_playbook: rhel8-setup-ebpf.yml
 - import_playbook: rhel8-setup-boom.yml
-- import_playbook: rhel8-setup-webconsole.yml
 - import_playbook: rhel8-setup-podman.yml
 - import_playbook: rhel8-setup-buildah.yml
 - import_playbook: rhel8-setup-stratis.yml
 - import_playbook: rhel8-setup-tlog.yml
+- import_playbook: rhel8-setup-lvm-vdo.yml
 - import_playbook: rhel8-setup-virtualization.yml
+- import_playbook: rhel8-setup-kpatch.yml
+
+
+## Save the webconsole for last since it will discconect webconsole session on service restart
+- import_playbook: rhel8-setup-webconsole.yml

@@ -1,5 +1,5 @@
 ---
-- hosts: node3.example.com
+- hosts: node3
   tasks:
 
     - name: "SETUP BUILDAH SKOPEO: yum install buildah,skopeo"
@@ -14,3 +14,5 @@
         mode: 0744
       with_items:
         - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-buildah-checkhost.sh'}
+        - {src: 'buildah-dan-cries.j2', dest: '/var/tmp/buildah-dan-cries.txt'}
+        - {src: 'buildah-index-html.j2', dest: '/var/tmp/buildah-index.html'}

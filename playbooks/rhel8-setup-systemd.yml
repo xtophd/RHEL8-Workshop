@@ -1,7 +1,10 @@
 ---
-- hosts: node1.example.com
+- hosts: node1
   tasks:
-        
+
+    - name: "SETUP SYSTEMD: yum install LAMP packages"
+      yum: name=httpd,mariadb,mariadb-server state=installed
+
     - name: "SETUP SYSTEMD: cheat script installs"
       template:
         src: "{{ item.src }}"
@@ -11,4 +14,5 @@
         mode: 0744
       with_items:
         - {src: 'cheat-checkhost.j2',           dest: '/usr/local/bin/cheat-systemd-checkhost.sh'}
+        - {src: 'cheat-systemd-lamp.j2',        dest: '/usr/local/bin/cheat-systemd-lamp.sh'}
         - {src: 'cheat-systemd-httpdconfig.j2', dest: '/usr/local/bin/cheat-systemd-httpdconfig.sh'}

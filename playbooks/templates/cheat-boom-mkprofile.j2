@@ -1,5 +1,36 @@
 #!/bin/bash
 
-echo "Creating BOOM profile"
+# For the workshop, we need to be prepared for 3 possibilities
+#   root disk is specified by UUID
+#   root disk is a LVM
+#   root disk is a block device
+#
+# NOTE: There is unexpected behavior when /boot is not a separate
+#       filesystem/partition.  Results in missing /boot in paths.
 
-boom profile create --from-host --uname-pattern el8
+#       So we adjust the profile for now until preferred solution
+#       is determined
+
+echo "Determining root device..."
+
+if grep -q '/boot' /proc/mounts ; then
+
+  echo "Creating default BOOM profile"
+  echo ""
+ 
+  boom profile create \
+    --from-host \
+    --uname-pattern el8
+
+else
+
+  echo "Creating BOOM profile with tweaks (no /boot filesystem)..."
+  echo ""
+
+  boom profile create \
+    --kernel-pattern="/boot/vmlinuz-%{version}" \
+    --initramfs-pattern="/boot/initramfs-%{version}.img" \
+    --from-host \
+    --uname-pattern el8
+
+fi

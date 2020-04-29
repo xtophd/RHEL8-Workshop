@@ -19,9 +19,9 @@ Using the connection information and credentials provided by the instructor, get
 
 == Invoke *tmux* Session
 
-*tmux* is a very handy utilty for terminal session management.  If for any reason you lose connectivity or your session is terminated, *tmux* will preserve your session and allow you to reconnect.  There are MANY other features provided by this utility.  Some of them are listed on the front page section titled *tmux*.
+*tmux* is a very handy utilty for terminal session management.  If for any reason you lose connectivity or your session is terminated, *tmux* will preserve your session and allow you to reconnect.  There are MANY other features provided by this utility.  Some of them are listed in the primary document section titled *Quick Overview of tmux*.
 
-.[root@workstation ~]#
+.[cloud-user@workstation ~]#
 ----
 tmux
 ----
@@ -30,12 +30,14 @@ tmux
 
 In order to execute the environment preparation, we need to become the administrative user 'root'.
 
-.[student@workstation ~]$ 
+.[cloud-user@workstation ~]$ 
 ----
 sudo -i
 ----
 
 == Download the Workshop project from GitHub
+
+WARNING: It is very likely that your instructor (or the automated deployment system) has already performed this step.  Do NOT delete and clone a new project directory if it already exists.
 
 .[root@workstation ~]#
 ----
@@ -44,23 +46,50 @@ cd ~
 git clone https://github.com/xtophd/RHEL8-Workshop
 ----
 
-== Run the Prep Script
+== Update the Workshop
 
-WARNING: It is important to be in the correct working directory for these installation procedures to function properly.  
+NOTE: This step is not needed if you just cloned the workshop, but if recent bug fixes or documentation updates were committed you may need to pull them into you project (branch).
+
+Here is how to refresh the workshop with the latest updates.
 
 .[root@workstation ~]#
 ----
 cd ~/RHEL8-Workshop
+
+git pull
 ----
+
+== Configure the Workshop
+
+WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace or overwrite the configuration unless explicitly told to do so.
+
+Copy the default configuration (ansible inventory) to the config directory.
+
+.[root@workstation ~]#
+----
+cd ~/RHEL8-Workshop
+
+cp ./sample-configs/rhel8-workshop ./config
+----
+
+== Run the Prep Script
+
+WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  There is typically no harm in rerunning the deployment playbooks.  Again, follow your instructor's guidance.
+
+NOTE: If you run the deployment playbooks from the web console shell, you will be disconnected and have to sign in again.  If you used tmux, you can easily recover your shell with 'tmux a'
+
+Now we will run the playbooks that will set up the workshop.
 
 .[root@workstation RHEL8-Workshop]#
 ----
+cd ~/RHEL8-Workshop
+
 bash prepare-rhel8-workshop.sh
 ----
 
-The preparation script will run for approximately 5 to 7 minutes.
+The preparation script will run for approximately 5 to 7 minutes on a fresh deployment.
 
-== A Few Words While the Installer Runs (5 or 6 minutes)
+== A Few Words While the Installer Runs
 
 [discrete]
 === New in RHEL 8
@@ -73,8 +102,10 @@ NOTE: If the presenter (or partner) has some slides to show, this is a good plac
   * End of Full Support: May 2024
   * End of Maintenance Support: May 2029
   ** _Subject to change, please refer to:_ https://access.redhat.com/support/policy/updates/errata[Red Hat Enterprise Linux Life Cycle]
-  * (NEW) RHEL 8 Release cadence is now a predictable 6 month cycle
+  * RHEL 8 Release cadence is now a predictable 6 month cycle
   ** RHEL 8.1 was released Nov 5, 2019
+  ** RHEL 8.1 was released April 28, 2019
+  
   
 ==== General Information
 
@@ -82,7 +113,7 @@ NOTE: If the presenter (or partner) has some slides to show, this is a good plac
   * System Compiler: GCC 8.2, LLVM 6.0
   * Hardware Architectures: Intel/AMD 64-bit, IBM Power LE, IBM z Systems, ARM 64-bit
   * Default File System: XFS
-  * Package Management: Yum v4
+  * Package Management: Yum v4 (dnf)
   * Time Sync: Chrony
   * Networking: Network Manager
 
@@ -98,8 +129,6 @@ The set up of the RHEL 8 Workshop should now be complete.  A couple of remaining
 
 [discrete]
 == End of Unit
-
-link:../RHEL8-Workshop.adoc#toc[Return to TOC]
 
 ////
 Always end files with a blank line to avoid include problems.

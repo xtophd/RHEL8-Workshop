@@ -1,16 +1,25 @@
 ---
-- hosts: workstation.example.com
+- hosts: workstation
   tasks:
 
     - name: "SETUP VIRTUALIZATION: yum install qemu-kvm libvirt virt-install libvirt-client libguestfs-tools"
-      yum: name=qemu-kvm,libvirt,virt-install,libvirt-client,libguestfs-tools,wget,cockpit-machines,lorax-composer,composer-cli,cockpit-composer state=installed
+      yum: name=qemu-kvm,libvirt,firewalld,virt-install,libvirt-client,libguestfs-tools,wget,cockpit-machines,lorax-composer,composer-cli,cockpit-composer state=installed
 
-    - name: "SETUP VIRTUALIZATION: service restart"
-      service: name="cockpit.socket" state=started enabled=yes
-      
-    - name: "SETUP VIRTUALIZATION: firewall configuration"
-      firewalld: port=9090/tcp permanent=yes immediate=yes state=enabled
-      
+    - name: "SETUP VIRTUALIZATION: cockpit service restart"
+      service: name="cockpit.socket" enabled=yes
+
+    - name: "SETUP VIRTUALIZATION: imagebuilder service restart"
+      service: name="cockpit" state=started enabled=yes
+
+    - name: "SETUP VIRTUALIZATION: imagebuilder service restart"
+      service: name="libvirtd" state=started enabled=yes
+
+    - name: "SETUP VIRTUALIZATION: imagebuilder service restart"
+      service: name="lorax-composer" state=started enabled=yes
+
+    - name: "SETUP VIRTUALIZATION: firewalld service start"
+      service: name="firewalld" state=started enabled=yes
+
     - name: "SETUP VIRTUALIZATION: cheat script installs"
       template:
         src: "{{ item.src }}"

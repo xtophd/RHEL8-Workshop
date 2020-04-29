@@ -1,5 +1,6 @@
 :sectnums:
 :sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -7,84 +8,123 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
-:imagesdir: ./_images
+:imagesdir: ./_images/rhel8.1-cockpit
 
 :toc:
 :toclevels: 1
 
+
+
 = Web Console
 
-Web Console is a Red Hat Enterprise Linux 8 web-based graphical user interface (WebUI) designed for managing and monitoring your local system, as well as additinal Linux servers located in your network environment.  Features include:
+== Overview
 
-  * Managing services
+Web Console is a Red Hat Enterprise Linux 8 web-based interface designed for managing and monitoring your local system.  The Web Console can also be extended to manage multiple servers located in your network.
+
+Features of the Web Console include:
+
   * Managing user accounts
   * Managing and monitoring system services
-  * Configuring network interfaces and firewall
+  * Configuring network interfaces
+  * Configuring firewall rules
   * Reviewing system logs
   * Managing virtual machines
   * Creating diagnostic reports
   * Setting kernel dump configuration
   * Configuring SELinux
-  * Updating software
-  * Managing system subscriptions
+  * Installing and Updating software
+  * Managing System Subscriptions
+  * more...
 
 The following exercises will cover some of  the capabilities of the Web Console on RHEL 8, as well as basic installation and set up.
 
 == Getting Started
 
-Since we already have web-console installed and active on *workstation.example.com*, we have the option to manage multiple additional hosts via this single portal.  Let's install a few packages to enable the web-console dashboard on *workstation.example.com*.  These steps needs to be performed as root.
+For these exercises, you will be using the host `workstation` as user `root`.
 
-.[root@workstation]#
-----
-yum install -y cockpit-dashboard
-----
+Use `sudo` to elevate your priviledges.
 
-Once the packages are installed, you will need to restart the cockpit services to enable the new functionality.
-
-.[root@workstation]#
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-systemctl restart cockpit
+$ *sudo -i*
 ----
 
-This will likely force you to sign-on to the web console again.
+Verify that you are on the right host for these exercises.
 
-Click the icon on the left that looks like a speedometer.
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cheat-cockpit-checkhost.sh*
+----
 
-Now click on the *+* icon to add *node2.example.com* to the list of servers we can manage with this web-console.
-
-Now click on *node2.example.com* in the server list to start with this lab.
+You are now ready to proceed with these exercises.
 
 == Installation and Configuraiton
 
 === Packages and Services
 
-For your convenience, the webconsole has already been installed and configured on *node2.example.com*.  The steps are pretty simple and outlined below.  Remember this provided as reference only as they were executed during the ansible play of prep-rhel8-workshop.
+For your convenience, the webconsole has already been installed and configured on *workstation.example.com*.  The steps for installation and setup are pretty simple and outlined below.  Remember this provided as reference only.
 
 [NOTE]
 ====
-_Native command(s) to install and enable firewalld_
+_Native command(s) to install and enable the Web Console_
 ----
-yum install -y cockpit
+yum install -y cockpit cockpit-dashboard firewalld
 systemctl enable --now cockpit.socket
 firewall-cmd --add-service=cockpit --permanent
 firewall-cmd --reload
 ----
 ====
 
-== Web Console User Interface
+=== Custom Ports
 
-NOTE: If you are usng the web-console on *workstation.example* with your local browser, you do not need to access the GUI console.
+By default, the Web Console listens on port 9090 of a host.  To make the system more accessible to students, an additional port of 443 was added to the configuration.  This was done by creating a systemd drop-in config:
 
-On host *workstation.example.com*, use the console GUI to start a web browser.
+./etc/systemd/system/cockpit.socket.d/listen.conf
+----
+[Socket]
+ListenStream=443
+----
 
-Then browse to URL: `https://node2.example.com:9090`
-Login userID: root  Password: <ROOT-PASSWD>
+This configuration change required a systemctl daemon-reload, selinux update and a firewall rule addition.  Remember this provided as reference only.
+
+[NOTE]
+====
+_Native command(s) to enable the Web Console on port 443_
+----
+systemctl daemon-reload
+systemctl restart cockpit.socket
+
+semanage port -m -t websm_port_t -p tcp 443
+
+firewall-cmd --add-port=443/tcp
+firewall-cmd --add-port=443/tcp --permanent
+----
+====
+
+That completes the installation and configuration of the Web Console.
+
+
+
+== Webconsole Login
+
+Your instructors may provide you with a unique link with special instructions to access the web-console on *https://workstation.example.com* with your local browser. This is the PREFERRED method.
+
+Accept the various notifications about insecure ceritificates, and then login in.
+
+WARNING: You MUST enable "Reuse my password for privileged tasks" during sign-on.  If you miss this option some of the tasks will not be available due to insufficient priviledges.  If this is the case, please log-off and start again.
+
+
+  * UserID: cloud-user
+  * Password: <PROVIDED-CLOUD-USER-PASSWD>
+  * Enable "Reuse my password for privileged tasks"
 
 ====
-image::cockpit-image13.png[Cockpit Login]
+image::slide1.png[Cockpit Login]
 ====
 
-Here is a simple dashboard where you can monitor current system activities:
+== Webconsole Overview
+
+After you successfully sign-on, you will land on the overview page which presents various artifacts about your system includeing:
 
   * CPU utilization
   * Memory Utilization
@@ -92,95 +132,172 @@ Here is a simple dashboard where you can monitor current system activities:
   * Network traffic
 
 ====
-image::cockpit-image7.png[Cockpit Dashboard]
+image::slide2.png[Cockpit Overview]
 ====
 
 == Enable Persistent Metrics
 
-To enable persistent metrics, Web Console requires “Performance Co-pilot (pcp)” and cockpit pcp plugin. Follow the screenshots to install and enable persistent metrics.
+It's nice that certain statistics about your system are available for inspection, but by default the webconsole does NOT store statistics long term.  For this, you need to install “Performance Co-pilot (pcp)”, the cockpit-pcp plugin and lastly enable "persistent metrics collection" in the webconsole.
 
-Use the Web Console -> Terminal to install a couple of packages and restart the Web Console socket.
+Start by clicking on the link "Enable stored metrics".
 
-.[root@node2]#
+====
+image::slide3.png[Cockpit Enable Stored Metrics]
+====
+
+A dialog will pop-up with basic notifications, go ahead and hit "Install".
+
+====
+image::slide4.png[Cockpit Install PCP]
+====
+
+Following the installation, there should be a toggle labelled `Store Metrics`, go ahead and click to enable and wait a few seconds for it to switch on.
+
+====
+image::slide5.png[Cockpit Turn-On Stored Metrics]
+====
+
+That's it, now you can view the performance data over time including when you are not signed into the web console.
+
+If you want to enable stored metrics by hand or plan to do so in a automation playbook, you can use follow the commands below.
+
+[NOTE]
+====
+_Native command(s) to enable stored metrics_
 ----
 yum install -y cockpit-pcp
 systemctl restart cockpit.socket
 ----
-
-NOTE: When the socket is restarted, your Web Console connection will reset and require you to login again.
-
-NOTE: You should also refresh your broswer for the option `Store metric` to be visible.
-
-Now enable persistent metrics.
-
 ====
-image::cockpit-image2.png[Cockpit Persistence 3]
-====
+
+
 
 == Change Performance Profile
 
 RHEL 8 comes with several pre-canned performance tuning profiles from Tuned. Since this is a virtual machine, the default profile “virtual-guest” was selected. You can easily switch profile via the Web Console web UI. In this exercise, we will change the profile to “throughput-performance”
 
 ====
-image::cockpit-image9.png[Cockpit Performance 1]
+image::slide6.png[Cockpit Perf Profile]
 ====
+
+A dialog box will appear.  Scroll and find "throughput-performance" and select.
+
 ====
-image::cockpit-image5.png[Cockpit Performance 2]
+image::slide7.png[Cockpit Perf Throughout]
 ====
+
+
 
 == View Logs
 
-Under the log section, you can review past and current log events and log severity
+Under the log section, you can inspect the system's logs.
 
 ====
-image::cockpit-image1.png[Cockpit Log 1]
+image::slide8.png[Cockpit Logs]
 ====
+
+Have a look at the search capabilities and notice that you can set criteria by:
+
+  * Date
+  * Severity
+  * Service
+
 ====
-image::cockpit-image16.png[Cockpit Log 2]
+image::slide9.png[Cockpit Logs Criteria]
 ====
+
+
 
 == Network Management
 
-Under the networking section, you can monitor current networking activities. You can create network bond, team, bridge, and vlan driven by GUI
+Under the networking section, you can monitor and manage current networking activities and devices. You can create a network bond, team, bridge, and vlan all driven by the webconsle GUI.
+
+Due to the nature of workshops, we refrain from making and saving changes to the network at this time but feel free to explore.
 
 ====
-image::cockpit-image8.png[Cockpit Network]
+image::slide10.png[Cockpit Network]
 ====
 
-Also under the networking section, you can configure your firewall rules. In the following example, you will find and enable NTP firewall rule.
+
+
+== Firewall Management
+
+Also under the networking section, you can configure your firewall rules. 
+
+For the next exercise, let's enable a rule for NTP (Network Time Protocol).
 
 ====
-image::cockpit-image6.png[Cockpit Firewall 1]
-====
-====
-image::cockpit-image3.png[Cockpit Firewall 2]
-====
-====
-image::cockpit-image10.png[Cockpit Firewall 3]
-====
-====
-image::cockpit-image15.png[Cockpit Firewall 4]
+image::slide11.png[Cockpit Firewall]
 ====
 
-Now that NTP firewall rule is enabled. Let’s make sure NTP service is enabled and running under the service section
+====
+image::slide12.png[Cockpit Firewall Service]
+====
 
 ====
-image::cockpit-image11.png[Cockpit Firewall 5]
+image::slide13.png[Cockpit Firewall Dialog]
 ====
+
+
 
 == Service Management
 
-Web Console also allows you to start/stop, restart, enable/disable a service on your RHEL 8 server:
+Now that you enabled a NTP firewall rule, let’s make sure an NTP service provider is enabled and running under the Web Console Services section.
+
+Remember that RHEL 8 uses a provider called 'chrony' for ntp.  So you can search for either 'chrony' or 'ntp'.
 
 ====
-image::cockpit-image17.png[Cockpit Service 5]
+image::slide14.png[Cockpit Services]
 ====
+
+Turns out, chronyd is already enabled and active.  Nothing to do here...
+
+====
+image::slide15.png[Cockpit Services]
+====
+
+
+
+== Dashboard
+
+You system has been configured with an additional plug-in called the Web Console Dashboard.  It appears like a speedometer on the left menu.
+
+====
+image::slide16.png[Cockpit Services]
+====
+
+The graph displays performance metrics for all hosts configured in the dashboard, which at this time is pretty boring since the workstation is the only host.  So let us add the additional systems in our workshop cluster.
+
+Select the '+' (add) button on the right side of the Servers list.
+
+====
+image::slide17.png[Cockpit Services]
+====
+
+Add system 'node1.example.com'.
+
+
+Repeat the steps for 'node2.example.com' and 'node3.example.com'
+
+====
+image::slide18.png[Cockpit Services]
+====
+
+Now not only do have visibility to performance data on all of the systems, you can also click on the servers and manage those through the Web Console as well (including Terminal access).  Very handy!
+
+====
+image::slide19.png[Cockpit Services]
+====
+
+== Conclusion
 
 This concludes a short exercise with Web Console. Feel free to click through and explore other sections:
 
 * Under *Accounts* section, you can manage user accounts on your RHEL 8 server
 * *Diagnostic Reports* allows you to create sosreport for Red Hat support
 * Under *Kernel Dump*, you can enable/disable kdump
+
+You will get an opportunity to manager Virtual Machines and Build System Images in later exercises.
 
 == Additional Resources
 
@@ -190,8 +307,6 @@ Red Hat Documentation
 
 [discrete]
 == End of Unit
-
-link:../RHEL8-Workshop.adoc#toc[Return to TOC]
 
 ////
 Always end files with a blank line to avoid include problems.
