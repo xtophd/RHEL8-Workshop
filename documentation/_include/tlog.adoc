@@ -217,7 +217,7 @@ systemctl restart sssd
 
 Red Hat Documentation
 
-    * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[Deploying Session Recording on Red Hat Enterprise Linux]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/recording_sessions/getting-started-with-session-recording_getting-started-with-session-recording[Getting Started With Session Recording]
 
 [discrete]
 == End of Unit
