@@ -205,7 +205,7 @@ users = other-user
 groups = other-user
 ----
 
-And lastly, how to reload systemd and restart the service.
+And lastly, reload systemd and restart the ssh service.
 
 .[root@node1]#
 ----
