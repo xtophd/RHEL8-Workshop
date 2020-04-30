@@ -166,7 +166,7 @@ public
   interfaces: eth0
 ----
 
-You may a one or more 2 zones depending on the deployed host and it's configuration:
+You may have one or more zones depending on the host and it's configuration:
 
   * `public` zone on interface `eth0`
   * `libvirt` zone on interface `virbr0`
