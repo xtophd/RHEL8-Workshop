@@ -2,7 +2,7 @@
 - hosts: all
   tasks:
   
-    - name: "PREP: template /etc/motd"
+    - name: "PREP: TEMPLATE /etc/motd"
       template:
         src: motd-generic.j2
         dest: /etc/motd
@@ -10,14 +10,26 @@
         group: root
         mode: 0644  
 
-    - name: "PREP: yum install tmux"
+    - name: "PREP: YUM remove UN-WANTED packages"
+      yum: name=insights-client state=absent
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
+
+    - name: "PREP: YUM install WANTED packages"
       yum: name=tmux state=installed
       register: result
       retries: 10
       until: result is succeeded
       delay: 5
 
-    - name: "SERVICE disable and stop unwanted services"
+    - name: "PREP: FILE remove UN-WATNED motd messages"
+      file:
+        path: /etc/motd.d/cockpit
+        state: absent
+
+    - name: "PREP: SERVICE disable and stop unwanted services"
       service: 
         name="{{ item.name }}"
         state=stopped
@@ -25,22 +37,22 @@
       with_items:
         - {name: 'rhsmcertd'}
 
-    - name: "CMD disable yum plugins for subscription-manager"
+    - name: "PREP: CMD disable yum plugins for subscription-manager"
       shell: 
         cmd: |          
           sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/subscription-manager.conf
           sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/product-id.conf
                     
-    - name: "USER create and/or reset users"
+    - name: "PREP: USER create and/or reset users"
       user: name="{{ item.name }}" password="{{ item.password }}"
       with_items:
         - {name: 'root', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
         - {name: '{{ student_username }}', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
 
-    - name: "USER modification"
+    - name: "PREP: USER modification"
       user: name="{{ student_username }}" groups="wheel"
 
-    - name: "Sudo Configuration"
+    - name: "PREP: Sudo Configuration"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
