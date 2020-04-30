@@ -4,6 +4,10 @@
 
     - name: "SETUP BUILDAH SKOPEO: yum install buildah,skopeo"
       yum: name=buildah,skopeo state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
 
     - name: "SETUP BUILDAH SKOPEO: cheat script installs"
       template:

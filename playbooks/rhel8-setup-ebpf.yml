@@ -4,6 +4,10 @@
   
     - name: "SETUP EBPF: yum install bcc-tools"
       yum: name=bcc-tools,net-tools,kernel-devel state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
 
     - name: "SETUP EBPF: cheat script installs"
       template:

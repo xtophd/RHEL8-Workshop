@@ -4,6 +4,10 @@
   
     - name: "SETUP WAYLAND: yum install packages"
       yum: name=gnome-tweaks state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
       
     - name: "SETUP WAYLAND: user modification"
       user: name="{{ student_username }}" groups="wheel"

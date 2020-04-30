@@ -4,6 +4,10 @@
   
     - name: "SETUP BOOM: yum install packages"
       yum: name=boom-boot state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
 
     - name: "PREP-SSHKEYS: known_hosts {{ student_username }} file permissions"
       file:

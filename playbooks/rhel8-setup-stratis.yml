@@ -4,6 +4,10 @@
   
     - name: "SETUP STRATIS: yum install packages"
       yum: name=stratisd,stratis-cli state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
       
     - name: "SETUP STRATIS: service restart"
       service: name="stratisd" state=restarted enabled=yes

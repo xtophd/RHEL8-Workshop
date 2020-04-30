@@ -1,3 +1,4 @@
+---
 - hosts: all
   tasks:
   
@@ -11,6 +12,10 @@
 
     - name: "PREP: yum install tmux"
       yum: name=tmux state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
 
     - name: "SERVICE disable and stop unwanted services"
       service: 

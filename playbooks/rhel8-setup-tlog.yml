@@ -4,6 +4,10 @@
   
     - name: "SETUP TLOG: yum install packages"
       yum: name=tlog,cockpit-session-recording state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
       
     - name: "USER create and/or reset users"
       user: name="other-user"

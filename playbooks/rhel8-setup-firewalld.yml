@@ -4,6 +4,10 @@
   
     - name: "SETUP FIREWALLD: yum install firewalld"
       yum: name=firewalld state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
 
     - name: "SETUP FIREWALLD: service stop nftables"
       service: name=nftables state=stopped enabled=no

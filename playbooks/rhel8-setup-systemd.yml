@@ -4,6 +4,10 @@
 
     - name: "SETUP SYSTEMD: yum install LAMP packages"
       yum: name=httpd,mariadb,mariadb-server state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
 
     - name: "SETUP SYSTEMD: cheat script installs"
       template:

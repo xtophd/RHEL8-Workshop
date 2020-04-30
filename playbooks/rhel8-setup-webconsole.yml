@@ -4,6 +4,10 @@
   
     - name: "SETUP WEBCONSOLE: yum install packages"
       yum: name=cockpit,cockpit-dashboard,firewalld,sos state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
 
     - name: "SETUP WEBCONSOLE: shell to add selinux rule for websm on port 443"
       shell: 

@@ -1,18 +1,13 @@
 ---
-#- hosts: workstation
-#  tasks:
-#  
-#    - name: "SETUP PODMAN: yum install docker-distribution"
-#      yum: name=docker-distribution state=installed
-#      
-#    - name: "SETUP PODMAN: service start docker-distribution"
-#      service: name=docker-distribution state=started enabled=yes
-
 - hosts: node3
   tasks:
 
     - name: "SETUP PODMAN: yum install podman,net-tools,wget"
       yum: name=podman,net-tools,wget state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
 
     - name: "SETUP PODMAN: config file installs"
       template:

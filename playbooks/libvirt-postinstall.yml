@@ -56,6 +56,10 @@
   
     - name: "LIBVIRT-POSTINSTALL: install ansible"
       yum: name=ansible state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
   
     - name: "LIBVIRT-POSTINSTALL: rhsm unregister"
       redhat_subscription:

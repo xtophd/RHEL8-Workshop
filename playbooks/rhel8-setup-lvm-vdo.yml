@@ -1,10 +1,13 @@
 ---
-
 - hosts: node3
   tasks:
 
     - name: "SETUP LVM-VDO: yum install vdo"
       yum: name=vdo state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
 
     - name: "SETUP LVM-VDO: cheat script installs"
       template:

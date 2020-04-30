@@ -4,6 +4,10 @@
 
     - name: "SETUP VIRTUALIZATION: yum install qemu-kvm libvirt virt-install libvirt-client libguestfs-tools"
       yum: name=qemu-kvm,libvirt,firewalld,virt-install,libvirt-client,libguestfs-tools,wget,cockpit-machines,lorax-composer,composer-cli,cockpit-composer state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
 
     - name: "SETUP VIRTUALIZATION: cockpit service restart"
       service: name="cockpit.socket" enabled=yes
