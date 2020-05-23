@@ -4,29 +4,29 @@
 
   - name: "PREP-SSHKEYS: file/directory .ssh permissions"
     file:
-      path: ~{{ student_username }}/.ssh
+      path: ~{{ g_studentName }}/.ssh
       mode: "0700"
-      owner: "{{ student_username }}"
-      group: "{{ student_username }}"
+      owner: "{{ g_studentName }}"
+      group: "{{ g_studentName }}"
       state: directory
 
-  - name: "PREP-SSHKEYS: known_hosts {{ student_username }} file permissions"
+  - name: "PREP-SSHKEYS: known_hosts {{ g_studentName }} file permissions"
     file:
-      path: "~{{ student_username }}/.ssh/known_hosts"
+      path: "~{{ g_studentName }}/.ssh/known_hosts"
       mode: "0700"
-      owner: "{{ student_username }}"
-      group: "{{ student_username }}"
+      owner: "{{ g_studentName }}"
+      group: "{{ g_studentName }}"
       state: touch
 
-  - name: "PREP-SSHKEYS: openssh_keypair {{ student_username }} create"
+  - name: "PREP-SSHKEYS: openssh_keypair {{ g_studentName }} create"
     openssh_keypair:
-      path:  ~{{ student_username }}/.ssh/id_rsa
-      owner: "{{ student_username }}"
-      group: "{{ student_username }}"
+      path:  ~{{ g_studentName }}/.ssh/id_rsa
+      owner: "{{ g_studentName }}"
+      group: "{{ g_studentName }}"
 
   - name: "PREP-SSHKEYS: clean out local ssh keys"
     vars:
-      p_file: "~{{ student_username }}/.ssh/known_hosts"
+      p_file: "~{{ g_studentName }}/.ssh/known_hosts"
     shell:
       cmd: |
         ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}
@@ -36,7 +36,7 @@
 
   - name: "PREP-SSHKEYS: add ssh keys for nodes"
     vars:
-      p_file: "~{{ student_username }}/.ssh/known_hosts"
+      p_file: "~{{ g_studentName }}/.ssh/known_hosts"
     shell:
       cmd: |
         ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }} >> {{ p_file }}
@@ -52,15 +52,15 @@
 
   - name: "PREP-SSHKEYS: file/directory .ssh permissions"
     file:
-      path: ~{{ student_username }}/.ssh
+      path: ~{{ g_studentName }}/.ssh
       mode: "0700"
-      owner: "{{ student_username }}"
-      group: "{{ student_username }}"
+      owner: "{{ g_studentName }}"
+      group: "{{ g_studentName }}"
       state: directory
 
   - name: "PREP-SSHKEYS: authorized_key deployment"
     authorized_key:
-      user: "{{ student_username }}"
+      user: "{{ g_studentName }}"
       state: present
-      key: "{{ lookup('file','~{{ student_username }}/.ssh/id_rsa.pub' ) }}"
+      key: "{{ lookup('file','~{{ g_studentName }}/.ssh/id_rsa.pub' ) }}"
 

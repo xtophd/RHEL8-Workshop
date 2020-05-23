@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: myBastion,myNodes
   tasks:
   
     - name: "PREP: TEMPLATE /etc/motd"
@@ -47,10 +47,10 @@
       user: name="{{ item.name }}" password="{{ item.password }}"
       with_items:
         - {name: 'root', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
-        - {name: '{{ student_username }}', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
+        - {name: '{{ g_studentName }}', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
 
     - name: "PREP: USER modification"
-      user: name="{{ student_username }}" groups="wheel"
+      user: name="{{ g_studentName }}" groups="wheel"
 
     - name: "PREP: Sudo Configuration"
       template:
@@ -61,7 +61,7 @@
         mode: 0600
       with_items:
         - {src: 'sudoers.j2', dest: '/etc/sudoers.d/rhel8-workshop'}
-        - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ student_username }}'}
+        - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ g_studentName }}'}
 
 - import_playbook: rhel8-prep-sshkeys.yml
 - import_playbook: rhel8-setup-wayland.yml

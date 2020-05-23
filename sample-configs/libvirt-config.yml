@@ -9,11 +9,14 @@
 ## Profile: NAT bridge
 ##
 
+# virt-host addr in private network
 g_kvmhost_ip:   "192.168.124.1"
-g_http_port:    "8008"
-g_cockpit_port: "9090"
 
-kvm_postinstall: "../playbooks/libvirt-postinstall.yml"
+# httpd,kickstart,repo service port
+g_http_port:    "8008"
+
+# cockpit defaults to 9090, but you can change it
+g_cockpit_port: "9090"
 
 kvm_cfg: 
 
@@ -34,15 +37,56 @@ kvm_cfg:
       addr:     "{{ g_kvmhost_ip }}/{{ g_pubPREFIX }}"
       nm:       "{{ g_pubNM }}"
 
+  kickstart:
+    dir: "/var/www/html/ks"
+    url: "http://{{ g_kvmhost_ip }}:{{ g_http_port }}/ks"
+
   iso:
     dir:        "/var/www/html/iso"
     name:       "rhel-8.1-x86_64-dvd.iso"
     mount:      "/var/www/html/repo"
 
   repo:
-    repo1 : 
-      name: "rhel-8-baseos-rpms"
-      url:  "http://{{ g_kvmhost_ip }}:{{ g_http_port }}/repo/BaseOS"
-    repo2 : 
-      name: "rhel-8-appstream-rpms"
-      url:  "http://{{ g_kvmhost_ip }}:{{ g_http_port }}/repo/AppStream"
+    dir: "/var/www/html/repos"
+    url: "http://{{ g_kvmhost_ip }}:{{ g_http_port }}/repos"
+
+kvm_deploy_plan:
+
+  ## PRE/POST INSTALL SCRIPTS BEFORE AND AFTER DEPLOY
+  ##
+  ##   pre_install:       STR complete executable shell (PWD: is project directory)
+  ##   post_install:      STR complete executable shell (PWD: is project directory)
+
+  pre_install:  ""
+  post_install: "ansible-playbook -i ./config/rhel8-workshop -e @./config/libvirt-config.yml -f 10 ./playbooks/rhel8-workshop.yml"
+
+  ##
+  ## each pass must define the following:
+  ##
+  ##   hostgroup:         STR ansible hostgroup to act on
+  ##   inject_sshkey:     T/F create a ssh key to enable ansible on client
+  ##   wait_for_shutdown: T/F wait for shutdown before install-02 (postconfig)
+  ##   post_config:       T/F run actions in install-02 (postconfig)
+  ##
+  ##   # PRE/POST INSTALL SCRIPTS BEFORE AND AFTER EACH HOSTGROUP
+  ##   pre_install:       STR complete executable shell (PWD: is project directory)
+  ##   post_install:      STR complete executable shell (PWD: is project directory)
+  ##
+
+ passes:
+    pass_1:
+      hostgroup:          "myBastion"
+      inject_sshkey:      True
+      wait_for_shutdown:  True
+      post_config:        True
+      pre_install:        ""
+      post_install:       ""
+
+    pass_2:
+      hostgroup:          "myNodes"
+      inject_sshkey:      True
+      wait_for_shutdown:  True
+      post_config:        True
+      pre_install:        ""
+      post_install:       ""
+

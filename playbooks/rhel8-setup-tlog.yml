@@ -14,7 +14,7 @@
 
     - name: "Sudo Configuration"
       vars:
-        student_username: "other-user"
+        g_studentName: "other-user"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"

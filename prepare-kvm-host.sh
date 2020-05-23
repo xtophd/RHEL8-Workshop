@@ -39,6 +39,9 @@ case "$1" in
         time  ansible-playbook -i ${myInventory} -e @${myExtravars} -f 10  --tags $1 ./playbooks.deployer-kvm/libvirt.yml 
         ;;
 
+    "deploy"     | \
+    "undeploy"   | \
+    "redeploy"   | \
     "basics"     | \
     "nested"     | \
     "cockpit"    | \

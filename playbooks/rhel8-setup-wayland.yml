@@ -10,7 +10,7 @@
       delay: 5
       
     - name: "SETUP WAYLAND: user modification"
-      user: name="{{ student_username }}" groups="wheel"
+      user: name="{{ g_studentName }}" groups="wheel"
             
     - name: "SETUP WAYLAND: cheat file installs"
       template:
