@@ -42,9 +42,7 @@ kvm_cfg:
     url: "http://{{ g_kvmhost_ip }}:{{ g_http_port }}/ks"
 
   iso:
-    dir:        "/var/www/html/iso"
-    name:       "rhel-8.1-x86_64-dvd.iso"
-    mount:      "/var/www/html/repo"
+    dir:        "/home/iso"
 
   repo:
     dir: "/var/www/html/repos"
@@ -58,7 +56,7 @@ kvm_deploy_plan:
   ##   post_install:      STR complete executable shell (PWD: is project directory)
 
   pre_install:  ""
-  post_install: "ansible-playbook -i ./config/rhel8-workshop -e @./config/libvirt-config.yml -f 10 ./playbooks/rhel8-workshop.yml"
+  post_install: "ansible-playbook -i ./config/master-config.yml -e @./config/libvirt-config.yml -f 10 ./playbooks/rhel8-prep-workshop.yml"
 
   ##
   ## each pass must define the following:
@@ -73,7 +71,7 @@ kvm_deploy_plan:
   ##   post_install:      STR complete executable shell (PWD: is project directory)
   ##
 
- passes:
+  passes:
     pass_1:
       hostgroup:          "myBastion"
       inject_sshkey:      True

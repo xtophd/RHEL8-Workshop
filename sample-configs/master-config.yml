@@ -41,13 +41,10 @@ g_owner = "Foo Bar"
 g_location = "Dallas"
 
 ## Configure the student name as this
-g_studentName = "student"
+g_studentName = "cloud-user"
 
 ## Your Workshop Cluster Name
 g_clusterName = "rhel8"
-
-## Your Workshop Cluster Wildcard Name
-g_wildcardName = "apps"
 
 ##
 ## ----------------------------------------
@@ -91,12 +88,12 @@ g_priNTP        = ""
 ##
 
 g_useDNS      = "True"
-g_useDHCP     = "True"
-g_usePXE      = "True"
-g_useHAPROXY  = "True"
-g_useMATCHBOX = "True"
+g_useDHCP     = "False"
+g_usePXE      = "False"
+g_useHAPROXY  = "False"
+g_useMATCHBOX = "False"
 g_useNFS      = "True"
-g_useNTP      = "True"
+g_useNTP      = "False"
 g_useREPOSYNC = "False"
 
 ## Configure DNS wildcard on bastion host
@@ -137,6 +134,22 @@ ansible_host="{{ inventory_hostname }}.{{ g_pubFQDN }}"
 ## We are running the playbooks on the baremetal virthost
 ansible_connection = "local"
 
+## -----------------
+
+[myBastion:vars]
+
+h_hwPROF = "kvm_vda"
+h_rsPROF = "bastion"
+h_ksPROF = "rhel8_lvm"
+
+## -----------------
+
+[myNodes:vars]
+
+h_hwPROF = "kvm_vda"
+h_rsPROF = "sml"
+h_ksPROF = "rhel8_lvm"
+
 ##
 ## ----------------------------------------
 ##
@@ -148,7 +161,7 @@ virthost  h_pubMAC="00:00:00:00:00:00" h_pubIP="192.168.124.1"
 workstation   h_pubMAC="2c:c2:60:20:c1:c1" h_pubIP="192.168.124.160" h_hwPROF="kvm_nest_vda" h_rsPROF="bastion"
 
 [myNodes]
-node1    h_pubMAC="2c:c2:60:20:c3:c3" h_pubIP="192.168.124.162" h_hwPROF="kvm_vda" h_rsPROF="rhel8"
-node2    h_pubMAC="2c:c2:60:20:c4:c4" h_pubIP="192.168.124.163" h_hwPROF="kvm_vda" h_rsPROF="rhel8-xtra"
-node3    h_pubMAC="2c:c2:60:20:c5:c5" h_pubIP="192.168.124.164" h_hwPROF="kvm_vda" h_rsPROF="rhel8-xtra"
+node1    h_pubMAC="2c:c2:60:20:c3:c3" h_pubIP="192.168.124.162" h_rsPROF="rhel8"
+node2    h_pubMAC="2c:c2:60:20:c4:c4" h_pubIP="192.168.124.163" h_rsPROF="rhel8-xtra"
+node3    h_pubMAC="2c:c2:60:20:c5:c5" h_pubIP="192.168.124.164" h_rsPROF="rhel8-xtra"
 
