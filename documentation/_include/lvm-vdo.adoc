@@ -131,7 +131,9 @@ multipath
 smartd
                  |
                  l| 
-mkfs mount
+mkfs
+mount
+fsadm
 |===
 
 
