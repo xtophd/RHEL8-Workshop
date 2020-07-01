@@ -94,7 +94,7 @@ NOTE: In this example, the root disk is identified by a UUID.  As a result, `boo
 _Native command(s) to make boom profile_
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-*boom profile create --from-host --uname-pattern el8* [--kernel-pattern="/boot/vmlinuz-%{version}" --initramfs-pattern="/boot/initramfs-%{version}.img"
+*boom profile create --from-host --uname-pattern el8 --kernel-pattern="/boot/vmlinuz-%{version}" --initramfs-pattern="/boot/initramfs-%{version}.img"*
 ----
 ====
 
