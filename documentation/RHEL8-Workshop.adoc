@@ -128,7 +128,7 @@ include::{includedir}/virtualization.adoc[leveloffset=+1]
 include::{includedir}/tlog.adoc[leveloffset=+1]
 include::{includedir}/lvm-vdo.adoc[leveloffset=+1]
 include::{includedir}/stratis.adoc[leveloffset=+1]
-include::{includedir}/boom.adoc[leveloffset=+1]
+include::{includedir}/boom-lvm-snapshot.adoc[leveloffset=+1] 
 include::{includedir}/wayland.adoc[leveloffset=+1]
 ////
 
