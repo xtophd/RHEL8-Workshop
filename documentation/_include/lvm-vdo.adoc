@@ -392,7 +392,7 @@ Let us now check some statistics.
 # *vdostats --human-readable*
 ----
 
-So in summary, we built a 30GB filesystem that only has 10GB of actual physical disk capacity.  We then copied 10GB of data into the filesystem, but after deduplication `vdostats --human-readbale` should reflect something near 4GB of available plysical space.
+So in summary, we built a 30GB filesystem that only has 10GB of actual physical disk capacity.  We then copied 10GB of data into the filesystem, but after deduplication `vdostats --human-readable` should reflect something near 4GB of available plysical space.
 
 A few additional high-level things to know about VDO.  
 
