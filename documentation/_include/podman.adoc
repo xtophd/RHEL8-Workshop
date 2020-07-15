@@ -514,7 +514,7 @@ Let us clean up your environment before proceeding
 
 A configuration file for a podman build has already been supplied for your system.  Have a look at the contents of that config.
 
-./root/custom_image.OCIfile
+./root/custom_image.OCIFile
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
 FROM ubi8/ubi
