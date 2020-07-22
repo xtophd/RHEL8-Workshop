@@ -253,6 +253,7 @@ You should have:
 Red Hat Documentation
 
     * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/installing_managing_and_removing_user-space_components/index[RHEL 8 Documentation: Installing, Managing, and Removing User Space Components]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/installing_managing_and_removing_user-space_components/using-appstream_using-appstream[RHEL 8 Documentation: Using Appstream]
     
 
 [discrete]
