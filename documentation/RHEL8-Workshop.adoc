@@ -136,7 +136,7 @@ include::{includedir}/wayland.adoc[leveloffset=+1]
 
 Red Hat Documentation
 
-    * This document provides an overview of changes in Red Hat Enterprise Linux 8 since Red Hat Enterprise Linux 7 to help you evaluate migration to Red Hat Enterprise Linux 8:  link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/considerations_in_adopting_rhel_8/index[CONSIDERATIONS IN ADOPTING RHEL 8]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/considerations_in_adopting_rhel_8/index[CONSIDERATIONS IN ADOPTING RHEL 8] - This document provides an overview of changes in Red Hat Enterprise Linux 8 since Red Hat Enterprise Linux 7 to help you evaluate migration to Red Hat Enterprise Linux 8:  
 
 
 [discrete]
