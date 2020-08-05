@@ -194,7 +194,7 @@ Since we will be reusing the same resources for many exercises, we will begin by
 # *mount /dev/vg_lab/lab1 /mnt/lab1*
 ----
 
-NOTE: If this were going to be a persistent filesystem, you would also need to add an entry to `etc/fstab`.
+NOTE: If this were going to be a persistent filesystem, you would also need to add an entry to `/etc/fstab`.
 
 === Examine Your Work
 
