@@ -251,6 +251,167 @@ Once these are both set, save the file and run:
 systemctl restart pmcd pmlogger pmproxy
 ----
 
+It will take pmseries a few minutes to have data collected, but once this has began, you can run:
+
+----
+pmseries kernel.all.load
+----
+
+and get output similar to:
+
+----
+fc13f67815676cd1ed1687fe55030c9e8c33b059
+----
+
+which verifies that pmseries is storing data in redis. We will view this data in grafana.
+
+== bpftrace pmda Initial Setup
+
+Let's install the bpftrace pmda to examine how this works. The rpm is already installed on the system, but we still have to install the pmda into pcp. On node2, run:
+
+----
+cd /var/lib/pcp/pmdas/bpftrace
+./Install
+pmrep bpftrace.scripts.runqlat.data.usecs -s 5
+----
+
+This should return 5 samples of run queue latency measured in microseconds:
+
+----
+  b.s.r.data_bytes
+            byte/s
+               N/A
+           570.033
+           573.032
+           572.621
+           573.303
+           573.271
+           572.550
+           573.998
+           574.196
+           575.521
+           572.610
+           574.096
+           575.030
+           577.681
+           577.983
+----
+
+Now how did that happen? If we examine the `/var/lib/pcp/pmdas/bpftrace/autostart` directory, we will see two included bpftrace scripts:
+
+----
+ls -lah /var/lib/pcp/pmdas/bpftrace/autostart/
+----
+
+----
+total 8.0K
+drwxr-xr-x. 2 root root  45 Aug  6 20:10 .
+drwxr-xr-x. 4 root root 161 Aug 13 21:24 ..
+-rw-r--r--. 1 root root 601 Jun 23 05:21 biolatency.bt
+-rw-r--r--. 1 root root 794 Jun 23 05:21 runqlat.bt
+----
+
+If we look at runqlat.bt, we will see a line in the code that reads:
+
+----
+                @usecs = hist((nsecs - $ns) / 1000);
+----
+
+This pmda has converted this `@usecs` bpfmap to a pcp metric. To see all pcp metrics from this script, run:
+
+----
+pminfo | grep bpftrace | grep runqlat
+----
+
+and you will see:
+
+----
+bpftrace.scripts.runqlat.data.usecs
+bpftrace.scripts.runqlat.data_bytes
+bpftrace.scripts.runqlat.code
+bpftrace.scripts.runqlat.probes
+bpftrace.scripts.runqlat.error
+bpftrace.scripts.runqlat.exit_code
+bpftrace.scripts.runqlat.pid
+bpftrace.scripts.runqlat.status
+----
+
+As such, any bpftrace script placed in the "autostart" directory will be parsed, run, and made available through pcp in this manner. If you add a bpftrace script, you do need to run `Remove` followed by `Install` in the `/var/lib/pcp/pmdas/bpftrace/` directory for this script to be picked up. This makes for a powerful integration between pcp and bpftrace.
+
+== Remote Logging Setup
+
+Let's use our pcp node2 as a remote logging server and our pcp node3 as a client. To do this, let's go to node3 and set up pmlogger as a client:
+
+Use `ip addr` to determine the ip address of your machine. For this example, we'll say the IP address is 192.168.1.4.
+
+Edit /etc/pcp/pmcd/pmcd.options and set:
+----
+-i 192.168.1.4
+----
+
+Please replace `192.168.1.4` with your actual IP address.
+
+Save this file and then we will need to open some services on the firewall:
+
+----
+firewall-cmd --add-service=pmproxy --add-service=pmcd --permanent
+firewall-cmd --reload
+----
+
+Now we need to all pcp to bind to unreserved ports:
+
+----
+setsebool -P pcp_bind_all_unreserved_ports on
+----
+
+Let's restart pcp:
+
+----
+systemctl restart pmcd pmlogger
+----
+
+Now back on node2, let's set up remote logging for node3:
+
+Edit /etc/pcp/pmlogger/control.d/remote and add:
+----
+192.168.1.4 n n PCP_LOG_DIR/pmlogger/node3 -r T24h10m -c config.remote
+----
+
+replacing `192.168.1.4` with the actual IP address of node3.
+
+Now, let's restart pcp:
+
+----
+systemctl restart pmcd pmlogger
+----
+
+Let's verify that we are now getting logs from node3:
+
+----
+cd /var/log/pcp/pmlogger/node3
+for i in $(ls *.0); do pmdumplog -L $i; done
+----
+
+This should generate output similar to:
+
+----
+Log Label (Log Format Version 2)
+Performance metrics from host node3
+    commencing Thu Aug 13 21:39:06.614021 2020
+    ending     Thu Aug 13 21:39:07.322042 2020
+Archive timezone: CEST-2
+PID for pmlogger: 5595
+Log Label (Log Format Version 2)
+Performance metrics from host node3
+    commencing Thu Aug 13 21:39:15.271834 2020
+    ending     Thu Aug 13 21:39:15.307463 2020
+Archive timezone: CEST-2
+PID for pmlogger: 6842
+----
+
+If you something like the above, then you have successfully set up remote logging. node2 is now accepting remote logs from node3 and further, metrics for node3 and node2 are being stored in the pmseries redis database!
+
+== Grafana Integration
 
 == Additional Resources
 
