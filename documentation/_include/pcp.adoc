@@ -413,6 +413,24 @@ If you something like the above, then you have successfully set up remote loggin
 
 == Grafana Integration
 
+Let's go ahead and setup Grafana on node2:
+
+----
+systemctl enable grafana-server
+systemctl start grafana-server
+firewall-cmd --add-service=grafana --add-service=pmproxy --permanent
+firewall-cmd --reload
+firewall-cmd --list-services
+----
+
+This last command should show both `pmproxy` and `grafana` in the open services:
+
+----
+cockpit dhcpv6-client grafana http https pmproxy ssh
+----
+
+Now from your browser, go to link:http://node2:3000[http://node2:3000] and login with the username `admin` and the password `admin`. You will be asked to specify a new password for the `admin` account. Please remember what you set the password to.
+
 == Additional Resources
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
