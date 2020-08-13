@@ -24,7 +24,7 @@ Combined with bpftrace, we are able to get at very interesting data from the ker
 
 == Getting Started
 
-For these exercises, you will primarily be using the host `node2` as user `root`.  However, these exercises do REQUIRE a second terminal session to run commands on other hosts.  Please pay careful attention to what commands to run on different hosts.
+For these exercises, you will primarily be using the hosts `node2` and `node3`  as user `root`.  However, these exercises do REQUIRE a second terminal session to run commands on other hosts.  Please pay careful attention to what commands to run on different hosts.
 
 TIP: Now is a great time to use the multi session capability of *tmux*.  Use `Ctrl-b "` to create another session with a split screen.  Cycle the active session back and forth with `CTRL-b n` (next) and `CTRL-b p` (previous).
 
@@ -60,533 +60,202 @@ Start by installing pcp,grafana,redis,js-d3-flame-graph, and others:
 # *yum install pcp grafana grafana-pcp cockpit-pcp bpftrace bcc-tools pcp-pmda-bpftrace cyrus-sasl-md5 cyrus-sasl-lib redis js-d3-flame-graph -y*
 ----
 
+== pminfo and pmrep
 
-== bcc-tools: tcplife
-
-The `tcplife` tool monitors tcp connections on the system and measures the amount of time that they've been open, the local and remote ports involved in the connection and the amount of data transferred and received in kilobytes.
-
-[discrete]
-==== Primary Terminal
-
-To run this tool, execute the following and give it a couple of seconds to get set up:
+Since we now have pcp installed and running on our machines, let's run the following on node1:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# */usr/share/bcc/tools/tcplife*
-
-PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
+pminfo | grep kernel | head -n 15
 ----
 
-[discrete]
-==== Secondary Terminal
-
-In your second terminal, establish yourself as described below and then run the following command:
-
-  * host: *workstation*
-  * user: *root*
+This will return similar output to:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"*
+kernel.all.load
+kernel.all.intr
+kernel.all.pswitch
+kernel.all.sysfork
+kernel.all.running
+kernel.all.blocked
+kernel.all.boottime
+kernel.all.hz
+kernel.all.uptime
+kernel.all.idletime
+kernel.all.nusers
+kernel.all.nroots
+kernel.all.nsessions
+kernel.all.lastpid
+kernel.all.runnable
 ----
 
-This command should run for about 10 seconds and then exit.  
-
-[discrete]
-==== Primary Terminal
-
-In the `tcplife` terminal, you should now see output similar to:
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
-28478 sshd       10.0.0.12       22    10.0.0.10       33514    14     2 9091.95
-----
-
-Doing the math with my numbers above, my session was open for about 9 seconds and was initiated by IP 10.0.0.10, the workstation.
-
-In the `tcplife` terminal, issue a Ctrl-C and this will return you to a prompt.
-
-
-
-
-
-== bcc-tools: execsnoop
-
-The `execsnoop` script monitors all calls to execve() and catches all processes that follow the fork->exec sequence, as well as processes that re-exec() themselves. Processes that fork() but do not exec() won't be caught by this script.
-
-[discrete]
-==== Primary Terminal
-
-Continuing on host `node2`, to run `execsnoop` as follows:
+This represents 15 pcp metrics that have the word "kernel" in them. Let's use the `pmrep` command to see what the load on our system currently is:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# */usr/share/bcc/tools/execsnoop*
-
-PCOMM            PID    PPID   RET ARGS
+pmrep kernel.all.load -s 15
 ----
 
-[discrete]
-==== Secondary Terminal
-
-In your second terminal, establish yourself as described below and then run the following command:
-
-  * host: *workstation*
-  * user: *root*
+This will return output similar to:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"*
+  k.a.load  k.a.load  k.a.load
+  1 minute  5 minute  15 minut
+                              
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
+     0.010     0.010     0.000
 ----
 
-[discrete]
-==== Primary Terminal
-
-In the `execsnoop` terminal, you should see output similar to:
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-PCOMM            PID    PPID   RET ARGS
-sshd             28512  749      0 /usr/sbin/sshd -D -oCiphers=aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr,aes256-cbc,aes128-gcm@openssh.com,aes128-ctr,aes128-cb -oMACs=hmac-sha2-256-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2- -oGSSAPIKexAlgorithms=gss-gex-sha1-,gss-group14-sha1- -oKexAlgorithms=curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-excha -oHostKeyAlgorithms=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha2-nis -oPubkeyAcceptedKeyTypes=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha -R
-unix_chkpwd      28514  28512    0 /usr/sbin/unix_chkpwd root chkexpiry
-bash             28516  28515    0 /bin/bash -c cheat-ebpf-rootkit.sh
-grepconf.sh      28517  28516    0 /usr/libexec/grepconf.sh -c
-grep             28518  28517    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
-grepconf.sh      28519  28516    0 /usr/libexec/grepconf.sh -c
-grep             28520  28519    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
-grepconf.sh      28521  28516    0 /usr/libexec/grepconf.sh -c
-grep             28522  28521    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
-sed              28524  28523    0 /usr/bin/sed -r -e s/^[[:blank:]]*([[:upper:]_]+)=([[:print:][:digit:]\._-]+|"[[:print:][:digit:]\._-]+")/export \1=\2/;t;d /etc/locale.conf
-uname            28525  28516    0 /usr/bin/uname -a
-sleep            28526  28516    0 /usr/bin/sleep 1
-who              28527  28516    0 /usr/bin/who
-sleep            28528  28516    0 /usr/bin/sleep 1
-grep             28530  28516    0 /usr/bin/grep root /etc/passwd
-sleep            28531  28516    0 /usr/bin/sleep 1
-grep             28532  28516    0 /usr/bin/grep root /etc/shadow
-sleep            28533  28516    0 /usr/bin/sleep 1
-cat              28534  28516    0 /usr/bin/cat /etc/fstab
-sleep            28535  28516    0 /usr/bin/sleep 1
-ps               28536  28516    0 /usr/bin/ps -ef
-sleep            28537  28516    0 /usr/bin/sleep 1
-netstat          28538  28516    0 /usr/bin/netstat -tulpn
-sleep            28539  28516    0 /usr/bin/sleep 1
-getenforce       28540  28516    0 /usr/sbin/getenforce
-sleep            28541  28516    0 /usr/bin/sleep 1
-firewall-cmd     28542  28516    0 /usr/bin/firewall-cmd --state
-----
-
-This shows you all the processes that ran exec() during that ssh login, their PID, their parent PID, their return code, and the arguments that were sent to the process. You could keep monitoring this for quite some time to catch potential bad actors on the system.
-
-In the `execsnoop` terminal, issue a Ctrl-C and this will return you to a prompt.
-
-
-
-
-
-== bcc-tools: mountsnoop
-
-Similar in nature to `execsnoop`, `mountsnoop` traces the mount() and umount() syscalls which show processes that are attempting to mount (or unmount) filesystems.
-
-[discrete]
-==== Primary Terminal
-
-To run this tool, execute the following and give it a couple of seconds to get set up:
+This gives us 15 samples at a 1-second interval for the 1-minute, 5-minute, and 15-minute load average for this host. In order to make this more interesting, we can start stress-ng in the second terminal:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# */usr/share/bcc/tools/mountsnoop*
-
-COMM             PID     TID     MNT_NS      CALL
+stress-ng --aio 40 --cpu 20 &
 ----
 
-[discrete]
-==== Secondary Terminal
-
-*PAY ATTENTION!!! USING A DIFFERENT HOST*
-
-In your second terminal, establish yourself as described below and then run the following command:
-
-  * host: *node2*
-  * user: *root*
-
-Let's try to unmount a mount that we know cannot be unmounted. For this, we'll pick the root filesystem '/'.
+and back in the first terminal:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *umount /*
-
-umount: /: target is busy.
+pmrep kernel.all.load -s 15
 ----
 
-[discrete]
-==== Primary Terminal
-
-Taking a look at the terminal running `mountsnoop`, we see:
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-umount           20001   20001   4026531840  umount("/", 0x0) = -EBUSY
-----
-
-This shows us that the mount is busy and cannot be unmounted.
-
-[discrete]
-==== Secondary Terminal
-
-Now let's try to unmount a filesystem that we should be able to unmount.  But before doing so, look at the mount options to ensure we can restore it correctly.  On `node2` run the following:
+and our output will show more load this time:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *grep /dev/shm /proc/mounts*
-
-tmpfs /dev/shm tmpfs *rw,seclabel,nosuid,nodev,relatime* 0 0
+  k.a.load  k.a.load  k.a.load
+  1 minute  5 minute  15 minut
+                              
+     1.600     0.330     0.110
+     1.600     0.330     0.110
+     1.600     0.330     0.110
+     1.600     0.330     0.110
+     3.080     0.660     0.210
+     3.080     0.660     0.210
+     3.080     0.660     0.210
+     3.080     0.660     0.210
+     3.080     0.660     0.210
+     4.430     0.980     0.320
+     4.430     0.980     0.320
+     4.430     0.980     0.320
+     4.430     0.980     0.320
+     4.430     0.980     0.320
+     5.680     1.300     0.430
 ----
 
-Now proceed to umount `/dev/shm` on `node2`
+Now in the second terminal, run:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *umount /dev/shm*
+killall -9 stress-ng
 ----
 
-[discrete]
-==== Primary Terminal
+This stops our stress-ng process and will allow the load on the system to return to normal.
 
-Back to the `mountsnoop` terminal and you should see the following:
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-umount           20003   20003   4026531840  umount("/dev/shm", 0x0) = 0
-----
-
-The umount command succeeded. 
-
-[discrete]
-==== Secondary Terminal
-
-Proceed to restore the /dev/shm mount as follows:
+Also, with pmrep, we can create ini files that allow us to build pcp reports. A pcp report to measure memory utilization would look like:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *mount -t tmpfs -o rw,nosuid,nodev,relatime,seclabel tmpfs /dev/shm*
+[mem-util]
+timestamp=yes
+interval=1s
+mem.util.bufmem=
+mem.util.cached=
+mem.util.free=
+mem.util.used=
 ----
 
-[discrete]
-==== Primary Terminal
-
-Finally, back to the `mountsnoop` terminal and you should see the following:
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-mount            20004   20004   4026531840  mount("tmpfs", "/dev/shm", "tmpfs", MS_NOSUID|MS_NODEV|MS_NOEXEC|MS_SYNCHRONOUS|MS_DIRSYNC|MS_NOATIME|MS_NODIRATIME|MS_MOVE|MS_REC|MS_UNBINDABLE|MS_SLAVE|MS_SHARED|MS_I_VERSION|MS_STRICTATIME|MS_LAZYTIME|MS_NOUSER|0x7f2b30000000, "") = 0
-----
-
-This shows us that the mount succeeded and all the options that were passed into the system call.
-
-As you can see, the `mountsnoop` tool is very useful for seeing what processes are calling the mount and umount system calls and what the results of those calls are.
-
-In the `mountsnoop` terminal, issue a Ctrl-C and this will return you to a prompt.
-
-
-
-
-
-== bcc-tools: xfsslower
-
-WARNING: Please verify the filesystem your host is using with the command `df -T /`.  If your host is configured with ext4, then substitute the command `ext4slower` in place of `xfsslower`.
-
-The purpose of the `xfsslower` tool (also `ext4slower` and `nfsslower`) is to show you filesystem operations slower than  a particular threshold, that defaults to 10ms. It traces reads, writes, opens, and syncs and then prints out the timestamp of the operation, the process name, the ID, the type of operation, the file offset in kilobytes, the latency of the I/O measured from when it was issued by VFS to the filesystem to when it was completed, and finally, the filename being operated on.
-
-[discrete]
-==== Primary Terminal
-
-To run this tool, execute the following and give it a couple of seconds to get set up:
+This is from the file `rhel-use.conf` and if we run this report, we will have timestamped data sampled at a 1 second interval that will include the pcp metrics: `mem.util.bufmem`, `mem.util.cached`, `mem.util.free`, `mem.util.used`. Let's use `pmrep` and rhel-use.conf to sample memory. But first, in our second terminal, let's generate some memory load:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# */usr/share/bcc/tools/xfsslower*
-
-Tracing xfs operations slower than 10 ms
-TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
+stress-ng --vm 20 &
 ----
 
-[discrete]
-==== Secondary Terminal
-
-In your second terminal, establish yourself as described below and then run the following command:
-
-  * host: *node2*
-  * user: *root*
+and in the first terminal:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *dd if=/dev/urandom of=bigfile bs=1024 count=20000*
+pmrep -c rhel-use.conf :mem-util -s 15
 ----
 
-This writes out a 20M file called bigfile and should not register on your `xfsslower` window.
-
-Now, let's execute the above command in a for loop so that we get more I/O going in parallel:
+This will print output similar to:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done*
+          m.u.bufmem  m.u.cached  m.u.free  m.u.used
+               Kbyte       Kbyte     Kbyte     Kbyte
+20:58:49           0     1589892     89752   1770152
+20:58:50           0     1502764    159928   1699976
+20:58:51           0     1628788     52140   1807764
+20:58:52           0     1587184     57004   1802900
+20:58:53           0     1601804     76884   1783020
+20:58:54           0     1610292     72720   1787184
+20:58:55           0     1555400    120180   1739724
+20:58:56           0     1002124    649464   1210440
+20:58:57           0     1629744     52336   1807568
+20:58:58           0     1621704     52664   1807240
+20:58:59           0     1614144     75640   1784264
+20:59:00           0     1612628     53104   1806800
+20:59:01           0     1584568    105372   1754532
+20:59:02           0     1602292     87688   1772216
+20:59:03           0     1606756     67600   1792304
 ----
 
-[discrete]
-==== Primary Terminal
-
-Now you should see similar output in your `xfsslower` window:
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
-20:44:43 b'dd'          32446  W 1024    778        44.11 b'bigfile1'
-20:44:43 b'dd'          32455  W 1024    818        55.11 b'bigfile10'
-20:44:43 b'dd'          32452  W 1024    1712       44.11 b'bigfile7'
-20:44:43 b'dd'          32455  W 1024    1778       55.02 b'bigfile10'
-20:44:43 b'dd'          32451  W 1024    2850       44.11 b'bigfile6'
-20:44:43 b'dd'          32447  W 1024    3598       44.10 b'bigfile2'
-20:44:43 b'dd'          32451  W 1024    3805       55.11 b'bigfile6'
-20:44:43 b'dd'          32446  W 1024    4612       44.28 b'bigfile1'
-20:44:43 b'dd'          32446  W 1024    5529       33.01 b'bigfile1'
-20:44:43 b'dd'          32454  W 1024    4504       55.11 b'bigfile9'
-20:44:43 b'dd'          32447  W 1024    7335       44.10 b'bigfile2'
-20:44:43 b'dd'          32455  W 1024    7545       44.02 b'bigfile10'
-20:44:43 b'dd'          32446  W 1024    8344       49.16 b'bigfile1'
-20:44:43 b'dd'          32448  W 1024    8183       44.18 b'bigfile3'
-20:44:43 b'dd'          32447  W 1024    9168       55.10 b'bigfile2'
-20:44:43 b'dd'          32449  W 1024    9728       54.10 b'bigfile4'
-20:44:43 b'dd'          32454  W 1024    10244      33.11 b'bigfile9'
-20:44:43 b'dd'          32447  W 1024    10989      55.02 b'bigfile2'
-20:44:43 b'dd'          32453  W 1024    11276      54.10 b'bigfile8'
-20:44:43 b'dd'          32453  W 1024    12169      33.10 b'bigfile8'
-20:44:43 b'dd'          32451  W 1024    13292      91.11 b'bigfile6'
-20:44:43 b'dd'          32453  W 1024    13108      47.24 b'bigfile8'
-20:44:43 b'dd'          32448  W 1024    13788      44.01 b'bigfile3'
-20:44:43 b'dd'          32454  W 1024    14137      44.23 b'bigfile9'
-20:44:43 b'dd'          32446  W 1024    16076      44.02 b'bigfile1'
-20:44:43 b'dd'          32447  W 1024    15796      44.26 b'bigfile2'
-20:44:44 b'dd'          32446  W 1024    17004      44.10 b'bigfile1'
-20:44:44 b'dd'          32455  W 1024    16697      44.16 b'bigfile10'
-20:44:44 b'dd'          32450  W 1024    18505      44.01 b'bigfile5'
-20:44:44 b'dd'          32451  W 1024    19056      44.17 b'bigfile6'
-20:44:44 b'dd'          32446  W 1024    19868      44.38 b'bigfile1'
-20:44:44 b'dd'          32452  W 1024    19272      44.14 b'bigfile7'
-20:44:44 b'dd'          32455  W 1024    19168      30.75 b'bigfile10'
-20:44:44 b'dd'          32453  W 1024    19612      31.16 b'bigfile8'
-20:44:44 b'dd'          32454  W 1024    19460      24.59 b'bigfile9'
-20:44:44 b'dd'          32447  W 1024    19508      36.20 b'bigfile2'
-----
-
-So we can see that when writing these files in parallel, we have xfs operations taking longer than 10ms to complete.
-
-In the `xfsslower` terminal, issue a Ctrl-C and this will return you to a prompt.
-
-
-
-
-
-== bcc-tools: cachestat
-
-The `cachestat` tool traces kernel page cache functions and prints every five second summaries to aid you in workload characterization.
-
-[discrete]
-==== Primary Terminal
-
-To run this tool, execute the following and give it a couple of seconds to get set up:
+Now in our second terminal, let's run:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# */usr/share/bcc/tools/cachestat*
-
-   TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
+killall -9 stress-ng
 ----
 
-[discrete]
-==== Secondary Terminal
+From this, we can see that pmrep is a powerful tool for reporting on pcp metrics at the command line.
 
-In your second terminal, establish yourself as described below and then run the following command:
+== pmseries enablement
 
-  * host: *node2*
-  * user: *root*
+pmseries allows pcp to store data in a redis database. This allows for searching historical data at a later time, which can be quite useful during the post mortem of a performance event. 
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+To set up pmseries, on node2, please edit /etc/pcp/pmseries/pmseries.conf and make sure the following under `[pmproxy]` is set:
+
 ----
-# *echo 3 > /proc/sys/vm/drop_caches*
-# *for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done*
-----
-
-This flushes the cache and then runs a series of `dd` commands to create some I/O.
-
-[discrete]
-==== Primary Terminal
-
-In the `cachestat` window, you should output similar to:
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-   TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
-       0        0        0        0            0        154
-   14773      901    13872    44133            1        200
+# support Redis protocol proxying
+redis.enabled = true
 ----
 
-This shows that we had 901 page cache misses during a five second period while running the above loop, but during that same second, there were 9,821 hits, indicating great performance from the page cache.
+Then make sure that under `[pmseries]`, you have the following set:
 
-In the `cachestat` terminal, issue a Ctrl-C and this will return you to a prompt.
-
-
-
-
-
-== bcc-tools: trace
-
-This tool is a swiss army knife allowing you to specify functions to trace and messages to be printed when certain conditions are met. You can read more about this by running:
-
-[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *man 8 trace*
+# allow REST API queries of fast, scalable time series
+enabled = true
 ----
 
-Let's do a simple trace in which we will dynamically trace the do_sys_open() kernel function and print the names of the files opened. 
+Once these are both set, save the file and run:
 
-[discrete]
-==== Primary Terminal
-
-To run this tool, execute the following and give it a couple of seconds to get set up:
-
-[bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# */usr/share/bcc/tools/trace 'p::do_sys_open "%s", arg2'*
-
-PID     TID     COMM            FUNC             -
+systemctl restart pmcd pmlogger pmproxy
 ----
 
-[discrete]
-==== Secondary Terminal
-
-In your second terminal, establish yourself as described below and then run the following command:
-
-  * host: *node2*
-  * user: *root*
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *cat /etc/fstab*
-----
-
-[discrete]
-==== Primary Terminal
-
-In the `trace` terminal, you will see something similar to:
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-32559   32559   cat             do_sys_open      b'/etc/ld.so.cache'
-32559   32559   cat             do_sys_open      b'/lib64/libc.so.6'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/locale-archive'
-32559   32559   cat             do_sys_open      b'/usr/share/locale/locale.alias'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_IDENTIFICATION'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_IDENTIFICATION'
-32559   32559   cat             do_sys_open      b'/usr/lib64/gconv/gconv-modules.cache'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_MEASUREMENT'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_MEASUREMENT'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_TELEPHONE'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_TELEPHONE'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_ADDRESS'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_ADDRESS'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_NAME'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_NAME'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_PAPER'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_PAPER'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_MESSAGES'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_MESSAGES'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_MESSAGES/SYS_LC_MESSAGES'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_MONETARY'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_MONETARY'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_COLLATE'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_COLLATE'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_TIME'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_TIME'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_NUMERIC'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_NUMERIC'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.UTF-8/LC_CTYPE'
-32559   32559   cat             do_sys_open      b'/usr/lib/locale/en_US.utf8/LC_CTYPE'
-32559   32559   cat             do_sys_open      b'/etc/fstab'
-----
-
-Go ahead and Ctrl-C `trace` and then let's do one more trace, this time, tracing the return values out of `trace`:
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# */usr/share/bcc/tools/trace 'r::do_sys_open "ret: %d", retval'*
-----
-
-[discrete]
-==== Secondary Terminal
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *cat /etc/fstab*
-
-PID     TID     COMM            FUNC             -
-----
-
-[discrete]
-==== Primary Terminal
-
-In the `trace` terminal, you will see something similar to:
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-PID     TID     COMM            FUNC             -
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: -2
-32576   32576   cat             do_sys_open      ret: 3
-32576   32576   cat             do_sys_open      ret: 3
-----
-
-Go to the terminal with `trace` running and issue a Ctrl-C. This will end the process and return you to the command line. 
-
-You may also now type `exit` in one of your tmux panes to return to having just one pane visible.
-
-There is a lot more that you can do with this tool when you actually need to start tracing what is getting passed into kernel functions and what is being returned by those kernel functions.
 
 == Additional Resources
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
 
-    * link:https://www.redhat.com/en/blog/bcc-tools-brings-dynamic-kernel-tracing-red-hat-enterprise-linux-81[bcc-tools brings dynamic kernel tracing to Red Hat Enterprise Linux 8.1]
-    * link:https://www.redhat.com/en/blog/why-networkmanager-talking-staticredhatcom-find-out-bcc-tools[Why is NetworkManager talking to static.redhat.com? Find out with bcc-tools!]   
-    * link:https://lab.redhat.com/ebpf-tracing[Performance observability in practice with bcc-tools: A lab on lab.redhat.com]
     * link:http://www.brendangregg.com/ebpf.html[Linux Extended BPF (eBPF Tracing Tools) - Brendan Gregg]
     * link:https://github.com/xdp-project/xdp-tutorial[Upstream XDP Tutorial (eXpress Data Path networking is tech preview in RHEL 8.2.)]
     * link:https://developers.redhat.com/blog/tag/ebpf/[eBPF blogs on Red Hat Developer (covering the networking aspect)]
