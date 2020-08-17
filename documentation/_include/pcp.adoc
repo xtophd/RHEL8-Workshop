@@ -666,7 +666,7 @@ image::grafana-105-vector-cpuedit.png[Edit CPU% Script]
 
 Now you will see the following screen:
 
-image::grafana-110-vector-cpuqery.png[CPU% Query]
+image::grafana-110-vector-cpuquery.png[CPU% Query]
 
 On this screen, delete the "B" query and change the "A" query to read:
 
@@ -676,7 +676,7 @@ bpftrace.scripts.cpuwalk.data.cpu
 
 When you have done this, your screen will look like:
 
-image::115-vector-cpuedit2.png[Now Using bpf!]
+image::grafana-115-vector-cpuedit2.png[Now Using bpf!]
 
 and you can see the data from the bpftrace script cpuwalk.bt being renedered through PCP Vector without giving the grafana user direct access to eBPF!
 
