@@ -479,11 +479,118 @@ Once you have finished this, click on the Dashboards icon and select "Manage":
 
 image::grafana-60-managebutton.png[Manage Button]
 
+From here you will see a list of dashboards that you can click on:
+
 image::grafana-65-managedashboards.png[Manage Dashboards]
+
+This is what our "PCP Vector Host Overview" Dashboard looks like:
 
 image::grafana-70-vectordashboard.png[Vector Dashboard]
 
+This is what our "PCP Redis Host Overview" Dashboard looks like:
+
 image::grafana-75-redisdashboard.png[Redis Dashboard]
+
+Congratulations, you've set up grafana to work with performance co-pilot!
+
+== bpftrace and grafana Integration
+
+In the last unit, we set up grafana and started to configure bpftrace, but didn't do anything with it. This is because this integration gives root level access to a grafana user! We will now explore this integration. Red Hat strongly advises not using this integration in production. The perfect use case for this is to use it in development and when you get your bpftrace scripts solid with you graphs, add those bpftrace scripts to the `autostart` directory of the bpftrace pmda and then expose the metrics via Vector, which will do in the next unit.
+
+Because we do not want to allow anyone to use the bpftrace integration without authentication, we are going to enable a sysadmin user to authenticate from grafana to pcp for the purpose of using the bpftrace pmda. 
+
+On node2, let's look at `/etc/sasl/pmcd.conf`. We are specifically looking to make sure that `digest-md5` is in the mech_list and that the sasldb_path is set to `/etc/pcp/passwd.db`. The file should look like:
+
+----
+# Enabled authentication mechanisms (space-separated list).
+# You can list many mechanisms at once, then the user can choose
+# by adding e.g. '?authmech=gssapi' to their host specification.
+# For other options, refer to SASL pluginviewer command output.
+#mech_list: plain login digest-md5 gssapi
+mech_list: plain login digest-md5
+
+# If deferring to the SASL auth daemon (runs as root, can do PAM
+# login using regular user accounts, unprivileged daemons cannot).
+#pwcheck_method: saslauthd
+
+# If using plain/digest-md5 for user database, this sets the file
+# containing the passwords.  Use 'saslpasswd2 -a pmcd [username]'
+# to add entries and 'sasldblistusers2 -f $sasldb_path' to browse.
+# Note: must be readable as the PCP daemons user (chown root:pcp).
+sasldb_path: /etc/pcp/passwd.db
+
+# Before using Kerberos via GSSAPI, you need a service principal on
+# the KDC server for pmcd, and that to be exported to the keytab.
+#keytab: /etc/pcp/krb5.tab
+----
+
+As we can see, everything is set correctly and there is nothing for us to do here.
+
+Now let's set up our sysadmin user on node2:
+
+----
+useradd -r sysadmin
+passwd sysadmin
+saslpasswd2 -a pmcd sysadmin
+----
+
+You do not have to set the regular password and the sasl password to be the same. That said, you will need the sasl password in a few steps, so remember what you set it to!
+
+Now we need to set the correct ownership and permission on the pcp sasl2 database on node2:
+
+----
+chown root:pcp /etc/pcp/passwd.db
+chmod 640 /etc/pcp/passwd.db
+----
+
+Now we need to restart pmcd on node2:
+
+----
+systemctl restart pmcd
+----
+
+Now on node2, let's verify that sasl authentication is working:
+
+----
+pminfo -f h "pcp://127.0.0.1?username=sysadmin" disk.dev.read
+----
+
+You will be prompted for your password and if you enter it correctly and sasl is set up correctly, you will see output similar to:
+
+----
+disk.dev.read
+    inst [0 or "vda"] value 10664
+----
+
+Now we need to change the bpftrace configuration to allow the sysadmin user access. On node2, edit `/var/lib/pcp/pmdas/bpftrace/bpftrace.conf` and make sure the following are set under `[dynamic_scripts]`:
+
+----
+enabled = true
+allowed_users = root,sysadmin
+----
+
+Once these changes have been made, run these commands on node2 to re-install the bpftrace pmda:
+
+----
+cd /var/lib/pcp/pmdas/bpftrace
+./Remove
+./Install
+pminfo | grep bpf
+----
+
+On that last pminfo command, you should see bpf metrics showing like:
+
+----
+bpftrace.scripts.runqlat.data.usecs
+bpftrace.scripts.runqlat.data_bytes
+bpftrace.scripts.runqlat.code
+bpftrace.scripts.runqlat.probes
+bpftrace.scripts.runqlat.error
+bpftrace.scripts.runqlat.exit_code
+bpftrace.scripts.runqlat.pid
+bpftrace.scripts.runqlat.status
+...
+----
 
 
 == Additional Resources
