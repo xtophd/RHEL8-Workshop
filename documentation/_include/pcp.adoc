@@ -592,6 +592,23 @@ bpftrace.scripts.runqlat.status
 ...
 ----
 
+Now back in our Grafana dashboard, click on the Configuration cog and "Data Sources":
+
+image::grafana-30-datasources.png[Data Sources]
+
+and then click on the "PCP bpftrace" data source. On this page, click the toggle for "Basic auth" under the "Auth" section so that it is on. You will know it is on when you get a "Basic Auth Details" section where you will enter the sasl credentials for the `sysadmin` user:
+
+image::grafana-80-bpftrace-auth.png[bpftrace Auth]
+
+Click "Save & Test" and you should get the "Data source is working" message. After this, you can click on the Dashboards icon, select "Manage" and pick the "PCP bpftrace System Analysis" dashboard, which looks like this:
+
+image::grafana-85-bpftrace-system-analysis.png[bpftrace System Analysis]
+
+Now let's click the Dashboards icon, select "Manage" and pick the "PCP bpftrace Flame Graphs" dashboard, which looks like:
+
+image::grafana-90-bpftrace-flame-graphs.png[bpftrace Flame Graphs]
+
+This let's us see live flame graphs of on cpu activity. To read a flame graph, you read from the bottom to the top. At the bottom, you have the process name and pid number. Above that, you will see the stack graphed out by function. The wider a process/function is on the flame graph, the more cpu it is taking. The redder a process/function is on the flame graph, the more cpu cycles it is spinning. Flame graphs provide a great visualization to understand how a CPU is spending its time.
 
 == Additional Resources
 
