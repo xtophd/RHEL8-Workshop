@@ -458,17 +458,22 @@ Click on "Add Data Source" and then search for "pcp":
 
 image::grafana-40-datasources-pcp.png[Searching for pcp data sources]
 
-Let's start by clicking "Select" next to PCP Redis. This will bring us to the following configuration page:
+Let's start by clicking "Select" next to PCP Redis. This will bring us to the following configuration page, where will specify `http://localhost:44322` for the URL:
 
 image::grafana-45-pcpredis-config.png[PCP Redis Config]
 
-For the hostname, we will specify `http://localhost:44322`:
+Now we'll hit "Save & Test":
 
 image::grafana-50-saveandtest.png[Eh]
 
-Now we'll hit "Save & Test":
+Now click on the configuration cog and select "Data Sources" again. At this time, we'll see that the "Add Data Source" button has moved:
 
 image::grafana-55-addagain.png[Eh]
+
+Click on "Add Data Source", search for pcp and repeat the above steps for:
+
+* PCP Vector
+* PCP bpftrace
 
 == Additional Resources
 
