@@ -434,7 +434,7 @@ Now from your browser, go to link:http://node2:3000[http://node2:3000] and login
 
 image::grafana-10-login.png[Login]
 
-Once you've logged in, click on the cog wheel for configuration and select "Plugins":
+Once you've logged in, click on the configuration cog and select "Plugins":
 
 image::grafana-15-plugins.png[Configure Plugins]
 
@@ -445,6 +445,30 @@ image::grafana-20-pcp-plugin.png[Performance Co-Pilot Grafana Plugin]
 Now click "Enable":
 
 image::grafana-25-pcp-enable.png[Enable Performance Co-Pilot Plugin]
+
+Now we can click on the configuration cog and select "Data Sources":
+
+image::grafana-30-datasources.png[Data Sources]
+
+Once this comes up, you'll be presented with a button for "Add Data Source":
+
+image::grafana-35-adddatasource.png[Add Data Source]
+
+Click on "Add Data Source" and then search for "pcp":
+
+image::grafana-40-datasources-pcp.png[Searching for pcp data sources]
+
+Let's start by clicking "Select" next to PCP Redis. This will bring us to the following configuration page:
+
+image::grafana-45-pcpredis-config.png[PCP Redis Config]
+
+For the hostname, we will specify `http://localhost:44322`:
+
+image::grafana-50-saveandtest.png[Eh]
+
+Now we'll hit "Save & Test":
+
+image::grafana-55-addagain.png[Eh]
 
 == Additional Resources
 
