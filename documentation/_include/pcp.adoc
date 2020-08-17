@@ -464,16 +464,27 @@ image::grafana-45-pcpredis-config.png[PCP Redis Config]
 
 Now we'll hit "Save & Test":
 
-image::grafana-50-saveandtest.png[Eh]
+image::grafana-50-saveandtest.png[Save and Test]
 
 Now click on the configuration cog and select "Data Sources" again. At this time, we'll see that the "Add Data Source" button has moved:
 
-image::grafana-55-addagain.png[Eh]
+image::grafana-55-addagain.png[Add Button has Moved]
 
 Click on "Add Data Source", search for pcp and repeat the above steps for:
 
 * PCP Vector
 * PCP bpftrace
+
+Once you have finished this, click on the Dashboards icon and select "Manage":
+
+image::grafana-60-managebutton.png[Manage Button]
+
+image::grafana-65-managedashboards.png[Manage Dashboards]
+
+image::grafana-70-vectordashboard.png[Vector Dashboard]
+
+image::grafana-75-redisdashboard.png[Redis Dashboard]
+
 
 == Additional Resources
 
