@@ -610,6 +610,77 @@ image::grafana-90-bpftrace-flame-graphs.png[bpftrace Flame Graphs]
 
 This let's us see live flame graphs of on cpu activity. To read a flame graph, you read from the bottom to the top. At the bottom, you have the process name and pid number. Above that, you will see the stack graphed out by function. The wider a process/function is on the flame graph, the more cpu it is taking. The redder a process/function is on the flame graph, the more cpu cycles it is spinning. Flame graphs provide a great visualization to understand how a CPU is spending its time.
 
+== Visualizing bpftrace data without providing root access to a user
+
+So while it's nice that we can now see bpftrace data visualized in grafana, we've also given this user great power over the system. Let's click on the Dashboards icon, select "Manage" and pick the "PCP bpftrace System Analysis" dashboard again. Once there, click on "CPU Usage" and then click "Edit":
+
+image::grafana-95-bpftrace-cpuedit.png[Edit CPU Chart]
+
+After this, you'll be taken to a screen where you can edit and run live bpftrace code on the system. This is the part you don't want to have exposed in production!
+
+image::grafana-100-bpftrace-cpuwalk-bt.png[Editing cpuwalk.bt in Grafana]
+
+This is the cpuwalk.bt file and you can make changes to it here and see those changes live in the graph. We are not going to make changes, but we would like to expose this data to our end users without giving them access to run their own bpftrace scripts. Let's save the contents of this file out to /root/cpuwalk.bt on our node2 system.
+
+Now on node2, run:
+
+----
+cd /var/lib/pcp/pmdas/bpftrace/autostart
+cp /root/cpuwalk.bt .
+restorecon ./cpuwalk.bt
+ls -lahZ .
+----
+
+Once you have done the above you should see the file in this directory with these permissions:
+
+----
+-rw-r--r--. 1 root root unconfined_u:object_r:pcp_var_lib_t:s0 497 Aug 17 17:17 cpuwalk.bt
+----
+
+Now, we need to remove and re-install the bpftrace pmda:
+
+----
+cd /var/lib/pcp/pmdas/bpftrace
+./Remove
+./Install
+pminfo | grep bpftrace | grep cpuwalk
+----
+
+If successful, we should see this output:
+
+----
+bpftrace.scripts.cpuwalk.data.output
+bpftrace.scripts.cpuwalk.data.cpu
+bpftrace.scripts.cpuwalk.data_bytes
+bpftrace.scripts.cpuwalk.code
+bpftrace.scripts.cpuwalk.probes
+bpftrace.scripts.cpuwalk.error
+bpftrace.scripts.cpuwalk.exit_code
+bpftrace.scripts.cpuwalk.pid
+bpftrace.scripts.cpuwalk.status
+----
+
+Now, we can access the bpf map named `@cpu` through the pcp metric `bpftrace.scripts.cpuwalk.data.cpu`. So let's do this in grafana. Click the Dasboard icon, select Manage, and then click the "PCP Vector Host Overview" dashboard. On this dashboard, click "CPU%" and click "Edit":
+
+image::grafana-105-vector-cpuedit.png[Edit CPU% Script]
+
+Now you will see the following screen:
+
+image::grafana-110-vector-cpuqery.png[CPU% Query]
+
+On this screen, delete the "B" query and change the "A" query to read:
+
+----
+bpftrace.scripts.cpuwalk.data.cpu
+----
+
+When you have done this, your screen will look like:
+
+image::115-vector-cpuedit2.png[Now Using bpf!]
+
+and you can see the data from the bpftrace script cpuwalk.bt being renedered through PCP Vector without giving the grafana user direct access to eBPF!
+
+
 == Additional Resources
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
