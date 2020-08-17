@@ -431,6 +431,20 @@ cockpit dhcpv6-client grafana http https pmproxy ssh
 
 Now from your browser, go to link:http://node2:3000[http://node2:3000] and login with the username `admin` and the password `admin`. You will be asked to specify a new password for the `admin` account. Please remember what you set the password to.
 
+image::grafana-10-login.png[Login]
+
+Once you've logged in, click on the cog wheel for configuration and select "Plugins":
+
+image::grafana-15-plugins.png[Configure Plugins]
+
+Now search for "Performance" and click on the "Performance Co-Pilot" plugin:
+
+image::grafana-20-pcp-plugin.png[Performance Co-Pilot Grafana Plugin]
+
+Now click "Enable":
+
+image::grafana-25-pcp-enable.png[Enable Performance Co-Pilot Plugin]
+
 == Additional Resources
 
 NOTE: You are not required to reference any additional resources for these exercises.  This is informational only.
