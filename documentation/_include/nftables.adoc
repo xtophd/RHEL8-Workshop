@@ -110,7 +110,7 @@ Verify the rule change.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *nft list table ip filter -n -a*
+# *nft -n -a list table ip filter*
 
 table ip filter { # handle 1
         chain INPUT { # handle 1
