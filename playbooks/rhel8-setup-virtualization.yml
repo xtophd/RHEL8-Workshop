@@ -9,13 +9,13 @@
       until: result is succeeded
       delay: 5
 
-    - name: "SETUP VIRTUALIZATION: cockpit service restart"
+    - name: "SETUP VIRTUALIZATION: cockpit socket enabled"
       service: name="cockpit.socket" enabled=yes
 
-    - name: "SETUP VIRTUALIZATION: imagebuilder service restart"
+    - name: "SETUP VIRTUALIZATION: cockpit service restart"
       service: name="cockpit" state=started enabled=yes
 
-    - name: "SETUP VIRTUALIZATION: imagebuilder service restart"
+    - name: "SETUP VIRTUALIZATION: service restart libvirtd"
       service: name="libvirtd" state=started enabled=yes
 
     - name: "SETUP VIRTUALIZATION: imagebuilder service restart"
