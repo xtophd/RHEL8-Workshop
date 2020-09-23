@@ -165,7 +165,7 @@ tmpfs                                      379M     0  379M   0% /run/user/1000
 /dev/mapper/stratis-1-3e8e[_truncated_]71dc  1.0T  7.2G 1017G   1% /summitdir
 ----
 
-The actual space used by a filesystem can be shown using the `stratis fs list` command as shown above.  Notice how the summitdur filesystem has a virtual size of 1T.  If the data in a filesystem actually approaches its virtual size, Stratis will automatically grow the filesystem.
+The actual space used by a filesystem can be shown using the `stratis fs list` command as shown above.  Notice how the summitdir filesystem has a virtual size of 1T.  If the data in a filesystem actually approaches its virtual size, Stratis will automatically grow the filesystem.
 
 == Create Mount Point
 
@@ -193,7 +193,7 @@ echo "UUID=${UUID} /summitdir xfs defaults 0 0" >> /etc/fstab
 ----
 ====
 
-Verify that the /etc/fstab entry is correct by unmounting and mounting the filesytem one last time.
+Verify that the /etc/fstab entry is correct by unmounting and mounting the filesystem one last time.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -213,7 +213,7 @@ tmpfs                                      379M     0  379M   0% /run/user/1000
 
 == Add Cache Device
 
-Stratis also makes it easy to add cache devices.  For example, say the filesystem we just created runs into some I/O performance issues.  You bought an SSD (solid state disk) and need to configure it into the system to act as a high speed cache.  Use the following commands to add the drive (/dev/sda) and check its status:
+Stratis also makes it easy to add cache devices.  For example, say the filesystem we just created runs into some I/O performance issues.  You bought an SSD (solid state disk) and need to configure it into the system to act as a high speed cache.  Use the following commands to add the drive (/dev/vdd) and check its status:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
