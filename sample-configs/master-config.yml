@@ -54,12 +54,12 @@ g_clusterName = "rhel8"
 ## Configure the public (primary) network
 g_publicNet     = "True"
 g_publicDomain  = "example.com"
-g_pubNET        = "192.168.124.0"
+g_pubNET        = "192.168.127.0"
 g_pubNM         = "255.255.255.0"
 g_pubPREFIX     = "24"
-g_pubGW         = "192.168.124.1"
-g_pubDNS        = "192.168.124.1"
-g_pubNTP        = "192.168.124.160"
+g_pubGW         = "192.168.127.1"
+g_pubDNS        = "192.168.127.1"
+g_pubNTP        = "192.168.127.160"
 g_pubFQDN       = "{{ g_clusterName }}.{{ g_publicDomain }}"
 
 ## Configure the private (secondary) network
@@ -140,7 +140,7 @@ ansible_connection = "local"
 
 h_hwPROF = "kvm_vda"
 h_rsPROF = "bastion"
-h_ksPROF = "rhel8_lvm"
+h_ksPROF = "rhel8"
 
 ## -----------------
 
@@ -148,20 +148,20 @@ h_ksPROF = "rhel8_lvm"
 
 h_hwPROF = "kvm_vda"
 h_rsPROF = "sml"
-h_ksPROF = "rhel8_lvm"
+h_ksPROF = "rhel8"
 
 ##
 ## ----------------------------------------
 ##
 
 [myVirthost]
-virthost  h_pubMAC="00:00:00:00:00:00" h_pubIP="192.168.124.1"
+virthost    h_pubIP="192.168.127.1"
 
 [myBastion]
-workstation   h_pubMAC="2c:c2:60:20:c1:c1" h_pubIP="192.168.124.160" h_hwPROF="kvm_nest_vda" h_rsPROF="bastion"
+workstation h_pubIP="192.168.127.160" h_hwPROF="kvm_nest_vda" h_rsPROF="bastion"
 
 [myNodes]
-node1    h_pubMAC="2c:c2:60:20:c3:c3" h_pubIP="192.168.124.162" h_rsPROF="rhel8"
-node2    h_pubMAC="2c:c2:60:20:c4:c4" h_pubIP="192.168.124.163" h_rsPROF="rhel8-xtra"
-node3    h_pubMAC="2c:c2:60:20:c5:c5" h_pubIP="192.168.124.164" h_rsPROF="rhel8-xtra"
+node1       h_pubIP="192.168.127.162" h_rsPROF="tiny"
+node2       h_pubIP="192.168.127.163" h_rsPROF="tiny-xtra"
+node3       h_pubIP="192.168.127.164" h_rsPROF="tiny-xtra"
 

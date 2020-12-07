@@ -10,7 +10,7 @@
 ##
 
 # virt-host addr in private network
-g_kvmhost_ip:   "192.168.124.1"
+g_kvmhost_ip:   "192.168.127.1"
 
 # httpd,kickstart,repo service port
 g_http_port:    "8008"
@@ -48,7 +48,29 @@ kvm_cfg:
     dir: "/var/www/html/repos"
     url: "http://{{ g_kvmhost_ip }}:{{ g_http_port }}/repos"
 
-kvm_deploy_plan:
+deployer_cfg:
+
+  ## deployer hostname OR ip
+  ip: "{{ g_kvmhost_ip }}"
+
+  ## httpd,kickstart,repo service port
+  http_port:    "8008"
+
+  ## cockpit defaults to 9090, but you can change it
+  cockpit_port: "9090"
+
+  kickstart:
+    dir: "/var/www/html/ks"
+    url: "http://{{ g_kvmhost_ip }}:8008/ks"
+
+  iso:
+    dir: "/home/iso"
+
+  repo:
+    dir: "/var/www/html/repos"
+    url: "http://{{ g_kvmhost_ip }}:8008/repos"
+
+deployer_plan:
 
   ## PRE/POST INSTALL SCRIPTS BEFORE AND AFTER DEPLOY
   ##
