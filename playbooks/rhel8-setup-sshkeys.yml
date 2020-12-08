@@ -1,5 +1,5 @@
 ---
-- hosts: workstation
+- hosts: myBastion
   tasks:
 
   - name: "PREP-SSHKEYS: file/directory .ssh permissions"
@@ -31,7 +31,7 @@
       cmd: |
         ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}
         ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}.{{ ansible_domain }}
-    loop: "{{ [ groups['workstation'], groups['nodes'] ]  | flatten(1) }}"
+    loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
     ignore_errors: yes
 
   - name: "PREP-SSHKEYS: add ssh keys for nodes"
@@ -41,7 +41,7 @@
       cmd: |
         ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }} >> {{ p_file }}
         ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }}.{{ ansible_domain }} >> {{ p_file }}
-    loop: "{{ [ groups['workstation'], groups['nodes'] ]  | flatten(1) }}"
+    loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
     ignore_errors: yes
 
 

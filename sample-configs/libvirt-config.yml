@@ -78,7 +78,7 @@ deployer_plan:
   ##   post_install:      STR complete executable shell (PWD: is project directory)
 
   pre_install:  ""
-  post_install: "ansible-playbook -i ./config/master-config.yml -e @./config/libvirt-config.yml -f 10 ./playbooks/rhel8-prep-workshop.yml"
+  post_install: "ansible-playbook -i ./config/master-config.yml -e @./config/libvirt-config.yml -f 10 ./playbooks/rhel8-workshop.yml"
 
   ##
   ## each pass must define the following:

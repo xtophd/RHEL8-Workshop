@@ -1,6 +1,7 @@
 [all:vars]
+
 myLocation = "Boston"
-myDomain = "example.com"
+myDomain   = "example.com"
 
 student_username = "cloud-user"
 
@@ -8,16 +9,13 @@ ansible_become          = True
 ansible_become_user     = root
 ansible_become_ask_pass = False
 
-[workstation:vars]
+[bastion:vars]
 myExample = "Sample Parameter"
 
-#[core]
-#core.example.com
-
-[workstation]
+[myBastion]
 workstation
 
-[nodes]
+[myNodes]
 node1
 node2
 node3
