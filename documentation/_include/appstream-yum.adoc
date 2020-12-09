@@ -17,6 +17,22 @@ endif::[]
 
 == Overview
 
+Application Streams are pre-packaged versions of runtime languages, web servers, databases, etc.
+
+Example:
+  * PHP 7.2 is an application stream
+	* PHP 7.3 is an application stream
+	* PostgreSQL 10 is an application stream
+  
+Application Streams allow multiple versions of things to be available for installation in RHEL.
+
+Users can select the applications they want, select the version of the application that they want (the stream), and install and update the Application Stream on their system(s).
+
+Application Streams:
+  * are packaged as Modules, RPMs, and Software Collections (SCL).
+  * are the mechanism of delivering and updating software at different speeds
+  * allow developers to have bleeding-edge software, and server admins longer stability
+
 == Getting Started
 
 For these exercises, you will be using the host `node1` as user `root`.
@@ -203,6 +219,17 @@ You may now switch back to the workstation:
 ----
 # *exit*
 ----
+
+== Summary
+
+=== Application Streams and Modules - Are they the same thing?
+
+  * Application Streams are installable components with multiple versions available
+    + Application Streams have a specified life, i.e. 5 years
+  * Modules are the packaging used to build Application Streams
+    + Modules have streams too, used to provide Application Streams
+  * Module packaging will be used for lots of things in RHEL, not all modules will be supported Application Streams
+    +Some modules are just single stream and some are just dependencies
 
 == (BONUS) App Stream Automation with Ansible
 
