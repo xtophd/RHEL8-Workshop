@@ -206,7 +206,7 @@ You may now switch back to the workstation:
 
 == (BONUS) App Stream Automation with Ansible
 
-WARN: Depending on the workshop environment deployed, you host may or may not have access to ansible.  In some cases, if your host does NOT have ansible available, you may be able to install an unsupported version from the EPEL repo.  Only install the EPEL version if instructed to do so: `cheat-ansible-from-epel.sh`
+WARNING: Depending on the workshop environment deployed, you host may or may not have access to ansible.  In some cases, if your host does NOT have ansible available, you may be able to install an unsupported version from the EPEL repo.  Only install the EPEL version if instructed to do so: `cheat-ansible-from-epel.sh`
 
 App Stream operations can be performed in ansible with the 'dnf' module.  Here is a sample of a dnf task:
 
