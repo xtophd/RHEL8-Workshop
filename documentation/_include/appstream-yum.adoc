@@ -224,6 +224,7 @@ You may now switch back to the workstation:
 
 == Summary
 
+[discrete]
 === Application Streams and Modules - Are they the same thing?
 
   * Application Streams are installable components with multiple versions available
