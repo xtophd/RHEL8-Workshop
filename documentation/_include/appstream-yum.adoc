@@ -20,9 +20,10 @@ endif::[]
 Application Streams are pre-packaged versions of runtime languages, web servers, databases, etc.
 
 Example:
+
   * PHP 7.2 is an application stream
-	* PHP 7.3 is an application stream
-	* PostgreSQL 10 is an application stream
+  * PHP 7.3 is an application stream
+  * PostgreSQL 10 is an application stream
   
 Application Streams allow multiple versions of things to be available for installation in RHEL.
 
