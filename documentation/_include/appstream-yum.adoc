@@ -29,6 +29,7 @@ Application Streams allow multiple versions of things to be available for instal
 Users can select the applications they want, select the version of the application that they want (the stream), and install and update the Application Stream on their system(s).
 
 Application Streams:
+
   * are packaged as Modules, RPMs, and Software Collections (SCL).
   * are the mechanism of delivering and updating software at different speeds
   * allow developers to have bleeding-edge software, and server admins longer stability
