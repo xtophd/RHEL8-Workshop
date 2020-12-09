@@ -4,12 +4,41 @@
 ##     on the control host (ie: workstation)
 ##     CWD =  ~root/RHEL8-Workshop
 
-myInventory="./config/rhel8-workshop"
+myInventory="./config/master-config.yml"
 
 if [ ! -e "${myInventory}" ] ; then
     echo "ERROR: Are you in the right directory? Can not find ${myInventory}" ; exit
     exit
 fi
-
-time ansible-playbook -i ${myInventory} -f 5 ./playbooks/rhel8-workshop.yml
     
+case "$1" in
+    "all")
+        time  ansible-playbook -i ${myInventory} -f 10  ./playbooks/rhel8-workshop.yml
+        ;;
+
+    "appstream"   | \
+    "boom"        | \
+    "buildah"     | \
+    "ebpf"        | \
+    "firewalld"   | \
+    "nftables"    | \
+    "prep"        | \
+    "podman"      | \
+    "stratis"     | \
+    "systemd"     | \
+    "tlog"        | \
+    "virt"        | \
+    "vdo"         | \
+    "wayland"     | \
+    "webconsole"  | \
+    "kpatch")
+
+        time  ansible-playbook -i ${myInventory} -f 10 --tags $1 ./playbooks/rhel8-workshop.yml
+        ;;
+
+    *)
+        echo "USAGE: bastion-setup.sh [ all | prep | appstream | boom | buildah | ebpf | firewalld | nftables | podman | stratis | systemd | tlog | virt | vdo | wayland | webconsole | kpatch ]"
+        ;;
+
+esac
+

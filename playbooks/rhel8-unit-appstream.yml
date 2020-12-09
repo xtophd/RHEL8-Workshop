@@ -1,0 +1,41 @@
+---
+- hosts: myBastion
+  tasks:
+  
+    - name: "SETUP APPSTREAM: deploy sample playbook and inventory"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0644
+      with_items:
+        - {src: 'appstream-playbook.j2', dest: '/usr/local/src/appstream-playbook.yml'} 
+        - {src: 'appstream-inventory.j2', dest: '/usr/local/src/appstream-inventory.yml'} 
+
+    - name: "SETUP APPSTREAM: cheat script installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0744
+      with_items:
+        - {src: 'cheat-ansible-from-epel.j2', dest: '/usr/local/bin/cheat-ansible-from-epel.sh'}
+
+
+
+
+
+- hosts: node1
+  tasks:
+
+    - name: "SETUP APPSTREAM: cheat file installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0744
+      with_items:
+        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-appstream-checkhost.sh'} 

@@ -1,5 +1,5 @@
 ---
-- hosts: workstation 
+- hosts: myBastion
   tasks:
   
     - name: "SETUP WEBCONSOLE: yum install packages"
@@ -57,7 +57,7 @@
 
 
 
-- hosts: nodes
+- hosts: myNodes
   tasks:
   
     - name: "SETUP WEBCONSOLE: yum install packages"

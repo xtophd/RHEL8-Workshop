@@ -1,84 +1,66 @@
 ---
-- hosts: myBastion,myNodes
-  tasks:
-  
-    - name: "PREP: TEMPLATE /etc/motd"
-      template:
-        src: motd-generic.j2
-        dest: /etc/motd
-        owner: root
-        group: root
-        mode: 0644  
 
-    - name: "PREP: YUM remove UN-WANTED packages"
-      yum: name=insights-client state=absent
-      register: result
-      retries: 10
-      until: result is succeeded
-      delay: 5
+- import_playbook: rhel8-prep.yml
+  tags:
+    - prep
 
-    - name: "PREP: YUM install WANTED packages"
-      yum: name=tmux state=installed
-      register: result
-      retries: 10
-      until: result is succeeded
-      delay: 5
-
-    - name: "PREP: FILE remove UN-WATNED motd messages"
-      file:
-        path: /etc/motd.d/cockpit
-        state: absent
-
-    - name: "PREP: SERVICE disable and stop unwanted services"
-      service: 
-        name="{{ item.name }}"
-        state=stopped
-        enabled=no
-      with_items:
-        - {name: 'rhsmcertd'}
-
-    - name: "PREP: CMD disable yum plugins for subscription-manager"
-      shell: 
-        cmd: |          
-          sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/subscription-manager.conf
-          sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/product-id.conf
-                    
-    - name: "PREP: USER create and/or reset users"
-      user: name="{{ item.name }}" password="{{ item.password }}"
-      with_items:
-        - {name: 'root', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
-        - {name: '{{ g_studentName }}', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
-
-    - name: "PREP: USER modification"
-      user: name="{{ g_studentName }}" groups="wheel"
-
-    - name: "PREP: Sudo Configuration"
-      template:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
-        owner: root
-        group: root
-        mode: 0600
-      with_items:
-        - {src: 'sudoers.j2', dest: '/etc/sudoers.d/rhel8-workshop'}
-        - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ g_studentName }}'}
-
-- import_playbook: rhel8-setup-sshkeys.yml
 - import_playbook: rhel8-unit-wayland.yml
-- import_playbook: rhel8-unit-appstreams.yml
-- import_playbook: rhel8-unit-systemd.yml
-- import_playbook: rhel8-unit-firewalld.yml
-- import_playbook: rhel8-unit-nftables.yml
-- import_playbook: rhel8-unit-ebpf.yml
-- import_playbook: rhel8-unit-boom.yml
-- import_playbook: rhel8-unit-podman.yml
-- import_playbook: rhel8-unit-buildah.yml
-- import_playbook: rhel8-unit-stratis.yml
-- import_playbook: rhel8-unit-tlog.yml
-- import_playbook: rhel8-unit-lvm-vdo.yml
-- import_playbook: rhel8-unit-virtualization.yml
-- import_playbook: rhel8-unit-kpatch.yml
+  tags:
+    - wayland
 
+- import_playbook: rhel8-unit-appstream.yml
+  tags:
+    - appstream
+
+- import_playbook: rhel8-unit-systemd.yml
+  tags:
+    - systemd
+
+- import_playbook: rhel8-unit-firewalld.yml
+  tags:
+    - firewalld
+
+- import_playbook: rhel8-unit-nftables.yml
+  tags:
+    - nftables
+
+- import_playbook: rhel8-unit-ebpf.yml
+  tags:
+    - ebpf
+
+- import_playbook: rhel8-unit-boom.yml
+  tags:
+    - boom
+
+- import_playbook: rhel8-unit-podman.yml
+  tags:
+    - podman
+
+- import_playbook: rhel8-unit-buildah.yml
+  tags:
+    - buildah
+
+- import_playbook: rhel8-unit-stratis.yml
+  tags:
+    - stratis
+
+- import_playbook: rhel8-unit-tlog.yml
+  tags:
+    - tlog
+
+- import_playbook: rhel8-unit-lvm-vdo.yml
+  tags:
+    - vdo
+
+- import_playbook: rhel8-unit-virtualization.yml
+  tags:
+    - virt
+
+- import_playbook: rhel8-unit-kpatch.yml
+  tags:
+    - kpatch
 
 ## Save the webconsole for last since it will discconect webconsole session on service restart
 - import_playbook: rhel8-unit-webconsole.yml
+  tags:
+    - webconsole
