@@ -17,6 +17,24 @@ endif::[]
 
 == Overview
 
+Application Streams are pre-packaged versions of runtime languages, web servers, databases, etc.
+
+Example:
+
+  * PHP 7.2 is an application stream
+  * PHP 7.3 is an application stream
+  * PostgreSQL 10 is an application stream
+  
+Application Streams allow multiple versions of things to be available for installation in RHEL.
+
+Users can select the applications they want, select the version of the application that they want (the stream), and install and update the Application Stream on their system(s).
+
+Application Streams:
+
+  * are packaged as Modules, RPMs, and Software Collections (SCL).
+  * are the mechanism of delivering and updating software at different speeds
+  * allow developers to have bleeding-edge software, and server admins longer stability
+
 == Getting Started
 
 For these exercises, you will be using the host `node1` as user `root`.
@@ -204,10 +222,23 @@ You may now switch back to the workstation:
 # *exit*
 ----
 
-== Ansible automation with App Stream
+== Summary
 
-App Stream operations can be performed in ansible with the dnf module,
-like such:
+[discrete]
+=== Application Streams and Modules - Are they the same thing?
+
+  * Application Streams are installable components with multiple versions available
+    + Application Streams have a specified life, i.e. 5 years
+  * Modules are the packaging used to build Application Streams
+    + Modules have streams too, used to provide Application Streams
+  * Module packaging will be used for lots of things in RHEL, not all modules will be supported Application Streams
+    +Some modules are just single stream and some are just dependencies
+
+== (BONUS) App Stream Automation with Ansible
+
+WARNING: Depending on the workshop environment deployed, your workstation host may not have access to ansible.  In some cases, if your host does NOT have ansible installed, you may be able to install an unsupported version from the EPEL repo.  Only install the EPEL version if instructed to do so: `cheat-ansible-from-epel.sh`
+
+App Stream operations can be performed in ansible with the 'dnf' module.  Here is a sample of a dnf task:
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -217,22 +248,24 @@ like such:
     state: present
 ----
 
-A sample of a dnf based playbook for this cluster is provided on the workstation host.
+A complete sample of a dnf based playbook for this cluster is provided on the workstation host.
 
 As user `root` on the host `workstation`, run the following:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cd ~/RHEL8-Workshop*
+# *cd /usr/local/src*
 
-# *ansible-playbook -i config/rhel8-workshop playbooks/appstream-pgsql.yml*
+# *ansible-playbook -i appstream-inventory.yml appstream-playbook.yml*
 ----
 
 Then to verify, you can use an ansible adhoc command to check your work.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ansible rhel8 -i config/rhel8-workshop -o -a "rpm -q postgresql-server"*
+# *cd /usr/local/src*
+
+# *ansible rhel8 -i appstream-inventory.yml -o -a "rpm -q postgresql-server"*
 
 node1 | CHANGED | rc=0 | (stdout) postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64
 node2 | FAILED! => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": true,"cmd": ["rpm","-q","postgresql-server"],"delta": "0:00:00.007318","end": "2020-05-01 17:28:38.719189","msg": "non-zero return code","rc": 1,"start": "2020-05-01 17:28:38.711871","stderr": "","stderr_lines": [],"stdout": "package postgresql-server is not installed","stdout_lines": ["package postgresql-server is not installed"],"warnings": ["Consider using the yum, dnf or zypper module rather than running 'rpm'.  If you need to use command because yum, dnf or zypper is insufficient you can add 'warn: false' to this command task or set 'command_warnings=False' in ansible.cfg to get rid of this message."]}
