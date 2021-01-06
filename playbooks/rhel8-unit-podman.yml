@@ -2,14 +2,14 @@
 - hosts: node3
   tasks:
 
-    - name: "SETUP PODMAN: yum install podman,net-tools,wget"
+    - name: "rhel8-unit-podman : yum install podman,net-tools,wget"
       yum: name=podman,net-tools,wget state=installed
       register: result
       retries: 10
       until: result is succeeded
       delay: 5
 
-    - name: "SETUP PODMAN: config file installs"
+    - name: "rhel8-unit-podman : config file installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -20,7 +20,7 @@
         - {src: 'podman-registries.j2', dest: '/etc/containers/registries.conf'}
         - {src: 'podman-ocifile.j2',    dest: '/root/custom_image.OCIFile'}
 
-    - name: "SETUP PODMAN: cheat script installs"
+    - name: "rhel8-unit-podman : cheat script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"

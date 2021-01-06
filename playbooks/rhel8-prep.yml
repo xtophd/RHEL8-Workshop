@@ -2,7 +2,7 @@
 - hosts: myBastion,myNodes
   tasks:
   
-  - name: "PREP: TEMPLATE /etc/motd"
+  - name: "rhel8-prep: rhel8-prep : TEMPLATE /etc/motd"
     template:
       src: motd-generic.j2
       dest: /etc/motd
@@ -10,26 +10,26 @@
       group: root
       mode: 0644  
 
-  - name: "PREP: YUM remove UN-WANTED packages"
+  - name: "rhel8-prep : YUM remove UN-WANTED packages"
     yum: name=insights-client state=absent
     register: result
     retries: 10
     until: result is succeeded
     delay: 5
 
-  - name: "PREP: YUM install WANTED packages"
+  - name: "rhel8-prep : YUM install WANTED packages"
     yum: name=tmux state=installed
     register: result
     retries: 10
     until: result is succeeded
     delay: 5
 
-  - name: "PREP: FILE remove UN-WATNED motd messages"
+  - name: "rhel8-prep : FILE remove UN-WATNED motd messages"
     file:
       path: /etc/motd.d/cockpit
       state: absent
 
-  - name: "PREP: SERVICE disable and stop unwanted services"
+  - name: "rhel8-prep : SERVICE disable and stop unwanted services"
     service: 
       name="{{ item.name }}"
       state=stopped
@@ -37,22 +37,22 @@
     with_items:
       - {name: 'rhsmcertd'}
 
-  - name: "PREP: CMD disable yum plugins for subscription-manager"
+  - name: "rhel8-prep : CMD disable yum plugins for subscription-manager"
     shell: 
       cmd: |          
         sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/subscription-manager.conf
         sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/product-id.conf
                   
-  - name: "PREP: USER create and/or reset users"
+  - name: "rhel8-prep : USER create and/or reset users"
     user: name="{{ item.name }}" password="{{ item.password }}"
     with_items:
       - {name: 'root', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
       - {name: '{{ g_studentName }}', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
 
-  - name: "PREP: USER modification"
+  - name: "rhel8-prep : USER modification"
     user: name="{{ g_studentName }}" groups="wheel"
 
-  - name: "PREP: Sudo Configuration"
+  - name: "rhel8-prep : Sudo Configuration"
     template:
       src: "{{ item.src }}"
       dest: "{{ item.dest }}"
@@ -63,7 +63,7 @@
       - {src: 'sudoers.j2', dest: '/etc/sudoers.d/rhel8-workshop'}
       - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ g_studentName }}'}
 
-  - name: "PREP: check ssh directory permissions for '{{ item }}'"
+  - name: "rhel8-prep : check ssh directory permissions for '{{ item }}'"
     file:
       path: ~{{ item }}/.ssh
       mode: "0700"
@@ -74,7 +74,7 @@
       - "root"
       - "{{ g_studentName }}"
 
-  - name: "PREP: check ssh known_hosts  permissions for '{{ item }}'"
+  - name: "rhel8-prep : check ssh known_hosts  permissions for '{{ item }}'"
     file:
       path: "~{{ item }}/.ssh/known_hosts"
       mode: "0700"
@@ -85,7 +85,7 @@
       - "root"
       - "{{ g_studentName }}"
 
-  - name: "PREP: clean up known_hosts for 'root'"
+  - name: "rhel8-prep : clean up known_hosts for 'root'"
     vars:
       p_file: "~root/.ssh/known_hosts"
     shell:
@@ -105,7 +105,7 @@
     loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
     ignore_errors: yes
 
-  - name: "PREP: clean up known_hosts for '{{ g_studentName }}'"
+  - name: "rhel8-prep : clean up known_hosts for '{{ g_studentName }}'"
     vars:
       p_file: "~{{ g_studentName }}/.ssh/known_hosts"
     shell:
@@ -136,27 +136,27 @@
 - hosts: myBastion
   tasks:
 
-  - name: "PREP: create ssh key for 'root'"
+  - name: "rhel8-prep : create ssh key for 'root'"
     openssh_keypair:
       path:  "~root/.ssh/id_rsa"
       owner: "root"
       group: "root"
     register: rootkey_result
 
-  - name: "PREP: save temp copy of 'root' ssh key"
+  - name: "rhel8-prep : save temp copy of 'root' ssh key"
     delegate_to: localhost
     copy:
       content="{{ rootkey_result.public_key }}" 
       dest="../config/root_sshkey.temp"
 
-  - name: "PREP: create ssh key for '{{ g_studentName }}'"
+  - name: "rhel8-prep : create ssh key for '{{ g_studentName }}'"
     openssh_keypair:
       path:  ~{{ g_studentName }}/.ssh/id_rsa
       owner: "{{ g_studentName }}"
       group: "{{ g_studentName }}"
     register: studentkey_result
 
-  - name: "PREP: save temp copy of {{ g_studentName }} ssh key"
+  - name: "rhel8-prep : save temp copy of {{ g_studentName }} ssh key"
     delegate_to: localhost
     copy:
       content="{{ studentkey_result.public_key }}" 
@@ -169,7 +169,7 @@
 - hosts: myNodes
   tasks:
   
-  - name: "PREP: install authorized_key to nodes for '{{ item }}'"
+  - name: "rhel8-prep : install authorized_key to nodes for '{{ item }}'"
     authorized_key:
       user: "{{ item }}"
       state: present
@@ -179,7 +179,7 @@
       - "root"
       - "{{ g_studentName }}"
 
-  - name: "PREP: remove local temp copy of ssh key for '{{ item }}'"
+  - name: "rhel8-prep : remove local temp copy of ssh key for '{{ item }}'"
     delegate_to: localhost
     file: path="../config/{{ item }}_sshkey.temp" state=absent
     with_items:

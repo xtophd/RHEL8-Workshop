@@ -1,18 +1,18 @@
 ---
-- hosts: workstation
+- hosts: myBastion
   tasks:
   
-    - name: "SETUP WAYLAND: yum install packages"
+    - name: "rhel8-unit-wayland : yum install packages"
       yum: name=gnome-tweaks state=installed
       register: result
       retries: 10
       until: result is succeeded
       delay: 5
       
-    - name: "SETUP WAYLAND: user modification"
+    - name: "rhel8-unit-wayland : user modification"
       user: name="{{ g_studentName }}" groups="wheel"
             
-    - name: "SETUP WAYLAND: cheat file installs"
+    - name: "rhel8-unit-wayland : cheat file installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"

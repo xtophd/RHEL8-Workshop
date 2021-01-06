@@ -2,14 +2,14 @@
 - hosts: node3
   tasks:
 
-    - name: "SETUP BUILDAH SKOPEO: yum install buildah,skopeo"
+    - name: "rhel8-unit-skopeo : yum install buildah,skopeo"
       yum: name=buildah,skopeo state=installed
       register: result
       retries: 10
       until: result is succeeded
       delay: 5
 
-    - name: "SETUP BUILDAH SKOPEO: cheat script installs"
+    - name: "rhel8-unit-skopeo : cheat script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"

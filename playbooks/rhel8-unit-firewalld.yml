@@ -2,20 +2,20 @@
 - hosts: node1
   tasks:
   
-    - name: "SETUP FIREWALLD: yum install firewalld"
+    - name: "rhel8-unit-firewalld : yum install firewalld"
       yum: name=firewalld state=installed
       register: result
       retries: 10
       until: result is succeeded
       delay: 5
 
-    - name: "SETUP FIREWALLD: service stop nftables"
+    - name: "rhel8-unit-firewalld : service stop nftables"
       service: name=nftables state=stopped enabled=no
 
-    - name: "SETUP FIREWALLD: service start firewalld"
+    - name: "rhel8-unit-firewalld : service start firewalld"
       service: name=firewalld state=started enabled=yes
       
-    - name: "SETUP FIREWALLD: cheat script installs"
+    - name: "rhel8-unit-firewalld : cheat script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"

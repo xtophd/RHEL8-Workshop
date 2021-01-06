@@ -2,14 +2,14 @@
 - hosts: node2
   tasks:
   
-    - name: "SETUP EBPF: yum install bcc-tools"
+    - name: "rhel8-unit-ebpf : yum install bcc-tools"
       yum: name=bcc-tools,net-tools,kernel-devel state=installed
       register: result
       retries: 10
       until: result is succeeded
       delay: 5
 
-    - name: "SETUP EBPF: cheat script installs"
+    - name: "rhel8-unit-ebpf : cheat script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"

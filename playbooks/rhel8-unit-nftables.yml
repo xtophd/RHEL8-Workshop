@@ -2,7 +2,7 @@
 - hosts: node2
   tasks:
   
-    - name: "SETUP NFTABLES: cheat script installs"
+    - name: "rhel8-unit-nftables : cheat script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"

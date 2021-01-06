@@ -1,30 +1,30 @@
 ---
-- hosts: workstation
+- hosts: myBastion
   tasks:
 
-    - name: "SETUP VIRTUALIZATION: yum install qemu-kvm libvirt virt-install libvirt-client libguestfs-tools"
+    - name: "rhel8-unit-virtualization : yum install packages"
       yum: name=qemu-kvm,libvirt,firewalld,virt-install,libvirt-client,libguestfs-tools,wget,cockpit-machines,lorax-composer,composer-cli,cockpit-composer state=installed
       register: result
       retries: 10
       until: result is succeeded
       delay: 5
 
-    - name: "SETUP VIRTUALIZATION: cockpit socket enabled"
+    - name: "rhel8-unit-virtualization : cockpit socket enabled"
       service: name="cockpit.socket" enabled=yes
 
-    - name: "SETUP VIRTUALIZATION: cockpit service restart"
+    - name: "rhel8-unit-virtualization : cockpit service restart"
       service: name="cockpit" state=started enabled=yes
 
-    - name: "SETUP VIRTUALIZATION: service restart libvirtd"
+    - name: "rhel8-unit-virtualization : service restart libvirtd"
       service: name="libvirtd" state=started enabled=yes
 
-    - name: "SETUP VIRTUALIZATION: imagebuilder service restart"
+    - name: "rhel8-unit-virtualization : imagebuilder service restart"
       service: name="lorax-composer" state=started enabled=yes
 
-    - name: "SETUP VIRTUALIZATION: firewalld service start"
+    - name: "rhel8-unit-virtualization : firewalld service start"
       service: name="firewalld" state=started enabled=yes
 
-    - name: "SETUP VIRTUALIZATION: cheat script installs"
+    - name: "rhel8-unit-virtualization : cheat script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
