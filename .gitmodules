@@ -1,3 +1,6 @@
 [submodule "playbooks.deployer-kvm"]
 	path = playbooks.deployer-kvm
 	url = http://github.com/xtophd/WS-Deployer-KVM
+[submodule "roles/xtoph_deploy"]
+	path = roles/xtoph_deploy
+	url = http://github.com/xtophd/xtoph_deploy
