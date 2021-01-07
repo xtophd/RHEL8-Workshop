@@ -1,0 +1,107 @@
+##
+##    First, need to set up the deployhost with
+##    needed software, services and settings
+##
+
+
+
+- hosts: myDeployhost
+  roles:
+    - role: xtoph_deploy
+      vars: 
+        xtoph_deploy_action: "setup"
+  tags:
+   - setup
+
+
+
+##
+##    Next, execute undeploy activities
+##
+##     NOTE: hosts may (or may not) exist, 
+##           majority of tasks run as 'delegate_to'
+##           and so we don't gather_facts
+##
+
+
+
+- hosts: myBastion,myNodes
+  gather_facts: no 
+  roles:
+    - role: xtoph_deploy
+      vars: 
+        xtoph_deploy_action: "undeploy"
+  tags:
+   - never
+   - undeploy
+   - redeploy
+
+
+
+##
+##     For the RHEL 8 Workshop, there are 
+##     no concurrency issues, so proceed 
+##     to deploy everything at once
+##
+##     NOTE: for same reasons listed above
+##           don't gather_facts 
+##
+##     NOTE: 'serial: #' limits concurrent 
+##           deployments and resolves problems
+##           related to disk space and i/o
+##           limits
+##
+
+
+
+- hosts: myBastion,myNodes
+  gather_facts: no 
+  serial: 2 
+  roles:
+    - role: xtoph_deploy
+      vars: 
+        xtoph_deploy_action: "deploy"
+  tags:
+    - deploy
+    - redeploy
+
+
+
+- hosts: myBastion,myNodes
+  gather_facts: no 
+  roles:
+    - role: xtoph_deploy
+      vars: 
+        xtoph_deploy_action: "deploy_monitor"
+  tags:
+    - deploy
+    - redeploy
+
+
+
+- hosts: myBastion,myNodes
+  gather_facts: no 
+  roles:
+    - role: xtoph_deploy
+      vars: 
+        xtoph_deploy_action: "deploy_finish"
+  tags:
+    - finish
+    - deploy
+    - redeploy
+
+
+
+##
+##    All nodes should be deployed
+##    So proceed to configure the workshop 
+## 
+
+
+
+- import_playbook: playbooks/rhel8-workshop.yml
+  tags:
+   - deploy
+   - redeploy
+   - workshop
+
