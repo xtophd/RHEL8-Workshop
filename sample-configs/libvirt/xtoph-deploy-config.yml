@@ -1,0 +1,81 @@
+xtoph_deploy_config:
+
+  debug: true
+
+  cleanup: true
+
+  selected_profile:
+    kickstart: "{{ h_ksPROF | default ('') }}"
+    resource:  "{{ h_rsPROF | default ('') }}"
+    hardware:  "{{ h_hwPROF | default ('') }}"
+
+  deployhost:
+    
+    ## deployer hostname OR ip
+    ip: "192.168.1.170"
+
+    ## httpd,kickstart,repo service port
+    http_port:    "8008"
+
+    ## cockpit defaults to 9090, but you can change it
+    cockpit_port: "9090"
+
+    ##
+    ## temporary directory for various tasks
+    ##
+    ##     * NOTE * needs to be unique for every host
+    ##
+
+    tmp_dir: "/home/tmp/{{ g_clusterName }}/{{ inventory_hostname }}"
+
+    kickstart:
+      dir: "/var/www/html/ks"
+      url: "http://192.168.1.170:8008/ks"
+
+    iso:
+      dir: "/home/iso"
+
+    repos:
+      dir: "/var/www/html/repos"
+      url: "http://192.168.1.170:8008/repos"
+
+  ovirt:
+
+    cluster_name:  "Default"
+    engine_cafile: "/etc/pki/ovirt-engine/ca.pem"
+    insecure:      "true"
+
+    vm:
+      name: "{{ g_clusterName }}_{{ inventory_hostname }}"
+
+    api:
+
+      ##  username and password should be stored in vaulted credentials.yml, NOT HERE!
+ 
+      username: ""
+      password: ""
+
+      ip:   "192.168.1.28"
+      fqdn: "rhvm.lab.linuxsoup.com"
+
+    network:
+
+      net0:
+        description:    "Primary interface"
+        ovirt_network:  "ovirtmgmt"
+        has_internet:   "{{ g_network0_has_internet }}"
+        enabled:        "{{ g_network0_enabled }}"
+        ip:             "{{ h_pubIP | default('') }}"
+        basedomain:     "{{ g_network0_basedomain }}"
+        network:        "{{ g_network0_network }}"
+        netmask:        "{{ g_network0_netmask }}"
+        broadcast:      "{{ g_network0_broadcast }}"
+        prefix:         "{{ g_network0_prefix }}"
+        gateway:        "{{ g_network0_gateway }}"
+        nameserver:     "{{ g_network0_nameserver }}"
+        timeserver:     "{{ g_network0_timeserver }}"
+        fqdn:           "{{ g_network0_fqdn }}"
+
+    storage:
+
+      domain: "rhv-data-hiperf"

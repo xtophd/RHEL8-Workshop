@@ -101,7 +101,7 @@
 
 - import_playbook: playbooks/rhel8-workshop.yml
   tags:
-   - deploy
-   - redeploy
+#   - deploy
+#   - redeploy
    - workshop
 
