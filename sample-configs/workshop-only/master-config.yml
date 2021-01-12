@@ -76,17 +76,17 @@ ansible_connection=local
 
 [myBastion:vars]
 
-h_hwPROF = "ovirt_sda"
-h_rsPROF = "bastion"
-h_ksPROF = "rhel82-bootiso"
+h_hwPROF = ""
+h_rsPROF = ""
+h_ksPROF = ""
 
 ## -----------------
 
 [myNodes:vars]
 
-h_hwPROF = "ovirt_sda"
-h_rsPROF = "tiny"
-h_ksPROF = "rhel82-bootiso"
+h_hwPROF = ""
+h_rsPROF = ""
+h_ksPROF = ""
 
 ## -----------------
 
@@ -102,8 +102,8 @@ bastion h_pubIP="192.168.1.110"
 
 [myNodes]
 node1   h_pubIP="192.168.1.111"
-node2   h_pubIP="192.168.1.112" h_rsPROF="tiny-extra" 
-node3   h_pubIP="192.168.1.113" h_rsPROF="tiny-extra"
+node2   h_pubIP="192.168.1.112" 
+node3   h_pubIP="192.168.1.113" 
 node4   h_pubIP="192.168.1.114" 
-node5   h_pubIP="192.168.1.115" h_ksPROF="rhel79-bootiso"
+node5   h_pubIP="192.168.1.115" 
 
