@@ -10,8 +10,7 @@
     - role: xtoph_deploy
       vars: 
         xtoph_deploy_action: "setup"
-  tags:
-   - setup
+      when: xtoph_deploy_cmd == "setup"
 
 
 
@@ -31,10 +30,8 @@
     - role: xtoph_deploy
       vars: 
         xtoph_deploy_action: "undeploy"
-  tags:
-   - never
-   - undeploy
-   - redeploy
+      when: xtoph_deploy_cmd == "undeploy" or xtoph_deploy_cmd == "redeploy"
+
 
 
 
@@ -61,34 +58,17 @@
     - role: xtoph_deploy
       vars: 
         xtoph_deploy_action: "deploy"
-  tags:
-    - deploy
-    - redeploy
+      when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy"
 
-
-
-- hosts: myBastion,myNodes
-  gather_facts: no 
-  roles:
     - role: xtoph_deploy
       vars: 
         xtoph_deploy_action: "deploy_monitor"
-  tags:
-    - deploy
-    - redeploy
+      when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy"
 
-
-
-- hosts: myBastion,myNodes
-  gather_facts: no 
-  roles:
     - role: xtoph_deploy
       vars: 
-        xtoph_deploy_action: "deploy_finish"
-  tags:
-    - finish
-    - deploy
-    - redeploy
+        xtoph_deploy_action: "deploy_post"
+      when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy"
 
 
 
@@ -100,8 +80,5 @@
 
 
 - import_playbook: playbooks/rhel8-workshop.yml
-  tags:
-   - deploy
-   - redeploy
-   - workshop
+  when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy" or xtoph_deploy_cmd=="workshop"
 
