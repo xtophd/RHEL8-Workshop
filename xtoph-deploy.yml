@@ -34,6 +34,27 @@
 
 
 
+##
+##     Before we start deploying systems, we
+##     need to ensure certain basics are configured.
+##     Run the 'deploy_preprocess' to:
+##       - generate MAC addresses if needed
+##       - add DNS entries to /etc/hosts
+##       - maybe more stuff, go look!
+##
+
+
+
+- hosts: myBastion,myNodes
+  gather_facts: no
+  roles:
+
+    - role: xtoph_deploy
+      vars:
+        xtoph_deploy_action: "deploy_preprocess"
+      when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy"
+
+
 
 ##
 ##     For the RHEL 8 Workshop, there are 
@@ -58,16 +79,6 @@
     - role: xtoph_deploy
       vars: 
         xtoph_deploy_action: "deploy"
-      when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy"
-
-    - role: xtoph_deploy
-      vars: 
-        xtoph_deploy_action: "deploy_monitor"
-      when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy"
-
-    - role: xtoph_deploy
-      vars: 
-        xtoph_deploy_action: "deploy_post"
       when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy"
 
 
