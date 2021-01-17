@@ -1,0 +1,115 @@
+xtoph_deploy_config:
+
+  debug: true
+
+  cleanup: true
+
+  selected_profile:
+    kickstart: "{{ h_ksPROF | default ('') }}"
+    resource:  "{{ h_rsPROF | default ('') }}"
+    hardware:  "{{ h_hwPROF | default ('') }}"
+
+  deployhost:
+
+    ##
+    ##     platform:      "ovirt" or "libvirt"
+    ##
+
+    platform: "libvirt"
+    
+    ##
+    ##    deployhost hostname OR ip that will
+    ##    accessible to the deployed VMs
+    ##
+
+    ip: "192.168.1.28"
+
+    ##
+    ##    http_port:      port to provide kickstart and
+    ##                    yum repo services
+    ##
+
+    http_enable:  true
+    http_port:    "8008"
+
+    ##
+    ##    cockpit_enable: install and configure cockpit
+    ##
+    ##    cockpit_port:   defaults to 9090 if left empty
+    ##                    if you change it, the config
+    ##                    will ADD the specifed port.
+    ##
+
+    cockpit_enable:  true
+    cockpit_port:    ""
+
+    ##
+    ##    temporary directory for various tasks
+    ##
+    ##    NOTE: needs to be unique for every host
+    ##
+
+    tmp_dir: "/home/tmp/{{ g_clusterName }}/{{ inventory_hostname }}"
+
+    ##
+    ##    Where with the kickstart configs are stored 
+    ##    What is the URL to access the kickstarts
+    ##
+
+    kickstart:
+      dir: "/var/www/html/ks"
+      url: "http://192.168.1.28:8008/ks"
+
+    ##
+    ##    Where will the repos be mounted
+    ##    What is the URL to access the repos
+    ##
+
+    repos:
+      dir: "/var/www/html/repos"
+      url: "http://192.168.1.28:8008/repos"
+
+    ##
+    ##    Where are the ISOs stored
+    ##
+
+    iso:
+      dir: "/home/iso"
+
+  libvirt:
+
+    ##
+    ##    netsted_virt_enable:   add flags to the OS kernel
+    ##                           to allow passtrough virt
+    ##
+
+    nested_virt_enable: true
+
+    vm:
+      name: "{{ g_clusterName }}_{{ inventory_hostname }}"
+
+    network:
+
+      net0:
+        network_name:    "br0"
+        fwd_type:        "bridge"
+        dev:             "enp4s0"
+        description:     "Primary interface"
+
+        enabled:         "{{ g_network0_enabled }}"
+        has_internet:    "{{ g_network0_has_internet }}"
+
+        ip:              "{{ h_pubIP | default('') }}"
+        basedomain:      "{{ g_network0_basedomain }}"
+        network:         "{{ g_network0_network }}"
+        netmask:         "{{ g_network0_netmask }}"
+        broadcast:       "{{ g_network0_broadcast }}"
+        prefix:          "{{ g_network0_prefix }}"
+        gateway:         "{{ g_network0_gateway }}"
+        nameserver:      "{{ g_network0_nameserver }}"
+        timeserver:      "{{ g_network0_timeserver }}"
+        fqdn:            "{{ g_network0_fqdn }}"
+
+    storage:
+
+      qcow_dir: "/home/virt-images"
