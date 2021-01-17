@@ -19,22 +19,26 @@ fi
 ##
 
 case "$1" in
-    "")
-
-        time  ansible-playbook --ask-vault-pass -i ${myInventory} -f 10 xtoph-deploy.yml
-        ;;
 
     "deploy"     | \
     "undeploy"   | \
     "redeploy"   | \
     "workshop"   | \
+    "setup+"     | \
     "setup")
 
         time  ansible-playbook --ask-vault-pass -i ${myInventory} -f 10 -e xtoph_deploy_cmd=${1} xtoph-deploy.yml
         ;;
 
     *)
-        echo "USAGE: xtoph-deploy.sh [ all | setup | deploy | undeploy | redeploy | finish | workshop ]"
+        echo "USAGE: xtoph-deploy.sh [ setup | setup+ | deploy | undeploy | redeploy | workshop ]"
+        echo ""
+        echo "  setup     ... runs only 'setup' plays"
+        echo "  setup+    ... runs both 'setup' and 'deploy' plays"
+        echo "  deploy    ... runs only 'deploy' plays"
+        echo "  undeploy  ... runs only 'undeploy' plays"
+        echo "  redeploy  ... runs both 'undeploy' and 'deploy' plays"
+        echo "  workshop  ... runs only the 'workshop' plays" 
         ;;
 
 esac         
