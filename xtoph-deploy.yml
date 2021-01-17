@@ -51,7 +51,7 @@
 
     - role: xtoph_deploy
       vars:
-        xtoph_deploy_action: "deploy_preprocess"
+        xtoph_deploy_action: "preprocess"
       when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy"
 
 
