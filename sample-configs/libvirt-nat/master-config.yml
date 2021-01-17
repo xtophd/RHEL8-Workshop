@@ -22,7 +22,7 @@ g_studentName = "cloud-user"
 ##    unique network domain for the cluster
 ##
 
-g_clusterName = "r8kvm"
+g_clusterName = "r8nat"
 
 ## ----------------------------------------
 ##    g_clusterVIP
