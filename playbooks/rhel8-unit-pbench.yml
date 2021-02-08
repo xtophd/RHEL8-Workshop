@@ -1,0 +1,11 @@
+---
+- hosts: node3
+  tasks:
+
+    - name: "rhel8-unit-pbench : yum install podman,net-tools,wget"
+      yum: name=podman,net-tools,wget state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
+
