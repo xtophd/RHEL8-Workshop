@@ -110,7 +110,8 @@ For Windows desktops:
   . link:{includedir}/lvm-vdo.adoc[*LVM and VDO* - Storage Management and Data Optimization]
   . link:{includedir}/stratis.adoc[*Stratis* - Simplified Storage Management]
   . link:{includedir}/boom.adoc[*BOOM* - Boot Management]
-  . link:{includedir}/wayland.adoc[*Wayland* - Desktop GUI ]
+  . link:{includedir}/wayland.adoc[*Wayland* - Desktop GUI]
+  . link:{includedir}/pbench.adoc[*Pbench Agent* - Benchmark Data Collection]
 
 
 ////  
@@ -128,8 +129,9 @@ include::{includedir}/virtualization.adoc[leveloffset=+1]
 include::{includedir}/tlog.adoc[leveloffset=+1]
 include::{includedir}/lvm-vdo.adoc[leveloffset=+1]
 include::{includedir}/stratis.adoc[leveloffset=+1]
-include::{includedir}/boom-lvm-snapshot.adoc[leveloffset=+1] 
+include::{includedir}/boom-lvm-snapshot.adoc[leveloffset=+1]
 include::{includedir}/wayland.adoc[leveloffset=+1]
+include::{includedir}/pbench.adoc[leveloffset=+1]
 ////
 
 [discrete]
@@ -152,5 +154,3 @@ safe-mode-name:: {safe-mode-name}
 ////
 Always end files with a blank line to avoid include problems.
 ////
-
-
