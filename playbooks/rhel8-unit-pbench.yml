@@ -1,5 +1,5 @@
 ---
-- hosts: node3
+- hosts: node1,node2,node3
   tasks:
 
     - name: "rhel8-unit-pbench : yum install podman,net-tools,wget"
@@ -8,4 +8,3 @@
       retries: 10
       until: result is succeeded
       delay: 5
-
