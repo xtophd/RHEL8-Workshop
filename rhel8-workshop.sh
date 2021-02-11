@@ -21,17 +21,18 @@ case "$1" in
     "buildah"     | \
     "ebpf"        | \
     "firewalld"   | \
+    "kpatch"      | \
     "nftables"    | \
-    "prep"        | \
+    "pbench"      | \
     "podman"      | \
+    "prep"        | \
     "stratis"     | \
     "systemd"     | \
     "tlog"        | \
-    "virt"        | \
     "vdo"         | \
+    "virt"        | \
     "wayland"     | \
-    "webconsole"  | \
-    "kpatch")
+    "webconsole")
 
         time  ansible-playbook -i ${myInventory} -f 10 --tags $1 ./playbooks/rhel8-workshop.yml
         ;;
