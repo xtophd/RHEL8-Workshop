@@ -61,12 +61,18 @@ Then have them go to node2 and node3, and install there as well.
 !!!! FIXME: Edit pbench-agent.cfg to add our own toolset
 vmstat turbostat sar pcp node-exporter
 
+
+!!!! FIXME: talk about pcp and node-exporter "persistent" tools
+
+!!!! FIXME: show how multiple user-benchmark iterations work to highlight the transient tools vs persistent tools
+
+
 As root, lets run a simple workload, and what data is collected
 ----
 # pbench-register-tool-set
 # pbench-register-tool --name=vmstat --remote=node2
 # pbench-register-tool --name=disk   --remote=node3
-# pbench-user-benchmark --config=first-run -- sleep 30
+# pbench-user-benchmark --config=first-run -- sine-wave <arguments>
 ----
 
 GOAL: to them a chance to inspect what data is collected in /var/lib/pbench-agent
@@ -185,15 +191,63 @@ Where is your data?
 STRETCH GOAL: run redis server on one of the nodes instead
 STRETCH GOAL: run the tool data sink on one of the nodes
 STRETCH GOAL: run a tool meister on the workstation
-STRETCH GOAL: run a user workload
 
 
 
 
-== Visualizing Prometheus/PCP metrics
+== Visualizing Live Prometheus/PCP metrics
 
-2. using live metrics visuals in Grafana for PCP and pbench
-3. visualizing previous captured metrics for PCP and pbench
+Let's see how we can visualize live metrics in Grafana for PCP and pbench.
+
+Run above setup again
+
+!!!! FIXME: run orchestration script
+
+----
+$ pbench-user-benchmark --config=second-run -- sleep 300
+----
+
+Run the live metrics container
+
+----
+$ podman run --network host -d --rm --name pbench-live-viz quay.io/pbench/live-metric-visualizer
+----
+
+Open a browser to watch live metrics at: http://workstation:3000/.
+
+!!!! FIXME: get Mustafa to describe what to do...
+How to log in: admin/admin; select the tab for dashboards, etc.
+
+!!!! FIXME: add cheat scrip to pull all referenced images
+
+Instructions for use:
+Open a web browser, and go to hostname:3000 (or localhost:3000)
+Default username: admin, default password: admin
+
+
+== Visualizing Live Prometheus/PCP metrics
+
+Visualizing previous captured metrics for PCP and pbench
+
+!!!! FIXME: get the right incantation
+
+
+Where we direct the use of a previous run to visualize.
+
+Navigate to <run-dir>/tools-default and extract the pcp data from the collected tarball
+
+----
+$ podman run --network host -d --rm --name pbench-pcp-viz --volume ${pbench_run}/${run_name}/tools-default/pcp/data:/var/log/pcp/pmlogger:Z pbench/pcp-graf-visualizer
+$ podman run --network host -d --rm --name pbench-prom-viz --volume ${pbench_run}:/var/lib/pbench-agent quay.io/pbench/prom-graf-visualizer
+----
+
+Open a web browser, and go to hostname:3000 (or localhost:3000)
+Default username: admin, default password: admin
+
+
+== Stretch GOAL: pbench-uperf for pbench-fio workload
+
+STRETCH GOAL: run a uperf or fio workload
 
 [discrete]
 == Additional Reference Materials
