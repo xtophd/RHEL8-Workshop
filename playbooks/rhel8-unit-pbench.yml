@@ -2,6 +2,11 @@
 - hosts: node1,node2,node3
   tasks:
 
+    - name: "rhel8-unit-pbnech : install pbench COPR (test) repo"
+      get_url:
+        url: https://copr.fedorainfracloud.org/coprs/portante/pbench-test/repo/epel-8/portante-pbench-test-epel-8.repo
+        dest: /etc/yum.repos.d/pbench.repo
+
     - name: "rhel8-unit-pbench : yum install buildah,podman"
       yum: name=buildah,podman state=installed
       register: result
