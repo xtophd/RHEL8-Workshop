@@ -2,8 +2,8 @@
 - hosts: node1,node2,node3
   tasks:
 
-    - name: "rhel8-unit-pbench : yum install podman,net-tools,wget"
-      yum: name=podman,net-tools,wget state=installed
+    - name: "rhel8-unit-pbench : yum install buildah,podman"
+      yum: name=buildah,podman state=installed
       register: result
       retries: 10
       until: result is succeeded
