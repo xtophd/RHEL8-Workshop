@@ -20,6 +20,8 @@ In this unit, we will get familiar with the Pbench Agent, the CLI it provides, a
 
 == Getting Started
 
+!!!! FIXME: ensure quay.io is one of the default containers in the registry
+
 For these exercises, you will be using the host `node1` as user `root`, and hosts `node2` and `node3` as user `cloud-user`.
 
 From host `workstation`, ssh to `node1`.
@@ -54,6 +56,11 @@ You are now ready to proceed with these exercises.
 
 Then have them go to node2 and node3, and install there as well.
 
+# Define our own tool set
+
+!!!! FIXME: Edit pbench-agent.cfg to add our own toolset
+vmstat turbostat sar pcp node-exporter
+
 As root, lets run a simple workload, and what data is collected
 ----
 # pbench-register-tool-set
@@ -84,6 +91,7 @@ Do this to prove non-root working use case.
 2. Move to workstation
 
 as root install pbench-agent on workstation
+
 ----
 # yum install pbench-agent
 ----
@@ -92,8 +100,18 @@ as root install pbench-agent on workstation
 
 4. verify you are now "cloud-user" on workstation
 
+!!!!  Figure out where our Redis Server will be
+
 5. setup non-root pbench environment variables
     defines our local data directory
+
+----
+$ mkdir some-directory
+$ export pbench_run=<some directory>
+$ export _PBENCH_TOOL_MEISTER_CLIENT_LOG_LEVEL=debug
+$ export _PBENCH_TOOL_MEISTER_START_LOG_LEVEL=debug
+$ export _PBENCH_TOOL_MEISTER_STOP_LOG_LEVEL=debug
+----
     
 6. register tools
 
@@ -111,10 +129,68 @@ for tool in vmstat turbostat sar pcp node-exporter; do
 done
 ----
 
- non-root pbench data collection
+7. Start tool meisters
+
+!!!! FIXME: provide TAG environment variable default
+
+---
+while read node; do
+    echo "${node}: podman run --name pbench-agent-tool-meister ..."
+    ssh ${node} podman run \
+        --name pbench-agent-tool-meister \
+        --network host \
+        --ulimit nofile=65536:65536 \
+        --rm \
+        -d \
+        -e REDIS_HOST=${REDIS_HOST} \
+        -e REDIS_PORT=${REDIS_PORT} \
+        -e PARAM_KEY=tm-default-${node} \
+        -e _PBENCH_TOOL_MEISTER_LOG_LEVEL=debug \
+        quay.io/pbench/pbench-agent-tool-meister-${DISTRO}:${TAG}
+done < ${pbench_run}/remotes.lis
+----
+
+8. Start tool data sink on the ** workstation **
+
+----
+$ podman run --name pbench-agent-tool-data-sink --network host --volume ${pbench_run}:/var/lib/pbench-agent:Z --ulimit nofile=65536:65536 --rm -d -e REDIS_HOST=${REDIS_HOST} -e REDIS_PORT=${REDIS_PORT} -e PARAM_KEY=tds-default -e _PBENCH_TOOL_DATA_SINK_LOG_LEVEL=debug quay.io/pbench/pbench-agent-tool-data-sink-${DISTRO}:${TAG}
+----
+
+----
+$ # FIXME should we run this on node3 or something?
+$ podman run --name demo-tm-redis --network host --rm -d redis
+$ export PBENCH_REDIS_SERVER=workstation:6543
+----
+
+!!!! FIXME: put the above commands into a script
+
+
+AT this point, the "tool meister" orchestration is done; no actions have been taken, no data collected, etc.
+
+
+9. All we do is run workload
+
+The +PBENCH_REDIS_SERVER+ environment directs the pbench-user-benchmark command to use the existing Tool Meister orchestration we have performed.
+
+----
+$ pbench-user-benchmark --config=second-run -- sleep 30
+----
+
+!!!! FIXME: walk them through inspecting the data collected
+
+Where is your data?
 
 
 
+STRETCH GOAL: run redis server on one of the nodes instead
+STRETCH GOAL: run the tool data sink on one of the nodes
+STRETCH GOAL: run a tool meister on the workstation
+STRETCH GOAL: run a user workload
+
+
+
+
+== Visualizing Prometheus/PCP metrics
 
 2. using live metrics visuals in Grafana for PCP and pbench
 3. visualizing previous captured metrics for PCP and pbench
