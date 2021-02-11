@@ -8,3 +8,13 @@
       retries: 10
       until: result is succeeded
       delay: 5
+
+    - name: "rhel8-unit-pbench : cheat script install"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0744
+      with_items:
+        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-pbench-checkhost.sh'}
