@@ -30,6 +30,9 @@
 - import_playbook: rhel8-unit-buildah.yml
   tags: buildah
 
+- import_playbook: rhel8-unit-pbench.yml
+  tags: pbench
+
 - import_playbook: rhel8-unit-stratis.yml
   tags: stratis
 
