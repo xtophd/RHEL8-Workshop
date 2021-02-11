@@ -38,7 +38,7 @@ case "$1" in
         ;;
 
     *)
-        echo "USAGE: bastion-setup.sh [ all | prep | appstream | boom | buildah | ebpf | firewalld | nftables | podman | stratis | systemd | tlog | virt | vdo | wayland | webconsole | kpatch ]"
+        echo "USAGE: bastion-setup.sh [ all | appstream | boom | buildah | ebpf | firewalld | kpatch | nftables | pbench | podman | prep | stratis | systemd | tlog | vdo | virt | wayland | webconsole ]"
         ;;
 
 esac
