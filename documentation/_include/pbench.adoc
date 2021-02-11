@@ -45,9 +45,79 @@ Verify that you are on the right host for these exercises.
 
 You are now ready to proceed with these exercises.
 
-== Container Basics
+== Pbench Agent Basics
 
-TBD
+----
+# Get pbench-agent installed on node1 as root
+# yum install pbench-agent 
+----
+
+Then have them go to node2 and node3, and install there as well.
+
+As root, lets run a simple workload, and what data is collected
+----
+# pbench-register-tool-set
+# pbench-register-tool --name=vmstat --remote=node2
+# pbench-register-tool --name=disk   --remote=node3
+# pbench-user-benchmark --config=first-run -- sleep 30
+----
+
+GOAL: to them a chance to inspect what data is collected in /var/lib/pbench-agent
+ * Show them where the registered tools are
+ * Show them where the log file is
+ * Show where the data is collected
+ 
+Point out that:
+ * some tools require root (default toolset has "turbostat" and "perf" (really "perf record"))
+ * and tool data collection is configured in /opt/pbench-agent/config/pbench-agent.cfg by default to be /var/lib/pbench-agent, which is owned by root
+
+
+== Container Pbench Agent
+
+1. Undo the pbench-agent installs on node1, node2, and node3
+----
+# for n in {1..3}; do ssh node${n} yum remove -y pbench-agent; done
+----
+
+Do this to prove non-root working use case.
+
+2. Move to workstation
+
+as root install pbench-agent on workstation
+----
+# yum install pbench-agent
+----
+
+3. Logout of root
+
+4. verify you are now "cloud-user" on workstation
+
+5. setup non-root pbench environment variables
+    defines our local data directory
+    
+6. register tools
+
+----
+for n in {1..3}; do
+    echo node${i}
+done > ${pbench_run}/remotes.lis
+
+# Register the default tool set, will be recorded in
+# ${pbench_run}/tools-v1-default
+for tool in vmstat turbostat sar pcp node-exporter; do
+    printf -- "\npbench-register-tool --name=${tool} --remotes=@${pbench_run}/remotes.lis\n"
+    pbench-register-tool --name=${tool} --remotes=@${pbench_run}/remotes.lis
+    sleep 1
+done
+----
+
+ non-root pbench data collection
+
+
+
+
+2. using live metrics visuals in Grafana for PCP and pbench
+3. visualizing previous captured metrics for PCP and pbench
 
 [discrete]
 == Additional Reference Materials
