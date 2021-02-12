@@ -4,7 +4,7 @@
 ##     on the control host (ie: workstation)
 ##     CWD =  ~root/RHEL8-Workshop
 
-myInventory="./config/master-config.yml"
+myInventory="./config/master-config.ini"
 
 if [ ! -e "${myInventory}" ] ; then
     echo "ERROR: Are you in the right directory? Can not find ${myInventory}" ; exit
