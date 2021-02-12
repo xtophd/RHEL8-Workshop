@@ -105,5 +105,5 @@ node1   h_pubIP="192.168.1.151"
 node2   h_pubIP="192.168.1.152" h_rsPROF="tiny-extra" 
 node3   h_pubIP="192.168.1.153" h_rsPROF="tiny-extra"
 node4   h_pubIP="192.168.1.154" 
-node5   h_pubIP="192.168.1.155" h_ksPROF="rhel79-bootiso"
+#node5   h_pubIP="192.168.1.155" h_ksPROF="rhel79-bootiso"
 
