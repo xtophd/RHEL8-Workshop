@@ -3,7 +3,7 @@
   tasks:
 
     - name: "rhel8-unit-virtualization : yum install packages"
-      yum: name=qemu-kvm,libvirt,firewalld,virt-install,libvirt-client,libguestfs-tools,wget,cockpit-machines,lorax-composer,composer-cli,cockpit-composer state=installed
+      yum: name=qemu-kvm,libvirt,firewalld,virt-install,libvirt-client,libguestfs-tools,wget,cockpit-machines,osbuild-composer,composer-cli,cockpit-composer state=installed
       register: result
       retries: 10
       until: result is succeeded
@@ -19,7 +19,7 @@
       service: name="libvirtd" state=started enabled=yes
 
     - name: "rhel8-unit-virtualization : imagebuilder service restart"
-      service: name="lorax-composer" state=started enabled=yes
+      service: name="osbuild-composer" state=started enabled=yes
 
     - name: "rhel8-unit-virtualization : firewalld service start"
       service: name="firewalld" state=started enabled=yes
