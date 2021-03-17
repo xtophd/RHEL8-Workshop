@@ -1,0 +1,296 @@
+:sectnums:
+:sectnumlevels: 3
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+:toc:
+:toclevels: 1
+
+= NETWORKMANAGER CLI
+
+NOTE: This unit is being ported to RHEL8 and is not part of the official content yet
+
+
+
+RHEL 7 brings new functionality to the command line for NetworkManager, the default network configuration utility. While you can still edit these interfaces by hand, the command line interface, nmcli, is able to provide a consistent, scriptable, frame-work for you to work with.
+
+In this part of the lab, we will discuss the general operation and command structure, as well as how to configure a bonded interface, along with the differences between bonding and teaming of NIC devices.
+
+== Getting Started
+
+Let's get started by logging into the workstation VM as root (if not already logged in) and simply perform the following command to get a quick status of what you have access to: 
+
+----
+# nmcli device status	
+----
+
+----
+DEVICE	TYPE		STATE	CONNECTION
+eth0		ethernet	connected	eth0
+eth1		ethernet	disconnected	–
+eth2		ethernet	disconnected	–
+eth3		ethernet	disconnected	--
+----
+
+At this point, you should see output similar to the above information. On this system, we have one device that is connected, eth0, and eth[1:3] are disconnected. We will primarily be working with the currently disconnected devices. 
+
+WARNIING: it is likely that the device names are different (ie: ensX vs. ethX)
+
+Notice that the command structure is:
+
+nmcli [OPTIONS] OBJECT { COMMAND | help }
+
+It's also important to mention that the bash-completion package will support nmcli commands, so while some of the commands below will look a bit long, they can be typed more quickly than it may appear.
+
+From here, we're going to use nmcli to create a new connection on eth1 with a static IP configuration. We'll be using a very generic ipv4 network, however ipv6 is supported, and uses similar command structures (ip6/gw6, etc). Not only will this create a static connection for eth1, but it will create a NetworkManager profile, called lab-eth1. To do this, issue the following command: 
+
+----
+# nmcli con add con-name lab-eth1 ifname eth1 type ethernet ip4 192.168.122.100/24 gw4 192.168.122.1 
+----
+
+----
+Connection `lab-eth1` (xxxxxx) successfully added. 
+----
+
+Now that we've done this, let's take a look at /etc/sysconfig/network-scripts/ifcfg-lab-eth1 to see what configuration variables have been populated. 
+
+----
+# cat /etc/sysconfig/network-scripts/ifcfg-lab-eth1 
+----
+
+As you can see, more than the standard set of options have been applied and the interface is UP. 
+
+----
+# nmcli device status; ip a 
+----
+
+Let's now DOWN the interface 
+
+----
+# nmcli con down “lab-eth1” 
+# nmcli device status; ip a 
+----
+
+You can begin using this interface by bringing up the network with this command: 
+
+----
+nmcli con up “lab-eth1” ifname eth1
+----
+
+----
+Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/Activate Connection/2) 
+----
+
+In the above command, notice that we still explicitly call out the interface name that we're applying that connection profile to. Because we can see from the ifcfg-lab-eth1 script that it's already assigned to that interface, we don't necessarily need that. (e.g. nmcli con up lab-eth1) We could, however, apply a wild card to that interface name within the profile, which would allow us to apply that connection string to any interface we wish. 
+
+Let's examine the nmcli device status again, this time looking at the newly brought up lab-eth1 connection, assigned to the eth1 device: 
+
+----
+# nmcli device status	
+----
+
+----
+DEVICE	TYPE		STATE	CONNECTION
+eth0		ethernet	connected	eth0
+eth1		ethernet	connected	lab-eth1
+eth2		ethernet	disconnected	–
+eth3		ethernet	disconnected	--
+----
+
+== Network Bonding
+
+Next, we're going to create a bonded (active/passive; Mode 1) interface, with two slaves. As we can see from above, eth2 and eth3 are available for the bonding.  Get started by using nmcli to create a bond0 profile for us to work with: 
+
+----
+# nmcli con add type bond ifname bond0 mode active-backup 
+----
+
+----
+Connection 'bond-bond0' (xxxxxxxx) successfully added. 
+----
+
+NOTE: If you can't remember the bonding mode syntax try `nmcli con add type bond ifname bond0 mode [tab] [tab]` to see the available options
+
+Examining the /etc/sysconfig/network-scripts/ifcfg-bond-bond0 profile, we can see that it's a very basic configuration, and cannot work until we add some slave interfaces, so next let's use nmcli to add a pair of slaves: 
+
+----
+# cat /etc/sysconfig/network-scripts/ifcfg-bond-bond0 
+----
+
+----
+# nmcli con add type bond-slave ifname eth2 master bond0 
+----
+
+----
+Connection 'bond-slave-eth2' (xxxxxxxx) successfully added. 
+----
+
+----
+# nmcli con add type bond-slave ifname eth3 master bond0 
+----
+
+----
+Connection 'bond-slave-eth3' (xxxxxxxx) successfully added. 
+----
+
+In order to bring up the bond using nmcli, bring up the slaves first, then the bond: 
+
+----
+# nmcli con up bond-slave-eth2 
+----
+
+----
+Connection successfully activated... 
+----
+
+----
+# nmcli con up bond-slave-eth3 
+----
+
+----
+Connection successfully activated... 
+----
+
+----
+# nmcli con up bond-bond0 
+----
+
+----
+Connection successfully activated... 
+----
+
+Now that our bond is configured let's set another static IPv4 address using the modify command: 
+
+----
+# nmcli con mod bond-bond0 ipv4.addresses 192.168.122.101/24 
+# nmcli con mod bond-bond0 ipv4.method manual 
+# nmcli con up bond-bond0 
+# ip ad sh bond0 
+----
+
+== Network Teaming
+
+The next new concept to introduce is Network Teaming. The two main benefits of NIC Teaming are data aggregation and failover, above and beyond the capabilities of network bonding. Another upside is that you can actually convert a bond to a team, which is our next exercise with nmcli. In order to simplify the environment, we will not be changing the name of the bond, as the conversion tool will not update things such as firewalld, or any other scripts or programs outside of the ifcfg files.
+
+
+Network teaming uses libteam to control one instance of the team driver. Ensure that teamd is already installed on your local workstation. We can also see that teamd.service is static, and doesn't need to be started or enabled. 
+
+----
+# yum install -y teamd 
+# systemctl list-unit-files | grep teamd
+----
+
+----
+teamd@.service	static
+----
+
+Next, we need to clean up a few pieces of the former section – run the following to bring down the bond and the slave interfaces, and then remove the configurations, all within nmcli: 
+
+----
+# nmcli con show 
+# nmcli con down bond-slave-eth2 
+----
+
+----
+Connection 'bond-slave-eth2' successfully deactivated. 
+----
+
+----
+# nmcli con down bond-slave-eth3 
+----
+
+----
+Connection 'bond-slave-eth3' successfully deactivated. 
+----
+
+----
+# nmcli con down bond-bond0 
+----
+
+----
+Connection 'bond-bond0' successfully deactivated. 
+----
+
+----
+# nmcli con delete bond-slave-eth2 
+# nmcli con delete bond-slave-eth3 
+# nmcli con delete bond-bond0 
+# nmcli con show 
+----
+
+Now, to create the new teaming interface(s), perform the following: 
+
+----
+# nmcli con add type team ifname team0 config '{“runner”:{“name”: “activebackup”}}'
+----
+
+----
+Connection 'team-team0' successfully added.
+----
+
+----
+# nmcli con show team-team0
+----
+
+----
+<output properties for team-team0>
+----
+
+----
+# nmcli con add type team-slave con-name team0-port1 ifname eth2 master team-team0
+----
+
+----
+Connection 'team0-port1' successfully added.
+----
+
+----
+# nmcli con add type team-slave con-name team0-port2 ifname eth3 master team-team0
+----
+
+----
+Connection 'team0-port2' successfully added.
+----
+
+
+Notice that the information above seems very similar in nature to the bonding interfaces that we created earlier in the lab. Now, use nmcli to add ip address information, bring up the interfaces, and examine the properties of the connection: 
+
+----
+# nmcli con mod team-team0 ipv4.addresses 192.168.122.101/24 
+# nmcli con mod team-team0 ipv4.method manual
+# nmcli con up team0-port1 
+# nmcli con up team0-port2 
+# nmcli con up team-team0 
+# nmcli con sh team-team0 
+# nmcli device status; ip a 
+----
+
+Examine the network properties in the output of the last two commands. We see what IP is assigned, which port actually has the address, and how traffic would be flowing (should any be heading across the interface). It also shows the mode (active/backup). 
+
+If we take down one of the interfaces (the one holding traffic), we can then do another 'show details', and we see that the IP address has moved over to the other interface. 
+
+----
+# nmcli con down team0-port1 
+# nmcli con sh team-team0 
+# nmcli device status; ip a 
+----
+
+== Additional Resources
+
+Red Hat Documentation
+
+    * link:https://https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8-beta/html/installing_identity_management_and_access_control/deploying-session-recording[Deplying Session Recording on Red Hat Enterprise Linux]
+
+[discrete]
+== End of Unit
+
+link:../RHEL7-Workshop.adoc#toc[Return to TOC]
+
+////
+Always end files with a blank line to avoid include problems.
+////
