@@ -22,7 +22,7 @@ xtoph_deploy_config:
     ##    accessible to the deployed VMs
     ##
 
-    ip: "192.168.127.1"
+    ip: "192.168.1.28"
 
     ##
     ##    http_port:      port to provide kickstart and
@@ -58,7 +58,7 @@ xtoph_deploy_config:
 
     kickstart:
       dir: "/var/www/html/ks"
-      url: "http://192.168.127.1:8008/ks"
+      url: "http://192.168.1.28:8008/ks"
 
     ##
     ##    Where will the repos be mounted
@@ -67,7 +67,7 @@ xtoph_deploy_config:
 
     repos:
       dir: "/var/www/html/repos"
-      url: "http://192.168.127.1:8008/repos"
+      url: "http://192.168.1.28:8008/repos"
 
     ##
     ##    Where are the ISOs stored
@@ -91,9 +91,9 @@ xtoph_deploy_config:
     network:
 
       net0:
-        network_name:    "virbr_{{ g_clusterName }}"
-        fwd_type:        "nat"
-        dev:             "eno1"
+        network_name:    "br0"
+        fwd_type:        "bridge"
+        dev:             "enp4s0"
         description:     "Primary interface"
 
         enabled:         "{{ g_network0_enabled }}"

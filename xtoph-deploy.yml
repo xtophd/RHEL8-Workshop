@@ -10,8 +10,8 @@
     - role: xtoph_deploy
       vars: 
         xtoph_deploy_action: "setup"
-      when: xtoph_deploy_cmd == "setup"
-
+      when: xtoph_deploy_cmd == "setup" or
+            xtoph_deploy_cmd == "setup+"
 
 
 ##
@@ -30,7 +30,8 @@
     - role: xtoph_deploy
       vars: 
         xtoph_deploy_action: "undeploy"
-      when: xtoph_deploy_cmd == "undeploy" or xtoph_deploy_cmd == "redeploy"
+      when: xtoph_deploy_cmd == "undeploy" or 
+            xtoph_deploy_cmd == "redeploy"
 
 
 
@@ -52,7 +53,9 @@
     - role: xtoph_deploy
       vars:
         xtoph_deploy_action: "preprocess"
-      when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy"
+      when: xtoph_deploy_cmd == "deploy" or 
+            xtoph_deploy_cmd == "setup+" or
+            xtoph_deploy_cmd == "redeploy" 
 
 
 
@@ -79,7 +82,9 @@
     - role: xtoph_deploy
       vars: 
         xtoph_deploy_action: "deploy"
-      when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy"
+      when: xtoph_deploy_cmd == "deploy" or 
+            xtoph_deploy_cmd == "setup+" or 
+            xtoph_deploy_cmd == "redeploy"
 
 
 
@@ -91,5 +96,8 @@
 
 
 - import_playbook: playbooks/rhel8-workshop.yml
-  when: xtoph_deploy_cmd == "deploy" or xtoph_deploy_cmd == "redeploy" or xtoph_deploy_cmd=="workshop"
+  when: xtoph_deploy_cmd == "deploy" or 
+        xtoph_deploy_cmd == "setup+" or 
+        xtoph_deploy_cmd == "redeploy" or 
+        xtoph_deploy_cmd == "workshop"
 
