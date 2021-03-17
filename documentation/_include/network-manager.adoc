@@ -13,7 +13,7 @@ endif::[]
 
 = NETWORKMANAGER CLI
 
-NOTE: This unit is being ported to RHEL8 and is not part of the official content yet
+WARNING: This unit is being ported to RHEL8 and is not part of the official workshop content yet.
 
 
 
