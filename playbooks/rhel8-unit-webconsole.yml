@@ -3,11 +3,19 @@
   tasks:
   
     - name: "rhel8-unit-webconsole : yum install packages"
-      yum: name=cockpit,cockpit-dashboard,firewalld,sos state=installed
+      yum: name=cockpit,firewalld,sos state=installed
       register: result
       retries: 10
       until: result is succeeded
       delay: 5
+
+    - name: "rhel8-unit-webconsole : yum install cockpit-dashboard for <= rhel 8.3"
+      yum: name=cockpit-dashboard state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
+      when: ansible_distribution_version is version('8.3','<=')
 
     - name: "rhel8-unit-webconsole : shell to add selinux rule for websm on port 443"
       shell: 
