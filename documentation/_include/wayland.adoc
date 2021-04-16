@@ -41,7 +41,7 @@ That said, Wayland also enables features that are hard or impossible to support 
 
 Wayland was born and raised in the X community, and has strong support.
 
-First introduced to the Fedora community back in version 25, Wayland has been under developemnt for several years before it's introduction in RHEL 8.   Wayland is the new standard in graphical desktop environments. 
+First introduced to the Fedora community back in version 25, Wayland has been under development for several years before it's introduction in RHEL 8.   Wayland is the new standard in graphical desktop environments. 
 
 For more information, see the resources listed below.
 
