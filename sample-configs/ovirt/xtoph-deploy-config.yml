@@ -76,9 +76,6 @@ xtoph_deploy_config:
     iso:
       dir: "/home/iso"
 
-
-
-
   ovirt:
 
     cluster_name:  "Default"
@@ -100,24 +97,33 @@ xtoph_deploy_config:
 
     network:
 
-      net0:
+      default:
+
         description:    "Primary interface"
         ovirt_network:  "ovirtmgmt"
+        ovirt_model:    "virtio"
+        managed:        "no"
 
-        enabled:        "{{ g_network0_enabled }}"
-        has_internet:   "{{ g_network0_has_internet }}"
-
-        ip:             "{{ h_pubIP | default('') }}"
-        basedomain:     "{{ g_network0_basedomain }}"
-        network:        "{{ g_network0_network }}"
-        netmask:        "{{ g_network0_netmask }}"
-        broadcast:      "{{ g_network0_broadcast }}"
-        prefix:         "{{ g_network0_prefix }}"
-        gateway:        "{{ g_network0_gateway }}"
-        nameserver:     "{{ g_network0_nameserver }}"
-        timeserver:     "{{ g_network0_timeserver }}"
-        fqdn:           "{{ g_network0_fqdn }}"
 
     storage:
 
       domain: "rhv-data-hiperf"
+
+  network:
+
+    default:
+
+      dev:             "{{ h_netDEV | default('eth0') }}"
+      description:    "Default Interface"
+
+      ip:             "{{ h_pubIP | default('') }}"
+      basedomain:     "{{ g_network0_basedomain }}"
+      network:        "{{ g_network0_network }}"
+      netmask:        "{{ g_network0_netmask }}"
+      broadcast:      "{{ g_network0_broadcast }}"
+      prefix:         "{{ g_network0_prefix }}"
+      gateway:        "{{ g_network0_gateway }}"
+      nameserver:     "{{ g_network0_nameserver }}"
+      timeserver:     "{{ g_network0_timeserver }}"
+      fqdn:           "{{ g_network0_fqdn }}"
+

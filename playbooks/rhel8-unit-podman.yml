@@ -1,5 +1,5 @@
 ---
-- hosts: node3
+- hosts: node3,bastion
   tasks:
 
     - name: "rhel8-unit-podman : yum install podman,net-tools,wget"
@@ -30,3 +30,4 @@
       with_items:
         - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-podman-checkhost.sh'}
         - {src: 'cheat-podman-loadregistry.j2', dest: '/usr/local/bin/cheat-podman-loadregistry.sh'}
+
