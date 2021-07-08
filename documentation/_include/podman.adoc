@@ -389,7 +389,7 @@ Error: container_linux.go:345: starting container process caused "exec: \"ps\": 
 
 What just happened?
 
-For the most part, containers are not meant for interactive (user) sessions.  In this instance, the image that we are using (ie: ubi) does not have the traditional commmandline utilities a user might expect.  Common tools to configure network interfaces like 'ip' simply aren't there.
+For the most part, containers are not meant for interactive (user) sessions.  In this instance, the image that we are using (ie: ubi) does not have the traditional commandline utilities a user might expect.  Common tools to configure network interfaces like 'ip' simply aren't there.
 
 So for this exercise, we leverage something called a 'bind mount' to effectively mirror a portion of the host's filesystem into the container's namespace.  Bind mounts are declared using the '-v' option.  In the example below, /usr/bin from the host will be exposed and accessible to the containers namespace mounted at '/usr/bin' (ie: /usr/bin:/usr/bin).
 
