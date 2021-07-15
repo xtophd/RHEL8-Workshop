@@ -1,0 +1,50 @@
+##
+## CUSTOM PLATFORM PROFILES
+##
+
+xtoph_config_platform:
+
+  libvirt:
+
+    platform_profile:
+
+      platform: "libvirt"
+
+      vm:
+        name: "{{ g_clusterName }}_{{ inventory_hostname }}"
+  
+      ##
+      ##    nested_virt_enable:   add flags to the OS kernel
+      ##                          to allow passtrough virt
+      ##
+  
+      nested_virt_enable: true
+
+      kickstart:
+        description: "hints to where installers can find devices"
+        netdev:  "{{ h_netDEV | default('eno1') }}"
+        blkdev:  "{{ h_blkDEV | default('sda') }}"
+  
+      network:
+        default:
+  
+          description:     "default libvirt network parameters"
+          network_name:    "virbr_{{ g_clusterName }}"
+          fwd_type:        "nat"
+
+          ip:              "{{ h_pubIP | default('') }}"
+          basedomain:      "{{ g_network0_basedomain }}"
+          network:         "{{ g_network0_network }}"
+          netmask:         "{{ g_network0_netmask }}"
+          broadcast:       "{{ g_network0_broadcast }}"
+          prefix:          "{{ g_network0_prefix }}"
+          gateway:         "{{ g_network0_gateway }}"
+          nameserver:      "{{ g_network0_nameserver }}"
+          timeserver:      "{{ g_network0_timeserver }}"
+          fqdn:            "{{ g_network0_fqdn }}"
+  
+      storage:
+        default:
+
+          description: "default libvirt storage parameters"
+          qcow_dir: "/home/virt-images"

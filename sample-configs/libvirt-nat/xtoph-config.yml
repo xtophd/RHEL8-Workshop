@@ -1,4 +1,4 @@
-xtoph_deploy_config:
+xtoph_config:
 
   debug: true
 
@@ -7,15 +7,19 @@ xtoph_deploy_config:
   selected_profile:
     kickstart: "{{ h_ksPROF | default ('') }}"
     resource:  "{{ h_rsPROF | default ('') }}"
-    hardware:  "{{ h_hwPROF | default ('') }}"
+    machine:   "{{ h_hwPROF | default ('') }}"
 
   deployhost:
 
     ##
-    ##     platform:      "ovirt" or "libvirt"
+    ##     platform_enable: one or more of the following
+    ##       - "ovirt" 
+    ##       - "libvirt"
+    ##       - "baremetal"
     ##
 
-    platform: "libvirt"
+    platform_enable: 
+      - "libvirt"
     
     ##
     ##    deployhost hostname OR ip that will
@@ -23,6 +27,18 @@ xtoph_deploy_config:
     ##
 
     ip: "192.168.127.1"
+
+    ##
+    ##    dnsmasq_enable:    ensures dnsmasq is installed
+    ##                       and enabled on the deployhost
+    ##
+    ##    dnsmasq_asprimary  host/vm resolves to ->
+    ##                         deployhost which forwards to ->
+    ##                           real-dns
+    ##
+
+    dnsmasq_enable:     true
+    dnsmasq_asprimary:  true
 
     ##
     ##    http_port:      port to provide kickstart and
@@ -75,41 +91,3 @@ xtoph_deploy_config:
 
     iso:
       dir: "/home/iso"
-
-  libvirt:
-
-    ##
-    ##    netsted_virt_enable:   add flags to the OS kernel
-    ##                           to allow passtrough virt
-    ##
-
-    nested_virt_enable: true
-
-    vm:
-      name: "{{ g_clusterName }}_{{ inventory_hostname }}"
-
-    network:
-
-      net0:
-        network_name:    "virbr_{{ g_clusterName }}"
-        fwd_type:        "nat"
-        dev:             "eno1"
-        description:     "Primary interface"
-
-        enabled:         "{{ g_network0_enabled }}"
-        has_internet:    "{{ g_network0_has_internet }}"
-
-        ip:              "{{ h_pubIP | default('') }}"
-        basedomain:      "{{ g_network0_basedomain }}"
-        network:         "{{ g_network0_network }}"
-        netmask:         "{{ g_network0_netmask }}"
-        broadcast:       "{{ g_network0_broadcast }}"
-        prefix:          "{{ g_network0_prefix }}"
-        gateway:         "{{ g_network0_gateway }}"
-        nameserver:      "{{ g_network0_nameserver }}"
-        timeserver:      "{{ g_network0_timeserver }}"
-        fqdn:            "{{ g_network0_fqdn }}"
-
-    storage:
-
-      qcow_dir: "/home/virt-images"
