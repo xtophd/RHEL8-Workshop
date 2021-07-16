@@ -1,0 +1,109 @@
+##
+##    !! WARNING !!  Ansible only interprets 'True' and 'False'
+##                   as booleans when reading ini files.  Other
+##                   values such as 'true' or 'false' would be 
+##                   interpreted as strings and would break various
+##                   logic tests.  
+##
+##                   When reading YML files, booleans can take on
+##                   many forms and be interpreted correctly.
+##
+##                   For consistency, only use unquoted booleans: True & False
+
+all: 
+
+  vars:
+
+    ## ----------------------------------------
+    ##    Workshop Variables
+
+    workshop_vars:
+
+      clustername:         "r8ovirt"
+      network_basedomain:  "example.com"
+      network_fqdn:        "r8ovirt.example.com"
+      
+      network_network:     "192.168.1.0"
+      network_netmask:     "255.255.255.0"
+      network_broadcast:   "192.168.1.255"
+      network_prefix:      "24"
+      network_gateway:     "192.168.1.1"
+      network_nameserver:  "192.168.1.30"
+      network_timeserver:  "192.168.1.60"
+      
+      studentName:         "cloud-user"
+
+    ## ----------------------------------------
+    ##    Xtoph Deploy Variables
+
+    xtoph_vars:
+
+      deployhost_ip:       "192.168.1.170" 
+      clustername:         "{{ workshop_vars.clustername }}"
+
+    ## ----------------------------------------
+    ##    Override default ansible host with
+    ##    one that includes fqdn.  This saves us
+    ##    from having to specify FQDN in host 
+    ##    vars section below.  This assumes all
+    ##    hosts are in the same domain. DUH!
+
+    ansible_host: "{{ inventory_hostname }}.{{ workshop_vars.network_fqdn }}"
+
+
+
+## ----------------------------------------
+## HOSTGROUPS & VARS
+## ----------------------------------------
+
+
+
+myDeployhost:
+  hosts:
+    deployer:
+      h_pubIP: "{{ xtoph_vars.deployhost_ip }}"
+  vars:
+    ansible_connection: local
+
+
+
+## -----------------
+
+
+
+myBastion:
+  hosts:
+    bastion:
+      h_pubIP: "192.168.1.110"
+  vars:
+    h_hwPROF:  "ovirt_sda"
+    h_rsPROF:  "bastion"
+    h_ksPROF:  "rhel84-bootiso"
+    h_netDEV:  "ens3"
+    h_blkDEV:  "sda"
+
+
+
+## -----------------
+
+
+
+myNodes:
+  hosts:
+    node1:
+      h_pubIP:  "192.168.1.111"
+      h_rsPROF: "tiny"
+    node2:
+      h_pubIP:  "192.168.1.112" 
+      h_rsPROF: "tiny-extra" 
+    node3:
+      h_pubIP:  "192.168.1.113"
+      h_rsPROF: "tiny-extra"
+    node4:
+      h_pubIP:  "192.168.1.114" 
+      h_rsPROF: "tiny"
+  vars: 
+    h_hwPROF: "ovirt_sda"
+    h_ksPROF: "rhel84-bootiso"
+    h_netDEV: "ens3"
+    h_blkDEV: "sda"

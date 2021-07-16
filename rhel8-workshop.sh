@@ -24,6 +24,7 @@ case "$1" in
     "nftables"    | \
     "prep"        | \
     "podman"      | \
+    "settings"    | \
     "stratis"     | \
     "systemd"     | \
     "tlog"        | \
@@ -37,7 +38,7 @@ case "$1" in
         ;;
 
     *)
-        echo "USAGE: bastion-setup.sh [ all | prep | appstream | boom | buildah | ebpf | firewalld | nftables | podman | stratis | systemd | tlog | virt | vdo | wayland | webconsole | kpatch ]"
+        echo "USAGE: bastion-setup.sh [ all | prep | appstream | boom | buildah | ebpf | firewalld | nftables | podman | settings | stratis | systemd | tlog | virt | vdo | wayland | webconsole | kpatch ]"
         ;;
 
 esac

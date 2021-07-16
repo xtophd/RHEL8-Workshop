@@ -1,5 +1,8 @@
 ---
 
+- import_playbook: rhel8-settings.yml
+  tags: settings
+
 - import_playbook: rhel8-prep.yml
   tags: prep
 

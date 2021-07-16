@@ -47,12 +47,14 @@
     user: name="{{ item.name }}" password="{{ item.password }}"
     with_items:
       - {name: 'root', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
-      - {name: '{{ g_studentName }}', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
+      - {name: '{{ workshop_vars.studentName }}', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
 
   - name: "rhel8-prep : USER modification"
-    user: name="{{ g_studentName }}" groups="wheel"
+    user: name="{{ workshop_vars.studentName }}" groups="wheel"
 
   - name: "rhel8-prep : Sudo Configuration"
+    vars:
+      t_studentName: "{{ workshop_vars.studentName }}"
     template:
       src: "{{ item.src }}"
       dest: "{{ item.dest }}"
@@ -61,7 +63,7 @@
       mode: 0600
     with_items:
       - {src: 'sudoers.j2', dest: '/etc/sudoers.d/rhel8-workshop'}
-      - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ g_studentName }}'}
+      - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ workshop_vars.studentName }}'}
 
   - name: "rhel8-prep : check ssh directory permissions for '{{ item }}'"
     file:
@@ -72,7 +74,7 @@
       state: directory
     with_items:
       - "root"
-      - "{{ g_studentName }}"
+      - "{{ workshop_vars.studentName }}"
 
   - name: "rhel8-prep : check ssh known_hosts  permissions for '{{ item }}'"
     file:
@@ -83,7 +85,7 @@
       state: touch
     with_items:
       - "root"
-      - "{{ g_studentName }}"
+      - "{{ workshop_vars.studentName }}"
 
   - name: "rhel8-prep : clean up known_hosts for 'root'"
     vars:
@@ -105,9 +107,9 @@
     loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
     ignore_errors: yes
 
-  - name: "rhel8-prep : clean up known_hosts for '{{ g_studentName }}'"
+  - name: "rhel8-prep : clean up known_hosts for '{{ workshop_vars.studentName }}'"
     vars:
-      p_file: "~{{ g_studentName }}/.ssh/known_hosts"
+      p_file: "~{{ workshop_vars.studentName }}/.ssh/known_hosts"
     shell:
       cmd: |
         ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}
@@ -115,11 +117,11 @@
     loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
     ignore_errors: yes
     become: yes
-    become_user: "{{ g_studentName }}"
+    become_user: "{{ workshop_vars.studentName }}"
 
-  - name: "rhel8-prep: scan and add ssh keys to known_hosts for '{{ g_studentName }}'"
+  - name: "rhel8-prep: scan and add ssh keys to known_hosts for '{{ workshop_vars.studentName }}'"
     vars:
-      p_file: "~{{ g_studentName }}/.ssh/known_hosts"
+      p_file: "~{{ workshop_vars.studentName }}/.ssh/known_hosts"
     shell:
       cmd: |
         ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }} >> {{ p_file }}
@@ -127,7 +129,7 @@
     loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
     ignore_errors: yes
     become: yes
-    become_user: "{{ g_studentName }}"
+    become_user: "{{ workshop_vars.studentName }}"
 
 
 
@@ -147,18 +149,18 @@
       content="{{ rootkey_result.public_key }}" 
       dest="../config/root_sshkey.temp"
 
-  - name: "rhel8-prep : create ssh key for '{{ g_studentName }}'"
+  - name: "rhel8-prep : create ssh key for '{{ workshop_vars.studentName }}'"
     openssh_keypair:
-      path:  ~{{ g_studentName }}/.ssh/id_rsa
-      owner: "{{ g_studentName }}"
-      group: "{{ g_studentName }}"
+      path:  ~{{ workshop_vars.studentName }}/.ssh/id_rsa
+      owner: "{{ workshop_vars.studentName }}"
+      group: "{{ workshop_vars.studentName }}"
     register: studentkey_result
 
-  - name: "rhel8-prep : save temp copy of {{ g_studentName }} ssh key"
+  - name: "rhel8-prep : save temp copy of {{ workshop_vars.studentName }} ssh key"
     delegate_to: localhost
     copy:
       content="{{ studentkey_result.public_key }}" 
-      dest="../config/{{g_studentName}}_sshkey.temp"
+      dest="../config/{{workshop_vars.studentName}}_sshkey.temp"
 
 
 
@@ -175,14 +177,14 @@
       manage_dir: yes
     with_items:
       - "root"
-      - "{{ g_studentName }}"
+      - "{{ workshop_vars.studentName }}"
 
   - name: "rhel8-prep : remove local temp copy of ssh key"
     delegate_to: localhost
     file: path="../config/{{ item }}_sshkey.temp" state=absent
     with_items:
       - "root"
-      - "{{ g_studentName }}"
+      - "{{ workshop_vars.studentName }}"
 
 
 

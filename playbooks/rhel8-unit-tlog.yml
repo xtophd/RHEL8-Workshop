@@ -14,7 +14,7 @@
 
     - name: "rhel8-unit-tlog : sudo Configuration"
       vars:
-        g_studentName: "other-user"
+        t_studentName: "other-user"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"

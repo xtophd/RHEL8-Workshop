@@ -10,7 +10,7 @@
       delay: 5
       
     - name: "rhel8-unit-wayland : user modification"
-      user: name="{{ g_studentName }}" groups="wheel"
+      user: name="{{ workshop_vars.studentName }}" groups="wheel"
             
     - name: "rhel8-unit-wayland : cheat file installs"
       template:

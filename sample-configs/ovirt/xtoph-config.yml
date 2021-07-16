@@ -15,13 +15,13 @@ xtoph_config:
 
     ##
     ##     platform_enable: one or more of the following
-    ##       - "ovirt" 
+    ##       - "ovirt"
     ##       - "libvirt"
     ##       - "baremetal"
     ##
 
-    platform_enable: 
-      - "libvirt"
+    platform_enable:
+      - "ovirt"
     
     ##
     ##    deployhost hostname OR ip that will
@@ -31,16 +31,15 @@ xtoph_config:
     ip: "{{ xtoph_vars.deployhost_ip }}"
 
     ##
-    ##    dnsmasq_enable:    ensures dnsmasq is installed
+    ##    dnsmasq_enable:    ensures dnsmasq is installed 
     ##                       and enabled on the deployhost
     ##
-    ##    dnsmasq_asprimary  host/vm resolves to ->
-    ##                         deployhost which forwards to ->
-    ##                           real-dns
-    ##
+    ##                       host/vm resolves to -> 
+    ##                         deployhost which forwards to -> 
+    ##                           real-dns          
+    ##                    
 
-    dnsmasq_enable:     true
-    dnsmasq_asprimary:  true
+    dnsmasq_enable:  true
 
     ##
     ##    http_port:      port to provide kickstart and
@@ -58,7 +57,7 @@ xtoph_config:
     ##                    will ADD the specifed port.
     ##
 
-    cockpit_enable:  true
+    cockpit_enable:  false
     cockpit_port:    ""
 
     ##
@@ -67,7 +66,7 @@ xtoph_config:
     ##    NOTE: needs to be unique for every host
     ##
 
-    tmp_dir: "/home/tmp/{{ g_clusterName }}/{{ inventory_hostname }}"
+    tmp_dir: "/home/tmp/{{ xtoph_vars.clustername }}/{{ inventory_hostname }}"
 
     ##
     ##    Where with the kickstart configs are stored 
@@ -85,7 +84,7 @@ xtoph_config:
 
     repos:
       dir: "/var/www/html/repos"
-      url: "http://{{ xtoph_vars.deployhost_ip }}/repos"
+      url: "http://{{ xtoph_vars.deployhost_ip }}:8008/repos"
 
     ##
     ##    Where are the ISOs stored
@@ -93,3 +92,4 @@ xtoph_config:
 
     iso:
       dir: "/home/iso"
+

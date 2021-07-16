@@ -4,33 +4,36 @@
 
 xtoph_config_platform:
 
-  libvirt:
+  ovirt:
 
     platform_profile:
 
-      platform: "libvirt"
+      platform: "ovirt"
+  
+      cluster_name:  "Default"
+      engine_cafile: "/etc/pki/ovirt-engine/ca.pem"
+      insecure:      true
+  
+      api:
+
+        ip: "192.168.1.28"
+        fqdn: "rhvm.lab.linuxsoup.com"
+  
+        note: "api credentials are stored in the encrypted credentials.yml"
 
       vm:
-        name: "{{ g_clusterName }}_{{ inventory_hostname }}"
+        name: "{{ xtoph_vars.clustername }}-{{ inventory_hostname }}"
   
-      ##
-      ##    nested_virt_enable:   add flags to the OS kernel
-      ##                          to allow passtrough virt
-      ##
-  
-      nested_virt_enable: true
-
       kickstart:
         description: "hints to where installers can find devices"
-        netdev:  "{{ h_netDEV | default('eno1') }}"
+        netdev:  "{{ h_netDEV | default('ens3') }}"
         blkdev:  "{{ h_blkDEV | default('sda') }}"
-  
+
       network:
         default:
-  
-          description:     "default libvirt network parameters"
-          network_name:    "virbr_{{ g_clusterName }}"
-          fwd_type:        "nat"
+          description: "default ovirt network parameters"
+          model: "virtio"
+          network_name: "ovirtmgmt"
 
           ip:                "{{ h_pubIP                          }}"
           mac:               "{{ g_pubMAC | default('')           }}"
@@ -46,6 +49,7 @@ xtoph_config_platform:
   
       storage:
         default:
-
-          description: "default libvirt storage parameters"
-          qcow_dir: "/home/virt-images"
+          description: "default ovirt storage parameters"
+          bus:         "virtio_scsi"
+          sparse:      "true"
+          domain_name: "rhv-data-hiperf"

@@ -1,0 +1,8 @@
+---
+- hosts: myBastion
+  gather_facts: no
+  tasks:
+  
+  - name: "rhel8-settings: debug workshop dictionary"
+    debug: var=workshop_vars
+

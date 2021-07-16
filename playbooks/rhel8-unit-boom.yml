@@ -9,7 +9,7 @@
       until: result is succeeded
       delay: 5
 
-    - name: "PREP-SSHKEYS: known_hosts {{ g_studentName }} file permissions"
+    - name: "PREP-SSHKEYS: known_hosts {{ workshop_vars.studentName }} file permissions"
       file:
         path: "/boot/loader/entries/84047b4cff36437eb8209baa78d1ef3c-0-rescue.conf"
         state: absent
