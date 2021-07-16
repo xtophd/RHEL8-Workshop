@@ -75,9 +75,9 @@ myBastion:
   hosts:
     bastion:
       h_pubIP: "192.168.127.110"
+      h_rsPROF:  "bastion"
   vars:
     h_hwPROF:  "kvm_nest_vda"
-    h_rsPROF:  "bastion"
     h_ksPROF:  "rhel84-bootiso"
     h_netDEV:  "enp1s0"
     h_blkDEV:  "vda"
@@ -103,7 +103,7 @@ myNodes:
       h_pubIP:  "192.168.1.114" 
       h_rsPROF: "tiny"
   vars: 
-    h_hwPROF: "ovirt_sda"
+    h_hwPROF: "kvm_nest_vda"
     h_ksPROF: "rhel84-bootiso"
-    h_netDEV: "snp1s0"
+    h_netDEV: "enp1s0"
     h_blkDEV: "vda"

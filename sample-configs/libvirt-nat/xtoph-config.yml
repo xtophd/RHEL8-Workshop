@@ -67,7 +67,7 @@ xtoph_config:
     ##    NOTE: needs to be unique for every host
     ##
 
-    tmp_dir: "/home/tmp/{{ g_clusterName }}/{{ inventory_hostname }}"
+    tmp_dir: "/home/tmp/{{ xtoph_vars.clustername }}/{{ inventory_hostname }}"
 
     ##
     ##    Where with the kickstart configs are stored 
@@ -85,7 +85,7 @@ xtoph_config:
 
     repos:
       dir: "/var/www/html/repos"
-      url: "http://{{ xtoph_vars.deployhost_ip }}/repos"
+      url: "http://{{ xtoph_vars.deployhost_ip }}:8008/repos"
 
     ##
     ##    Where are the ISOs stored

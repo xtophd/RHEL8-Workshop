@@ -11,7 +11,7 @@ xtoph_config_platform:
       platform: "libvirt"
 
       vm:
-        name: "{{ g_clusterName }}_{{ inventory_hostname }}"
+        name: "{{ xtoph_vars.clustername }}_{{ inventory_hostname }}"
   
       ##
       ##    nested_virt_enable:   add flags to the OS kernel
@@ -29,7 +29,7 @@ xtoph_config_platform:
         default:
   
           description:     "default libvirt network parameters"
-          network_name:    "virbr_{{ g_clusterName }}"
+          network_name:    "virbr_{{ workshop_vars.clustername }}"
           fwd_type:        "nat"
 
           ip:                "{{ h_pubIP                          }}"
