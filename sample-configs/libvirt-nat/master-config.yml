@@ -100,7 +100,7 @@ myNodes:
       h_pubIP:  "192.168.127.113"
       h_rsPROF: "tiny-extra"
     node4:
-      h_pubIP:  "192.168.1.114" 
+      h_pubIP:  "192.168.127.114" 
       h_rsPROF: "tiny"
   vars: 
     h_hwPROF: "kvm_nest_vda"
