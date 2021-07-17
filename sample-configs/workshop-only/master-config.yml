@@ -1,0 +1,109 @@
+##
+##    !! WARNING !!  Ansible only interprets 'True' and 'False'
+##                   as booleans when reading ini files.  Other
+##                   values such as 'true' or 'false' would be 
+##                   interpreted as strings and would break various
+##                   logic tests.  
+##
+##                   When reading YML files, booleans can take on
+##                   many forms and be interpreted correctly.
+##
+##                   For consistency, only use unquoted booleans: True & False
+
+all: 
+
+  vars:
+
+    ## ----------------------------------------
+    ##    Workshop Variables
+
+    workshop_vars:
+
+      clustername:         "r8lvnat"
+      network_basedomain:  "example.com"
+      network_fqdn:        "r8lvnat.example.com"
+      
+      network_network:     "192.168.1.0"
+      network_netmask:     "255.255.255.0"
+      network_broadcast:   "192.168.1.255"
+      network_prefix:      "24"
+      network_gateway:     "192.168.1.1"
+      network_nameserver:  "192.168.1.1"
+      network_timeserver:  "192.168.1.1"
+      
+      studentName:         "cloud-user"
+
+    ## ----------------------------------------
+    ##    Xtoph Deploy Variables
+
+    xtoph_vars:
+
+      deployhost_ip:       ""
+      clustername:         ""
+
+    ## ----------------------------------------
+    ##    Override default ansible host with
+    ##    one that includes fqdn.  This saves us
+    ##    from having to specify FQDN in host 
+    ##    vars section below.  This assumes all
+    ##    hosts are in the same domain. DUH!
+
+    ansible_host: "{{ inventory_hostname }}.{{ workshop_vars.network_fqdn }}"
+
+
+
+## ----------------------------------------
+## HOSTGROUPS & VARS
+## ----------------------------------------
+
+
+
+myDeployhost:
+  hosts:
+    deployer:
+      h_pubIP: ""
+  vars:
+    ansible_connection: local
+
+
+
+## -----------------
+
+
+
+myBastion:
+  hosts:
+    bastion:
+      h_pubIP:  "192.168.127.110"
+      h_rsPROF: ""
+  vars:
+    h_hwPROF:  ""
+    h_ksPROF:  ""
+    h_netDEV:  ""
+    h_blkDEV:  ""
+
+
+
+## -----------------
+
+
+
+myNodes:
+  hosts:
+    node1:
+      h_pubIP:  "192.168.1.111"
+      h_rsPROF: ""
+    node2:
+      h_pubIP:  "192.168.1.112" 
+      h_rsPROF: "" 
+    node3:
+      h_pubIP:  "192.168.1.113"
+      h_rsPROF: ""
+    node4:
+      h_pubIP:  "192.168.1.114" 
+      h_rsPROF: ""
+  vars: 
+    h_hwPROF: ""
+    h_ksPROF: ""
+    h_netDEV: ""
+    h_blkDEV: ""
