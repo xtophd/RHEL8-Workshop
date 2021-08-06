@@ -4,6 +4,8 @@ xtoph_config:
 
   cleanup: true
 
+  hostname: "{{ inventory_hostname }}"
+
   clustername: "{{ xtoph_vars.clustername }}"
 
   selected_profile:
