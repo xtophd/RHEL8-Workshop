@@ -81,7 +81,7 @@
       - {src: 'sudoers.j2', dest: '/etc/sudoers.d/rhel8-workshop'}
       - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ workshop_vars.studentName }}'}
 
-  - name: "rhel8-prep : check ssh directory permissions for '{{ item }}'"
+  - name: "rhel8-prep : check ssh directory permissions"
     file:
       path: ~{{ item }}/.ssh
       mode: "0700"
@@ -92,7 +92,7 @@
       - "root"
       - "{{ workshop_vars.studentName }}"
 
-  - name: "rhel8-prep : check ssh known_hosts  permissions for '{{ item }}'"
+  - name: "rhel8-prep : check ssh known_hosts  permissions"
     file:
       path: "~{{ item }}/.ssh/known_hosts"
       mode: "0700"
@@ -103,7 +103,7 @@
       - "root"
       - "{{ workshop_vars.studentName }}"
 
-  - name: "rhel8-prep : clean up known_hosts for 'root'"
+  - name: "rhel8-prep : clean up known_hosts for root"
     vars:
       p_file: "~root/.ssh/known_hosts"
     shell:
@@ -115,7 +115,7 @@
       - "{{ groups['myNodes'] }}"
     ignore_errors: yes
 
-  - name: "rhel8-prep: scan and add ssh keys to known_hosts for 'root'"
+  - name: "rhel8-prep: scan and add ssh keys to known_hosts for root"
     vars:
       p_file: "~root/.ssh/known_hosts"
     shell:
@@ -127,7 +127,7 @@
       - "{{ groups['myNodes'] }}"
     ignore_errors: yes
 
-  - name: "rhel8-prep : clean up known_hosts for '{{ workshop_vars.studentName }}'"
+  - name: "rhel8-prep : clean up known_hosts for {{ workshop_vars.studentName }}"
     vars:
       p_file: "~{{ workshop_vars.studentName }}/.ssh/known_hosts"
     shell:
@@ -141,7 +141,7 @@
     become: yes
     become_user: "{{ workshop_vars.studentName }}"
 
-  - name: "rhel8-prep: scan and add ssh keys to known_hosts for '{{ workshop_vars.studentName }}'"
+  - name: "rhel8-prep: scan and add ssh keys to known_hosts for {{ workshop_vars.studentName }}"
     vars:
       p_file: "~{{ workshop_vars.studentName }}/.ssh/known_hosts"
     shell:
