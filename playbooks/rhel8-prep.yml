@@ -25,7 +25,7 @@
     until: result is succeeded
     delay: 5
 
-  - name: "rhel8-prep : FILE remove UN-WATNED motd messages"
+  - name: "rhel8-prep : FILE remove UN-WANTED motd messages"
     file:
       path: /etc/motd.d/cockpit
       state: absent
@@ -156,20 +156,20 @@
   become: true
   tasks:
 
-  - name: "rhel8-prep : create ssh key for 'root'"
+  - name: "rhel8-prep : create ssh key for root"
     openssh_keypair:
       path:  "~root/.ssh/id_rsa"
       owner: "root"
       group: "root"
     register: rootkey_result
 
-  - name: "rhel8-prep : save temp copy of 'root' ssh key"
+  - name: "rhel8-prep : save temp copy of root ssh key"
     delegate_to: localhost
     copy:
       content="{{ rootkey_result.public_key }}" 
       dest="../config/root_sshkey.temp"
 
-  - name: "rhel8-prep : create ssh key for '{{ workshop_vars.studentName }}'"
+  - name: "rhel8-prep : create ssh key for {{ workshop_vars.studentName }}"
     openssh_keypair:
       path:  ~{{ workshop_vars.studentName }}/.ssh/id_rsa
       owner: "{{ workshop_vars.studentName }}"
