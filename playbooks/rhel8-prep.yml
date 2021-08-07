@@ -105,7 +105,9 @@
       cmd: |
         ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}
         ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}.{{ workshop_vars.network_fqdn }}
-    loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
+    with_items:
+      - "{{ groups['myBastion'] }}"
+      - "{{ groups['myNodes'] }}"
     ignore_errors: yes
 
   - name: "rhel8-prep: scan and add ssh keys to known_hosts for 'root'"
@@ -115,7 +117,9 @@
       cmd: |
         ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }} >> {{ p_file }}
         ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }}.{{ workshop_vars.network_fqdn }} >> {{ p_file }}
-    loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
+    with_items:
+      - "{{ groups['myBastion'] }}"
+      - "{{ groups['myNodes'] }}"
     ignore_errors: yes
 
   - name: "rhel8-prep : clean up known_hosts for '{{ workshop_vars.studentName }}'"
@@ -125,7 +129,9 @@
       cmd: |
         ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}
         ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}.{{ workshop_vars.network_fqdn }}
-    loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
+    with_items:
+      - "{{ groups['myBastion'] }}"
+      - "{{ groups['myNodes'] }}"
     ignore_errors: yes
     become: yes
     become_user: "{{ workshop_vars.studentName }}"
@@ -137,7 +143,9 @@
       cmd: |
         ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }} >> {{ p_file }}
         ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }}.{{ workshop_vars.network_fqdn }} >> {{ p_file }}
-    loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
+    with_items:
+      - "{{ groups['myBastion'] }}"
+      - "{{ groups['myNodes'] }}"
     ignore_errors: yes
     become: yes
     become_user: "{{ workshop_vars.studentName }}"
