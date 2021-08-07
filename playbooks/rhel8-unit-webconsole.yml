@@ -1,5 +1,6 @@
 ---
 - hosts: myBastion
+  become: true
   tasks:
   
     - name: "rhel8-unit-webconsole : yum install packages"
@@ -66,6 +67,7 @@
 
 
 - hosts: myNodes
+  become: true
   tasks:
   
     - name: "rhel8-unit-webconsole : yum install packages"

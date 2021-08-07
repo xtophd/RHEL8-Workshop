@@ -1,5 +1,6 @@
 ---
 - hosts: node1
+  become: true
   tasks:
   
     - name: "rhel8-unit-tlog : yum install packages"

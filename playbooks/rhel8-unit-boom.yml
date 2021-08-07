@@ -1,5 +1,6 @@
 ---
 - hosts: node3
+  become: true
   tasks:
   
     - name: "rhel8-unit-boom : yum install packages"

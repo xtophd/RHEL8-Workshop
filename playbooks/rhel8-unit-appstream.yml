@@ -1,5 +1,6 @@
 ---
 - hosts: myBastion
+  become: true
   tasks:
   
     - name: "rhel8-unit-appstream : deploy sample playbook and inventory"
@@ -28,6 +29,7 @@
 
 
 - hosts: node1
+  become: true
   tasks:
 
     - name: "rhel8-unit-appstream : cheat file installs"

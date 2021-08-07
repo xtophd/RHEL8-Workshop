@@ -1,5 +1,6 @@
 ---
 - hosts: node2
+  become: true
   tasks:
   
     - name: "rhel8-unit-ebpf : yum install bcc-tools"

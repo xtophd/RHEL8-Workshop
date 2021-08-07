@@ -1,5 +1,6 @@
 ---
 - hosts: myBastion
+  become: true
   tasks:
   
     - name: "rhel8-unit-wayland : yum install packages"

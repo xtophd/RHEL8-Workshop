@@ -1,5 +1,6 @@
 ---
 - hosts: node3,bastion
+  become: true
   tasks:
 
     - name: "rhel8-unit-podman : yum install podman,net-tools,wget"
