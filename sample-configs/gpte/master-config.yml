@@ -25,7 +25,7 @@ all:
       network_basedomain:  "internal"
       network_fqdn:        "{{ lookup('file','.././config/gpte-guid.txt') }}.internal"
       
-      studentName:          "cloud-user"
+      studentName:          "student"
       studentPassword:      "{{ lookup('file','.././config/gpte-studentpw.txt') }}"
       set_studentPassword:  True
 
