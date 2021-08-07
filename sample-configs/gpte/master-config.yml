@@ -17,29 +17,18 @@ all:
     ## ----------------------------------------
     ##    Workshop Variables
 
+
+
     workshop_vars:
 
       clustername:         "{{ lookup('file','.././config/gpte-guid.txt') }}"
       network_basedomain:  "internal"
       network_fqdn:        "{{ lookup('file','.././config/gpte-guid.txt') }}.internal"
       
-#      network_network:     "192.168.1.0"
-#      network_netmask:     "255.255.255.0"
-#      network_broadcast:   "192.168.1.255"
-#      network_prefix:      "24"
-#      network_gateway:     "192.168.1.1"
-#      network_nameserver:  "192.168.1.30"
-#      network_timeserver:  "192.168.1.60"
-      
-      studentName:         "cloud-user"
+      studentName:          "cloud-user"
+      studentPassword:      "{{ lookup('file','.././config/gpte-studentpw.txt') }}"
 
-    ## ----------------------------------------
-    ##    Xtoph Deploy Variables
 
-#    xtoph_vars:
-#
-#      deployhost_ip:       "192.168.1.170" 
-#      clustername:         "{{ workshop_vars.clustername }}"
 
     ## ----------------------------------------
     ##    Override default ansible host with
@@ -48,6 +37,8 @@ all:
     ##    vars section below.  This assumes all
     ##    hosts are in the same domain. DUH!
 
+
+
     ansible_host: "{{ inventory_hostname }}.{{ workshop_vars.network_fqdn }}"
 
 
@@ -55,19 +46,6 @@ all:
 ## ----------------------------------------
 ## HOSTGROUPS & VARS
 ## ----------------------------------------
-
-
-
-#myDeployhost:
-#  hosts:
-#    deployer:
-#      h_pubIP: "{{ xtoph_vars.deployhost_ip }}"
-#  vars:
-#    ansible_connection: local
-
-
-
-## -----------------
 
 
 
