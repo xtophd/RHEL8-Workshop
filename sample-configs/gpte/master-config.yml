@@ -33,6 +33,25 @@ all:
       adminPassword:        ""
       set_adminPassword:    False
 
+      enable_unit:
+        appstream:          True
+        boom:               False
+        buildah:            True
+        ebpf:               True
+        firewalld:          True
+        kpatch:             False
+        nftables:           True
+        podman:             True
+        stratis:            True
+        systemd:            True
+        tlog:               True
+        virtualization:     False
+        vdo:                True
+        wayland:            False
+        webconsole:         True
+  
+        
+
 
 
     ## ----------------------------------------
