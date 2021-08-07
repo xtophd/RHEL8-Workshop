@@ -1,5 +1,6 @@
 ---
 - hosts: myBastion,myNodes
+  become: true
   tasks:
   
   - name: "rhel8-prep: rhel8-prep : TEMPLATE /etc/motd"
@@ -93,7 +94,7 @@
     shell:
       cmd: |
         ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}
-        ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}.{{ ansible_domain }}
+        ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}.{{ workshop_vars.network_fqdn }}
     loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
     ignore_errors: yes
 
@@ -103,7 +104,7 @@
     shell:
       cmd: |
         ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }} >> {{ p_file }}
-        ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }}.{{ ansible_domain }} >> {{ p_file }}
+        ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }}.{{ workshop_vars.network_fqdn }} >> {{ p_file }}
     loop: "{{ [ groups['myBastion'], groups['myNodes'] ]  | flatten(1) }}"
     ignore_errors: yes
 
