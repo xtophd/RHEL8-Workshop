@@ -44,11 +44,21 @@
         sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/subscription-manager.conf
         sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/product-id.conf
                   
-  - name: "rhel8-prep : USER create and/or reset users"
-    user: name="{{ item.name }}" password="{{ item.password }}"
-    with_items:
-      - {name: 'root', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
-      - {name: '{{ workshop_vars.studentName }}', password: '$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70'}
+  - name: "rhel8-prep : create and/or reset admin user"
+    user: 
+      name:     "{{ workshop_vars.adminName  }}" 
+      password: "{{ workshop_vars.adminPassword }}"
+      state:    present
+    when:
+      - workshop_vars.set_adminPassword
+
+  - name: "rhel8-prep : create and/or reset student user"
+    user: 
+      name:     "{{ workshop_vars.studentName  }}" 
+      password: "{{ workshop_vars.studentPassword }}"
+      state:    present
+    when:
+      - workshop_vars.set_studentPassword
 
   - name: "rhel8-prep : USER modification"
     user: name="{{ workshop_vars.studentName }}" groups="wheel"

@@ -27,6 +27,11 @@ all:
       
       studentName:          "cloud-user"
       studentPassword:      "{{ lookup('file','.././config/gpte-studentpw.txt') }}"
+      set_studentPassword:  True
+
+      adminName:            "root"
+      adminPassword:        ""
+      set_adminPassword:    False
 
 
 
