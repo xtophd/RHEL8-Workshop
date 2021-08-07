@@ -1,21 +1,5 @@
 ---
 
-        appstream:          True
-        boom:               False
-        buildah:            True
-        ebpf:               True
-        firewalld:          True
-        kpatch:             False
-        nftables:           True
-        podman:             True
-        stratis:            True
-        systemd:            True
-        tlog:               True
-        virtualization:     False
-        vdo:                True
-        wayland:            False
-        webconsole:         True
-
 - import_playbook: rhel8-settings.yml
   tags: settings
 
