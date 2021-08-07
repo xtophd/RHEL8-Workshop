@@ -55,7 +55,7 @@
   tags: vdo
 
 - import_playbook: rhel8-unit-virtualization.yml
-  when: workshop_vars.enable_unit.virtulization
+  when: workshop_vars.enable_unit.virtualization
   tags: virt
 
 - import_playbook: rhel8-unit-kpatch.yml
