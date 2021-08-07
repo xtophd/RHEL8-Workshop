@@ -47,7 +47,7 @@
   - name: "rhel8-prep : create and/or reset admin user"
     user: 
       name:     "{{ workshop_vars.adminName  }}" 
-      password: "{{ workshop_vars.adminPassword }}"
+      password: "{{ workshop_vars.adminPassword | password_hash('sha512') }}"
       state:    present
     when:
       - workshop_vars.set_adminPassword
@@ -55,7 +55,7 @@
   - name: "rhel8-prep : create and/or reset student user"
     user: 
       name:     "{{ workshop_vars.studentName  }}" 
-      password: "{{ workshop_vars.studentPassword }}"
+      password: "{{ workshop_vars.studentPassword | password_hash('sha512') }}"
       state:    present
     when:
       - workshop_vars.set_studentPassword
