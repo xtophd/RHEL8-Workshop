@@ -60,6 +60,11 @@
     when:
       - workshop_vars.set_studentPassword
 
+  - name: "rhel8-prep : create student group"
+    group: 
+      name:     "{{ workshop_vars.studentName  }}" 
+      state:    present
+
   - name: "rhel8-prep : USER modification"
     user: name="{{ workshop_vars.studentName }}" groups="wheel"
 
