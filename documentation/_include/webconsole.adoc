@@ -107,7 +107,7 @@ That completes the installation and configuration of the Web Console.
 
 == Webconsole Login
 
-Your instructors (or workshop portal) may provide you with a unique link and special instructions to access the web-console on the *bastion*. It is the PREFERRED method to use you local web browser.
+Your instructors (or workshop portal) may provide you with a unique link and special instructions to access the web-console on the *bastion*. It is PREFERRED that you use your local web browser.
 
 Accept the various notifications about insecure ceritificates, and then login in.
 
