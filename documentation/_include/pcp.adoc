@@ -29,7 +29,7 @@ For these exercises, you will primarily be using the hosts `node2` and `node3`  
 
 TIP: Now is a great time to use the multi session capability of *tmux*.  Use `Ctrl-b "` to create another session with a split screen.  Cycle the active session back and forth with `CTRL-b n` (next) and `CTRL-b p` (previous).
 
-From host `workstation`, ssh to `node2`.
+From host `bastion`, ssh to `node2`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -47,7 +47,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-pcp-checkhost.sh*
+# *workshop-pcp-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.

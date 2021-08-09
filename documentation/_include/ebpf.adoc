@@ -30,7 +30,7 @@ For these exercises, you will primarily be using the host `node2` as user `root`
 
 TIP: Now is a great time to use the multi session capability of *tmux*.  Use `Ctrl-b "` to create another session with a split screen.  Cycle the active session back and forth with `CTRL-b n` (next) and `CTRL-b p` (previous).
 
-From host `workstation`, ssh to `node2`.
+From host `bastion`, ssh to `node2`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -48,7 +48,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-ebpf-checkhost.sh*
+# *workshop-ebpf-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -89,12 +89,12 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 
 In your second terminal, establish yourself as described below and then run the following command:
 
-  * host: *workstation*
+  * host: *bastion*
   * user: *root*
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"*
+# *ssh node2.example.com "sudo workshop-ebpf-rootkit.sh"*
 ----
 
 This command should run for about 10 seconds and then exit.  
@@ -110,7 +110,7 @@ PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 28478 sshd       10.0.0.12       22    10.0.0.10       33514    14     2 9091.95
 ----
 
-Doing the math with my numbers above, my session was open for about 9 seconds and was initiated by IP 10.0.0.10, the workstation.
+Doing the math with my numbers above, my session was open for about 9 seconds and was initiated by IP 10.0.0.10, the bastion.
 
 In the `tcplife` terminal, issue a Ctrl-C and this will return you to a prompt.
 
@@ -139,12 +139,12 @@ PCOMM            PID    PPID   RET ARGS
 
 In your second terminal, establish yourself as described below and then run the following command:
 
-  * host: *workstation*
+  * host: *bastion*
   * user: *root*
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ssh node2.example.com "sudo cheat-ebpf-rootkit.sh"*
+# *ssh node2.example.com "sudo workshop-ebpf-rootkit.sh"*
 ----
 
 [discrete]
@@ -157,7 +157,7 @@ In the `execsnoop` terminal, you should see output similar to:
 PCOMM            PID    PPID   RET ARGS
 sshd             28512  749      0 /usr/sbin/sshd -D -oCiphers=aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr,aes256-cbc,aes128-gcm@openssh.com,aes128-ctr,aes128-cb -oMACs=hmac-sha2-256-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2- -oGSSAPIKexAlgorithms=gss-gex-sha1-,gss-group14-sha1- -oKexAlgorithms=curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-excha -oHostKeyAlgorithms=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha2-nis -oPubkeyAcceptedKeyTypes=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha -R
 unix_chkpwd      28514  28512    0 /usr/sbin/unix_chkpwd root chkexpiry
-bash             28516  28515    0 /bin/bash -c cheat-ebpf-rootkit.sh
+bash             28516  28515    0 /bin/bash -c workshop-ebpf-rootkit.sh
 grepconf.sh      28517  28516    0 /usr/libexec/grepconf.sh -c
 grep             28518  28517    0 /usr/bin/grep -qsi ^COLOR.*none /etc/GREP_COLORS
 grepconf.sh      28519  28516    0 /usr/libexec/grepconf.sh -c

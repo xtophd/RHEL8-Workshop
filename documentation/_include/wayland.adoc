@@ -67,7 +67,7 @@ reboot
 ----
 ====
 
-Please proceed to log into the GUI console of *workstation.example.com* as the user *student*.  The password should be provided by your instructor.
+Please proceed to log into the GUI console of *bastion.example.com* as the user *student*.  The password should be provided by your instructor.
 
 == Customizing the Desktop
 

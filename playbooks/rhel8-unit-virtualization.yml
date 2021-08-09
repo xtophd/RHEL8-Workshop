@@ -25,7 +25,7 @@
     - name: "rhel8-unit-virtualization : firewalld service start"
       service: name="firewalld" state=started enabled=yes
 
-    - name: "rhel8-unit-virtualization : cheat script installs"
+    - name: "rhel8-unit-virtualization : workshop script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -33,5 +33,5 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2',           dest: '/usr/local/bin/cheat-virt-checkhost.sh'}
+        - {src: 'workshop-checkhost.j2',           dest: '/usr/local/bin/workshop-virt-checkhost.sh'}
 

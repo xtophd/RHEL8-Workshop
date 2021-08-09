@@ -23,7 +23,7 @@ In this part of the lab, we will discuss the general operation and command struc
 
 == Getting Started
 
-Let's get started by logging into the workstation VM as root (if not already logged in) and simply perform the following command to get a quick status of what you have access to: 
+Let's get started by logging into the bastion VM as root (if not already logged in) and simply perform the following command to get a quick status of what you have access to: 
 
 ----
 # nmcli device status	
@@ -178,7 +178,7 @@ Now that our bond is configured let's set another static IPv4 address using the 
 The next new concept to introduce is Network Teaming. The two main benefits of NIC Teaming are data aggregation and failover, above and beyond the capabilities of network bonding. Another upside is that you can actually convert a bond to a team, which is our next exercise with nmcli. In order to simplify the environment, we will not be changing the name of the bond, as the conversion tool will not update things such as firewalld, or any other scripts or programs outside of the ifcfg files.
 
 
-Network teaming uses libteam to control one instance of the team driver. Ensure that teamd is already installed on your local workstation. We can also see that teamd.service is static, and doesn't need to be started or enabled. 
+Network teaming uses libteam to control one instance of the team driver. Ensure that teamd is already installed on your local bastion. We can also see that teamd.service is static, and doesn't need to be started or enabled. 
 
 ----
 # yum install -y teamd 

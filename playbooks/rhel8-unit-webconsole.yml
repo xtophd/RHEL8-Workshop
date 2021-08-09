@@ -53,7 +53,7 @@
     - name: "rhel8-unit-webconsole : firewall configuration"
       firewalld: port=443/tcp permanent=yes immediate=yes state=enabled
 
-    - name: "rhel8-unit-webconsole : cheat file installs"
+    - name: "rhel8-unit-webconsole : workshop file installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -61,7 +61,7 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-cockpit-checkhost.sh'} 
+        - {src: 'workshop-checkhost.j2', dest: '/usr/local/bin/workshop-cockpit-checkhost.sh'} 
 
 
 

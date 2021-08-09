@@ -27,7 +27,7 @@ Instead of an entirely in-kernel approach like ZFS or Btrfs, Stratis uses a hybr
 
 For these exercises, you will be using the host `node2` as user `root`.
 
-From host `workstation`, ssh to `node2`.
+From host `bastion`, ssh to `node2`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -45,7 +45,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-stratis-checkhost.sh*
+# *workshop-stratis-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -171,7 +171,7 @@ The actual space used by a filesystem can be shown using the `stratis fs list` c
 
 Now make sure the filesystem will mount at boot time by adding the following line to the end of the /etc/fstab file:
 
-INFO: If you are comfortable with an editor, you can type it in or cut and paste using the UUID from the output of “stratis fs”.   If not, you can use a cheat-script we prepared for you.
+INFO: If you are comfortable with an editor, you can type it in or cut and paste using the UUID from the output of “stratis fs”.   If not, you can use a workshop-script we prepared for you.
 
 ./etc/fstab
 [source,options="nowrap",subs="{markup-in-source}"]
@@ -181,7 +181,7 @@ UUID=<the-uuid-unique-to-the-new-filesystem>  /summitdir  xfs  defaults  0  0
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-stratis-fstab.sh
+workshop-stratis-fstab.sh
 ----
 
 [NOTE]

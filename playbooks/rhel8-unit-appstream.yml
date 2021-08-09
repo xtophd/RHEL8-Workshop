@@ -14,7 +14,7 @@
         - {src: 'appstream-playbook.j2', dest: '/usr/local/src/appstream-playbook.yml'} 
         - {src: 'appstream-inventory.j2', dest: '/usr/local/src/appstream-inventory.yml'} 
 
-    - name: "rhel8-unit-appstream : cheat script installs"
+    - name: "rhel8-unit-appstream : workshop script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -22,7 +22,7 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-ansible-from-epel.j2', dest: '/usr/local/bin/cheat-ansible-from-epel.sh'}
+        - {src: 'workshop-ansible-from-epel.j2', dest: '/usr/local/bin/workshop-ansible-from-epel.sh'}
 
 
 
@@ -32,7 +32,7 @@
   become: true
   tasks:
 
-    - name: "rhel8-unit-appstream : cheat file installs"
+    - name: "rhel8-unit-appstream : workshop file installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -40,4 +40,4 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-appstream-checkhost.sh'} 
+        - {src: 'workshop-checkhost.j2', dest: '/usr/local/bin/workshop-appstream-checkhost.sh'} 

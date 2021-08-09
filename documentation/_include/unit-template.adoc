@@ -16,7 +16,7 @@ Provide a unit summary here.
 
 Some instrcutional text
 
-.[root@workstation]#
+.[root@bastion]#
 ----
 ssh node1.example.com
 ----

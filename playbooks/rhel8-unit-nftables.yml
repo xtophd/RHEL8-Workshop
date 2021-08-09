@@ -3,7 +3,7 @@
   become: true
   tasks:
   
-    - name: "rhel8-unit-nftables : cheat script installs"
+    - name: "rhel8-unit-nftables : workshop script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -11,4 +11,4 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2',               dest: '/usr/local/bin/cheat-nftables-checkhost.sh'}
+        - {src: 'workshop-checkhost.j2',               dest: '/usr/local/bin/workshop-nftables-checkhost.sh'}

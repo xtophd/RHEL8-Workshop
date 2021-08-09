@@ -29,7 +29,7 @@ NOTE: For 99% of all use cases the firewalld tools are the best choice.  For thi
 
 For these exercises, you will be using the host `node2` as user `root`.
 
-From host `workstation`, ssh to `node2`.
+From host `bastion`, ssh to `node2`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -47,7 +47,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-nftables-checkhost.sh*
+# *workshop-nftables-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.

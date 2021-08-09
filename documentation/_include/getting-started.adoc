@@ -14,9 +14,9 @@ endif::[]
 
 = Workshop Environment Preparation
 
-== Sign-On on to your *workstation* session
+== Sign-On on to your *bastion* session
 
-Using the connection information and credentials provided by the instructor, get yourselves signed into your workstation session.
+Using the connection information and credentials provided by the instructor, get yourselves signed into your bastion session.
 
 == Invoke *tmux* Session
 

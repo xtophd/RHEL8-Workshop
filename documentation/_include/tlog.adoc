@@ -24,7 +24,7 @@ If you have successfully run the RHEL 8 lab preparation playbook, then node1.exa
 
 For these exercises, you will be using the host `node1` as user `root`.
 
-From host `workstation`, ssh to `node1`.
+From host `bastion`, ssh to `node1`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -42,7 +42,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-tlog-checkhost.sh*
+# *workshop-tlog-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -168,7 +168,7 @@ We have taken the liberty of scripting this "search" to playback the last sessio
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-tlog-playback.sh*
+# *workshop-tlog-playback.sh*
 ----
 
 Once you hit enter on the above command, you will see a note that "Playback Started..." and again when "Playback Finished...".  Be patient until it completes and your root prompt returns.

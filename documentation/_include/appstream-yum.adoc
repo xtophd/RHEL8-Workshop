@@ -39,7 +39,7 @@ Application Streams:
 
 For these exercises, you will be using the host `node1` as user `root`.
 
-From host `workstation`, ssh to `node1`.
+From host `bastion`, ssh to `node1`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -57,7 +57,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-appstream-checkhost.sh*
+# *workshop-appstream-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -215,7 +215,7 @@ the command is:
 # *yum module enable mariadb mysql -y*
 ----
 
-You may now switch back to the workstation:
+You may now switch back to the bastion:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -236,7 +236,7 @@ You may now switch back to the workstation:
 
 == (BONUS) App Stream Automation with Ansible
 
-WARNING: Depending on the workshop environment deployed, your workstation host may not have access to ansible.  In some cases, if your host does NOT have ansible installed, you may be able to install an unsupported version from the EPEL repo.  Only install the EPEL version if instructed to do so: `cheat-ansible-from-epel.sh`
+WARNING: Depending on the workshop environment deployed, your bastion host may not have access to ansible.  In some cases, if your host does NOT have ansible installed, you may be able to install an unsupported version from the EPEL repo.  Only install the EPEL version if instructed to do so: `workshop-ansible-from-epel.sh`
 
 App Stream operations can be performed in ansible with the 'dnf' module.  Here is a sample of a dnf task:
 
@@ -248,9 +248,9 @@ App Stream operations can be performed in ansible with the 'dnf' module.  Here i
     state: present
 ----
 
-A complete sample of a dnf based playbook for this cluster is provided on the workstation host.
+A complete sample of a dnf based playbook for this cluster is provided on the bastion host.
 
-As user `root` on the host `workstation`, run the following:
+As user `root` on the host `bastion`, run the following:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----

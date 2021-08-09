@@ -24,7 +24,7 @@ In this unit, we will continue to work with containers and get familiar with `Bu
 
 For these exercises, you will be using the host `node3` as user `root`.
 
-From host `workstation`, ssh to `node3`.
+From host `bastion`, ssh to `node3`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -42,7 +42,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-buildah-checkhost.sh*
+# *workshop-buildah-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.

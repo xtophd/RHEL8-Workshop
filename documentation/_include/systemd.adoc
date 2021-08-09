@@ -29,7 +29,7 @@ Systemd is the "init" system for RHEL 8 (and 7 for that matter).  It replaces Up
 
 For these exercises, you will be using the host `node1` as user `root`.
 
-From host `workstation`, ssh to `node1`.
+From host `bastion`, ssh to `node1`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -47,7 +47,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-systemd-checkhost.sh*
+# *workshop-systemd-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -147,7 +147,7 @@ The state will  be enabled, disabled, static, or masked.  Static indicates that 
 
 === Install Packages
 
-Now that we have a good idea of what’s installed on our system, let’s get a basic lamp stack up and running.  If you prefer not to type all of these commands, there is a cheat script below to save you some time.
+Now that we have a good idea of what’s installed on our system, let’s get a basic lamp stack up and running.  If you prefer not to type all of these commands, there is a workshop script below to save you some time.
 
 Let us install some packages.
 
@@ -212,11 +212,11 @@ Last but not least, you need to enable a firewall port.
 success
 ----
 
-So as promised, here is a cheat script that performs all of the above steps.
+So as promised, here is a workshop script that performs all of the above steps.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-systemd-lamp.sh*
+# *workshop-systemd-lamp.sh*
 ----
 
 === Customize Services
@@ -237,7 +237,7 @@ Create a drop-in configuration file to extend the default httpd.service unit
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-systemd-httpdconfig.sh*
+# *workshop-systemd-httpdconfig.sh*
 
 Contents of /etc/systemd/system/httpd.service.d/50-httpd.conf
 [Service]

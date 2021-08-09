@@ -26,7 +26,7 @@ These exercises will help you get familiar with the basic concepts of LVM and al
 
 For these exercises, you will be using the host `node3` as user `root`.
 
-From host `workstation`, ssh to `node3`.
+From host `bastion`, ssh to `node3`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -44,7 +44,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-vdo-checkhost.sh*
+# *workshop-vdo-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
