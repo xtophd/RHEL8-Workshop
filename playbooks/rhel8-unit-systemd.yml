@@ -1,5 +1,6 @@
 ---
 - hosts: node1
+  become: true
   tasks:
 
     - name: "rhel8-unit-systemd : yum install LAMP packages"
@@ -9,7 +10,7 @@
       until: result is succeeded
       delay: 5
 
-    - name: "rhel8-unit-systemd : cheat script installs"
+    - name: "rhel8-unit-systemd : workshop script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -17,6 +18,6 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2',           dest: '/usr/local/bin/cheat-systemd-checkhost.sh'}
-        - {src: 'cheat-systemd-lamp.j2',        dest: '/usr/local/bin/cheat-systemd-lamp.sh'}
-        - {src: 'cheat-systemd-httpdconfig.j2', dest: '/usr/local/bin/cheat-systemd-httpdconfig.sh'}
+        - {src: 'workshop-checkhost.j2',           dest: '/usr/local/bin/workshop-systemd-checkhost.sh'}
+        - {src: 'workshop-systemd-lamp.j2',        dest: '/usr/local/bin/workshop-systemd-lamp.sh'}
+        - {src: 'workshop-systemd-httpdconfig.j2', dest: '/usr/local/bin/workshop-systemd-httpdconfig.sh'}

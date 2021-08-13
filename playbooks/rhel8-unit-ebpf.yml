@@ -1,5 +1,6 @@
 ---
 - hosts: node2
+  become: true
   tasks:
   
     - name: "rhel8-unit-ebpf : yum install bcc-tools"
@@ -9,7 +10,7 @@
       until: result is succeeded
       delay: 5
 
-    - name: "rhel8-unit-ebpf : cheat script installs"
+    - name: "rhel8-unit-ebpf : workshop script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -17,5 +18,5 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2',    dest: '/usr/local/bin/cheat-ebpf-checkhost.sh'}
-        - {src: 'cheat-ebpf-rootkit.j2', dest: '/usr/local/bin/cheat-ebpf-rootkit.sh'}
+        - {src: 'workshop-checkhost.j2',    dest: '/usr/local/bin/workshop-ebpf-checkhost.sh'}
+        - {src: 'workshop-ebpf-rootkit.j2', dest: '/usr/local/bin/workshop-ebpf-rootkit.sh'}

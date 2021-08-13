@@ -29,7 +29,7 @@ will load the same kernel with a few additional detectable parameters.
 
 For these exercises, you will be using the host `node3` as user `root`.
 
-From host `workstation`, ssh to `node3`.
+From host `bastion`, ssh to `node3`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -47,7 +47,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-boom-checkhost.sh*
+# *workshop-boom-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -70,7 +70,7 @@ Creating a new boot entry begins with a boom `profile`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-boom-mkprofile.sh*
+# *workshop-boom-mkprofile.sh*
 
 Determining root device...
 Creating BOOM profile with tweaks (UUID disk)...
@@ -136,11 +136,11 @@ root=UUID=f7614c41-2835-4125-bb13-50772dc2f30c
 
 NOTE: In this scenario, the boot device is listed by a UUID.  Depending on the lab environment, you could see a logical volume name or a physcial device path.
 
-Now we need to get to the actual device (or lvm) path.  Although this logic is not complicated, it's not really the focus of this exercise, so you've been provided another cheat-script.
+Now we need to get to the actual device (or lvm) path.  Although this logic is not complicated, it's not really the focus of this exercise, so you've been provided another workshop-script.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-boom-mkentry.sh*
+# *workshop-boom-mkentry.sh*
 
 
 Determining root device...
@@ -208,7 +208,7 @@ Boot Entry (boot_id=40d2351)
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-boom-mkentry-custom.sh*
+# *workshop-boom-mkentry-custom.sh*
 
 Determining root device...
 UUID reduction if necessary...
@@ -235,12 +235,12 @@ Before reboot, there are 2 options to invoke the right loader at restart:
   . enter the GRUB menu and select at boot time
   . use grub-set-default to pre-select which one to load by default
   
-We are going to opt for pre-select since it's easier to script.  Use the following cheat to inspect 
+We are going to opt for pre-select since it's easier to script.  Use the following workshop to inspect 
 the currently configured GRUB menu options.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-boom-grublist.sh*
+# *workshop-boom-grublist.sh*
 
      0  title="Red Hat Enterprise Linux (4.18.0-147.el8.x86_64) 8.1 (Ootpa)"
      1  title="RHEL 8 Workshop"

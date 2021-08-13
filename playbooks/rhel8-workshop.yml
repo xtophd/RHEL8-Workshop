@@ -7,47 +7,62 @@
   tags: prep
 
 - import_playbook: rhel8-unit-wayland.yml
+  when: workshop_vars.enable_unit.wayland
   tags: wayland
 
 - import_playbook: rhel8-unit-appstream.yml
+  when: workshop_vars.enable_unit.appstream
   tags: appstream
 
 - import_playbook: rhel8-unit-systemd.yml
+  when: workshop_vars.enable_unit.systemd
   tags: systemd
 
 - import_playbook: rhel8-unit-firewalld.yml
+  when: workshop_vars.enable_unit.firewalld
   tags: firewalld
 
 - import_playbook: rhel8-unit-nftables.yml
+  when: workshop_vars.enable_unit.nftables
   tags: nftables
 
 - import_playbook: rhel8-unit-ebpf.yml
+  when: workshop_vars.enable_unit.ebpf
   tags: ebpf
 
 - import_playbook: rhel8-unit-boom.yml
+  when: workshop_vars.enable_unit.boom
   tags: boom
 
 - import_playbook: rhel8-unit-podman.yml
+  when: workshop_vars.enable_unit.podman
   tags: podman
 
 - import_playbook: rhel8-unit-buildah.yml
+  when: workshop_vars.enable_unit.buildah
   tags: buildah
 
 - import_playbook: rhel8-unit-stratis.yml
+  when: workshop_vars.enable_unit.stratis
   tags: stratis
 
 - import_playbook: rhel8-unit-tlog.yml
+  when: workshop_vars.enable_unit.tlog
   tags: tlog
 
 - import_playbook: rhel8-unit-lvm-vdo.yml
+  when: workshop_vars.enable_unit.vdo
   tags: vdo
 
 - import_playbook: rhel8-unit-virtualization.yml
+  when: workshop_vars.enable_unit.virtualization
   tags: virt
 
 - import_playbook: rhel8-unit-kpatch.yml
+  when: workshop_vars.enable_unit.kpatch
   tags: kpatch
 
 ## Save the webconsole for last since it will discconect webconsole session on service restart
 - import_playbook: rhel8-unit-webconsole.yml
+  when: workshop_vars.enable_unit.webconsole
   tags: webconsole

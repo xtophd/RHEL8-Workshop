@@ -1,5 +1,6 @@
 ---
 - hosts: node1
+  become: true
   tasks:
   
     - name: "rhel8-unit-tlog : yum install packages"
@@ -34,7 +35,7 @@
       with_items:
         - {src: 'tlog-config.j2', dest: '/etc/sssd/conf.d/sssd-session-recording.conf'} 
 
-    - name: "rhel8-unit-tlog : cheat file installs"
+    - name: "rhel8-unit-tlog : workshop file installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -42,8 +43,8 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-tlog-checkhost.sh'} 
-        - {src: 'cheat-tlog-playback.j2', dest: '/usr/local/bin/cheat-tlog-playback.sh'} 
+        - {src: 'workshop-checkhost.j2', dest: '/usr/local/bin/workshop-tlog-checkhost.sh'} 
+        - {src: 'workshop-tlog-playback.j2', dest: '/usr/local/bin/workshop-tlog-playback.sh'} 
 
     - name: "rhel8-unit-tlog : service restart"
       service: name="sssd" state=restarted enabled=yes

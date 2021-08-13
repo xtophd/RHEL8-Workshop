@@ -27,7 +27,7 @@ BOOM also has a simple command-line interface (CLI) and API.
 
 For these exercises, you will be using the host `node3` as user `root`.
 
-From host `workstation`, ssh to `node3`.
+From host `bastion`, ssh to `node3`.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -45,7 +45,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-boom-checkhost.sh*
+# *workshop-boom-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -73,7 +73,7 @@ In order to support LVM snapshots on the root volume, we need to:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-snap-addstorage.sh
+workshop-boom-snap-addstorage.sh
 ----
 
 [NOTE]
@@ -129,7 +129,7 @@ The next set of instructions will create a file and a userID that we will remove
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-snap-importantstuff.sh
+workshop-boom-snap-importantstuff.sh
 ----
 
 [NOTE]
@@ -163,7 +163,7 @@ Now that we have created some important data, it's time to create a snapshot of 
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-snap-mksnap.sh
+workshop-boom-snap-mksnap.sh
 ----
 
 [NOTE]
@@ -179,7 +179,7 @@ Let us take a quick look at what we just did.
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-snap-lvreport.sh
+workshop-boom-snap-lvreport.sh
 ----
 
 [NOTE]
@@ -259,7 +259,7 @@ Analyze the snapshot data and we see that there is now a measurable difference.
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-snap-lvreport.sh
+workshop-boom-snap-lvreport.sh
 ----
 
 .Command Output
@@ -293,7 +293,7 @@ Create a boom profile.
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-mkprofile.sh
+workshop-boom-mkprofile.sh
 ----
 
 [NOTE]
@@ -338,7 +338,7 @@ Now to create a boot entry for grub which utilizes the snapshot as the boot volu
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-snap-mkentry.sh
+workshop-boom-snap-mkentry.sh
 ----
 
 [NOTE]
@@ -410,12 +410,12 @@ Before reboot, there are 2 options to invoke the right loader at restart:
   . enter the GRUB menu and select at boot time
   . use grub-set-default to preselect which one to load
   
-We are going to opt for preselect since it's just easier.  Use the following cheat to inspect the currently configured GRUB menu options.
+We are going to opt for preselect since it's just easier.  Use the following workshop to inspect the currently configured GRUB menu options.
 
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-grublist.sh
+workshop-boom-grublist.sh
 ----
 
 .Command Output
@@ -464,7 +464,7 @@ reboot
 
 Once the host is back online, ssh to back to *node3.example.com* and verify that the “importantfile” and “importantuser” exist in the backup snapshot:
 
-.[root@workstation]#
+.[root@bastion]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 ssh root@node3.example.com
@@ -512,7 +512,7 @@ We will now reboot node3 virtual machine again into rescue mode and return the h
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-grublist.sh
+workshop-boom-grublist.sh
 ----
 
 .Command Output
@@ -541,7 +541,7 @@ reboot
 
 Once the host is back online, ssh to back to *node3.example.com*.
 
-.[root@workstation]#
+.[root@bastion]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 ssh root@node3.example.com
@@ -594,7 +594,7 @@ Set grub to boot default OS again.
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-grublist.sh
+workshop-boom-grublist.sh
 ----
 
 .Command Output
@@ -623,7 +623,7 @@ reboot
 
 We have now returned the host to it's previous state (ie: the moment we created the snapshot with boom). Let's make sure everything is where we expect.
 
-.[root@workstation ~]#
+.[root@bastion ~]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 ssh root@node3.example.com
@@ -679,7 +679,7 @@ Double check the grub configuration.
 .[root@node3]#
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-cheat-boom-grublist.sh
+workshop-boom-grublist.sh
 ----
 
 Note that the snapshot entry has been removed.

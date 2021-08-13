@@ -1,5 +1,6 @@
 ---
 - hosts: node2
+  become: true
   tasks:
   
     - name: "rhel8-unit-stratis : yum install packages"
@@ -12,7 +13,7 @@
     - name: "rhel8-unit-stratis : service restart"
       service: name="stratisd" state=restarted enabled=yes
 
-    - name: "rhel8-unit-stratis : cheat file installs"
+    - name: "rhel8-unit-stratis : workshop file installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -20,5 +21,5 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-stratis-checkhost.sh'} 
-        - {src: 'cheat-stratis-fstab.j2', dest: '/usr/local/bin/cheat-stratis-fstab.sh'} 
+        - {src: 'workshop-checkhost.j2', dest: '/usr/local/bin/workshop-stratis-checkhost.sh'} 
+        - {src: 'workshop-stratis-fstab.j2', dest: '/usr/local/bin/workshop-stratis-fstab.sh'} 

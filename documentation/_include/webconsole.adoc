@@ -19,7 +19,7 @@ endif::[]
 
 == Overview
 
-Web Console is a Red Hat Enterprise Linux 8 web-based user interface designed for managing and monitoring your local system.  The Web Console can also be extended to manage multiple servers located in your network.
+Web Console is a Red Hat Enterprise Linux 8 web-based graphical user interface designed for managing and monitoring your local system.  The Web Console can also be extended to manage multiple servers located in your network.
 
 Features of the Web Console include:
 
@@ -40,7 +40,7 @@ The following exercises will cover some of the capabilities of the Web Console o
 
 == Getting Started
 
-For these exercises, you will be using the host `workstation` as user `root`.
+For these exercises, you will be using the host `bastion` as user `root`.
 
 Use `sudo` to elevate your priviledges.
 
@@ -53,7 +53,7 @@ Verify that you are on the right host for these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *cheat-cockpit-checkhost.sh*
+# *workshop-cockpit-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -62,7 +62,7 @@ You are now ready to proceed with these exercises.
 
 === Packages and Services
 
-For your convenience, the webconsole has already been installed and configured on *workstation.example.com*.  The steps for installation and setup are pretty simple and outlined below.  Remember this provided as reference only.
+For your convenience, the webconsole has already been installed and configured on *bastion.example.com*.  The steps for installation and setup are pretty simple and outlined below.  Remember this provided as reference only.
 
 [NOTE]
 ====
@@ -107,7 +107,7 @@ That completes the installation and configuration of the Web Console.
 
 == Webconsole Login
 
-Your instructors may provide you with a unique link with special instructions to access the web-console on *https://workstation.example.com* with your local browser. This is the PREFERRED method.
+Your instructors (or workshop portal) may provide you with a unique link and special instructions to access the web-console on the *bastion*. It is PREFERRED that you use your local web browser.
 
 Accept the various notifications about insecure ceritificates, and then login in.
 
@@ -266,7 +266,7 @@ You system has been configured with an additional plug-in called the Web Console
 image::slide16.png[Cockpit Services]
 ====
 
-The graph displays performance metrics for all hosts configured in the dashboard, which at this time is pretty boring since the workstation is the only host.  So let us add the additional systems in our workshop cluster.
+The graph displays performance metrics for all hosts configured in the dashboard, which at this time is pretty boring since the bastion is the only host.  So let us add the additional systems in our workshop cluster.
 
 Select the '+' (add) button on the right side of the Servers list.
 

@@ -1,5 +1,6 @@
 ---
 - hosts: node3
+  become: true
   tasks:
 
     - name: "rhel8-unit-skopeo : yum install buildah,skopeo"
@@ -9,7 +10,7 @@
       until: result is succeeded
       delay: 5
 
-    - name: "rhel8-unit-skopeo : cheat script installs"
+    - name: "rhel8-unit-skopeo : workshop script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -17,6 +18,6 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-buildah-checkhost.sh'}
+        - {src: 'workshop-checkhost.j2', dest: '/usr/local/bin/workshop-buildah-checkhost.sh'}
         - {src: 'buildah-dan-cries.j2', dest: '/var/tmp/buildah-dan-cries.txt'}
         - {src: 'buildah-index-html.j2', dest: '/var/tmp/buildah-index.html'}

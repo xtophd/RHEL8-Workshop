@@ -1,5 +1,6 @@
 ---
 - hosts: node3,bastion
+  become: true
   tasks:
 
     - name: "rhel8-unit-podman : yum install podman,net-tools,wget"
@@ -20,7 +21,7 @@
         - {src: 'podman-registries.j2', dest: '/etc/containers/registries.conf'}
         - {src: 'podman-ocifile.j2',    dest: '/root/custom_image.OCIFile'}
 
-    - name: "rhel8-unit-podman : cheat script installs"
+    - name: "rhel8-unit-podman : workshop script installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -28,6 +29,6 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-podman-checkhost.sh'}
-        - {src: 'cheat-podman-loadregistry.j2', dest: '/usr/local/bin/cheat-podman-loadregistry.sh'}
+        - {src: 'workshop-checkhost.j2', dest: '/usr/local/bin/workshop-podman-checkhost.sh'}
+        - {src: 'workshop-podman-loadregistry.j2', dest: '/usr/local/bin/workshop-podman-loadregistry.sh'}
 

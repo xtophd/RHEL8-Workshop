@@ -21,9 +21,9 @@ INFO: If you are using the web-console and do not see "Virtual Machines" or the 
 
 == Getting Started
 
-Starting on the host *workstation.example.com*, just make sure you're the root user.
+Starting on the host *bastion.example.com*, just make sure you're the root user.
 
-.[root@workstation]#
+.[root@bastion]#
 ----
 id
 
@@ -32,9 +32,9 @@ uid=0(root) gid=0(root) groups=0(root)
 
 Verify that you are on the right host for these exercises.
 
-.[root@workstation ~]#
+.[root@bastion ~]#
 ----
-cheat-imagebuilder-checkhost.sh
+workshop-imagebuilder-checkhost.sh
 ----
 
 You are now ready to proceed with these exercises.

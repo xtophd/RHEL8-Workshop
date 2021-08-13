@@ -1,5 +1,6 @@
 ---
 - hosts: myBastion
+  become: true
   tasks:
   
     - name: "rhel8-unit-wayland : yum install packages"
@@ -12,7 +13,7 @@
     - name: "rhel8-unit-wayland : user modification"
       user: name="{{ workshop_vars.studentName }}" groups="wheel"
             
-    - name: "rhel8-unit-wayland : cheat file installs"
+    - name: "rhel8-unit-wayland : workshop file installs"
       template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -20,4 +21,4 @@
         group: root
         mode: 0744
       with_items:
-        - {src: 'cheat-checkhost.j2', dest: '/usr/local/bin/cheat-wayland-checkhost.sh'} 
+        - {src: 'workshop-checkhost.j2', dest: '/usr/local/bin/workshop-wayland-checkhost.sh'} 
