@@ -19,7 +19,7 @@ endif::[]
 
 == Overview
 
-Web Console is a Red Hat Enterprise Linux 8 web-based interface designed for managing and monitoring your local system.  The Web Console can also be extended to manage multiple servers located in your network.
+Web Console is a Red Hat Enterprise Linux 8 web-based graphical user interface designed for managing and monitoring your local system.  The Web Console can also be extended to manage multiple servers located in your network.
 
 Features of the Web Console include:
 
