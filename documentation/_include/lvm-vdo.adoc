@@ -7,6 +7,7 @@
 :disk3: /dev/sdd
 :disk4: /dev/sde
 :disk_glob: /dev/sd{b..e}
+:myProvider: %cloud_provider%
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -14,7 +15,7 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
-ifeval::[%cloud-provider% == ec2]
+ifeval::[%cloud_provider% == ec2]
 :disk0: /dev/nvme0n1
 :disk1: /dev/nvme1n1
 :disk2: /dev/nvme2n1
@@ -29,6 +30,9 @@ endif::[]
 = LVM and VDO : Storage Management and Data Optimization
 
 == Overview
+
+{myProvider}
+
 
 A Logical Volume Manager is a software layer on top of physical hard disks and partitions, which creates an abstraction of continuity and ease-of-use for managing the lifecycle of those devices (ie: addition, removal, replacement, repartitioning, backup, etc).
 
