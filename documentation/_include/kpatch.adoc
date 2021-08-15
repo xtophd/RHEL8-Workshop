@@ -53,17 +53,17 @@ Let's start by looking at the current kernel version:
 ----
 # *rpm -q kernel*
 
-kernel-4.18.0-147.el8.x86_64
+kernel-4.18.0-305.el8.x86_64
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *uname -r*
 
-4.18.0-147.el8.x86_64
+4.18.0-305.el8.x86_64
 ----
 
-Here we can see that we are running the 4.18.0-147 kernel. Now we install all kpatches for our kernel:
+Here we can see that we are running the 4.18.0-305 kernel. Now we install all kpatches for our kernel:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -79,45 +79,36 @@ Further, if you'd like to look at which CVEs are included by the kpatch installe
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *rpm -qi --changelog kpatch-patch-4_18_0-147*
+# *rpm -qi --changelog kpatch-patch-4_18_0-305*
 
-Name        : kpatch-patch-4_18_0-147
+Name        : kpatch-patch-4_18_0-305
 Version     : 1
-Release     : 4.el8
+Release     : 1.el8
 Architecture: x86_64
-Install Date: Wed 26 Feb 2020 08:43:23 PM EST
+Install Date: Sun 15 Aug 2021 04:45:35 PM UTC
+Group       : System Environment/Kernel
 ....
-* Tue Dec 03 2019 Joe Lawrence <joe.lawrence@redhat.com> [1-4.el8]
-- hw: [incomplete fix] Machine Check Error on Page Size Change (IFU) [1779250] {CVE-2018-12207}
+* Tue May 11 2021 Artem Savkov <asavkov@redhat.com> [1-1.el8]
+- serspace applications can misuse the KVM API to cause a write of 16 bytes at an offset up to 32 GB from vcpu->run [1954230] {CVE-2021-3501}
 
-* Mon Nov 18 2019 Josh Poimboeuf <jpoimboe@redhat.com> [1-3.el8]
-- Fix sysfs reporting for MDS-affected systems [1766986] {CVE-2019-11135}
-
-* Sun Nov 17 2019 Josh Poimboeuf <jpoimboe@redhat.com> [1-2.el8]
-- Fix IFU bug bit conflict [1766987] {CVE-2018-12207}
-
-* Fri Nov 15 2019 Joe Lawrence <joe.lawrence@redhat.com> [1-1.el8]
-- hw: Machine Check Error on Page Size Change (IPU) [1766987] {CVE-2018-12207}
-- hw: TSX Asynchronous Abort Side channel attack [1766986] {CVE-2019-11135}
-
-* Thu Oct 17 2019 Joe Lawrence <joe.lawrence@redhat.com> [0-0.el8]
-- An empty patch to subscribe to kpatch stream for kernel-4.18.0-147.el8 [1762443]
+* Mon May 03 2021 Joe Lawrence <joe.lawrence@redhat.com> [0-0.el8]
+- An empty patch to subscribe to kpatch stream for kernel-4.18.0-305.el8 [1956393]
 ----
 
-This tells us that we are now protected against CVE-2018-12207 and CVE-2019-11135. Let's check `kpatch list`:
+This tells us that we are now protected against CVE-2021-3501. Let's check `kpatch list`:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *kpatch list*
 
 Loaded patch modules:
-kpatch_4_18_0_147_1_4 [enabled]
+kpatch_4_18_0_305_1_1 [enabled]
 
 Installed patch modules:
-kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
+kpatch_4_18_0_305_1_1 (4.18.0-305.el8.x86_64)
 ----
 
-We can see that we have kpatch_4_18_0_147_1_4 now installed and loaded. We have these protections effective immediately and without having to reboot. We can now schedule a reboot for a time that is convenient for us. 
+We can see that we have kpatch_4_18_0_305_1_1 now installed and loaded. We have these protections effective immediately and without having to reboot. We can now schedule a reboot for a time that is convenient for us. 
 
 == Taking that Scheduled Reboot 
 
@@ -136,7 +127,7 @@ At that point, kpatch list would look something like this:
 Loaded patch modules:
 
 Installed patch modules:
-kpatch_4_18_0_147_1_4 (4.18.0-147.el8.x86_64)
+kpatch_4_18_0_305_1_1 (4.18.0-305.el8.x86_64)
 ----
 
 Note that while we have installed patch modules, none of them are actually loaded.
