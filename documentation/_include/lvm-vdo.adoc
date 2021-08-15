@@ -1,12 +1,26 @@
 :sectnums:
 :sectnumlevels: 3
 :markup-in-source: verbatim,attributes,quotes
+:disk0: /dev/sda
+:disk1: /dev/sdb
+:disk2: /dev/sdc
+:disk3: /dev/sdd
+:disk4: /dev/sde
+:disk_glob: /dev/sd{b..e}
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
 :important-caption: :heavy_exclamation_mark:
 :caution-caption: :fire:
 :warning-caption: :warning:
+endif::[]
+ifeval::[{cloud-provider} == ec2]
+:disk0: /dev/nvme0n1
+:disk1: /dev/nvme1n1
+:disk2: /dev/nvme2n1
+:disk3: /dev/nvme3n1
+:disk4: /dev/nvme4n1
+:disk_glob: /dev/nvme{1..4}n1
 endif::[]
 
 :toc:
@@ -156,9 +170,9 @@ Since we will be reusing the same resources for many exercises, we will begin by
 
 # *vgremove -ff vg_lab*
 
-# *pvremove /dev/vd{b..e}*
+# *pvremove {disk_glob}*
 
-# *wipefs -a /dev/vd{b..e}*
+# *wipefs -a {disk_glob}*
 
 # *partprobe*
 ----
@@ -167,14 +181,14 @@ Since we will be reusing the same resources for many exercises, we will begin by
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *pvcreate /dev/vdb*
+# *pvcreate {disk1}*
 ----
 
 === Volume Group (Pool) Creation
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *vgcreate vg_lab /dev/vdb*
+# *vgcreate vg_lab {disk1}*
 ----
 
 === Logical Volume Creation
