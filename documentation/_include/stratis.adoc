@@ -8,6 +8,21 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
+:disk0: /dev/sda
+:disk1: /dev/sdb
+:disk2: /dev/sdc
+:disk3: /dev/sdd
+:disk4: /dev/sde
+:disk_glob: /dev/sd{b..e}
+ifeval::["%cloud_provider%" == "ec2"]
+:disk0: /dev/nvme0n1
+:disk1: /dev/nvme1n1
+:disk2: /dev/nvme2n1
+:disk3: /dev/nvme3n1
+:disk4: /dev/nvme4n1
+:disk_glob: /dev/nvme{1..4}n1
+endif::[]
+
 
 
 :toc:
@@ -89,7 +104,7 @@ Apr 27 18:41:52 node2.example.com systemd[1]: Started A daemon that manages a po
 
 == Create Storage Pool
 
-WARNING: /dev/vda is the system disk, DO NOT use it in any of the stratis commands or the vm will become unusable.
+WARNING: {disk0} is the system disk, DO NOT use it in any of the stratis commands or the vm will become unusable.
 
 Next, see what disks/block devices are present, create a pool, create a filesystem in the pool, and mount the filesystem.
 
@@ -97,19 +112,19 @@ Next, see what disks/block devices are present, create a pool, create a filesyst
 ----
 # *sfdisk -s*
 
-/dev/vda:  31457280
-/dev/vdb:   5242880
-/dev/vdc:   5242880
-/dev/vdd:   5242880
-/dev/vde:   5242880
+{disk0}:  31457280
+{disk1}:   5242880
+{disk2}:   5242880
+{disk3}:   5242880
+{disk4}:   5242880
 total: 52428800 blocks
 ----
 
-WARNING: REMEMBER - DON'T USE /dev/vda!!!
+WARNING: REMEMBER - DON'T USE {disk0}!!!
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *stratis pool create summitpool /dev/vdb /dev/vdc*
+# *stratis pool create summitpool {disk2} {disk3}*
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
@@ -127,8 +142,8 @@ Check the status of the block devices
 # *stratis blockdev list*
 
 Pool Name   Device Node     Physical Size   State  Tier
-summitpool  /dev/vdb                5 GiB  In-use  Data
-summitpool  /dev/vdc                5 GiB  In-use  Data
+summitpool  {disk1}                 5 GiB  In-use  Data
+summitpool  {disk2}                 5 GiB  In-use  Data
 ----
 
 == Create Filesystem
@@ -217,7 +232,7 @@ Stratis also makes it easy to add cache devices.  For example, say the filesyste
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *stratis pool add-cache summitpool  /dev/vdd*
+# *stratis pool add-cache summitpool  {disk3}*
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
@@ -225,9 +240,9 @@ Stratis also makes it easy to add cache devices.  For example, say the filesyste
 # *stratis blockdev*
 
 Pool Name	Device Node    Physical Size   State   Tier
-summitpool   /dev/vdb                5 GiB  In-use   Data
-summitpool   /dev/vdc                5 GiB  In-use   Data
-summitpool   /dev/vdd                5 GiB  In-use  Cache
+summitpool   {disk1}                 5 GiB  In-use   Data
+summitpool   {disk2}                 5 GiB  In-use   Data
+summitpool   {disk3}                 5 GiB  In-use  Cache
 ----
 
 == Grow Storage Pool
@@ -236,7 +251,7 @@ Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summ
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *stratis pool add-data summitpool /dev/vde*
+# *stratis pool add-data summitpool {disk4}*
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
@@ -244,10 +259,10 @@ Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summ
 # *stratis blockdev*
 
 Pool Name    Device Node    Physical Size   State   Tier
-summitpool   /dev/vdb               5 GiB  In-use   Data
-summitpool   /dev/vdc               5 GiB  In-use   Data
-summitpool   /dev/vdd               5 GiB  In-use  Cache
-summitpool   /dev/vde               5 GiB  In-use   Data
+summitpool   {disk1}                5 GiB  In-use   Data
+summitpool   {disk2}                5 GiB  In-use   Data
+summitpool   {disk3}                5 GiB  In-use  Cache
+summitpool   {disk4}                5 GiB  In-use   Data
 ----
 
 Verify that the pool shows the additional space, and that the amount used is now in a safe range.
