@@ -124,7 +124,7 @@ WARNING: REMEMBER - DON'T USE {disk0}!!!
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *stratis pool create summitpool {disk2} {disk3}*
+# *stratis pool create summitpool {disk1} {disk2}*
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
