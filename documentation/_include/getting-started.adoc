@@ -86,7 +86,7 @@ Now we will run the playbooks that will set up the workshop.
 ----
 # *cd ~/RHEL8-Workshop*
 
-# *bash rhel8-workshop.sh all*
+# *./rhel8-workshop.sh all*
 ----
 
 The preparation script will run for approximately 5 to 7 minutes on a fresh deployment.
