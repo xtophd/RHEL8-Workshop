@@ -39,9 +39,9 @@ $ *sudo -i*
 
 == Only with Explicit Instructions
 
-WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace, update or overwrite the configuration unless explicitly told to do so.
+WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace, update or overwrite the configuration unless you are directed to do so.
 
-Click on the commands below to expose steps to perform each action.  Remember, only do this if excplicity told to do so.
+Click on the commands below to expose steps to perform each action.  Remember, only do this if explicitly asked to do so.
 
 .Commands to clone workshop from source
 [%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
