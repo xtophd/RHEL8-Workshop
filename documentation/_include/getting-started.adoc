@@ -36,44 +36,6 @@ In order to execute the environment preparation, we need to become the administr
 $ *sudo -i*
 ----
 
-== Download the Workshop project from GitHub
-
-WARNING: It is very likely that your instructor (or the automated deployment system) has already performed this step.  Do NOT delete and clone a new project directory if it already exists.
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *cd ~*
-    
-# *git clone https://github.com/xtophd/RHEL8-Workshop*
-----
-
-== Update the Workshop
-
-NOTE: This step is not needed if you just cloned the workshop, but if recent bug fixes or documentation updates were committed you may need to pull them into you project (branch).
-
-Here is how to refresh the workshop with the latest updates.
-
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *cd ~/RHEL8-Workshop*
-
-# *git pull*
-----
-
-== Configure the Workshop
-
-WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace or overwrite the configuration unless explicitly told to do so.
-
-Copy the default configuration (ansible inventory) to the config directory.
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *cd ~/RHEL8-Workshop*
-
-# *cp ./sample-configs/[depoyment-type]/* ./config
-----
-
 == Run the Prep Script
 
 WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  There is typically no harm in rerunning the deployment playbooks.  Again, follow your instructor's guidance.
@@ -130,6 +92,60 @@ The set up of the RHEL 8 Workshop should now be complete.  A couple of remaining
 2.  Pay attention to which user-id (login) to use
 3.  Pay attention to which host to use
 4.  There is an exam at the conclusion of the workshop... #notreally
+
+
+
+== Download the Workshop project from GitHub
+
+WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace, update or overwrite the configuration unless explicitly told to do so.
+
+[%collapse]
+====
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cd ~*
+    
+# *git clone https://github.com/xtophd/RHEL8-Workshop*
+----
+====
+
+
+
+== Update the Workshop
+
+WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace, update or overwrite the configuration unless explicitly told to do so.
+
+Here is how to refresh the workshop with the latest updates.
+
+[%collapse]
+====
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cd ~/RHEL8-Workshop*
+
+# *git pull*
+----
+====
+
+
+
+== Configure the Workshop
+
+WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace, update or overwrite the configuration unless explicitly told to do so.
+
+[%collapse]
+====
+Copy the default configuration (ansible inventory) to the config directory.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *cd ~/RHEL8-Workshop*
+
+# *cp ./sample-configs/[depoyment-type]/* ./config
+----
+====
+
+
 
 [discrete]
 == End of Unit
