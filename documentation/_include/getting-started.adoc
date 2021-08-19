@@ -102,14 +102,14 @@ WARNING: It is likely that your instructor (or the automated deployment system) 
 Here is how to use git to clone the workshop from the source.  Please ask your instructor regarding the specific branch you may be using.
 
 .Expose commands
-[%collapsible]
-----
+[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
+====
 # *cd ~*
     
 # *git clone https://github.com/xtophd/RHEL8-Workshop*
 
 # *git branch <branch-name>*
-----
+====
 
 
 
@@ -120,7 +120,7 @@ WARNING: It is likely that your instructor (or the automated deployment system) 
 Here is how to refresh the workshop with the latest updates.
 
 .Expose commands
-[%collapsible]
+[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
 ====
 # *cd ~/RHEL8-Workshop*
 
@@ -136,8 +136,7 @@ WARNING: It is likely that your instructor (or the automated deployment system) 
 Here is how to configure the workshop before invoking the preparation script.
 
 .Expose commands
-
-[%collapsible]
+[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
 ====
 # *cd ~/RHEL8-Workshop*
 
