@@ -102,7 +102,7 @@ WARNING: It is likely that your instructor (or the automated deployment system) 
 Here is how to use git to clone the workshop from the source.  Please ask your instructor regarding the specific branch you may be using.
 
 .Expose commands
-[%collapse]
+[%collapsible]
 ----
 # *cd ~*
     
@@ -120,7 +120,7 @@ WARNING: It is likely that your instructor (or the automated deployment system) 
 Here is how to refresh the workshop with the latest updates.
 
 .Expose commands
-[%collapse]
+[%collapsible]
 ----
 # *cd ~/RHEL8-Workshop*
 
@@ -135,7 +135,8 @@ WARNING: It is likely that your instructor (or the automated deployment system) 
 
 Here is how to configure the workshop before invoking the preparation script.
 
-[%collapse]
+.Expose commands
+[%collapsible]
 ----
 # *cd ~/RHEL8-Workshop*
 
