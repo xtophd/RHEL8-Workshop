@@ -66,7 +66,7 @@ Click on the commands below to expose steps to perform each action.  Remember, o
 ====
 # *cd ~/RHEL8-Workshop*
 
-# *cp ./sample-configs/[depoyment-type]/** ./config*
+# *cp ./sample-configs/[depoyment-type]/\* ./config*
 ====
 
 
