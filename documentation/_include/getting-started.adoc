@@ -47,7 +47,9 @@ Click on the commands below to expose steps to perform each action.  Remember, o
 [%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
 ====
 # *cd ~*
+
 # *git clone https://github.com/xtophd/RHEL8-Workshop*
+
 # *git branch <branch-name>*
 ====
 
@@ -55,6 +57,7 @@ Click on the commands below to expose steps to perform each action.  Remember, o
 [%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
 ====
 # *cd ~/RHEL8-Workshop*
+
 # *git pull*
 ====
 
@@ -62,7 +65,8 @@ Click on the commands below to expose steps to perform each action.  Remember, o
 [%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
 ====
 # *cd ~/RHEL8-Workshop*
-# *cp ./sample-configs/[depoyment-type]/* ./config
+
+# *cp ./sample-configs/[depoyment-type]/** ./config*
 ====
 
 
