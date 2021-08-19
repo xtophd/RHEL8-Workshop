@@ -104,11 +104,18 @@ Here is how to use git to clone the workshop from the source.  Please ask your i
 .Click to expose commands
 [%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
 ====
+
+=== Commands to clone the workshop from the source.  Please ask your instructor regarding the specific branch you may be using.
+
 # *cd ~*
     
 # *git clone https://github.com/xtophd/RHEL8-Workshop*
 
 # *git branch <branch-name>*
+
+=== Here is how to refresh the workshop with the latest updates.
+
+
 ====
 
 
