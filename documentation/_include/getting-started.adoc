@@ -121,11 +121,11 @@ Here is how to refresh the workshop with the latest updates.
 
 .Expose commands
 [%collapsible]
-----
+====
 # *cd ~/RHEL8-Workshop*
 
 # *git pull*
-----
+====
 
 
 
@@ -136,12 +136,13 @@ WARNING: It is likely that your instructor (or the automated deployment system) 
 Here is how to configure the workshop before invoking the preparation script.
 
 .Expose commands
+
 [%collapsible]
-----
+====
 # *cd ~/RHEL8-Workshop*
 
 # *cp ./sample-configs/[depoyment-type]/* ./config
-----
+====
 
 
 
