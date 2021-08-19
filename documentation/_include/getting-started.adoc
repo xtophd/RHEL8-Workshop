@@ -36,6 +36,37 @@ In order to execute the environment preparation, we need to become the administr
 $ *sudo -i*
 ----
 
+
+== Only with Explicit Instructions
+
+WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace, update or overwrite the configuration unless explicitly told to do so.
+
+Click on the commands below to expose steps to perform each action.  Remember, only do this if excplicity told to do so.
+
+.Commands to clone workshop from source
+[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
+====
+# *cd ~*
+# *git clone https://github.com/xtophd/RHEL8-Workshop*
+# *git branch <branch-name>*
+====
+
+.Commands to update the workshop
+[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
+====
+# *cd ~/RHEL8-Workshop*
+# *git pull*
+====
+
+.Commands to configure the workshop
+[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
+====
+# *cd ~/RHEL8-Workshop*
+# *cp ./sample-configs/[depoyment-type]/* ./config
+====
+
+
+
 == Run the Prep Script
 
 WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  There is typically no harm in rerunning the deployment playbooks.  Again, follow your instructor's guidance.
@@ -93,62 +124,6 @@ The set up of the RHEL 8 Workshop should now be complete.  A couple of remaining
 3.  Pay attention to which host to use
 4.  There is an exam at the conclusion of the workshop... #notreally
 
-
-
-== Download the Workshop project from GitHub
-
-WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace, update or overwrite the configuration unless explicitly told to do so.
-
-Here is how to use git to clone the workshop from the source.  Please ask your instructor regarding the specific branch you may be using.
-
-.Click to expose commands
-[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
-====
-
-=== Commands to clone the workshop from the source.  Please ask your instructor regarding the specific branch you may be using.
-
-# *cd ~*
-    
-# *git clone https://github.com/xtophd/RHEL8-Workshop*
-
-# *git branch <branch-name>*
-
-=== Here is how to refresh the workshop with the latest updates.
-
-
-====
-
-
-
-== Update the Workshop
-
-WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace, update or overwrite the configuration unless explicitly told to do so.
-
-Here is how to refresh the workshop with the latest updates.
-
-.Click to expose commands
-[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
-====
-# *cd ~/RHEL8-Workshop*
-
-# *git pull*
-====
-
-
-
-== Configure the Workshop
-
-WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace, update or overwrite the configuration unless explicitly told to do so.
-
-Here is how to configure the workshop before invoking the preparation script.
-
-.Click to expose commands
-[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
-====
-# *cd ~/RHEL8-Workshop*
-
-# *cp ./sample-configs/[depoyment-type]/* ./config
-====
 
 
 
