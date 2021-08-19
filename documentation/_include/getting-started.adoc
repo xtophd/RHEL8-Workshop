@@ -46,27 +46,27 @@ Click on the commands below to expose steps to perform each action.  Remember, o
 .Commands to clone workshop from source
 [%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
 ====
-# *cd ~*
+# cd ~
 
-# *git clone https://github.com/xtophd/RHEL8-Workshop*
+# git clone https://github.com/xtophd/RHEL8-Workshop
 
-# *git branch <branch-name>*
+# git branch <branch-name>
 ====
 
 .Commands to update the workshop
 [%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
 ====
-# *cd ~/RHEL8-Workshop*
+# cd ~/RHEL8-Workshop
 
-# *git pull*
+# git pull
 ====
 
 .Commands to configure the workshop
 [%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
 ====
-# *cd ~/RHEL8-Workshop*
+# cd ~/RHEL8-Workshop
 
-# *cp ./sample-configs/[depoyment-type]/* ./config*
+# cp ./sample-configs/[depoyment-type]/* ./config
 ====
 
 
