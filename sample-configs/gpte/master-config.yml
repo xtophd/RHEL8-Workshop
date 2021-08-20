@@ -21,17 +21,26 @@ all:
 
     workshop_vars:
 
-      clustername:         "{{ lookup('file','.././config/gpte-guid.txt') }}"
-      network_basedomain:  "internal"
-      network_fqdn:        "{{ lookup('file','.././config/gpte-guid.txt') }}.internal"
+      clustername:          "{{ lookup('file','.././config/gpte-guid.txt') }}"
+      network_basedomain:   "internal"
+      network_fqdn:         "{{ lookup('file','.././config/gpte-guid.txt') }}.internal"
       
-      studentName:          "student"
-      studentPassword:      "{{ lookup('file','.././config/gpte-studentpw.txt') }}"
-      set_studentPassword:  True
+      set_student_password: True
+      set_admin_password:   False
 
-      adminName:            "root"
-      adminPassword:        ""
-      set_adminPassword:    False
+      ##
+      ##    Passwords should be loaded from a file
+      ##    or be set in credentials.yml.  Never here
+      ##    unless you understand the risks.
+      ##
+      ##    !!! LEAVE PASSWORDS COMMENTED OUT !!!
+      ##
+
+      student_nameame:      "student"
+      student_password:     "{{ lookup('file','.././config/gpte-studentpw.txt') }}"
+
+      admin_name:           "root"
+      #admin_password:       ""
 
       enable_unit:
         appstream:          True
