@@ -1,6 +1,7 @@
 :sectnums:
 :sectnumlevels: 3
 :markup-in-source: verbatim,attributes,quotes
+:imagesdir: ./_images/rhel8.1-cockpit
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -8,7 +9,16 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
-:imagesdir: ./_images/rhel8.1-cockpit
+:ssh_username: <Provided-By-Instructor>
+:ssh_password: <Provided-By-Instructor>
+:targethost_fqdn: <Provided-By-Instructor>
+ifeval::["%cloud_provider%" == "ec2"]
+:ssh_password: %ssh_password%
+:ssh_username: %ssh_username%
+:targethost_fqdn: %targethost%
+endif::[]
+
+
 
 :toc:
 :toclevels: 1
@@ -62,7 +72,7 @@ You are now ready to proceed with these exercises.
 
 === Packages and Services
 
-For your convenience, the webconsole has already been installed and configured on *bastion.example.com*.  The steps for installation and setup are pretty simple and outlined below.  Remember this provided as reference only.
+For your convenience, the webconsole has already been installed and configured on *bastion.example.com*.  The steps for installation and setup are pretty simple and outlined below.  Remember that this is provided as reference only.
 
 [NOTE]
 ====
@@ -85,7 +95,7 @@ By default, the Web Console listens on port 9090 of a host.  To make the system 
 ListenStream=443
 ----
 
-This configuration change required a systemctl daemon-reload, selinux update and a firewall rule addition.  Remember this provided as reference only.
+This configuration change required a systemctl daemon-reload, selinux update and a firewall rule addition.  Remember that this is provided as reference only.
 
 [NOTE]
 ====
@@ -113,10 +123,9 @@ Accept the various notifications about insecure ceritificates, and then login in
 
 WARNING: You MUST enable "Reuse my password for privileged tasks" during sign-on.  If you miss this option some of the tasks will not be available due to insufficient priviledges.  If this is the case, please log-off and start again.
 
-
-  * UserID: cloud-user
-  * Password: <PROVIDED-CLOUD-USER-PASSWD>
-  * Enable "Reuse my password for privileged tasks"
+  * URL: link:https://{targethost_fqdn}/[] 
+  * UserID: %ssh_username%
+  * Password: %ssh_password%
 
 ====
 image::slide1.png[Cockpit Login]

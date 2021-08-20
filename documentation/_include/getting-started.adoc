@@ -73,11 +73,9 @@ Click on the commands below to expose steps to perform each action.  Remember, o
 
 == Run the Prep Script
 
-WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  There is typically no harm in rerunning the deployment playbooks.  Again, follow your instructor's guidance.
-
 NOTE: If you run the deployment playbooks from the web console shell, you will be disconnected and have to sign in again.  If you used tmux, you can easily recover your shell with 'tmux a'
 
-Now we will run the playbooks that will set up the workshop.
+Now we will run the playbooks that will set up all of the workshop exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
