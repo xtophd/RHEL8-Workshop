@@ -11,12 +11,13 @@
       delay: 5
 
     - name: "rhel8-unit-webconsole : yum install cockpit-dashboard for <= rhel 8.3"
-      yum: name=cockpit-dashboard state=installed
+      yum: name=cockpit-dashboard,cockpit-pcp state=installed
       register: result
       retries: 10
       until: result is succeeded
       delay: 5
-      when: ansible_distribution_version is version('8.3','<=')
+      ## Had some problems with RHEL 8.4 BETA.  Verify that this is no longer needed
+      # when: ansible_distribution_version is version('8.3','<=')
 
     - name: "rhel8-unit-webconsole : shell to add selinux rule for websm on port 443"
       shell: 
