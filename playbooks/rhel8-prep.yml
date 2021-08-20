@@ -15,6 +15,7 @@
       file: "../config/credentials.yml"
     when: 
       - workshop_vars.set_student_password 
+      - workshop_vars.student_password is undefined
       - rhel8workshop_student_password is undefined
  
 
