@@ -36,7 +36,7 @@ all:
       ##    !!! LEAVE PASSWORDS COMMENTED OUT !!!
       ##
 
-      student_nameame:      "student"
+      student_name:         "student"
       student_password:     "{{ lookup('file','.././config/gpte-studentpw.txt') }}"
 
       admin_name:           "root"
