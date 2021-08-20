@@ -19,19 +19,52 @@ all:
 
     workshop_vars:
 
-      clustername:         "r8ovirt"
-      network_basedomain:  "example.com"
-      network_fqdn:        "r8ovirt.example.com"
+      clustername:          "r8ovirt"
+      network_basedomain:   "example.com"
+      network_fqdn:         "r8ovirt.example.com"
       
-      network_network:     "192.168.1.0"
-      network_netmask:     "255.255.255.0"
-      network_broadcast:   "192.168.1.255"
-      network_prefix:      "24"
-      network_gateway:     "192.168.1.1"
-      network_nameserver:  "192.168.1.30"
-      network_timeserver:  "192.168.1.60"
-      
-      studentName:         "cloud-user"
+      network_network:      "192.168.1.0"
+      network_netmask:      "255.255.255.0"
+      network_broadcast:    "192.168.1.255"
+      network_prefix:       "24"
+      network_gateway:      "192.168.1.1"
+      network_nameserver:   "192.168.1.30"
+      network_timeserver:   "192.168.1.60"
+
+      set_student_password: True
+      set_admin_password:   True
+
+      ##
+      ##    Passwords should be loaded from a file
+      ##    or be set in credentials.yml.  Never here
+      ##    unless you understand the risks.
+      ##
+      ##    !!! LEAVE PASSWORDS COMMENTED OUT !!!
+      ##
+
+      student_name:         "cloud-user"
+      #student_password:     ""
+      admin_name:           "root"
+      #admin_password:       ""
+
+      enable_unit:
+        appstream:          True
+        boom:               False
+        buildah:            True
+        ebpf:               True
+        firewalld:          True
+        kpatch:             False
+        nftables:           True
+        podman:             True
+        stratis:            True
+        systemd:            True
+        tlog:               True
+        virtualization:     False
+        vdo:                True
+        wayland:            False
+        webconsole:         True
+
+
 
     ## ----------------------------------------
     ##    Xtoph Deploy Variables
