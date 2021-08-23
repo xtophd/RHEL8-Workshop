@@ -18,3 +18,10 @@
 
     Then used PowerPoint to annotate the images and export to PNG
 
+## 2021 - Display size 2560x1440
+
+    magick convert test.png -crop  2560x1330+0+70 new.png
+    
+    FOR %a in (*.png) DO magick convert "%a" -crop 2560x1330+0+70  ".\crops\%a"
+
+    Then used PowerPoint to annotate the images and export to PNG

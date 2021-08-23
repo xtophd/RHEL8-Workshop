@@ -1,7 +1,7 @@
 :sectnums:
 :sectnumlevels: 3
 :markup-in-source: verbatim,attributes,quotes
-:imagesdir: ./_images/rhel8.1-cockpit
+:imagesdir: ./_images/rhel8.4-cockpit
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -121,8 +121,6 @@ Your instructors (or workshop portal) may provide you with a unique link and spe
 
 Accept the various notifications about insecure ceritificates, and then login in.
 
-WARNING: You MUST enable "Reuse my password for privileged tasks" during sign-on.  If you miss this option some of the tasks will not be available due to insufficient priviledges.  If this is the case, please log-off and start again.
-
   * URL: link:https://{targethost_fqdn}/[] 
   * UserID: %ssh_username%
   * Password: %ssh_password%
@@ -154,21 +152,19 @@ Start by clicking on the link "Enable stored metrics".
 image::slide3.png[Cockpit Enable Stored Metrics]
 ====
 
-A dialog will pop-up with basic notifications, go ahead and hit "Install".
+If your system has not already had the Performance Copilot packages installed, a dialog box should have appear to confirm the automatic install.  In our case, the software is already installed and you can proceed to view some performance data by selecting "View Details" on the "Usage" card.
 
 ====
-image::slide4.png[Cockpit Install PCP]
+image::slide4.png[View Usage Details]
 ====
 
-Following the installation, there should be a toggle labelled `Store Metrics`, go ahead and click to enable and wait a few seconds for it to switch on.
+Take a moment to review the available performance information.  Since the workshop likely has not be up for very long, there is probably nothing interesting to see yet.  Towards the end of the workshop, return to this page and see your performance data.
 
 ====
-image::slide5.png[Cockpit Turn-On Stored Metrics]
+image::slide5.png[Performance Charts]
 ====
 
-That's it, now you can view the performance data over time including when you are not signed into the web console.
-
-If you want to enable stored metrics by hand or plan to do so in a automation playbook, you can use follow the commands below.
+To configure and enable stored metrics by hand, you can use follow the commands below.
 
 [NOTE]
 ====
