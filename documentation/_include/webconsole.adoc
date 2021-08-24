@@ -131,12 +131,14 @@ image::slide1.png[Cockpit Login]
 
 == Webconsole Overview
 
-After you successfully sign-on, you will land on the overview page which presents various artifacts about your system includeing:
+After you successfully sign-on, you will land on the overview page which presents various artifacts about your system including:
 
   * CPU utilization
   * Memory Utilization
   * Disk I/O
   * Network traffic
+
+Also make note that your userid has "Administrative Access", meaning that your userid is configured on the host as part of the "wheel" security group.
 
 ====
 image::slide2.png[Cockpit Overview]
