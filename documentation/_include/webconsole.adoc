@@ -231,15 +231,19 @@ image::slide10.png[Cockpit Network]
 
 Also under the networking section, you can configure your firewall rules. 
 
-For the next exercise, let's enable a rule for NTP (Network Time Protocol).
+For the next exercise, let's enable a rule for NTP (Network Time Protocol).  Begin by selecting the Networking category and "Edit rules and zones".
 
 ====
 image::slide11.png[Cockpit Firewall]
 ====
 
+Now you should see a list of active services and ports.  Proceed to select "Add services"
+
 ====
 image::slide12.png[Cockpit Firewall Service]
 ====
+
+In the dialog, filter on 'ntp' and then select the 'ntp' check box.  Lastly hit "Add services".
 
 ====
 image::slide13.png[Cockpit Firewall Dialog]
@@ -265,35 +269,40 @@ image::slide15.png[Cockpit Services]
 
 
 
-== Dashboard
+== Remote Node Management
 
-You system has been configured with an additional plug-in called the Web Console Dashboard.  It appears like a speedometer on the left menu.
+As of RHEL 8.4, the "Web Console Dashboard" plug-in has been deplricated.  The core functionality of being able to manage multiple nodes from a single interface has been intergrated into the webconsole base.  Now adding additional nodes and selecting one to manage is simple and intuitive.
+
+We begin by selecting the pull-down in the top-left corner.
 
 ====
 image::slide16.png[Cockpit Services]
 ====
 
-The graph displays performance metrics for all hosts configured in the dashboard, which at this time is pretty boring since the bastion is the only host.  So let us add the additional systems in our workshop cluster.
-
-Select the '+' (add) button on the right side of the Servers list.
+Now it is only a matter of selecting 'Add new host' and entering a few data points.
 
 ====
 image::slide17.png[Cockpit Services]
 ====
 
-Add system 'node1.example.com'.
+Add system 'node1.%subdomain'.
 
-
-Repeat the steps for 'node2.example.com' and 'node3.example.com'
-
-====
-image::slide18.png[Cockpit Services]
-====
-
-Now not only do have visibility to performance data on all of the systems, you can also click on the servers and manage those through the Web Console as well (including Terminal access).  Very handy!
+Repeat the steps to add node2 and node3.
 
 ====
-image::slide19.png[Cockpit Services]
+image::slide18.png[Cockpit Add Nodes]
+====
+
+Now when you hit the pull-down, you have complete access and managibility of the additional nodes.
+
+====
+image::slide19.png[Cockpit Remote Nodes]
+====
+
+Go ahead and select node1 and then access a terminal session. Very handy!
+
+====
+image::slide20.png[Cockpit Remote Terminal]
 ====
 
 == Conclusion
