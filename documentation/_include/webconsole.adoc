@@ -243,7 +243,7 @@ Now you should see a list of active services and ports.  Proceed to select "Add 
 image::slide12.png[Cockpit Firewall Service]
 ====
 
-In the dialog, filter on 'ntp' and then select the 'ntp' check box.  Lastly hit "Add services".
+In the dialog box enter 'ntp' as the filter, select 'ntp' and hit "Add services".
 
 ====
 image::slide13.png[Cockpit Firewall Dialog]
