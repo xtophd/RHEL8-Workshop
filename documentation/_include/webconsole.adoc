@@ -154,7 +154,7 @@ Start by clicking on the link "Enable stored metrics".
 image::slide3.png[Cockpit Enable Stored Metrics]
 ====
 
-If your system has not already had the Performance Copilot packages installed, a dialog box should have appear to confirm the automatic install.  In our case, the software is already installed and you can proceed to view some performance data by selecting "View Details" on the "Usage" card.
+If your system has not already had the Performance Copilot packages installed, a dialog box should have appeared to confirm the automatic install.  In our case, the software is already installed and you can proceed to view some performance data by selecting "View Details" on the "Usage" card.
 
 ====
 image::slide4.png[View Usage Details]
