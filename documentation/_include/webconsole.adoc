@@ -121,9 +121,21 @@ Your instructors (or workshop portal) may provide you with a unique link and spe
 
 Accept the various notifications about insecure ceritificates, and then login in.
 
-  * URL: link:https://{targethost_fqdn}/[] 
-  * UserID: %ssh_username%
-  * Password: %ssh_password%
+Use the following URL:
+
+  * link:https://{targethost_fqdn}/[] 
+
+And the following UserID and Password:
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+%ssh_username%
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+%ssh_password%
+----
 
 ====
 image::slide1.png[Cockpit Login]
