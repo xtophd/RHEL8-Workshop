@@ -50,6 +50,8 @@ Click on the commands below to expose steps to perform each action.  Remember, o
 
 # git clone https://github.com/xtophd/RHEL8-Workshop
 
+# cd ./RHEL8-Workshop
+
 # git branch <branch-name>
 ====
 
