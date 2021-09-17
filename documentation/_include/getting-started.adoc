@@ -22,18 +22,18 @@ Using the connection information and credentials provided by the instructor, get
 
 *tmux* is a very handy utilty for terminal session management.  If for any reason you lose connectivity or your session is terminated, *tmux* will preserve your session and allow you to reconnect.  There are MANY other features provided by this utility.  Some of them are listed in the primary document section titled *Quick Overview of tmux*.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="execute"]
 ----
-$ *tmux*
+*tmux*
 ----
 
 == Become the root user
 
 In order to execute the environment preparation, we need to become the administrative user 'root'.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="execute"]
 ----
-$ *sudo -i*
+*sudo -i*
 ----
 
 
@@ -77,7 +77,7 @@ NOTE: If you run the deployment playbooks from the web console shell, you will b
 
 Now we will run the playbooks that will set up all of the workshop exercises.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="execute"]
 ----
 cd ~/RHEL8-Workshop
 
@@ -115,7 +115,6 @@ NOTE: If the presenter (or partner) has some slides to show, this is a good plac
   * Package Management: Yum v4 (dnf)
   * Time Sync: Chrony
   * Networking: Network Manager
-
 
 == Conclusion
 
