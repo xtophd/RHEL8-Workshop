@@ -99,7 +99,12 @@ yum versionlock clear
 
 === LEAPP Tools Installation
 
+Install the LEAPP tools.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
 yum install -y leapp leapp-repository leapp-repository-deps lvm2-python-boom cockpit-leapp
+----
 
 === LEAPP Data Files Retrieval
 
