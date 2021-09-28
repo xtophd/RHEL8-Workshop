@@ -60,6 +60,7 @@ If necessary, begin by disabling any local static repos and switching to the lat
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 yum-config-manager --disable my-rhel-7-server-rpms
+
 ----
 
 Next, register the host and attach an entitlement.
@@ -67,6 +68,7 @@ Next, register the host and attach an entitlement.
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 subscription-manager register --auto-attach
+
 ----
 
 Finally, enable all of the correct software repositories.
@@ -74,6 +76,10 @@ Finally, enable all of the correct software repositories.
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 subscription-manager repos --disable=*
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
 subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-optional-rpms --enable=rhel-7-server-extras-rpms
 ----
 
