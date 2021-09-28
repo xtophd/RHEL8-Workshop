@@ -106,12 +106,20 @@ cd /etc/leapp/files
 tar zxvf /var/tmp/leapp-data14.tar.gz
 ----
 
-=== LEAPP Upgrade
+=== LEAPP Pre-Upgrade
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-leapp upgrade --debug
+leapp preupgrade
 ----
+
+
+Update sshd_config
+
+Remove kernel modules
+
+Python
+
 
 ====
 
