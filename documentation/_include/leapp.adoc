@@ -55,10 +55,43 @@ You are now ready to proceed with these exercises.
 
 First item of business is to ensure the proper software repositories are enabled on the host.  In our workshop environment, node4 was likely provisioned with a RHEL 7.x ISO image and configured with local static self-managed repos.
 
+If necessary, begin by disabling any local static repos and switching to the latest managed ones from Red Hat.
+
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-optional-rpms --enable rhel-7-server-extras-rpms
+yum-config-manager --disable my-rhel-7-server-rpms
 ----
+
+Next, register the host and attach an entitlement.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+subscription-manager register --auto-attach
+----
+
+Finally, enable all of the correct software repositories.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+subscription-manager repos --disable=*
+subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-optional-rpms --enable=rhel-7-server-extras-rpms
+----
+
+Ensure that Red Hat Subscription Manager is set to consume the latest RHEL 7 content.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+subscription-manager release --unset
+----
+
+If you use the yum-plugin-versionlock plug-in to lock packages to a specific version, clear the lock as follows.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# yum versionlock clear
+----
+
+
 
 === 
 
