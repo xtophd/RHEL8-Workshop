@@ -88,7 +88,7 @@ If you use the yum-plugin-versionlock plug-in to lock packages to a specific ver
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# yum versionlock clear
+yum versionlock clear
 ----
 
 === LEAPP Tools Installation
