@@ -132,6 +132,8 @@ leapp preupgrade
 
 The output from the previous command should have listed a few items that are inhibiting the upgrade of the host.
 
+[source,options="nowrap",subs="{markup-in-source}"]
+----
 ============================================================
                      UPGRADE INHIBITED
 ============================================================
@@ -146,6 +148,7 @@ Consult the pre-upgrade report for details and possible remediation.
 Notice that the output refers you to the pre-upgrade report for details and remediations.  If your system has the cockpit-leap package installed, you can switch to using a web-broswer to step through each item and inspect the remediation options.
 
 A report has been generated at /var/log/leapp/leapp-report.txt
+----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
