@@ -112,8 +112,11 @@ Download and store the latest LEAPP data file in /etc/leapp/files.  This example
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-mkdir -p /etc/leapp/files
-cd /etc/leapp/files
+mkdir -p /etc/leapp/files; cd /etc/leapp/files
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
 tar zxvf /var/tmp/leapp-data14.tar.gz
 ----
 
