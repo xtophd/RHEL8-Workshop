@@ -91,9 +91,16 @@ If you use the yum-plugin-versionlock plug-in to lock packages to a specific ver
 # yum versionlock clear
 ----
 
+=== Retrieve & Store LEAPP Data File
 
+Download and store the latest LEAPP data file in /etc/leapp/files.  This example assumes you downloaded leapp-data14.tar.gz from redhat.com and stored it in /var/tmp
 
-=== 
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+mkdir -p /etc/leapp/files
+cd /etc/leapp/files
+tar zxvf /var/tmp/leapp-data14.tar.gz
+----
 
 
 [discrete]
