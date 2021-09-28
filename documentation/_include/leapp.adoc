@@ -97,8 +97,9 @@ If you use the yum-plugin-versionlock plug-in to lock packages to a specific ver
 yum versionlock clear
 ----
 
-=== LEAPP Tools Installation
+== LEAPP Installation
 
+=== LEAPP Tools
 Install the LEAPP tools.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
@@ -106,7 +107,7 @@ Install the LEAPP tools.
 yum install -y leapp leapp-repository leapp-repository-deps lvm2-python-boom cockpit-leapp
 ----
 
-=== LEAPP Data Files Retrieval
+=== LEAPP Data
 
 Download and store the latest LEAPP data file in /etc/leapp/files.  This example assumes you downloaded leapp-data14.tar.gz from redhat.com and stored it in /var/tmp
 
@@ -120,7 +121,7 @@ mkdir -p /etc/leapp/files; cd /etc/leapp/files
 tar zxvf /var/tmp/leapp-data14.tar.gz
 ----
 
-=== LEAPP Pre-Upgrade
+== LEAPP Pre-Upgrade
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
@@ -129,7 +130,8 @@ leapp preupgrade
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
-=== Upgrade Inhibited
+
+== Pre-Upgrade Report
 
 The output from the previous command should have listed a few items that are inhibiting the upgrade of the host.
 
@@ -162,8 +164,7 @@ Python
 == Create Custom Actor
 
 
-====
-
+== Summary
 
 
 [discrete]
