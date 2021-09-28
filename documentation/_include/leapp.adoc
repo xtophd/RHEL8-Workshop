@@ -153,14 +153,13 @@ A report has been generated at /var/log/leapp/leapp-report.txt
 less /var/log/leapp/leapp-report.txt
 ----
 
-
-
-
 Update sshd_config
 
 Remove kernel modules
 
 Python
+
+== Create Custom Actor
 
 
 ====
