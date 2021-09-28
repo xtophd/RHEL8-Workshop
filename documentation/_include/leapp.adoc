@@ -57,21 +57,21 @@ First item of business is to ensure the proper software repositories are enabled
 
 If necessary, begin by disabling any local static repos and switching to the latest managed ones from Red Hat.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 yum-config-manager --disable my-rhel-7-server-rpms
 ----
 
 Next, register the host and attach an entitlement.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 subscription-manager register --auto-attach
 ----
 
 Finally, enable all of the correct software repositories.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 subscription-manager repos --disable=*
 subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-optional-rpms --enable=rhel-7-server-extras-rpms
@@ -79,14 +79,14 @@ subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-op
 
 Ensure that Red Hat Subscription Manager is set to consume the latest RHEL 7 content.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 subscription-manager release --unset
 ----
 
 If you use the yum-plugin-versionlock plug-in to lock packages to a specific version, clear the lock as follows.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 # yum versionlock clear
 ----
@@ -99,7 +99,7 @@ yum install -y leapp leapp-repository leapp-repository-deps lvm2-python-boom coc
 
 Download and store the latest LEAPP data file in /etc/leapp/files.  This example assumes you downloaded leapp-data14.tar.gz from redhat.com and stored it in /var/tmp
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 mkdir -p /etc/leapp/files
 cd /etc/leapp/files
@@ -108,7 +108,7 @@ tar zxvf /var/tmp/leapp-data14.tar.gz
 
 === LEAPP Pre-Upgrade
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 leapp preupgrade
 ----
