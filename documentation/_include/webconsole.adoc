@@ -74,7 +74,7 @@ You are now ready to proceed with these exercises.
 
 === Packages and Services
 
-For your convenience, the webconsole has already been installed and configured on *bastion.example.com*.  The steps for installation and setup are pretty simple and outlined below.  Remember that this is provided as reference only.
+For your convenience, the webconsole has already been installed and configured on *bastion* host.  The steps for installation and setup are pretty simple and outlined below.  Remember that this is provided as reference only.
 
 [NOTE]
 ====
@@ -299,7 +299,7 @@ Now it is only a matter of selecting 'Add new host' and entering a few data poin
 image::slide17.png[Cockpit Services]
 ====
 
-Add system 'node1.%subdomain%'.
+Add system *node1.%subdomain%*
 
 Repeat the steps to add node2 and node3.
 
