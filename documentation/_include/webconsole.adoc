@@ -12,10 +12,12 @@ endif::[]
 :ssh_username: <Provided-By-Instructor>
 :ssh_password: <Provided-By-Instructor>
 :targethost_fqdn: <Provided-By-Instructor>
+:subdomain: example.com
 ifeval::["%cloud_provider%" == "ec2"]
 :ssh_password: %ssh_password%
 :ssh_username: %ssh_username%
 :targethost_fqdn: %targethost%
+:subdomain: %subdomain%
 endif::[]
 
 
@@ -297,7 +299,7 @@ Now it is only a matter of selecting 'Add new host' and entering a few data poin
 image::slide17.png[Cockpit Services]
 ====
 
-Add system 'node1.%subdomain'.
+Add system 'node1.%subdomain%'.
 
 Repeat the steps to add node2 and node3.
 
