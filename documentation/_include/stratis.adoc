@@ -106,7 +106,30 @@ Apr 27 18:41:52 node2.example.com systemd[1]: Started A daemon that manages a po
 
 WARNING: {disk0} is the system disk, DO NOT use it in any of the stratis commands or the vm will become unusable.
 
-Next, see what disks/block devices are present, create a pool, create a filesystem in the pool, and mount the filesystem.
+
+=== Clean Up Devices
+
+Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *umount /mnt/lab**
+
+# *umount /summitdir*
+
+# *vgremove -ff vg_lab*
+
+# *pvremove {disk_glob}*
+
+# *wipefs -a {disk_glob}*
+
+# *partprobe*
+----
+
+
+=== Identify Available Block Devices
+
+See what disks/block devices are present, create a pool, create a filesystem in the pool, and mount the filesystem.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -120,14 +143,17 @@ Next, see what disks/block devices are present, create a pool, create a filesyst
 total: 52428800 blocks
 ----
 
+=== Create the Pool
+
 WARNING: REMEMBER - DON'T USE {disk0}!!!
 
-NOTE: If the stratis command results in "D-Bus: ERROR: Engine error: At least one of the devices specified was unsuitable for initialization" you will need to wipe the device(s) clean before use: 'wipefs -a {disk1} {disk2}'
+Create a storage pool using a couple of available disks.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *stratis pool create summitpool {disk1} {disk2}*
 ----
+
+Verify your work and confirm the existence of the new storage pool with the combined available capacity.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -228,25 +254,6 @@ tmpfs                                      379M     0  379M   0% /run/user/1000
 /dev/mapper/stratis-1-3e8e[_truncated_]71dc  1.0T  7.2G 1017G   1% /summitdir
 ----
 
-== Add Cache Device
-
-Stratis also makes it easy to add cache devices.  For example, say the filesystem we just created runs into some I/O performance issues.  You bought an SSD (solid state disk) and need to configure it into the system to act as a high speed cache.  Use the following commands to add the drive (/dev/vdd) and check its status:
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *stratis pool init-cache summitpool  {disk3}*
-----
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *stratis blockdev*
-
-Pool Name	Device Node    Physical Size   State   Tier
-summitpool   {disk1}                 5 GiB  In-use   Data
-summitpool   {disk2}                 5 GiB  In-use   Data
-summitpool   {disk3}                 5 GiB  In-use  Cache
-----
-
 == Grow Storage Pool
 
 Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summitfs” filesystem is growing close to the physical space in “summitpool”, adding an additional disk/block device is done using:
@@ -275,6 +282,25 @@ Verify that the pool shows the additional space, and that the amount used is now
 
 Name          Total Physical Size   Total Physical Used
 summitpool                 15 GiB               606 MiB
+----
+
+== Add Cache Device
+
+Stratis also makes it easy to add cache devices.  For example, say the filesystem we just created runs into some I/O performance issues.  You bought an SSD (solid state disk) and need to configure it into the system to act as a high speed cache.  Use the following commands to add the drive (/dev/vdd) and check its status:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *stratis pool init-cache summitpool  {disk3}*
+----
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *stratis blockdev*
+
+Pool Name	Device Node    Physical Size   State   Tier
+summitpool   {disk1}                 5 GiB  In-use   Data
+summitpool   {disk2}                 5 GiB  In-use   Data
+summitpool   {disk3}                 5 GiB  In-use  Cache
 ----
 
 == Additional Resources
