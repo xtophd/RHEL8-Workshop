@@ -48,7 +48,7 @@ all:
         buildah:            True
         ebpf:               True
         firewalld:          True
-        kpatch:             False
+        kpatch:             True
         nftables:           True
         podman:             True
         stratis:            True
