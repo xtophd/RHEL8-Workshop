@@ -81,7 +81,7 @@ Next we need to enable the `stratisd` service
 # *systemctl enable --now stratisd*
 ----
 
-NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
+TIP: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
 
 Finally check the service status.
 
@@ -122,6 +122,8 @@ total: 52428800 blocks
 
 WARNING: REMEMBER - DON'T USE {disk0}!!!
 
+NOTE: If the stratis command results in "D-Bus: ERROR: Engine error: At least one of the devices specified was unsuitable for initialization" you will need to wipe the device(s) clean before use: 'wipefs -a {disk1} {disk2}'
+
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *stratis pool create summitpool {disk1} {disk2}*
@@ -160,14 +162,14 @@ Now create a filesystem, a directory mount point, and mount the filesystem:
 ----
 # *stratis fs list*
 
-Pool Name   Name      Used     Created            Device                        UUID
-summitpool  summitfs  546 MiB  Apr 18 2020 09:15  /stratis/summitpool/summitfs  095fb4891a5743d0a589217071ff71dc
+Pool Name   Name      Used     Created            Device                            UUID
+summitpool  summitfs  546 MiB  Apr 18 2020 09:15  /dev/stratis/summitpool/summitfs  095fb4891a5743d0a589217071ff71dc
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *mkdir /summitdir*
-# *mount /stratis/summitpool/summitfs /summitdir*
+# *mount /dev/stratis/summitpool/summitfs /summitdir*
 # *df -h*
 
 Filesystem                                 Size  Used Avail Use% Mounted on
@@ -203,7 +205,7 @@ workshop-stratis-fstab.sh
 ====
 _Native command(s) to amend /etc/fstab_
 ----
-UUID=`lsblk -n -o uuid /stratis/summitpool/summitfs`
+UUID=`lsblk -n -o uuid /dev/stratis/summitpool/summitfs`
 echo "UUID=${UUID} /summitdir xfs defaults 0 0" >> /etc/fstab
 ----
 ====
