@@ -234,7 +234,7 @@ Stratis also makes it easy to add cache devices.  For example, say the filesyste
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *stratis pool add-cache summitpool  {disk3}*
+# *stratis pool init-cache summitpool  {disk3}*
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
