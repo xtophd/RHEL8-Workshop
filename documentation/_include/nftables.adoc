@@ -141,7 +141,7 @@ Verify the rule change.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *nft list table ip filter -n -a*
+# *nft -n -a list table ip filter*
 
 table ip filter { # handle 1
         chain INPUT { # handle 1
@@ -170,7 +170,7 @@ Verify the new rules.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *nft list table ip filter -n -a*
+# *nft -n -a list table ip filter*
 
 table ip filter { # handle 1
         chain INPUT { # handle 1
@@ -203,7 +203,7 @@ Verify Increased Security
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *nft list table ip filter -n -a*
+# *nft -n -a list table ip filter*
 
 table ip filter { # handle 1
         chain INPUT { # handle 1
@@ -234,7 +234,7 @@ Now find the handle and remove the rule currently allowing access for SSH, HTTP,
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *nft list table ip filter -n -a*
+# *nft -n -a list table ip filter*
 
 table ip filter { # handle 1
         chain INPUT { # handle 1
@@ -265,7 +265,7 @@ Verify that everything is back to normal
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *nft list table ip filter -n -a*
+# *nft -n -a list table ip filter*
 
 table ip filter { # handle 1
         chain INPUT { # handle 1
