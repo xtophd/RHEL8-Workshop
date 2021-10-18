@@ -149,6 +149,7 @@ WARNING: REMEMBER - DON'T USE {disk0}!!!
 
 Create a storage pool using a pair of the available disks.
 
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *stratis pool create summitpool {disk1} {disk2}*
 ----
