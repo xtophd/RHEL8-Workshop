@@ -51,7 +51,7 @@ Execute the workshop setup script:
 *cd ~/RHEL8-Workshop; ./rhel8-workshop.sh all*
 ----
 
-Set back for a short presentation, this should take about 8 minutes.
+Sit back for a short presentation, this should only take about 8 minutes.
 
 
 == Environment Description
