@@ -299,9 +299,22 @@ Now it is only a matter of selecting 'Add new host' and entering a few data poin
 image::slide17.png[Cockpit Services]
 ====
 
-Add system *node1.%subdomain%*
+Add the additional systems from your workshop cluster.
 
-Repeat the steps to add node2 and node3.
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*node1.%subdomain%*
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*node2.%subdomain%*
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*node3.%subdomain%*
+----
 
 ====
 image::slide18.png[Cockpit Add Nodes]
