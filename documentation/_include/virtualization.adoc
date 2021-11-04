@@ -91,7 +91,7 @@ System needs to be configure with access to the following repos:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools cockpit-machines lorax-composer composer-cli cockpit-composer*
+# *yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools cockpit-machines osbuild-composer composer-cli cockpit-composer*
 ----
 
 === Enable System Services
@@ -104,9 +104,9 @@ To enable the necessary services for this unit:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *systemctl enable lorax-composer libvirtd*
+# *systemctl enable osbuild-composer libvirtd*
 
-# *systemctl start lorax-composer libvirtd*
+# *systemctl start osbuild-composer libvirtd*
 ----
 
 === Verify Virtualization Host Status
