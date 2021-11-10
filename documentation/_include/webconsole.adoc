@@ -17,7 +17,7 @@ ifeval::["%cloud_provider%" == "ec2"]
 :ssh_password: %ssh_password%
 :ssh_username: %ssh_username%
 :targethost_fqdn: %targethost%
-:subdomain: %subdomain%
+:subdomain: %subdomain_internal%
 endif::[]
 
 

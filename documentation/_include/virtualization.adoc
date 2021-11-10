@@ -106,7 +106,7 @@ To enable the necessary services for this unit:
 ----
 # *systemctl enable osbuild-composer libvirtd*
 
-# *systemctl start osbuild-composer libvirtd*
+# *systemctl start osbuild-composer.socket libvirtd*
 ----
 
 === Verify Virtualization Host Status
