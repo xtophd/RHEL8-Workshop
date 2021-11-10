@@ -303,17 +303,17 @@ Add the additional systems from your workshop cluster.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*node1.%subdomain%*
+*node1.{subdomain}*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*node2.%subdomain%*
+*node2.{subdomain}*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*node3.%subdomain%*
+*node3.{subdomain}*
 ----
 
 ====
