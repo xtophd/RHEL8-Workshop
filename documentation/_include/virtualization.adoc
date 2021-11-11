@@ -166,21 +166,21 @@ However, in order to access them for download one needs to have an active Red Ha
 
 Install the required packages - this will pull in several Python related dependencies.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *yum install -y osbuild-composer*
 ----
 
 Next we need to enable the `osbuild-composer.socket` service
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *systemctl enable --now osbuild-composer.socket*
 ----
 
 Finally check the service status.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *systemctl status osbuild-composer.socket*
 ----
@@ -190,19 +190,19 @@ Finally check the service status.
 Blueprints a defined by a TOML configuration file.  A sample has been provided to get us started with a very basic definition.
 
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *cat /usr/local/etc/osbuild-edge.toml*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 CONTENTS OF TOML FILE HERE
 ----
 
 Now we just need to push it to our Image Builder blueprint catalog.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *composer-cli blueprints push /usr/local/etc/osbuild-edge.toml*
 ----
@@ -210,7 +210,7 @@ Now we just need to push it to our Image Builder blueprint catalog.
 
 === List Blueprints
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *composer-cli blueprints list*
 ----
@@ -222,12 +222,12 @@ Edge
 
 A nice quick way to determine if the local `Image Builder` can resolve all dependencies for the blueprint is to run  it thorugh a `depsolve`.  Here you can also see a full list of rpms that will be installed on the image.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *composer-cli blueprints depsolve example-http-server*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 blueprint: example-http-server v0.0.1
     acl-2.2.53-1.el8.x86_64
@@ -249,27 +249,27 @@ blueprint: example-http-server v0.0.1
 
 We are now ready to compose the blueprint into an image.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *composer-cli compose start Edge qcow2*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 Compose 812019dd-20e5-4528-a99b-09fbe47ca2d8 added to the queue
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *composer-cli compose status*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *composer-cli compose list*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 812019dd-20e5-4528-a99b-09fbe47ca2d8 *FINISHED* Edge 0.0.1 qcow2
 ----
@@ -285,17 +285,17 @@ Now you are ready to leverage the example-http-server and deploy the VM with Red
 
 First we need to grab a copy of the image and put it in the right place for our platform.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *cd /var/lib/libvirt/images*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *composer-cli compose image 812019dd-20e5-4528-a99b-09fbe47ca2d8*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *mv *.qcow2 vmguest.qcow2*
 ----
@@ -304,7 +304,7 @@ First we need to grab a copy of the image and put it in the right place for our 
 
 Now you need to set a root password in the image
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *virt-customize -a vmguest.qcow2 --root-password password:redhat --uninstall cloud-init*
 ----
@@ -313,7 +313,7 @@ Now you need to set a root password in the image
 
 Finally it's time to launch the VM
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *virt-install \
    --import \
@@ -352,12 +352,12 @@ WARN: It is IMPORTANT to stop or delete the deployed VMs
 
 Using either the CLI (or the Web-Console), be sure to shutdown the VM(s) you deployed to ensure additional workshop exercises perform reasonably.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *virsh list --all*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *virsh shutdown vmguest*
 ----
