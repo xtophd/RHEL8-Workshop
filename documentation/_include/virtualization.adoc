@@ -128,12 +128,12 @@ Finally check the service status.
 
 One simple command checks various hardware and software configurations for support of virtualization.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *virt-host-validate*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
   QEMU: Checking for hardware virtualization                                 : PASS
   QEMU: Checking if device /dev/kvm exists                                   : PASS
