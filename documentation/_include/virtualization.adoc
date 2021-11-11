@@ -30,16 +30,16 @@ For these exercises, you will be using the host `bastion` as user `root`.
 
 Use `sudo` to elevate your priviledges.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*sudo -i*
+sudo -i
 ----
 
 Verify that you are on the right host for these exercises.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*workshop-virt-checkhost.sh*
+workshop-virt-checkhost.sh
 ----
 
 You are now ready to proceed with these exercises.
@@ -57,7 +57,7 @@ You can start by examining the CPU flags (capabilities) advertised by your syste
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*grep -E 'svm|vmx' /proc/cpuinfo*
+grep -E 'svm|vmx' /proc/cpuinfo
 ----
 
 [source,options="nowrap",subs="{markup-in-source}"]
@@ -74,12 +74,12 @@ pke avx512_vnni md_clear arch_capabilities
 
 You are looking for either the Intel flag (vmx) or the AMD flag (svm).  A more sophisticated command makes it a little easier to determine.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "WARNING!! Virt NOT Supported"; fi*
+*if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "WARNING!! Virt NOT Supported"; fi*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 Virt Supported
 ----
@@ -97,7 +97,7 @@ System needs to be configure with access to the following repos:
 
 Install the required packages.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
 *yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools cockpit-machines*
 ----
@@ -110,16 +110,16 @@ If for some reason the webconsole is not enabled, please visit that unit for ins
 
 To enable the necessary services for this unit:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}"]
 ----
-# *systemctl enable --now libvirtd*
+*systemctl enable --now libvirtd*
 ----
 
 Finally check the service status.
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl status libvirtd*
+*systemctl status libvirtd*
 ----
 
 === Verify Virtualization Host Status
