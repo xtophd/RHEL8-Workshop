@@ -168,7 +168,7 @@ Install the required packages - this will pull in several Python related depende
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*yum install -y osbuild-composer*
+*yum install -y osbuild-composer composer-cli*
 ----
 
 Next we need to enable the `osbuild-composer.socket` service
@@ -192,19 +192,25 @@ Blueprints a defined by a TOML configuration file.  A sample has been provided t
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*cat /usr/local/etc/osbuild-edge.toml*
+*cat /usr/local/src/osbuild-edge.toml*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
-CONTENTS OF TOML FILE HERE
+name = "Edge"
+description = ""
+version = "0.0.1"
+
+[[modules]]
+name = "crun"
+version = "*"
 ----
 
-Now we just need to push it to our Image Builder blueprint catalog.
+Now we just need to push the iamge blueprint to our image builder catalog.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*composer-cli blueprints push /usr/local/etc/osbuild-edge.toml*
+*composer-cli blueprints push /usr/local/src/osbuild-edge.toml*
 ----
 
 
