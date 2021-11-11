@@ -130,7 +130,7 @@ One simple command checks various hardware and software configurations for suppo
 
 [bash,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *virt-host-validate*
+*virt-host-validate*
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
