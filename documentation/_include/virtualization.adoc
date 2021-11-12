@@ -212,8 +212,6 @@ Some additional simple virtual machine management commands
   * *virsh shutdown <vm-name> performs a soft shutdown of the virtual machine
   * *virsh destroy <vm-name> performs distructive cold stop the virtual machine
 
-----
-
 == Explore VM Management with 'Web-Console'
 
 From the menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary when compared the Red Hat Virtualization Manager (RHVM) , but one critical feature is available: the console!
