@@ -1,7 +1,14 @@
-name = "sample-webserver"
-description = "sample blueprint of apache httpd server"
-version = "0.0.1"
-
-[[modules]]
-name = "crun"
-version = "*"
+{
+    "x86_64": [
+        {
+            "name": "baseos",
+            "baseurl": "http://192.168.1.170:8008/repos/rhel-8.4/BaseOS",
+            "gpgkey": ""
+        },
+        {
+            "name": "appstream",
+            "baseurl": "http://192.168.1.170:8008/repos/rhel-8.4/AppStream",
+            "gpgkey": ""
+        }
+    ]
+}
