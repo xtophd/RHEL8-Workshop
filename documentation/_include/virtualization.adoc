@@ -209,8 +209,8 @@ Some additional simple virtual machine management commands
   * *virsh list* lists running virtual machines
   * *virsh list --all* lists all virtual machines regardless of state
   * *virsh start <vm-name>* starts a virtual machine named 
-  * *virsh shutdown <vm-name> performs a soft shutdown of the virtual machine
-  * *virsh destroy <vm-name> performs distructive cold stop the virtual machine
+  * *virsh shutdown <vm-name>* performs a soft shutdown of the virtual machine
+  * *virsh destroy <vm-name>* performs distructive cold stop the virtual machine
 
 == Explore VM Management with 'Web-Console'
 
