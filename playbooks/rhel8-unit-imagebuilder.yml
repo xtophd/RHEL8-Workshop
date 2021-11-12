@@ -1,0 +1,35 @@
+---
+- hosts: myBastion
+  become: true
+  tasks:
+
+    - name: "rhel8-unit-imagebuilder : yum install packages"
+      yum: name=osbuild-composer,composer-cli,cockpit-composer state=installed
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
+
+    - name: "rhel8-unit-imagebuilder : create osbuild local config directiry"
+      file:
+        path: "/etc/osbuild-composer/repositories"
+        mode: "0755"
+        owner: "root"
+        group: "root"
+        state: directory
+
+    - name: "rhel8-unit-imagebuilder : osbuild-composer.socket enable"
+      service: name="osbuild-composer.socket" enabled=yes
+
+    - name: "rhel8-unit-imagebuilder : workshop script installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0744
+      with_items:
+        - {src: 'workshop-checkhost.j2',       dest: '/usr/local/bin/workshop-imagebuilder-checkhost.sh'}
+        - {src: 'workshop-osbuild-config.j2',  dest: '/usr/local/etc/osbuild-rhel8.json'}
+        - {src: 'workshop-osbuild-toml.j2',    dest: '/usr/local/etc/osbuild-sample.toml'}
+

@@ -1,97 +1,98 @@
-xtoph_config:
+debug: true
 
-  debug: true
+cleanup: true
 
-  cleanup: true
+hostname: "{{ inventory_hostname }}"
 
-  hostname: "{{ inventory_hostname }}"
+clustername: "{{ xtoph_vars.clustername }}"
 
-  clustername: "{{ xtoph_vars.clustername }}"
+selected_profile:
+  kickstart: "{{ h_ksPROF | default ('') }}"
+  machine:   "{{ h_hwPROF | default ('') }}"
+  platform:  "{{ h_plPROF | default ('') }}"
+  resource:  "{{ h_rsPROF | default ('') }}"
 
-  selected_profile:
-    kickstart: "{{ h_ksPROF | default ('') }}"
-    resource:  "{{ h_rsPROF | default ('') }}"
-    machine:   "{{ h_hwPROF | default ('') }}"
+deployhost:
 
-  deployhost:
+  ##
+  ##     platform_enable: one or more of the following
+  ##       - "ovirt"
+  ##       - "libvirt"
+  ##       - "baremetal"
+  ##
 
-    ##
-    ##     platform_enable: one or more of the following
-    ##       - "ovirt"
-    ##       - "libvirt"
-    ##       - "baremetal"
-    ##
-
-    platform_enable:
-      - "ovirt"
+  platform_enable:
+    - "ovirt"
     
-    ##
-    ##    deployhost hostname OR ip that will
-    ##    accessible to the deployed VMs
-    ##
+  ##
+  ##    deployhost hostname OR ip that will
+  ##    accessible to the deployed VMs
+  ##
 
-    ip: "{{ xtoph_vars.deployhost_ip }}"
+  ip: "{{ xtoph_vars.deployhost_ip }}"
 
-    ##
-    ##    dnsmasq_enable:    ensures dnsmasq is installed 
-    ##                       and enabled on the deployhost
-    ##
-    ##                       host/vm resolves to -> 
-    ##                         deployhost which forwards to -> 
-    ##                           real-dns          
-    ##                    
+  ##
+  ##    dnsmasq_enable:    ensures dnsmasq is installed
+  ##                       and enabled on the deployhost
+  ##
+  ##    dnsmasq_asprimary  host/vm resolves to ->
+  ##                         deployhost which forwards to ->
+  ##                           real-dns
+  ##                    
 
-    dnsmasq_enable:  true
+  dnsmasq_enable:  true
+  dnsmasq_asprimary:  true
 
-    ##
-    ##    http_port:      port to provide kickstart and
-    ##                    yum repo services
-    ##
 
-    http_enable:  true
-    http_port:    "8008"
+  ##
+  ##    http_port:      port to provide kickstart and
+  ##                    yum repo services
+  ##
 
-    ##
-    ##    cockpit_enable: install and configure cockpit
-    ##
-    ##    cockpit_port:   defaults to 9090 if left empty
-    ##                    if you change it, the config
-    ##                    will ADD the specifed port.
-    ##
+  http_enable:  true
+  http_port:    "8008"
 
-    cockpit_enable:  false
-    cockpit_port:    ""
+  ##
+  ##    cockpit_enable: install and configure cockpit
+  ##
+  ##    cockpit_port:   defaults to 9090 if left empty
+  ##                    if you change it, the config
+  ##                    will ADD the specifed port.
+  ##
 
-    ##
-    ##    temporary directory for various tasks
-    ##
-    ##    NOTE: needs to be unique for every host
-    ##
+  cockpit_enable:  false
+  cockpit_port:    ""
 
-    tmp_dir: "/home/tmp/{{ xtoph_vars.clustername }}/{{ inventory_hostname }}"
+  ##
+  ##    temporary directory for various tasks
+  ##
+  ##    NOTE: needs to be unique for every host
+  ##
 
-    ##
-    ##    Where with the kickstart configs are stored 
-    ##    What is the URL to access the kickstarts
-    ##
+  tmp_dir: "/home/tmp/{{ xtoph_vars.clustername }}/{{ inventory_hostname }}"
 
-    kickstart:
-      dir: "/var/www/html/ks"
-      url: "http://{{ xtoph_vars.deployhost_ip }}:8008/ks"
+  ##
+  ##    Where with the kickstart configs are stored 
+  ##    What is the URL to access the kickstarts
+  ##
 
-    ##
-    ##    Where will the repos be mounted
-    ##    What is the URL to access the repos
-    ##
+  kickstart:
+    dir: "/var/www/html/ks"
+    url: "http://{{ xtoph_vars.deployhost_ip }}:8008/ks"
 
-    repos:
-      dir: "/var/www/html/repos"
-      url: "http://{{ xtoph_vars.deployhost_ip }}:8008/repos"
+  ##
+  ##    Where will the repos be mounted
+  ##    What is the URL to access the repos
+  ##
 
-    ##
-    ##    Where are the ISOs stored
-    ##
+  repos:
+    dir: "/var/www/html/repos"
+    url: "http://{{ xtoph_vars.deployhost_ip }}:8008/repos"
 
-    iso:
-      dir: "/home/iso"
+  ##
+  ##    Where are the ISOs stored
+  ##
+
+  iso:
+    dir: "/home/iso"
 

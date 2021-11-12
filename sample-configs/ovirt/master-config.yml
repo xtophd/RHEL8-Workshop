@@ -59,6 +59,7 @@ all:
         stratis:            True
         systemd:            True
         tlog:               True
+        imagebuilder:       True
         virtualization:     False
         vdo:                True
         wayland:            False
@@ -81,7 +82,6 @@ all:
     ##    vars section below.  This assumes all
     ##    hosts are in the same domain. DUH!
 
-    ansible_host: "{{ inventory_hostname }}.{{ workshop_vars.network_fqdn }}"
 
 
 
@@ -96,6 +96,7 @@ myDeployhost:
     deployer:
       h_pubIP: "{{ xtoph_vars.deployhost_ip }}"
   vars:
+    ansible_host: "{{ inventory_hostname }}.{{ workshop_vars.network_fqdn }}"
     ansible_connection: local
 
 
@@ -107,13 +108,15 @@ myDeployhost:
 myBastion:
   hosts:
     bastion:
-      h_pubIP: "192.168.1.110"
+      h_pubIP:   "192.168.1.110"
   vars:
-    h_hwPROF:  "ovirt_sda"
-    h_rsPROF:  "bastion"
-    h_ksPROF:  "rhel84-bootiso"
-    h_netDEV:  "ens3"
-    h_blkDEV:  "sda"
+    ansible_host: "{{ inventory_hostname }}.{{ workshop_vars.network_fqdn }}"
+    h_hwPROF:     "ovirt_sda"
+    h_rsPROF:     "bastion"
+    h_ksPROF:     "rhel84-bootiso"
+    h_plPROF:     "ovirt"
+    h_netDEV:     "ens3"
+    h_blkDEV:     "sda"
 
 
 
@@ -124,19 +127,23 @@ myBastion:
 myNodes:
   hosts:
     node1:
-      h_pubIP:  "192.168.1.111"
-      h_rsPROF: "tiny"
+      h_pubIP:    "192.168.1.111"
+      h_rsPROF:   "tiny"
     node2:
-      h_pubIP:  "192.168.1.112" 
-      h_rsPROF: "tiny-extra" 
+      h_pubIP:    "192.168.1.112" 
+      h_rsPROF:   "tiny-extra" 
     node3:
-      h_pubIP:  "192.168.1.113"
-      h_rsPROF: "tiny-extra"
+      h_pubIP:    "192.168.1.113"
+      h_rsPROF:   "tiny-extra"
     node4:
-      h_pubIP:  "192.168.1.114" 
-      h_rsPROF: "tiny"
+      h_pubIP:    "192.168.1.114" 
+      h_ksPROF:   "rhel79-bootiso"
+      h_netDEV:   "eth0"
+      h_rsPROF:   "tiny"
   vars: 
-    h_hwPROF: "ovirt_sda"
-    h_ksPROF: "rhel84-bootiso"
-    h_netDEV: "ens3"
-    h_blkDEV: "sda"
+    ansible_host: "{{ inventory_hostname }}.{{ workshop_vars.network_fqdn }}"
+    h_plPROF:     "ovirt"
+    h_hwPROF:     "ovirt_sda"
+    h_ksPROF:     "rhel84-bootiso"
+    h_netDEV:     "ens3"
+    h_blkDEV:     "sda"

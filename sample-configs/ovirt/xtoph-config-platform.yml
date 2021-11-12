@@ -2,54 +2,49 @@
 ## CUSTOM PLATFORM PROFILES
 ##
 
-xtoph_config_platform:
+ovirt:
 
-  ovirt:
-
-    platform_profile:
-
-      platform: "ovirt"
+    type: "ovirt"
+    description: "Custom platform specification for ovirt: virtio, virtio_scsi,sparse"
+      
   
-      cluster_name:  "Default"
-      engine_cafile: "/etc/pki/ovirt-engine/ca.pem"
-      insecure:      true
+    cluster_name:  "Default"
+    engine_cafile: "/etc/pki/ovirt-engine/ca.pem"
+    insecure:      true
   
-      api:
+    api:
 
-        ip: "192.168.1.28"
-        fqdn: "rhvm.lab.linuxsoup.com"
+      ip: "192.168.1.28"
+      fqdn: "rhvm.lab.linuxsoup.com"
+
+      note: "api credentials are stored in the encrypted credentials.yml"
+
+    vm:
+      name: "{{ xtoph_vars.clustername }}-{{ inventory_hostname }}"
   
-        note: "api credentials are stored in the encrypted credentials.yml"
+    kickstart:
+      description: "hints to where installers can find devices"
+      netdev:  "{{ h_netDEV | default('ens3') }}"
+      blkdev:  "{{ h_blkDEV | default('sda') }}"
 
-      vm:
-        name: "{{ xtoph_vars.clustername }}-{{ inventory_hostname }}"
+    network:
+      default:
+        description: "default ovirt network parameters"
+        model: "virtio"
+        network_name: "ovirtmgmt"
+        basedomain:        "{{ workshop_vars.network_basedomain }}"
+        network:           "{{ workshop_vars.network_network    }}"
+        netmask:           "{{ workshop_vars.network_netmask    }}"
+        broadcast:         "{{ workshop_vars.network_broadcast  }}"
+        prefix:            "{{ workshop_vars.network_prefix     }}"
+        gateway:           "{{ workshop_vars.network_gateway    }}"
+        nameserver:        "{{ workshop_vars.network_nameserver }}"
+        timeserver:        "{{ workshop_vars.network_timeserver }}"
+        fqdn:              "{{ workshop_vars.network_fqdn       }}"
   
-      kickstart:
-        description: "hints to where installers can find devices"
-        netdev:  "{{ h_netDEV | default('ens3') }}"
-        blkdev:  "{{ h_blkDEV | default('sda') }}"
-
-      network:
-        default:
-          description: "default ovirt network parameters"
-          model: "virtio"
-          network_name: "ovirtmgmt"
-
-          ip:                "{{ h_pubIP                          }}"
-          mac:               "{{ g_pubMAC | default('')           }}"
-          basedomain:        "{{ workshop_vars.network_basedomain }}"
-          network:           "{{ workshop_vars.network_network    }}"
-          netmask:           "{{ workshop_vars.network_netmask    }}"
-          broadcast:         "{{ workshop_vars.network_broadcast  }}"
-          prefix:            "{{ workshop_vars.network_prefix     }}"
-          gateway:           "{{ workshop_vars.network_gateway    }}"
-          nameserver:        "{{ workshop_vars.network_nameserver }}"
-          timeserver:        "{{ workshop_vars.network_timeserver }}"
-          fqdn:              "{{ workshop_vars.network_fqdn       }}"
-  
-      storage:
-        default:
-          description: "default ovirt storage parameters"
-          bus:         "virtio_scsi"
-          sparse:      "true"
-          domain_name: "rhv-data-hiperf"
+    storage:
+      default:
+        description: "default ovirt storage parameters"
+        bus:         "virtio_scsi"
+        sparse:      "true"
+        domain_name: "rhv-data-hiperf"

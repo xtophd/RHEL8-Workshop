@@ -37,6 +37,7 @@ case "$1" in
     "systemd"     | \
     "tlog"        | \
     "virt"        | \
+    "osbuild"     | \
     "vdo"         | \
     "wayland"     | \
     "webconsole"  | \

@@ -54,6 +54,10 @@
   when: workshop_vars.enable_unit.vdo
   tags: vdo
 
+- import_playbook: rhel8-unit-imagebuilder.yml
+  when: workshop_vars.enable_unit.imagebuilder
+  tags: osbuild
+
 - import_playbook: rhel8-unit-virtualization.yml
   when: workshop_vars.enable_unit.virtualization
   tags: virt
