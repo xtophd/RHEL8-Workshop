@@ -64,7 +64,7 @@ Blueprints a defined by a TOML configuration file.  A sample has been provided t
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*cat /usr/local/etc/osbuild-edge.toml*
+*cat /usr/local/etc/osbuild-sample.toml*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}"]

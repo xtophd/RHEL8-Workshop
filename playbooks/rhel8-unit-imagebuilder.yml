@@ -18,9 +18,6 @@
         group: "root"
         state: directory
 
-    - name: "rhel8-unit-imagebuilder : osbuild-composer.socket enable"
-      service: name="osbuild-composer.socket" enabled=yes
-
     - name: "rhel8-unit-imagebuilder : workshop script installs"
       template:
         src: "{{ item.src }}"
@@ -30,6 +27,27 @@
         mode: 0744
       with_items:
         - {src: 'workshop-checkhost.j2',       dest: '/usr/local/bin/workshop-imagebuilder-checkhost.sh'}
-        - {src: 'workshop-osbuild-config.j2',  dest: '/usr/local/etc/osbuild-rhel8.json'}
+        - {src: 'workshop-osbuild-config.j2',  dest: '/etc/osbuild-composer/repositories/rhel-8.json'}
         - {src: 'workshop-osbuild-toml.j2',    dest: '/usr/local/etc/osbuild-sample.toml'}
+
+    - name: "rhel8-unit-imagebuilder : osbuild-composer.socket stopped"
+      service: 
+        name: "osbuild-composer.socket" 
+        enabled: yes
+        state: stopped
+
+    - name: "rhel8-unit-imagebuilder : osbuild-composer/workers stopped"
+      service: 
+        name: "{{ item }}"
+        state: stopped
+      with_items:
+        - "osbuild-worker@.service.d"
+        - "osbuild-worker@1.service"
+        - "osbuild-composer.service"
+
+    - name: "rhel8-unit-imagebuilder : osbuild-composer.socket started"
+      service: 
+        name: "osbuild-composer.socket" 
+        enabled: yes
+        state: started
 
