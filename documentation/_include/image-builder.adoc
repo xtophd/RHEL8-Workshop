@@ -78,7 +78,7 @@ name = "crun"
 version = "*"
 ----
 
-Now we just need to push the iamge blueprint to our image builder catalog.
+Now we just need to push the image blueprint to our image builder catalog.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
@@ -149,7 +149,7 @@ Compose 812019dd-20e5-4528-a99b-09fbe47ca2d8 added to the queue
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
-812019dd-20e5-4528-a99b-09fbe47ca2d8 *FINISHED* Edge 0.0.1 qcow2
+812019dd-20e5-4528-a99b-09fbe47ca2d8 *FINISHED* sample-webserver 0.0.1 qcow2
 ----
 
 It may take a few minutes, but eventually you should see a "FINISHED" status
@@ -165,10 +165,26 @@ We need to grab a copy of the image and put it in the right place for our platfo
 *cd /var/lib/libvirt/images*
 ----
 
+Take a moment to identify the UUID of the created image.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*composer-cli compose list*
+----
+
+[source,options="nowrap",subs="{markup-in-source}"]
+----
+812019dd-20e5-4528-a99b-09fbe47ca2d8 *FINISHED* sample-webserver 0.0.1 qcow2
+----
+
+Now use the UUID from your ouput to extract the QCOW image.
+
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *composer-cli compose image 812019dd-20e5-4528-a99b-09fbe47ca2d8*
 ----
+
+Finally you can rename it to something a little more convinient
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
@@ -184,22 +200,8 @@ Now you need to set a root password in the image
 *virt-customize -a vmguest.qcow2 --root-password password:redhat --uninstall cloud-init*
 ----
 
-=== Deploy the QCOW Image
-
-Finally it's time to launch the VM
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*virt-install \
-   --import \
-   --name vmguest \
-   --memory 2048 \
-   --vcpus 1 \
-   --disk /var/lib/libvirt/images/vmguest.qcow2 \
-   --graphics vnc \
-   --noautoconsole\
-   --os-variant rhel8.1*
-----
+Your image is now ready for deployment.  You can proceed to the next unit covering virtualization on RHEL
+to deploy the workload you just created.
 
 == Additional Resources
 

@@ -60,7 +60,7 @@ all:
         systemd:            True
         tlog:               True
         imagebuilder:       True
-        virtualization:     False
+        virtualization:     True
         vdo:                True
         wayland:            False
         webconsole:         True
