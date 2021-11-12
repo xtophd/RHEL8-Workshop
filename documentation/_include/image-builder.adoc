@@ -43,7 +43,27 @@ Install the required packages - this will pull in several Python related depende
 *yum install -y osbuild-composer composer-cli*
 ----
 
-Next we need to enable the `osbuild-composer.socket` service
+To ensure everything is stopped.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*systemctl stop osbuild-composer.socket*
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*systemctl stop osbuild-worker@.service.d osbuild-worker@1.service osbuild-composer.service*
+----
+
+Depending on the environment the workshop is running in, we probably need to adjust
+the available repos by adding a few custom options.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*cp /usr/local/etc/osbuild-config.json /etc/osbuild-composer/repositories/rhel-8.json*
+----
+
+Next we need to enable and start the `osbuild-composer.socket` service
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
