@@ -64,13 +64,13 @@ Blueprints a defined by a TOML configuration file.  A sample has been provided t
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*cat /usr/local/src/osbuild-edge.toml*
+*cat /usr/local/etc/osbuild-edge.toml*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
-name = "Edge"
-description = ""
+name = "sample-webserver"
+description = "Sample apache httpd server"
 version = "0.0.1"
 
 [[modules]]
@@ -82,7 +82,7 @@ Now we just need to push the iamge blueprint to our image builder catalog.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*composer-cli blueprints push /usr/local/src/osbuild-edge.toml*
+*composer-cli blueprints push /usr/local/etc/osbuild-sample.toml*
 ----
 
 
@@ -95,19 +95,19 @@ Now we just need to push the iamge blueprint to our image builder catalog.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-Edge
+sample-webserver
 ----
 
 A nice quick way to determine if the local `Image Builder` can resolve all dependencies for the blueprint is to run  it thorugh a `depsolve`.  Here you can also see a full list of rpms that will be installed on the image.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*composer-cli blueprints depsolve example-http-server*
+*composer-cli blueprints depsolve sample-webserver*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
-blueprint: example-http-server v0.0.1
+blueprint: sample-webserver v0.0.1
     acl-2.2.53-1.el8.x86_64
     apr-1.6.3-9.el8.x86_64
     apr-util-1.6.1-6.el8.x86_64
@@ -129,7 +129,7 @@ We are now ready to compose the blueprint into an image.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*composer-cli compose start Edge qcow2*
+*composer-cli compose start sample-webserver qcow2*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}"]
