@@ -244,9 +244,9 @@ Cockpit Project Page
 
 Network Related Topics
 
-    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bridging
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bridging[Configure Network Bridging]
 
-    * link:http://blog.leifmadsen.com/blog/2016/12/01/create-network-bridge-with-nmcli-for-libvirt/
+    * link:http://blog.leifmadsen.com/blog/2016/12/01/create-network-bridge-with-nmcli-for-libvirt/[Create Network Bridge with nmcli]
 
 [discrete]
 == End of Unit
