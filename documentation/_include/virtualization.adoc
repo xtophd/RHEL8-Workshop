@@ -153,14 +153,22 @@ One simple command checks various hardware and software configurations for suppo
 
 === Overview
 
-Red Hat provides pre-made images of RHEL for use as virtual machines.  This come in a QCOW2 format.
+Red Hat provides pre-made images of RHEL for use as virtual machines which come in a QCOW2 format.
 
-However, in order to access them for download one needs to have an active Red Hat Enterprise Linux entitlement.  An obvious alternative to downloading an image is to make one.  There are 2 solutions to creating a VM image from scratch:
+However, in order to access them for download one needs to have an active Red Hat Enterprise Linux entitlement.  An alternative to downloading an image is to make one.  There are 2 solutions to creating a VM image from scratch:
 
-  * Provision one (via bootable ISO or PXE)
-  * Magically build an image using the `Image Builder`
+  * Provision one the old fashioned way (via bootable ISO or PXE)
+  * Magically build an image using the `Image Builder` service
 
-`Image Builder` is a set of tools to create custom RHEL images in a variety of formats for compatibility with major cloud providers and virtualization technologies available.  Meaning, you can specify the target platfrom for you vm and create an appropriate image for VMWare, AWS, Openstack, KVM, etc...
+`Image Builder` is a set of tools to create custom RHEL images in a variety of formats for compatibility with major cloud providers and virtualization technologies.  Meaning, you can specify the target platfrom for you vm and create an appropriate image for VMWare, AWS, Openstack, KVM, etc...
+
+IMPORTANT: As of Red Hat Enterprise Linux 8.3, the osbuild-composer backend replaces lorax-composer and provides more reliable backend and more predictable output images.
+
+NOTE: Cross-distribution image building, such as building a CentOS image on RHEL is not supported.
+
+NOTE: You CAN create images of multiple RHEL minor releases that are different from the host (ex: RHEL 8.4, RHEL 8.5) but to do so requires additional repo configurations which are not available in this workshop environment.
+
+NOTE: Internet connectivity is not a prerequisite, however Image Builder is configured to connect to Red Hat CDN by default and must modified to work in an isolated environment.
 
 === Installation and Configuration
 
@@ -370,13 +378,19 @@ Using either the CLI (or the Web-Console), be sure to shutdown the VM(s) you dep
 
 == Additional Resources
 
-https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bridging
+Image Builder
 
-http://blog.leifmadsen.com/blog/2016/12/01/create-network-bridge-with-nmcli-for-libvirt/
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/composing_a_customized_rhel_system_image/index[Image Builder]
 
 Cockpit Project Page
 
     * link:http://cockpit-project.org/blog/category/release.html[Cockpit Project]
+
+Network Related Topics
+
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bridging
+
+    * link:http://blog.leifmadsen.com/blog/2016/12/01/create-network-bridge-with-nmcli-for-libvirt/
 
 [discrete]
 == End of Unit
