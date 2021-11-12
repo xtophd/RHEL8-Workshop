@@ -44,7 +44,7 @@ Verify that you are on the right host for these exercises.
 
 You are now ready to proceed with these exercises.
 
-=== Requirements
+== Requirements
 
 First we need to ensure the system being used supports either:
 
@@ -86,7 +86,7 @@ Virt Supported
 
 After you install all the required software, there are some additional tools to provide more detailed reporting on system capabilities.
 
-=== Installation and Configuration
+== Installation and Configuration
 
 NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material only.
 
