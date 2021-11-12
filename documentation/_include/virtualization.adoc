@@ -149,151 +149,13 @@ One simple command checks various hardware and software configurations for suppo
   QEMU: Checking for device assignment IOMMU support                         : WARN (No ACPI IVRS table found, IOMMU either disabled in BIOS or not supported by this hardware platform)
 ----
 
-== Image Builder
-
-=== Overview
-
-Red Hat provides pre-made images of RHEL for use as virtual machines which come in a QCOW2 format.
-
-However, in order to access them for download one needs to have an active Red Hat Enterprise Linux entitlement.  An alternative to downloading an image is to make one.  There are 2 solutions to creating a VM image from scratch:
-
-  * Provision one the old fashioned way (via bootable ISO or PXE)
-  * Magically build an image using the `Image Builder` service
-
-`Image Builder` is a set of tools to create custom RHEL images in a variety of formats for compatibility with major cloud providers and virtualization technologies.  Meaning, you can specify the target platfrom for you vm and create an appropriate image for VMWare, AWS, Openstack, KVM, etc...
-
-IMPORTANT: As of Red Hat Enterprise Linux 8.3, the osbuild-composer backend replaces lorax-composer and provides more reliable backend and more predictable output images.
-
-NOTE: Cross-distribution image building, such as building a CentOS image on RHEL is not supported.
-
-NOTE: You CAN create images of multiple RHEL minor releases that are different from the host (ex: RHEL 8.4, RHEL 8.5) but to do so requires additional repo configurations which are not available in this workshop environment.
-
-NOTE: Internet connectivity is not a prerequisite, however Image Builder is configured to connect to Red Hat CDN by default and must modified to work in an isolated environment.
-
-=== Installation and Configuration
-
-Install the required packages - this will pull in several Python related dependencies.
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*yum install -y osbuild-composer composer-cli*
-----
-
-Next we need to enable the `osbuild-composer.socket` service
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*systemctl enable --now osbuild-composer.socket*
-----
-
-Finally check the service status.
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*systemctl status osbuild-composer.socket*
-----
-
-=== Create a Blueprint
-
-Blueprints a defined by a TOML configuration file.  A sample has been provided to get us started with a very basic definition.
-
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*cat /usr/local/src/osbuild-edge.toml*
-----
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-name = "Edge"
-description = ""
-version = "0.0.1"
-
-[[modules]]
-name = "crun"
-version = "*"
-----
-
-Now we just need to push the iamge blueprint to our image builder catalog.
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*composer-cli blueprints push /usr/local/src/osbuild-edge.toml*
-----
-
-
-=== List Blueprints
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*composer-cli blueprints list*
-----
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-Edge
-----
-
-A nice quick way to determine if the local `Image Builder` can resolve all dependencies for the blueprint is to run  it thorugh a `depsolve`.  Here you can also see a full list of rpms that will be installed on the image.
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*composer-cli blueprints depsolve example-http-server*
-----
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-blueprint: example-http-server v0.0.1
-    acl-2.2.53-1.el8.x86_64
-    apr-1.6.3-9.el8.x86_64
-    apr-util-1.6.1-6.el8.x86_64
-    audit-libs-3.0-0.13.20190507gitf58ec40.el8.x86_64
-    basesystem-11-5.el8.noarch
-    bash-4.4.19-10.el8.x86_64
-    brotli-1.0.6-1.el8.x86_64
-    bzip2-libs-1.0.6-26.el8.x86_64
-    ca-certificates-2018.2.24-6.el8.noarch
-    chkconfig-1.11-1.el8.x86_64
-    coreutils-8.30-6.el8.x86_64
-...SNIP...
-----
-
-
-=== Compose a Blueprint
-
-We are now ready to compose the blueprint into an image.
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*composer-cli compose start Edge qcow2*
-----
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-Compose 812019dd-20e5-4528-a99b-09fbe47ca2d8 added to the queue
-----
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*composer-cli compose status*
-----
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*composer-cli compose list*
-----
-
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-812019dd-20e5-4528-a99b-09fbe47ca2d8 *FINISHED* Edge 0.0.1 qcow2
-----
-
-It may take a few minutes, but eventually you should see a "FINISHED" status
-
-
 == Deploy A Virtual-Machine with 'virt-install'
 
-Now you are ready to leverage the example-http-server and deploy the VM with Red Hat Enterprise Linux.
+Red Hat provides pre-made generic images of RHEL for use as virtual machines in a QCOW2 format.
+
+However, in order to access them for download one needs to have an active Red Hat Enterprise Linux entitlement.  An alternative to downloading a qcow image is to make one.  
+
+Fortunately, that's precisely what you did in the previous unit with Image Builder.
 
 === Retrieve a QCOW Image
 
@@ -377,10 +239,6 @@ Using either the CLI (or the Web-Console), be sure to shutdown the VM(s) you dep
 ----
 
 == Additional Resources
-
-Image Builder
-
-    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/composing_a_customized_rhel_system_image/index[Image Builder]
 
 Cockpit Project Page
 
