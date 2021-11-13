@@ -102,11 +102,8 @@ name = "sample-webserver"
 description = "standard apache httpd webserver"
 version = "0.0.1"
 
-[customizations.firewall.services]
+[customizations.services]
 enabled = ["httpd"]
-
-[customizations.firewall]
-port = ["http,https"]
 
 [[modules]]
 version = "2.4.*"
@@ -117,16 +114,17 @@ version = "2.4.*"
 name = "mod_ssl"
 
 [[packages]]
+version = "*"
 name = "openssh-server"
 
 [[packages]]
+version = "*"
 name = "rsync"
 ----
 
 Looking over the bludprint, it should be apparent that this image blueprint builds on a standard RHEL base by:
 
     * enabling the httpd service 
-    * exposing the standard network ports
     * adding a few packages 
 
 Now we need to push the blueprint to our image builder catalog.
