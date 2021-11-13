@@ -87,7 +87,7 @@ Blueprints a defined by a TOML configuration file.  A sample has been provided t
 *cat /usr/local/etc/osbuild-sample.toml*
 ----
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap"]
 ----
 name = "sample-webserver"
 description = "standard apache httpd webserver"
