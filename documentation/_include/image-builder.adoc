@@ -79,7 +79,7 @@ Finally check the service status.
 
 == Create a Blueprint
 
-Blueprints a defined by a TOML configuration file.  A sample has been provided to get us started with a very basic definition.
+Blueprints are defined by a TOML configuration file.  A sample has been provided to get us started with a very basic definition.
 
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
