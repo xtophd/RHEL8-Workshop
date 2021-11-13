@@ -90,15 +90,37 @@ Blueprints a defined by a TOML configuration file.  A sample has been provided t
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
 name = "sample-webserver"
-description = "Sample apache httpd server"
+description = "standard apache httpd webserver"
 version = "0.0.1"
 
+[customizations.firewall.services]
+enabled = ["httpd"]
+
+[customizations.firewall]
+port = ["http,https"]
+
 [[modules]]
-name = "crun"
-version = "*"
+version = "2.4.*"
+name = "httpd"
+
+[[modules]]
+version = "2.4.*"
+name = "mod_ssl"
+
+[[packages]]
+name = "openssh-server"
+
+[[packages]]
+name = "rsync"
 ----
 
-Now we just need to push the image blueprint to our image builder catalog.
+Looking over the bludprint, it should be apparent that image builds on a standard RHEL base by:
+
+    * enabling the httpd service 
+    * exposing the standard network ports
+    * adding a few packages 
+
+Now we need to push the blueprint to our image builder catalog.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
@@ -125,23 +147,24 @@ A nice quick way to determine if the local `Image Builder` can resolve all depen
 *composer-cli blueprints depsolve sample-webserver*
 ----
 
+If everything is in order, you output should look something like this.
+
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
 blueprint: sample-webserver v0.0.1
     acl-2.2.53-1.el8.x86_64
-    apr-1.6.3-9.el8.x86_64
-    apr-util-1.6.1-6.el8.x86_64
-    audit-libs-3.0-0.13.20190507gitf58ec40.el8.x86_64
+    audit-libs-3.0-0.17.20191104git1c2f876.el8.x86_64
     basesystem-11-5.el8.noarch
-    bash-4.4.19-10.el8.x86_64
-    brotli-1.0.6-1.el8.x86_64
+    bash-4.4.19-14.el8.x86_64
+    brotli-1.0.6-3.el8.x86_64
     bzip2-libs-1.0.6-26.el8.x86_64
-    ca-certificates-2018.2.24-6.el8.noarch
-    chkconfig-1.11-1.el8.x86_64
-    coreutils-8.30-6.el8.x86_64
+    ca-certificates-2020.2.41-80.0.el8_2.noarch
+    chkconfig-1.13-2.el8.x86_64
+    coreutils-8.30-8.el8.x86_64
 ...SNIP...
 ----
 
+If you see errors or packages that can not be resolved, this is likely a problem with the osbuild repo configuration(s).  Let your instructor know and hopefully this can be fixed.
 
 == Compose a Blueprint
 
