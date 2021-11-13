@@ -199,7 +199,7 @@ To determine what IP address was assigned to the new host, we can using some opt
 virsh net-dhcp-leases default
 ----
 
-The output will shows us the clients MAC address and the IP address it was assigned via the libvirt integrate dnsmasq service.
+The output will show us the clients MAC address and the IP address it was assigned via the libvirt integrated dnsmasq service.
 
 [source,options="nowrap"]
 ----
@@ -208,11 +208,11 @@ The output will shows us the clients MAC address and the IP address it was assig
  2021-11-13 11:19:33   52:54:00:63:85:76   ipv4       192.168.122.62/24   -          01:52:54:00:63:85:76
 ----
 
-Another mechanism is to use the 'domifaddr' option
+Another mechanism determine the ip address of the client is to use the 'domifaddr' option.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-virsh net-dhcp-leases default
+virsh domifaddr vmguest
 ----
 
 [source,options="nowrap"]
