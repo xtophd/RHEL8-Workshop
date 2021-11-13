@@ -236,23 +236,14 @@ ssh $VM_IP
 
 The password was set in the previous exercise with virt-customize and is probably just 'redhat'
 
+The VM is on a private network and not accessbile from the internet.  You will only be able to access it from the bastion via ssh, or from the webconsole.
 
 === VM Inspection
 
 
-=== VM Shutdown
-
-Now that we have completed acitivities with the virtual machine, it is time
-to shut it down.
-
-Back on the bastion host, issue the virsh shutdown command.
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-virsh shutdown vmguest
-----
 
 === Additional CLI Commands
+
 
 Some additional simple virtual machine management commands
 
@@ -264,15 +255,13 @@ Some additional simple virtual machine management commands
 
 == Explore VM Management with 'Web-Console'
 
-From the menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary when compared the Red Hat Virtualization Manager (RHVM) , but one critical feature is available: the console!
+From the menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary when compared with the Red Hat Virtualization Manager (RHVM), but one critical feature is available: the console!
 
 Take some time to explore the capabilities of the Web-Console Machines webui.
 
-Log in to your client (user:root password:redhat) and poke around.  The VM is on a private network and not accessbile from the internet.  You will only be able to access from the webconsole.
-
 == Shutdown Virtual Machines
 
-WARN: It is IMPORTANT to stop or delete the deployed VMs
+WARN: It is IMPORTANT to shutdown the deployed VMs.  Leaving any VM running in this workshop environment can adversely impact other exercises.
 
 Using either the CLI (or the Web-Console), be sure to shutdown the VM(s) you deployed to ensure additional workshop exercises perform reasonably.
 
