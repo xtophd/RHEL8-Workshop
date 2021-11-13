@@ -23,7 +23,7 @@ When installing Red Hat Enterprise Linux from scratch, the traditional methods a
   * Use the BOOT ISO with network accessible repos 
   * Use the pre-built KVM Guest images (qcow2)
 
-Leveraging additional network services like pxe, dhcp, kickstart, ansible automation, etc... The process can be heavily automated and turned into a completely hands-free task.  We have doing this for decades.
+Leveraging additional tools and services (ie: pxe, dhcp, kickstart, ansible automation, ipmi, redfish, etc...) the process can be heavily automated and turned into a completely hands-free task.  We have doing this for decades.
 
 Starting with Red Hat Enterprise Linux 8, now there is a new method for creating RHEL images to add to your toolbox: 'Image Builder'.
 
