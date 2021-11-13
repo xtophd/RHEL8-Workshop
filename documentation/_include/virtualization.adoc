@@ -190,7 +190,7 @@ It is now time to launch the VM
 
 Give the VM a few moments to boot.
 
-=== VM Connectivity
+== Virtual Machine Connectivity
 
 To determine what IP address was assigned to the new host, we can using some options to the virsh utility
 
@@ -238,11 +238,11 @@ The password was set in the previous exercise with virt-customize and is probabl
 
 The VM is on a private network and not accessbile from the internet.  You will only be able to access it from the bastion via ssh, or from the webconsole.
 
-=== VM Inspection
+== Virtual Machine Inspection
 
 
 
-=== Additional CLI Commands
+== Additional CLI Commands
 
 
 Some additional simple virtual machine management commands
@@ -259,7 +259,7 @@ From the menu, select the Machines tab.  You will notice that the interface is s
 
 Take some time to explore the capabilities of the Web-Console Machines webui.
 
-== Shutdown Virtual Machines
+== Virtual Machine Shutdown
 
 WARN: It is IMPORTANT to shutdown the deployed VMs.  Leaving any VM running in this workshop environment can adversely impact other exercises.
 
