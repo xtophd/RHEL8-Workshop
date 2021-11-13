@@ -250,12 +250,9 @@ Now you need to set a root password in the image
 *virt-customize -a vmguest.qcow2 --root-password password:redhat --uninstall cloud-init*
 ----
 
-Your image is now mostly ready for deployment.  We say "mostly" because there are still a few steps to do before our image performs as an actual webserver:
+Your image is now ready for deployment.
 
-    * set the httpd service to 'enabled'.
-    * add actual content to the image 
-
-We will tackle those steps in the next unit covering virtualization on RHEL with kvm.
+In the next unit, we will tackle how to utilize the native virtualization technology included with RHEL to launch your custom built image.
 
 == Additional Resources
 
