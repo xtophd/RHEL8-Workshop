@@ -254,7 +254,10 @@ Now you need to set a root password in the image
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*virt-customize -a vmguest.qcow2 --root-password password:redhat --uninstall cloud-init*
+*virt-customize -a vmguest.qcow2 \
+                --hostname vmguest \
+                --root-password password:redhat \
+                --uninstall cloud-init*
 ----
 
 Your image is now ready for deployment.
