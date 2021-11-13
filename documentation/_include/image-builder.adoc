@@ -215,7 +215,7 @@ Finally you can rename it to something a little more convinient
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*mv $IMAGE_UUID.qcow2 vmguest.qcow2*
+*mv $IMAGE_UUID-disk.qcow2 vmguest.qcow2*
 ----
 
 === Modify the QCOW Image
