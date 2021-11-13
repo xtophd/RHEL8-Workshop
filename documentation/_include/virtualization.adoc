@@ -185,7 +185,7 @@ It is now time to launch the VM
    --disk /var/lib/libvirt/images/vmguest.qcow2 \
    --graphics vnc \
    --noautoconsole\
-   --os-variant rhel8.1*
+   --os-variant rhel8.4*
 ----
 
 Give the VM a few moments to boot.
