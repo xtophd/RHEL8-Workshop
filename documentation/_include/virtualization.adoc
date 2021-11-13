@@ -222,11 +222,15 @@ Another mechanism determine the ip address of the client is to use the 'domifadd
  vnet0      52:54:00:63:85:76    ipv4         192.168.122.62/24
 ----
 
-Now it is time to connect to the host so we check out some it's characteristics.
+If the above command results in empty data, it is just an indication that the virtual machine has 
+not completed it's bootstrap.  Just give it a few more moments and try again.
+
+Once we can see the network information, now it is time to connect to the host so 
+and check out some it's characteristics.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*export VM_IP=$(virsh domifaddr vmguest | grep vnet0 | awk '{ split($4,a,/\//) ; print a[1] }')*
+*export VM_IP=$(virsh domifaddr vmguest | sed -e '1,2d' -e '$d' | awk '{ split($4,a,/\//) ; print a[1] }')*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
@@ -234,16 +238,16 @@ Now it is time to connect to the host so we check out some it's characteristics.
 *ssh $VM_IP*
 ----
 
-The password was set in the previous exercise with virt-customize and is probably just 'redhat'
+The password was set in the previous exercise with virt-customize command and is probably just 'redhat'
 
-The VM is on a private network and not accessbile from the internet.  You will only be able to access it from the bastion via ssh, or from the webconsole.
+The virtual machine is on a private network and not accessbile from the internet.  You will only 
+be able to access it from the bastion via ssh, or from the webconsole.
 
 == Virtual Machine Inspection
 
 
 
 == Additional CLI Commands
-
 
 Some additional simple virtual machine management commands
 
