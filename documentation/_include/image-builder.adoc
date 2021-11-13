@@ -17,14 +17,17 @@ endif::[]
 
 == Overview
 
-Red Hat provides pre-made images of RHEL for use as virtual machines which come in a QCOW2 format.
+When installing Red Hat Enterprise Linux from scratch, the traditional methods are:
 
-However, in order to access them for download one needs to have an active Red Hat Enterprise Linux entitlement.  An alternative to downloading an image is to make one.  There are 2 solutions to creating a VM image from scratch:
+  * Use the DVD ISO
+  * Use the BOOT ISO with network accessible repos 
+  * Use the pre-built KVM Guest images (qcow2)
 
-  * Provision one the old fashioned way (via bootable ISO or PXE)
-  * Magically build an image using the `Image Builder` service
+Now of course, leveraging additional services like pxe, dhcp, kickstart, ansible automation, etc... The process can be heavily automated.
 
-`Image Builder` is a set of tools to create custom RHEL images in a variety of formats for compatibility with major cloud providers and virtualization technologies.  Meaning, you can specify the target platfrom for you vm and create an appropriate image for VMWare, AWS, Openstack, KVM, etc...
+Starting with Red Hat Enterprise Linux 8, now there is a new method for creating RHEL images to add to your toolbox: 'Image Builder'.
+
+`Image Builder` is a set of tools that create custom RHEL images in a variety of formats for compatibility with major cloud providers and virtualization technologies.  Meaning, you can create a blueprint of the image and then specify the target platfrom to create an appropriate image for VMWare, AWS, Openstack, KVM, etc...
 
 IMPORTANT: As of Red Hat Enterprise Linux 8.3, the osbuild-composer backend replaces lorax-composer and provides more reliable backend and more predictable output images.
 
