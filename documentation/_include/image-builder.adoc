@@ -201,7 +201,7 @@ Here is a helpful way to store the last FINISHED image UUID to an environment va
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*export IMAGE_UUID=`composer-cli compose list | grep -m 1 FINISHED | awk '{print $1}'`*
+*export IMAGE_UUID=$(composer-cli compose list | grep -m 1 FINISHED | awk '{print $1}')*
 ----
 
 Now use the UUID from your ouput to extract the QCOW image.

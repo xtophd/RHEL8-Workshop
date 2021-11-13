@@ -3,5 +3,34 @@ description = "standard apache httpd webserver"
 version = "0.0.1"
 
 [[modules]]
-name = "crun"
-version = "*"
+version = "2.4.*"
+name = "httpd"
+
+[[modules]]
+version = "5.4"
+name = "mod_auth_kerb"
+
+[[modules]]
+version = "2.4.*"
+name = "mod_ssl"
+
+[[modules]]
+version = "5.4.*"
+name = "php"
+
+[[modules]]
+version = "5.4.*"
+name = "php-mysql"
+
+[[packages]]
+version = "7.*"
+name = "openssh-server"
+
+[[packages]]
+version = "3.1.*"
+name = "rsync"
+
+[[packages]]
+version = "1.8"
+name = "tmux"
+
