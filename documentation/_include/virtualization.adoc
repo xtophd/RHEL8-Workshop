@@ -171,7 +171,7 @@ In the previous exercise, you built a custom QCOW2 image using Image Builder.  T
 vmguest.qcow2
 ----
 
-=== Deploy the QCOW Image
+=== VM Deployment
 
 It is now time to launch the VM
 
@@ -186,6 +186,70 @@ It is now time to launch the VM
    --graphics vnc \
    --noautoconsole\
    --os-variant rhel8.1*
+----
+
+Give the VM a few moments to boot.
+
+=== VM Connectivity
+
+To determine what IP address was assigned to the new host, we can using some options to the virsh utility
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+virsh net-dhcp-leases default
+----
+
+The output will shows us the clients MAC address and the IP address it was assigned via the libvirt integrate dnsmasq service.
+
+[source,options="nowrap"]
+----
+ Expiry Time           MAC address         Protocol   IP address          Hostname   Client ID or DUID
+-----------------------------------------------------------------------------------------------------------
+ 2021-11-13 11:19:33   52:54:00:63:85:76   ipv4       192.168.122.62/24   -          01:52:54:00:63:85:76
+----
+
+Another mechanism is to use the 'domifaddr' option
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+virsh net-dhcp-leases default
+----
+
+[source,options="nowrap"]
+----
+ Name       MAC address          Protocol     Address
+-------------------------------------------------------------------------------
+ vnet0      52:54:00:63:85:76    ipv4         192.168.122.62/24
+----
+
+Now it is time to connect to the host so we check out some it's characteristics.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+export VM_IP=$(virsh domifaddr vmguest | grep vnet0 | awk '{ split($4,a,/\//) ; print a[1] }')
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+ssh $VM_IP
+----
+
+The password was set in the previous exercise with virt-customize and is probably just 'redhat'
+
+
+=== VM Inspection
+
+
+=== VM Shutdown
+
+Now that we have completed acitivities with the virtual machine, it is time
+to shut it down.
+
+Back on the bastion host, issue the virsh shutdown command.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+virsh shutdown vmguest
 ----
 
 === Additional CLI Commands
