@@ -197,18 +197,25 @@ Take a moment to identify the UUID of the created image.
 812019dd-20e5-4528-a99b-09fbe47ca2d8 *FINISHED* sample-webserver 0.0.1 qcow2
 ----
 
+Here is a helpful way to store the last FINISHED image UUID to an environment variable.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*export IMAGE_UUID=`composer-cli compose list | grep -m 1 FINISHED | awk '{print $1}'`*
+----
+
 Now use the UUID from your ouput to extract the QCOW image.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*composer-cli compose image 812019dd-20e5-4528-a99b-09fbe47ca2d8*
+*composer-cli compose image $IMAGE_UUID*
 ----
 
 Finally you can rename it to something a little more convinient
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*mv *.qcow2 vmguest.qcow2*
+*mv $IMAGE_UUID.qcow2 vmguest.qcow2*
 ----
 
 === Modify the QCOW Image
