@@ -114,7 +114,7 @@ name = "openssh-server"
 name = "rsync"
 ----
 
-Looking over the bludprint, it should be apparent that image builds on a standard RHEL base by:
+Looking over the bludprint, it should be apparent that this image blueprint builds on a standard RHEL base by:
 
     * enabling the httpd service 
     * exposing the standard network ports
