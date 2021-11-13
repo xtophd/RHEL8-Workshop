@@ -196,7 +196,7 @@ To determine what IP address was assigned to the new host, we can using some opt
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-virsh net-dhcp-leases default
+*virsh net-dhcp-leases default*
 ----
 
 The output will show us the clients MAC address and the IP address it was assigned via the libvirt integrated dnsmasq service.
@@ -212,7 +212,7 @@ Another mechanism determine the ip address of the client is to use the 'domifadd
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-virsh domifaddr vmguest
+*virsh domifaddr vmguest*
 ----
 
 [source,options="nowrap"]
@@ -226,12 +226,12 @@ Now it is time to connect to the host so we check out some it's characteristics.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-export VM_IP=$(virsh domifaddr vmguest | grep vnet0 | awk '{ split($4,a,/\//) ; print a[1] }')
+*export VM_IP=$(virsh domifaddr vmguest | grep vnet0 | awk '{ split($4,a,/\//) ; print a[1] }')*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-ssh $VM_IP
+*ssh $VM_IP*
 ----
 
 The password was set in the previous exercise with virt-customize and is probably just 'redhat'
