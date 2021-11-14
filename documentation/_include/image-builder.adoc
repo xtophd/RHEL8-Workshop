@@ -270,6 +270,7 @@ Image Builder
 
     * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/composing_a_customized_rhel_system_image/index[Image Builder]
     * link:https://github.com/rlucente-se-jboss/RFESummit2021[RHEL for Edge Demo]
+    * link:https://access.redhat.com/solutions/5773421[Configuring Image Builder with Satellite]
 
 Cockpit Project Page
 
