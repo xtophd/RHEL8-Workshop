@@ -54,7 +54,8 @@ all:
         stratis:            True
         systemd:            True
         tlog:               True
-        virtualization:     False
+        imagebuilder:       True
+        virtualization:     True
         vdo:                True
         wayland:            False
         webconsole:         True
