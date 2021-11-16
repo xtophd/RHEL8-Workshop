@@ -54,7 +54,7 @@ To prevent possible installation conflicts (overrides), we specifically exclude 
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*yum install --exclude=osbuild* -y lorax-composer composer-cli libguestfs-tools*
+**yum install --exclude=osbuild* -y lorax-composer composer-cli**
 ----
 
 Ensure everything is stopped.
