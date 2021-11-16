@@ -4,7 +4,7 @@
   tasks:
 
     - name: "rhel8-unit-virtualization : yum install packages"
-      yum: name=qemu-kvm,libvirt,firewalld,virt-install,libvirt-client,libguestfs-tools,wget,cockpit-machines,osbuild-composer,composer-cli,cockpit-composer state=installed
+      yum: name=qemu-kvm,libvirt,firewalld,virt-install,libvirt-client,libguestfs-tools,wget,cockpit-machines state=installed
       register: result
       retries: 10
       until: result is succeeded
