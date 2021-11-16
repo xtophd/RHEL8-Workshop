@@ -181,7 +181,7 @@ Now you need to set a root password in the image
     -a /var/lib/libvirt/images/vmguest.qcow2 \
     --hostname vmguest \
     --root-password password:redhat \
-    --copy /usr/local/etc/imagebuilder-index.html:/var/www/html/index.html \
+    --copy-in /usr/local/etc/imagebuilder-index.html:/var/www/html/index.html \
     --uninstall cloud-init*
 ----
 
