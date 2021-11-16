@@ -38,7 +38,7 @@
       with_items:
         - {src: 'workshop-checkhost.j2',       dest: '/usr/local/bin/workshop-imagebuilder-checkhost.sh'}
         - {src: 'workshop-osbuild-toml.j2',    dest: '/usr/local/etc/imagebuilder-sample.toml'}
-        - {src: 'workshop-osbuild-index.j2',   dest: '/usr/local/etc/imagebuilder-index.html'}
+        - {src: 'workshop-osbuild-html.j2',    dest: '/usr/local/etc/index.html'}
 #        - {src: 'workshop-osbuild-config.j2',  dest: '/etc/osbuild-composer/repositories/rhel-8.json'}
 
     - name: "rhel8-unit-imagebuilder : service stop"
