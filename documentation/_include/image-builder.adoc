@@ -243,7 +243,7 @@ Finally you can rename it to something a little more convinient
 *mv $IMAGE_UUID-disk.qcow2 vmguest.qcow2*
 ----
 
-=== Conclusion
+== Conclusion
 
 Minus a few customizations, your image is now ready for deployment.
 
