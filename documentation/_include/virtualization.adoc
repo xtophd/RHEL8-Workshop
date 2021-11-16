@@ -177,10 +177,12 @@ Now you need to set a root password in the image
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*virt-customize -a /var/lib/libvirt/images/vmguest.qcow2 \
-                --hostname vmguest \
-                --root-password password:redhat \
-                --uninstall cloud-init*
+*virt-customize \
+    -a /var/lib/libvirt/images/vmguest.qcow2 \
+    --hostname vmguest \
+    --root-password password:redhat \
+    --copy /usr/local/etc/imagebuilder-index.html:/var/www/html/index.html \
+    --uninstall cloud-init*
 ----
 
 
@@ -239,7 +241,20 @@ If the above command results in empty data, it is just an indication that the vi
 not completed it's bootstrap.  Just give it a few more moments and try again.
 
 Once we can see the network information, now it is time to connect to the host so 
-and check out some it's characteristics.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*export VM_IP=$(virsh domifaddr vmguest | sed -e '1,2d' -e '$d' | awk '{ split($4,a,/\//) ; print a[1] }')*
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*curl $VM_IP*
+----
+
+== Virtual Machine Inspection
+
+Now it is time to connect to the host and check out some it's characteristics.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
@@ -256,9 +271,26 @@ The password was set in the previous exercise with virt-customize command and is
 The virtual machine is on a private network and not accessbile from the internet.  You will only 
 be able to access it from the bastion via ssh, or from the webconsole.
 
-== Virtual Machine Inspection
+Verify that the httpd daemon is running.
 
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*systemctl status httpd*
+----
 
+Verifiy that the index.html is installed.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*ls /var/www/html/index.html*
+----
+
+Exit back to the host
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*exit*
+----
 
 == Additional CLI Commands
 
