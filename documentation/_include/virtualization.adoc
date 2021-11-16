@@ -221,7 +221,7 @@ To determine what IP address was assigned to the new host, we can using some opt
 
 The output will show us the clients MAC address and the IP address it was assigned via the libvirt integrated dnsmasq service.
 
-[source,options="nowrap"]
+[bash,options="nowrap"]
 ----
  Expiry Time           MAC address         Protocol   IP address          Hostname   Client ID or DUID
 -----------------------------------------------------------------------------------------------------------
@@ -235,7 +235,7 @@ Another mechanism determine the ip address of the client is to use the 'domifadd
 *virsh domifaddr vmguest*
 ----
 
-[source,options="nowrap"]
+[bash,options="nowrap"]
 ----
  Name       MAC address          Protocol     Address
 -------------------------------------------------------------------------------
