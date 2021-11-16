@@ -88,7 +88,7 @@ Blueprints are defined by a TOML configuration file.  A sample has been provided
 *cat /usr/local/etc/imagebuilder-sample.toml*
 ----
 
-[source,options="nowrap"]
+[bash,options="nowrap"]
 ----
 name = "sample-webserver"
 description = "standard apache httpd webserver"
@@ -151,7 +151,7 @@ A nice quick way to determine if the local `Image Builder` can resolve all depen
 
 If everything is in order, you output should look something like this.
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 blueprint: sample-webserver v0.0.1
     acl-2.2.53-1.el8.x86_64
@@ -192,7 +192,7 @@ Compose 812019dd-20e5-4528-a99b-09fbe47ca2d8 added to the queue
 *composer-cli compose list*
 ----
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 812019dd-20e5-4528-a99b-09fbe47ca2d8 *FINISHED* sample-webserver 0.0.1 qcow2
 ----
