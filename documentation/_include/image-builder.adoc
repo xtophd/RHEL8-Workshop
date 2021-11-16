@@ -45,12 +45,14 @@ NOTE: Internet connectivity is not a prerequisite, however Image Builder is conf
 
 == Installation and Configuration
 
-NOTE: As mentioned above, when RHEL 8.3 was released the *Image Builder* backend was replaced with another toolset called 'osbuild'.  
+NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material only.
+
+As mentioned above, when RHEL 8.3 was released the *Image Builder* backend was replaced with another toolset called 'osbuild'.  
 At the time of the design and validation of this lab, the feature set and configuration options of 'osbuild' are not compatible with 
 this workshop environment.  Thus, we will stick with the lorax backend for now but other than the installation and setup the 
 operational commands remain the same.
 
-To prevent possible installation conflicts (overrides), we specifically exclude 'osbuild' when installing the lorax-composer.
+To prevent possible installation conflicts (overrides), we specifically exclude 'osbuild' components when installing the lorax-composer.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----

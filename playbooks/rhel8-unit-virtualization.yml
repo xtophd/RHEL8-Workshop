@@ -10,17 +10,8 @@
       until: result is succeeded
       delay: 5
 
-    - name: "rhel8-unit-virtualization : cockpit socket enabled"
-      service: name="cockpit.socket" enabled=yes
-
-    - name: "rhel8-unit-virtualization : cockpit service restart"
-      service: name="cockpit" state=started enabled=yes
-
     - name: "rhel8-unit-virtualization : service restart libvirtd"
       service: name="libvirtd" state=started enabled=yes
-
-    - name: "rhel8-unit-virtualization : imagebuilder service restart"
-      service: name="osbuild-composer" state=started enabled=yes
 
     - name: "rhel8-unit-virtualization : firewalld service start"
       service: name="firewalld" state=started enabled=yes
