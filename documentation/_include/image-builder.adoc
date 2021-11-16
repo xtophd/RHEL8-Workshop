@@ -85,7 +85,7 @@ Blueprints are defined by a TOML configuration file.  A sample has been provided
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*cat /usr/local/etc/osbuild-sample.toml*
+*cat /usr/local/etc/imagebuilder-sample.toml*
 ----
 
 [source,options="nowrap"]
@@ -123,7 +123,7 @@ Now we need to push the blueprint to our image builder catalog.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*composer-cli blueprints push /usr/local/etc/osbuild-sample.toml*
+*composer-cli blueprints push /usr/local/etc/imagebuilder-sample.toml*
 ----
 
 
