@@ -173,7 +173,12 @@ vmguest.qcow2
 
 == Customize your QCOW Image
 
-Now you need to set a root password in the image
+Now you need to do a few more things to your image:
+
+    * set a hostname
+    * set a root password
+    * copy a simple HTML file
+    * remove the cloud-init package
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
