@@ -13,8 +13,8 @@
     - name: "rhel8-unit-imagebuilder : yum install packages"
       yum: 
         name:    "lorax-composer,composer-cli"
-        state:   installed
-        exclude: "osbuild*"
+        state:   "installed"
+        exclude: "osbuild,osbuild-composer,osbuild-composer-core,osbuild-composer-worker,osbuild-ostree,osbuild-selinux"
       register: result
       retries: 10
       until: result is succeeded
