@@ -39,43 +39,51 @@ IMPORTANT: As of Red Hat Enterprise Linux 8.3, the osbuild-composer backend repl
 
 NOTE: Cross-distribution image building, such as building a CentOS image on RHEL is not supported.
 
-NOTE: You CAN create images of multiple RHEL minor releases that are different from the host (ex: RHEL 8.4, RHEL 8.5) with osbuild-composer but to doing so requires additional repo configurations which are not available in this workshop environment.
+NOTE: You CAN create images of multiple RHEL minor releases that are different from the host (ex: RHEL 8.4, RHEL 8.5) but to do so requires additional repo configurations which are not available in this workshop environment.
 
-NOTE: Internet connectivity is not a prerequisite, however Image Builder is configured to connect to Red Hat CDN by default and must modified to work in an isolated environment or when connected to a Red Hat Satellite server.
+NOTE: Internet connectivity is not a prerequisite, however Image Builder is configured to connect to Red Hat CDN by default and must modified to work in an isolated environment.
 
 == Installation and Configuration
 
-NOTE: As mentioned above, when RHEL 8.3 was released the *Image Builder* backend was replaced with another toolset called 'osbuild'.  
-At the time of the design and validation of this lab, the feature set and configuration options of 'osbuild' are not compatible with 
-this workshop environment.  Thus, we will stick with the lorax backend for now but other than the installation and setup the 
-operational commands remain the same.
-
-To prevent possible installation conflicts (overrides), we specifically exclude 'osbuild' when installing the lorax-composer.
+Install the required packages - this will pull in several Python related dependencies.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*yum install --exclude=osbuild* -y lorax-composer composer-cli libguestfs-tools*
+*yum install -y osbuild-composer composer-cli*
 ----
 
-Ensure everything is stopped.
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-*systemctl stop lorax-composer.socket*
-----
-
-Next we need to enable and start the `lorax-composer.socket` service
+To ensure everything is stopped.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*systemctl enable --now lorax-composer.socket*
+*systemctl stop osbuild-composer.socket*
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*systemctl stop osbuild-worker@.service.d osbuild-worker@1.service osbuild-composer.service*
+----
+
+Depending on the environment the workshop is running in, we probably need to adjust
+the available repos by adding a few custom options.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*cp /usr/local/etc/osbuild-config.json /etc/osbuild-composer/repositories/rhel-8.json*
+----
+
+Next we need to enable and start the `osbuild-composer.socket` service
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*systemctl enable --now osbuild-composer.socket*
 ----
 
 Finally check the service status.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*systemctl status lorax-composer.socket*
+*systemctl status osbuild-composer.socket*
 ----
 
 == Create a Blueprint
@@ -136,9 +144,6 @@ Now we need to push the blueprint to our image builder catalog.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-example-atlas
-example-development
-example-http-server
 sample-webserver
 ----
 
@@ -243,12 +248,21 @@ Finally you can rename it to something a little more convinient
 *mv $IMAGE_UUID-disk.qcow2 vmguest.qcow2*
 ----
 
-=== Conclusion
+=== Modify the QCOW Image
 
-Minus a few customizations, your image is now ready for deployment.
+Now you need to set a root password in the image
 
-The next unit covers the native virtualization technology included with RHEL 
-and will utilize this image to deploy the sample-webserver.
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*virt-customize -a vmguest.qcow2 \
+                --hostname vmguest \
+                --root-password password:redhat \
+                --uninstall cloud-init*
+----
+
+Your image is now ready for deployment.
+
+In the next unit, we will tackle how to utilize the native virtualization technology included with RHEL to launch your custom built image.
 
 == Additional Resources
 

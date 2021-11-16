@@ -171,6 +171,19 @@ In the previous exercise, you built a custom QCOW2 image using Image Builder.  T
 vmguest.qcow2
 ----
 
+== Customize your QCOW Image
+
+Now you need to set a root password in the image
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*virt-customize -a /var/lib/libvirt/images/vmguest.qcow2 \
+                --hostname vmguest \
+                --root-password password:redhat \
+                --uninstall cloud-init*
+----
+
+
 === VM Deployment
 
 It is now time to launch the VM
