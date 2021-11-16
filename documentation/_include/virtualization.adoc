@@ -186,7 +186,7 @@ Now you need to do a few more things to your image:
     -a /var/lib/libvirt/images/vmguest.qcow2 \
     --hostname vmguest \
     --root-password password:redhat \
-    --copy-in /usr/local/etc/imagebuilder-index.html:/var/www/html/index.html \
+    --copy-in /usr/local/etc/imagebuilder-index.html:/var/www/html \
     --uninstall cloud-init*
 ----
 
