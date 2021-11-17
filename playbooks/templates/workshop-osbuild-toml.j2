@@ -5,6 +5,9 @@ version = "0.0.1"
 [customizations.services]
 enabled = ["httpd"]
 
+[customizations.firewall.services]
+enabled = ["http,https"]
+
 [[modules]]
 version = "2.4.*"
 name = "httpd"
