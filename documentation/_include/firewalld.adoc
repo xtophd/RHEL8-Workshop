@@ -621,7 +621,7 @@ Finally, activate the service and verify.
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
-firewall-cmd --enable=workshop
+firewall-cmd --add-service=workshop
 ----
 
 [source,options="nowrap",subs="{markup-in-source}"]
