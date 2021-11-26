@@ -612,7 +612,12 @@ Now it is time to import the config file.
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
-firewall-cmd --permanent --new-service-from-file=/usr/local/etc/firewalld-customname.xml --name=workshop
+firewall-cmd --new-service-from-file=/usr/local/etc/firewalld-customname.xml --name=workshop
+----
+
+[source,options="nowrap",subs="{markup-in-source}"]
+----
+firewall-cmd --reload
 ----
 
 === Activate Service
@@ -628,6 +633,9 @@ firewall-cmd --add-service=workshop
 ----
 firewall-cmd --zone=public --list-all
 ----
+
+
+Just make note of the fact we did not use the '--permanent' option with any of our commands.  If the system reboots, or if firewalld is reloaded then the custom named serviced will be lost.  You can preserve the customizations with a simple `firewall-cmd --runtime-to-permanent`
 
 And you are done!
 
