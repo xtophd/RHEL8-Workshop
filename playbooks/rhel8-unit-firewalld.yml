@@ -26,4 +26,5 @@
       with_items:
         - {src: 'workshop-checkhost.j2',               dest: '/usr/local/bin/workshop-firewalld-checkhost.sh'}
         - {src: 'workshop-firewalld-customconfigs.j2', dest: '/usr/local/bin/workshop-firewalld-customconfigs.sh'}
+        - {src: 'workshop-firewalld-customname.j2',    dest: '/usr/local/etc/firewalld-customname.xml'}
 
