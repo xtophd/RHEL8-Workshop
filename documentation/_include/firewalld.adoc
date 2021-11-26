@@ -150,7 +150,10 @@ Determine current state of the firewalld service.
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
 *firewall-cmd --state*
+----
 
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
 running
 ----
 
@@ -159,7 +162,10 @@ Get a list of currently configured and active "zones".
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
 *firewall-cmd --get-active-zones*
+----
 
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
 libvirt
   interfaces: virbr0
 public
