@@ -592,7 +592,7 @@ First, have a look at the configuration file which has already been prepared for
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
-cat /usr/local/etc/firewall-customname.xml
+cat /usr/local/etc/firewalld-customname.xml
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
@@ -612,7 +612,7 @@ Now it is time to import the config file.
 
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
-firewall-cmd --permanent --new-service-from-file=/usr/local/etc/firewall-customname.xml
+firewall-cmd --permanent --new-service-from-file=/usr/local/etc/firewalld-customname.xml
 ----
 
 === Activate Service
