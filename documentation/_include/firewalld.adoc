@@ -106,7 +106,7 @@ Let us examine a couple of the system's default zone files in */usr/lib/firewall
 ----
 
 .drop.xml
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+[bash,options="nowrap",subs="{markup-in-source}"]
 ----
 <?xml version="1.0" encoding="utf-8"?>
 <zone target="DROP">
