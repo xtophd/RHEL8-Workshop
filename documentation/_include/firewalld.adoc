@@ -610,7 +610,7 @@ cat /usr/local/etc/firewalld-customname.xml
 
 Now it is time to import the config file.
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 firewall-cmd --new-service-from-file=/usr/local/etc/firewalld-customname.xml --name=workshop --permanent
 ----
