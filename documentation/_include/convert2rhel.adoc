@@ -49,7 +49,9 @@ Verify that you are on the right host for these exercises.
 
 You are now ready to proceed with these exercises.
 
-== Host Preparation
+== Pre Conversion Preperation
+
+=== Conflict Resolution
 
 I know this kernel module creates a conflict, so blacklist it and reboot
 
@@ -63,9 +65,7 @@ echo "blacklist nfnetlink" >> /etc/modprobe.d/convert2rhel.conf
 reboot
 ----
 
-
-
-== Host Preparation Continued
+=== Certificates and Configurations
 
 Download the Red Hat GPG key:
 
@@ -88,28 +88,29 @@ Install the Convert2RHEL repository file:
 curl -o /etc/yum.repos.d/convert2rhel.repo https://ftp.redhat.com/redhat/convert2rhel/7/convert2rhel.repo
 ----
 
-Install the Convert2RHEL utility:
-
-[source,options="nowrap",subs="{markup-in-source}",role="copy"]
-----
-yum -y install convert2rhel
-----
-
-I'm using a local satellite for this first run through
-
-Download the consumer RPM to the /usr/share/convert2rhel/subscription-manager/ directory:
+I'm using a local satellite for this demonstration.
+Download the consumer RPM.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 curl --insecure --output /usr/share/convert2rhel/subscription-manager/katello-ca-consumer-latest.noarch.rpm http://satellite.sat6ovirt.example.com/pub/katello-ca-consumer-latest.noarch.rpm
 ----
 
-Run the conversion
+=== Software Installation
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+yum -y install convert2rhel
+----
+
+== Run the conversion
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 convert2rhel -y --org ExampleCom --activationkey MyKey-DEV
 ----
+
+== Post Conversion Cleanup
 
 Disable the CentOS repos
 
@@ -138,9 +139,7 @@ yum list extras --disablerepo="*" --enablerepo=rhel-7-server-rpms
 [discrete]
 == Additional Reference Materials
 
-* link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/upgrading_from_rhel_7_to_rhel_8[UPGRADING FROM RHEL 7 TO RHEL 8]
-* link:https://access.redhat.com/articles/3664871[Data required by the Leapp utility for an in-place upgrade from RHEL 7 to RHEL 8]
-* link:https://www.redhat.com/en/blog/upgrading-rhel-7-rhel-8-leapp-and-boom[Upgrading from RHEL 7 to RHEL 8 with Leapp and BOOM - Victor Hernando]
+* link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/converting_from_an_rpm-based_linux_distribution_to_rhel/index[Converting From An RPM-Based Linux Distribution to RHEL]
 
 [discrete]
 == End of Unit
