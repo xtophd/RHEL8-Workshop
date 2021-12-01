@@ -51,6 +51,22 @@ You are now ready to proceed with these exercises.
 
 == Host Preparation
 
+I know this kernel module creates a conflict, so blacklist it and reboot
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+echo "blacklist nfnetlink" >> /etc/modprobe.d/convert2rhel.conf
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+reboot
+----
+
+
+
+== Host Preparation Continued
+
 Download the Red Hat GPG key:
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
