@@ -112,6 +112,8 @@ convert2rhel -y --org ExampleCom --activationkey MyKey-DEV
 
 == Post Conversion Cleanup
 
+=== Disable Conflicting Repos
+
 Disable the CentOS repos
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
@@ -126,12 +128,36 @@ Reboot
 reboot
 ----
 
+=== Validation
+
+Validate the installed OS release
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+cat /etc/redhat-release
+----
+
+Inspect installed packages and their repo origin.  Just about everything should be from a rhel-7-server-rpms or equivalent repo.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+yum list installed
+----
+
+=== Optional
+
 Remove third-party packages from the original OS that remained unchanged (typically packages that do not have a RHEL counterpart). To get a list of these packages, use:
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 yum list extras --disablerepo="*" --enablerepo=rhel-7-server-rpms
 ----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+yum remove yum-plugin-fastestmirror
+----
+
 
 == Summary
 
