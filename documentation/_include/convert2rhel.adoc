@@ -76,7 +76,7 @@ Install the Convert2RHEL utility:
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# yum -y install convert2rhel
+yum -y install convert2rhel
 ----
 
 
