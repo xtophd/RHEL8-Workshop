@@ -79,7 +79,14 @@ Install the Convert2RHEL utility:
 yum -y install convert2rhel
 ----
 
+I'm using a local satellite for this first run through
 
+Download the consumer RPM to the /usr/share/convert2rhel/subscription-manager/ directory:
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+curl --insecure --output /usr/share/convert2rhel/subscription-manager/katello-ca-consumer-latest.noarch.rpm https://satellite.example.com/pub/katello-ca-consumer-latest.noarch.rpm
+----
 
 
 == Summary
