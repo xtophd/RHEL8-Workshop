@@ -101,7 +101,7 @@ Download the consumer RPM to the /usr/share/convert2rhel/subscription-manager/ d
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-curl --insecure --output /usr/share/convert2rhel/subscription-manager/katello-ca-consumer-latest.noarch.rpm http://satellite.example.com/pub/katello-ca-consumer-latest.noarch.rpm
+curl --insecure --output /usr/share/convert2rhel/subscription-manager/katello-ca-consumer-latest.noarch.rpm http://satellite.sat6ovirt.example.com/pub/katello-ca-consumer-latest.noarch.rpm
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
