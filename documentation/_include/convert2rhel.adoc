@@ -69,8 +69,16 @@ Install the Convert2RHEL repository file:
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# curl -o /etc/yum.repos.d/convert2rhel.repo https://ftp.redhat.com/redhat/convert2rhel/7/convert2rhel.repo
+curl -o /etc/yum.repos.d/convert2rhel.repo https://ftp.redhat.com/redhat/convert2rhel/7/convert2rhel.repo
 ----
+
+Install the Convert2RHEL utility:
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+# yum -y install convert2rhel
+----
+
 
 
 
