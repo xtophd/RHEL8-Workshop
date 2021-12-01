@@ -108,7 +108,7 @@ Run the conversion
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-convert2rhel --org ExampleCom --activationkey MyKey-DEV
+convert2rhel -y --org ExampleCom --activationkey MyKey-DEV
 ----
 
 Disable the CentOS repos
