@@ -137,6 +137,11 @@ Validate the installed OS release
 cat /etc/redhat-release
 ----
 
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+lsb_release --all
+----
+
 Inspect installed packages and their repo origin.  Just about everything should be from a rhel-7-server-rpms or equivalent repo.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
