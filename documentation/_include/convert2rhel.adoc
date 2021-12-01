@@ -104,10 +104,27 @@ Download the consumer RPM to the /usr/share/convert2rhel/subscription-manager/ d
 curl --insecure --output /usr/share/convert2rhel/subscription-manager/katello-ca-consumer-latest.noarch.rpm http://satellite.sat6ovirt.example.com/pub/katello-ca-consumer-latest.noarch.rpm
 ----
 
+Run the conversion
+
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 convert2rhel --org ExampleCom --activationkey MyKey-DEV
 ----
+
+Disable the CentOS repos
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+yum-config-manager --disable my-centos-7-rpms
+----
+
+Reboot
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+reboot
+----
+
 
 
 == Summary
