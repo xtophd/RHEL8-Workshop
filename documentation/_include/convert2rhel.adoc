@@ -93,7 +93,7 @@ Download the consumer RPM.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-curl --insecure --output /usr/share/convert2rhel/subscription-manager/katello-ca-consumer-latest.noarch.rpm http://satellite.sat6ovirt.example.com/pub/katello-ca-consumer-latest.noarch.rpm
+curl --create-dirs --insecure --output /usr/share/convert2rhel/subscription-manager/katello-ca-consumer-latest.noarch.rpm http://satellite.sat6ovirt.example.com/pub/katello-ca-consumer-latest.noarch.rpm
 ----
 
 === Software Installation
