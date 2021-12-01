@@ -127,7 +127,10 @@ reboot
 
 Remove third-party packages from the original OS that remained unchanged (typically packages that do not have a RHEL counterpart). To get a list of these packages, use:
 
-# yum list extras --disablerepo="*" --enablerepo=RHEL_RepoID
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+yum list extras --disablerepo="*" --enablerepo=rhel-7-server-rpms
+----
 
 == Summary
 
