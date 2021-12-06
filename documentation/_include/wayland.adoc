@@ -258,7 +258,7 @@ That is all for this quick first time introduction to Wayland.
 
 Red Hat Documentation
 
-  * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_rhel_systems_from_your_desktop[Managing RHEL Systems From Your Desktop]
+  * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/using_the_desktop_environment_in_rhel_8/index[Desktop Environment in RHEL 8]
 
 Wayland Related Sites
 
