@@ -350,7 +350,7 @@ public
 
 Now let us disable a service port not needed for our workshop environment, namely *dhcp6-client*.
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 *firewall-cmd --remove-service=dhcpv6-client*
 ----
