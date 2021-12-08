@@ -82,7 +82,7 @@ The configuration files are stored in
   
 Red Hat distributes the default service configurations in /usr/lib/firewalld.  These configurations are NOT meant for customization.  They WILL be overwritten and replaced from time to time as Red Hat releases new packages or updates for the operating system.
 
-Customizations for the firewall configuration belong in */etc/firewalld*.  These configuration files (if they exist) take precedence over the default configs located in */usr/lib/firewalld*.
+Customizations for the firewall configuration belong in */etc/firewalld*.  These configuration files (if they exist) take precedence over the default configs located in */usr/lib/firewalld*
 
 === Zone Configs
 
