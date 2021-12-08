@@ -532,7 +532,7 @@ Since the httpd service is already active, all we really need to do is reload fi
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *firewall-cmd --info-service=http*
+*firewall-cmd --info-service=http*
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
