@@ -493,7 +493,9 @@ public
 *workshop-firewalld-customconfigs.sh*
 ----
 
-Two configuration files were just created */etc/firewalld/services*.  They are identical to the system default ones except that our additional ports (8080 and 8443) were added the the definition.
+Two configuration files were just created */etc/firewalld/services*
+
+They are identical to the system default ones except that our additional ports (8080 and 8443) were added the the definition.
 
 .Config File /etc/firewalld/services/http.xml
 [bash,options="nowrap",subs="{markup-in-source}"]
