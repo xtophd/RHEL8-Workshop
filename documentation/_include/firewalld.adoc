@@ -119,7 +119,7 @@ Let us examine a couple of the system's default zone files in */usr/lib/firewall
 
 There are nearly 50 built-in services files shipped with firewalld. Services files include Port (ranges) with protocol, Netfilter helper modules, and destination address (range) for IPv4 and/or IPv6. You can also create your own services files or customize the default files. To customize a file, simply copy it from /usr/lib/firewalld/services to /etc/firewalld/services then make any required changes. 
 
-Here are a couple common configs for services defined in */usr/lib/firewalld/services*.
+Here are a couple common configs for services defined in */usr/lib/firewalld/services*
 
 .ssh.xml
 [bash,options="nowrap",subs="{markup-in-source}"]
