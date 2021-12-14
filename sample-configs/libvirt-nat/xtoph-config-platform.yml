@@ -2,52 +2,54 @@
 ## CUSTOM PLATFORM PROFILES
 ##
 
-xtoph_config_platform:
+libvirt_nat:
 
-  libvirt:
+    type:        "libvirt"
+    host_fqdn:   "amanda1.lab.linuxsoup.com"
+    host_ip:     "192.168.1.23"
+    description: "Customized platform libvirt_nat: nat network, nested_virt, sparse storage"
 
-    platform_profile:
+    platform: "libvirt"
 
-      platform: "libvirt"
-
-      vm:
+    vm:
         name: "{{ xtoph_vars.clustername }}_{{ inventory_hostname }}"
-  
-      ##
-      ##    nested_virt_enable:   add flags to the OS kernel
-      ##                          to allow passtrough virt
-      ##
-  
-      nested_virt_enable: true
 
-      kickstart:
+    ##
+    ##    nested_virt_enable:   add flags to the OS kernel
+    ##                          to allow passtrough virt
+    ##
+
+    nested_virt_enable: true
+
+    kickstart:
         description: "hints to where installers can find devices"
         netdev:  "{{ h_netDEV | default('eno1') }}"
         blkdev:  "{{ h_blkDEV | default('sda') }}"
-  
-      network:
-        default:
-  
-          description:     "default libvirt network parameters"
-          network_name:    "virbr_{{ workshop_vars.clustername }}"
 
-          undeploy:        true
-          fwd_type:        "nat"
-
-          ip:              "{{ h_pubIP                          }}"
-          mac:             "{{ g_pubMAC | default('')           }}"
-          basedomain:      "{{ workshop_vars.network_basedomain }}"
-          network:         "{{ workshop_vars.network_network    }}"
-          netmask:         "{{ workshop_vars.network_netmask    }}"
-          broadcast:       "{{ workshop_vars.network_broadcast  }}"
-          prefix:          "{{ workshop_vars.network_prefix     }}"
-          gateway:         "{{ workshop_vars.network_gateway    }}"
-          nameserver:      "{{ workshop_vars.network_nameserver }}"
-          timeserver:      "{{ workshop_vars.network_timeserver }}"
-          fqdn:            "{{ workshop_vars.network_fqdn       }}"
-  
-      storage:
+    network:
         default:
 
-          description: "default libvirt storage parameters"
-          qcow_dir: "/home/virt-images"
+            description:     "default libvirt network parameters"
+            network_name:    "virbr_{{ workshop_vars.clustername }}"
+
+            undeploy:        true
+            fwd_type:        "nat"
+            model:           "virtio"
+
+            basedomain:      "{{ workshop_vars.network_basedomain }}"
+            network:         "{{ workshop_vars.network_network    }}"
+            netmask:         "{{ workshop_vars.network_netmask    }}"
+            broadcast:       "{{ workshop_vars.network_broadcast  }}"
+            prefix:          "{{ workshop_vars.network_prefix     }}"
+            gateway:         "{{ workshop_vars.network_gateway    }}"
+            nameserver:      "{{ workshop_vars.network_nameserver }}"
+            timeserver:      "{{ workshop_vars.network_timeserver }}"
+            fqdn:            "{{ workshop_vars.network_fqdn       }}"
+
+    storage:
+        default:
+
+            description: "default libvirt storage parameters"
+            qcow_dir: "/home/virt-images"
+            bus: "virtio"
+            sparse: "true"
