@@ -1,6 +1,7 @@
 :sectnums:
 :sectnumlevels: 3
 :markup-in-source: verbatim,attributes,quotes
+:imagesdir: ./_images/rhel8.4-cockpit
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -8,7 +9,18 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
-:imagesdir: ./_images/rhel8.1-cockpit
+:ssh_username: <Provided-By-Instructor>
+:ssh_password: <Provided-By-Instructor>
+:targethost_fqdn: <Provided-By-Instructor>
+:subdomain: example.com
+ifeval::["%cloud_provider%" == "ec2"]
+:ssh_password: %ssh_password%
+:ssh_username: %ssh_username%
+:targethost_fqdn: %targethost%
+:subdomain: %subdomain_internal%
+endif::[]
+
+
 
 :toc:
 :toclevels: 1
@@ -62,7 +74,7 @@ You are now ready to proceed with these exercises.
 
 === Packages and Services
 
-For your convenience, the webconsole has already been installed and configured on *bastion.example.com*.  The steps for installation and setup are pretty simple and outlined below.  Remember this provided as reference only.
+For your convenience, the webconsole has already been installed and configured on *bastion* host.  The steps for installation and setup are pretty simple and outlined below.  Remember that this is provided as reference only.
 
 [NOTE]
 ====
@@ -85,7 +97,7 @@ By default, the Web Console listens on port 9090 of a host.  To make the system 
 ListenStream=443
 ----
 
-This configuration change required a systemctl daemon-reload, selinux update and a firewall rule addition.  Remember this provided as reference only.
+This configuration change required a systemctl daemon-reload, selinux update and a firewall rule addition.  Remember that this is provided as reference only.
 
 [NOTE]
 ====
@@ -111,12 +123,21 @@ Your instructors (or workshop portal) may provide you with a unique link and spe
 
 Accept the various notifications about insecure ceritificates, and then login in.
 
-WARNING: You MUST enable "Reuse my password for privileged tasks" during sign-on.  If you miss this option some of the tasks will not be available due to insufficient priviledges.  If this is the case, please log-off and start again.
+Use the following URL:
 
+  * link:https://{targethost_fqdn}/[] 
 
-  * UserID: cloud-user
-  * Password: <PROVIDED-CLOUD-USER-PASSWD>
-  * Enable "Reuse my password for privileged tasks"
+And the following UserID and Password:
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+%ssh_username%
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+%ssh_password%
+----
 
 ====
 image::slide1.png[Cockpit Login]
@@ -124,12 +145,14 @@ image::slide1.png[Cockpit Login]
 
 == Webconsole Overview
 
-After you successfully sign-on, you will land on the overview page which presents various artifacts about your system includeing:
+After you successfully sign-on, you will land on the overview page which presents various artifacts about your system including:
 
   * CPU utilization
   * Memory Utilization
   * Disk I/O
   * Network traffic
+
+Also make note that your userid has "Administrative Access", meaning that your userid is configured on the host as part of the "wheel" security group.
 
 ====
 image::slide2.png[Cockpit Overview]
@@ -145,21 +168,19 @@ Start by clicking on the link "Enable stored metrics".
 image::slide3.png[Cockpit Enable Stored Metrics]
 ====
 
-A dialog will pop-up with basic notifications, go ahead and hit "Install".
+If your system has not already had the Performance Copilot packages installed, a dialog box should have appeared to confirm the automatic install.  In our case, the software is already installed and you can proceed to view some performance data by selecting "View Details" on the "Usage" card.
 
 ====
-image::slide4.png[Cockpit Install PCP]
+image::slide4.png[View Usage Details]
 ====
 
-Following the installation, there should be a toggle labelled `Store Metrics`, go ahead and click to enable and wait a few seconds for it to switch on.
+Take a moment to review the available performance information.  Since the workshop likely has not be up for very long, there is probably nothing interesting to see yet.  Towards the end of the workshop, return to this page and see your performance data.
 
 ====
-image::slide5.png[Cockpit Turn-On Stored Metrics]
+image::slide5.png[Performance Charts]
 ====
 
-That's it, now you can view the performance data over time including when you are not signed into the web console.
-
-If you want to enable stored metrics by hand or plan to do so in a automation playbook, you can use follow the commands below.
+To configure and enable stored metrics by hand, you can use follow the commands below.
 
 [NOTE]
 ====
@@ -224,15 +245,19 @@ image::slide10.png[Cockpit Network]
 
 Also under the networking section, you can configure your firewall rules. 
 
-For the next exercise, let's enable a rule for NTP (Network Time Protocol).
+For the next exercise, let's enable a rule for NTP (Network Time Protocol).  Begin by selecting the Networking category and "Edit rules and zones".
 
 ====
 image::slide11.png[Cockpit Firewall]
 ====
 
+Now you should see a list of active services and ports.  Proceed to select "Add services"
+
 ====
 image::slide12.png[Cockpit Firewall Service]
 ====
+
+In the dialog box enter 'ntp' as the filter, select 'ntp' and hit "Add services".
 
 ====
 image::slide13.png[Cockpit Firewall Dialog]
@@ -258,35 +283,53 @@ image::slide15.png[Cockpit Services]
 
 
 
-== Dashboard
+== Remote Node Management
 
-You system has been configured with an additional plug-in called the Web Console Dashboard.  It appears like a speedometer on the left menu.
+As of RHEL 8.4, the "Web Console Dashboard" plug-in has been deplricated.  The core functionality of being able to manage multiple nodes from a single interface has been intergrated into the webconsole base.  Now adding additional nodes and selecting one to manage is simple and intuitive.
+
+We begin by selecting the pull-down in the top-left corner.
 
 ====
 image::slide16.png[Cockpit Services]
 ====
 
-The graph displays performance metrics for all hosts configured in the dashboard, which at this time is pretty boring since the bastion is the only host.  So let us add the additional systems in our workshop cluster.
-
-Select the '+' (add) button on the right side of the Servers list.
+Now it is only a matter of selecting 'Add new host' and entering a few data points.
 
 ====
 image::slide17.png[Cockpit Services]
 ====
 
-Add system 'node1.example.com'.
+Add the additional systems from your workshop cluster.
 
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*node1.{subdomain}*
+----
 
-Repeat the steps for 'node2.example.com' and 'node3.example.com'
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*node2.{subdomain}*
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*node3.{subdomain}*
+----
 
 ====
-image::slide18.png[Cockpit Services]
+image::slide18.png[Cockpit Add Nodes]
 ====
 
-Now not only do have visibility to performance data on all of the systems, you can also click on the servers and manage those through the Web Console as well (including Terminal access).  Very handy!
+Now when you hit the pull-down, you have complete access and managibility of the additional nodes.
 
 ====
-image::slide19.png[Cockpit Services]
+image::slide19.png[Cockpit Remote Nodes]
+====
+
+Go ahead and select node1 and then access a terminal session. Very handy!
+
+====
+image::slide20.png[Cockpit Remote Terminal]
 ====
 
 == Conclusion

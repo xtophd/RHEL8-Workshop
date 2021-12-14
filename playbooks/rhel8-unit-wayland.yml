@@ -11,7 +11,7 @@
       delay: 5
       
     - name: "rhel8-unit-wayland : user modification"
-      user: name="{{ workshop_vars.studentName }}" groups="wheel"
+      user: name="{{ workshop_vars.student_name }}" groups="wheel"
             
     - name: "rhel8-unit-wayland : workshop file installs"
       template:

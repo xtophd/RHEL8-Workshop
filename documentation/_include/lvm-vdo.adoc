@@ -1,12 +1,6 @@
 :sectnums:
 :sectnumlevels: 3
 :markup-in-source: verbatim,attributes,quotes
-:disk0: /dev/sda
-:disk1: /dev/sdb
-:disk2: /dev/sdc
-:disk3: /dev/sdd
-:disk4: /dev/sde
-:disk_glob: /dev/sd{b..e}
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -14,7 +8,13 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
-ifeval::[{cloud-provider} == ec2]
+:disk0: /dev/sda
+:disk1: /dev/sdb
+:disk2: /dev/sdc
+:disk3: /dev/sdd
+:disk4: /dev/sde
+:disk_glob: /dev/sd{b..e}
+ifeval::["%cloud_provider%" == "ec2"]
 :disk0: /dev/nvme0n1
 :disk1: /dev/nvme1n1
 :disk2: /dev/nvme2n1

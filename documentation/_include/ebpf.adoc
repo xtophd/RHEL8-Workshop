@@ -94,7 +94,7 @@ In your second terminal, establish yourself as described below and then run the 
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ssh node2.example.com "sudo workshop-ebpf-rootkit.sh"*
+# *ssh node2 "sudo workshop-ebpf-rootkit.sh"*
 ----
 
 This command should run for about 10 seconds and then exit.  
@@ -144,7 +144,7 @@ In your second terminal, establish yourself as described below and then run the 
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *ssh node2.example.com "sudo workshop-ebpf-rootkit.sh"*
+# *ssh node2 "sudo workshop-ebpf-rootkit.sh"*
 ----
 
 [discrete]

@@ -86,7 +86,7 @@ For Linux or MacOS based desktops:
 For Windows desktops:
 
   * COPY standard app: CTRL-c
-  * PASTE to stardard app: CTRL-v
+  * PASTE to stardard app: CTRL-v 
   * COPY from web-console terminal: CTRL-a + CTRL-c
   * PASTE to web-console terminal: CTRL-a + CTRL-v
 
@@ -105,6 +105,7 @@ For Windows desktops:
   . link:{includedir}/appstream-yum.adoc[*App Stream* - Application Delivery]
   . link:{includedir}/podman.adoc[*Podman* - Container Management]
   . link:{includedir}/buildah.adoc[*Buildah & Skopeo* - Container Development]
+  . link:{includedir}/image-builder.adoc[*Image Builder* - Easy custom OS Builds]
   . link:{includedir}/virtualization.adoc[*Virtualization* - Virtualization Management]
   . link:{includedir}/tlog.adoc[*TLog* - Session Logging]
   . link:{includedir}/lvm-vdo.adoc[*LVM and VDO* - Storage Management and Data Optimization]
@@ -115,7 +116,7 @@ For Windows desktops:
 
 ////  
 TO PRINT THIS DOC REMOVE THIS LINE AND COMMENTS AROUND INCLUDES
-include::{includedir}/Getting-Started.adoc[leveloffset=+1]
+include::{includedir}/getting-started.adoc[leveloffset=+1]
 include::{includedir}/webconsole.adoc[leveloffset=+1]
 include::{includedir}/systemd.adoc[leveloffset=+1]
 include::{includedir}/firewalld.adoc[leveloffset=+1]
@@ -124,6 +125,7 @@ include::{includedir}/ebpf.adoc[leveloffset=+1]
 include::{includedir}/appstream-yum.adoc[leveloffset=+1]
 include::{includedir}/podman.adoc[leveloffset=+1]
 include::{includedir}/buildah.adoc[leveloffset=+1]
+include::{includedir}/image-builder.adoc[leveloffset=+1]
 include::{includedir}/virtualization.adoc[leveloffset=+1]
 include::{includedir}/tlog.adoc[leveloffset=+1]
 include::{includedir}/lvm-vdo.adoc[leveloffset=+1]

@@ -12,81 +12,78 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 
-= Workshop Environment Preparation
+= Workshop Preparation (DO THIS FIRST!)
 
-== Sign-On on to your *bastion* session
+== Sign-On to *bastion* host
 
 Using the connection information and credentials provided by the instructor, get yourselves signed into your bastion session.
 
-== Invoke *tmux* Session
+== Invoke *tmux* 
 
 *tmux* is a very handy utilty for terminal session management.  If for any reason you lose connectivity or your session is terminated, *tmux* will preserve your session and allow you to reconnect.  There are MANY other features provided by this utility.  Some of them are listed in the primary document section titled *Quick Overview of tmux*.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="execute"]
 ----
-$ *tmux*
+*tmux*
 ----
 
 == Become the root user
 
 In order to execute the environment preparation, we need to become the administrative user 'root'.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="execute"]
 ----
-$ *sudo -i*
-----
-
-== Download the Workshop project from GitHub
-
-WARNING: It is very likely that your instructor (or the automated deployment system) has already performed this step.  Do NOT delete and clone a new project directory if it already exists.
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *cd ~*
-    
-# *git clone https://github.com/xtophd/RHEL8-Workshop*
+*sudo -i*
 ----
 
-== Update the Workshop
 
-NOTE: This step is not needed if you just cloned the workshop, but if recent bug fixes or documentation updates were committed you may need to pull them into you project (branch).
+== Only with Explicit Instructions
 
-Here is how to refresh the workshop with the latest updates.
+WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace, update or overwrite the configuration unless you are directed to do so.
+
+Click on the commands below to expose steps to perform each action.  Remember, only do this if explicitly asked to do so.
+
+.Commands to clone workshop from source
+[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
+====
+# cd ~
+
+# git clone https://github.com/xtophd/RHEL8-Workshop
+
+# cd ./RHEL8-Workshop
+
+# git branch <branch-name>
+====
+
+.Commands to update the workshop
+[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
+====
+# cd ~/RHEL8-Workshop
+
+# git pull
+====
+
+.Commands to configure the workshop
+[%collapsible,bash,options="nowrap",subs="{markup-in-source}"]
+====
+# cd ~/RHEL8-Workshop
+
+# cp ./sample-configs/[depoyment-type]/* ./config
+====
 
 
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *cd ~/RHEL8-Workshop*
-
-# *git pull*
-----
-
-== Configure the Workshop
-
-WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  Do not replace or overwrite the configuration unless explicitly told to do so.
-
-Copy the default configuration (ansible inventory) to the config directory.
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *cd ~/RHEL8-Workshop*
-
-# *cp ./sample-configs/[depoyment-type]/* ./config
-----
 
 == Run the Prep Script
 
-WARNING: It is likely that your instructor (or the automated deployment system) has already performed these steps.  There is typically no harm in rerunning the deployment playbooks.  Again, follow your instructor's guidance.
-
 NOTE: If you run the deployment playbooks from the web console shell, you will be disconnected and have to sign in again.  If you used tmux, you can easily recover your shell with 'tmux a'
 
-Now we will run the playbooks that will set up the workshop.
+Now we will run the playbooks that will set up all of the workshop exercises.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="execute"]
 ----
-# *cd ~/RHEL8-Workshop*
+cd ~/RHEL8-Workshop
 
-# *bash rhel8-workshop.sh all*
+./rhel8-workshop.sh all
 ----
 
 The preparation script will run for approximately 5 to 7 minutes on a fresh deployment.
@@ -121,7 +118,6 @@ NOTE: If the presenter (or partner) has some slides to show, this is a good plac
   * Time Sync: Chrony
   * Networking: Network Manager
 
-
 == Conclusion
 
 The set up of the RHEL 8 Workshop should now be complete.  A couple of remaining words of advice:
@@ -130,6 +126,9 @@ The set up of the RHEL 8 Workshop should now be complete.  A couple of remaining
 2.  Pay attention to which user-id (login) to use
 3.  Pay attention to which host to use
 4.  There is an exam at the conclusion of the workshop... #notreally
+
+
+
 
 [discrete]
 == End of Unit

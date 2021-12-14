@@ -58,7 +58,7 @@ Start by installing pcp,grafana,redis,js-d3-flame-graph, and others:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *yum install pcp grafana grafana-pcp cockpit-pcp bpftrace bcc-tools pcp-pmda-bpftrace cyrus-sasl-md5 cyrus-sasl-lib redis js-d3-flame-graph -y*
+# *yum install pcp pcp-system-tools grafana grafana-pcp cockpit-pcp bpftrace bcc-tools pcp-pmda-bpftrace cyrus-sasl-md5 cyrus-sasl-lib redis js-d3-flame-graph -y*
 ----
 
 == pminfo and pmrep

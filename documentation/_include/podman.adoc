@@ -220,6 +220,7 @@ Here is a list of the fundamental podman commands and their purpose:
   * *podman ps* - lists running containers
   * *podman pull* - pulls (copies) container image from repository (ie: redhat and/or docker hub)
   * *podman run* - run a container
+  * *podman inspect* - view facts about a container
   * *podman logs* - display logs of a container (can be used with --follow)
   * *podman rm* - remove one or more containers
   * *podman rmi* - remove one or more images
@@ -571,6 +572,26 @@ Time to deploy the image.  A few things to note here:
 ----
 # *podman run -d --name="webserver" -p 8080:80 custom_image*
 ----
+
+=== Inspect
+
+To view some facts about the running container, you use 'podman inspect'.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *podman inspect webserver*
+----
+
+This reveals quite a bit of information which you can drill in to using additional format arguments.  For example, let us locate the IP address for the container.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *podman inspect --format '{{ .NetworkSettings.IPAddress }}' webserver*
+----
+
+You can see the IP address that was assigned to the container.
+
+We can apply the same filter to any value in the json output. Try a few different ones.
 
 === Validation
 

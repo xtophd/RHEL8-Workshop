@@ -1,0 +1,185 @@
+:sectnums:
+:sectnumlevels: 3
+:markup-in-source: verbatim,attributes,quotes
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+:toc:
+:toclevels: 1
+
+= Upgrading from RHEL 7 to RHEL 8
+
+WARNING: THIS UNIT IS A WORK IN PROGRESS AND NOT COMPLETE
+
+== Overview
+
+WARNING:  This unit will only function if the workshop environment is provisioned with a local Satellite Server OR if the client is registered to redhat.com.  Please consult the instructor for directions before proceeding.
+
+In this unit, we will get familiar with the upgrade tool called LEAPP.
+
+== Getting Started
+
+For these exercises, you will be using the host `node4` as user `root`.  Before you begin, confirm the node was provisioned with RHEL 7.9
+
+From host `bastion`, ssh to `node4`.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *ssh node4*
+----
+
+Use `sudo` to elevate your priviledges.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+$ *sudo -i*
+----
+
+Verify that you are on the right host for these exercises.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *workshop-leapp-checkhost.sh*
+----
+
+You are now ready to proceed with these exercises.
+
+== Host Preparation
+
+=== Package Repositories
+
+First item of business is to ensure the proper software repositories are enabled on the host.  In our workshop environment, node4 was likely provisioned with a RHEL 7.x ISO image and configured with local static self-managed repos.
+
+If necessary, begin by disabling any local static repos and switching to the latest managed ones from Red Hat.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+yum-config-manager --disable my-rhel-7-server-rpms
+
+----
+
+Next, register the host and attach an entitlement.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+subscription-manager register --auto-attach
+
+----
+
+Finally, enable all of the correct software repositories.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+subscription-manager repos --disable=*
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-optional-rpms --enable=rhel-7-server-extras-rpms
+----
+
+Ensure that Red Hat Subscription Manager is set to consume the latest RHEL 7 content.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+subscription-manager release --unset
+----
+
+If you use the yum-plugin-versionlock plug-in to lock packages to a specific version, clear the lock as follows.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+yum versionlock clear
+----
+
+== LEAPP Installation
+
+=== LEAPP Tools
+Install the LEAPP tools.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+yum install -y leapp leapp-repository leapp-repository-deps lvm2-python-boom cockpit-leapp
+----
+
+=== LEAPP Data
+
+Download and store the latest LEAPP data file in /etc/leapp/files.  This example assumes you downloaded leapp-data14.tar.gz from redhat.com and stored it in /var/tmp
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+mkdir -p /etc/leapp/files; cd /etc/leapp/files
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+tar zxvf /var/tmp/leapp-data14.tar.gz
+----
+
+== LEAPP Pre-Upgrade
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+leapp preupgrade
+----
+
+== Pre-Upgrade Report
+
+The output from the previous command should have listed a few items that are inhibiting the upgrade of the host.
+
+[source,options="nowrap",subs="{markup-in-source}"]
+----
+============================================================
+                     UPGRADE INHIBITED
+============================================================
+
+Upgrade has been inhibited due to the following problems:
+    1. Inhibitor: Possible problems with remote login using root account
+    2. Inhibitor: Detected loaded kernel drivers which have been removed in RHEL 8. Upgrade cannot proceed.
+    3. Inhibitor: Missing required answers in the answer file
+Consult the pre-upgrade report for details and possible remediation.
+----
+
+Notice that the output refers you to the pre-upgrade report for details and remediations.  If your system has the cockpit-leap package installed, you can switch to using a web-broswer to step through each item and inspect the remediation options.
+
+A report has been generated at /var/log/leapp/leapp-report.txt
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+less /var/log/leapp/leapp-report.txt
+----
+
+Update sshd_config
+
+Remove kernel modules
+
+Python
+
+== Create Custom Actor
+
+
+== Summary
+
+
+[discrete]
+== Additional Reference Materials
+
+* link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/upgrading_from_rhel_7_to_rhel_8[UPGRADING FROM RHEL 7 TO RHEL 8]
+* link:https://access.redhat.com/articles/3664871[Data required by the Leapp utility for an in-place upgrade from RHEL 7 to RHEL 8]
+* link:https://www.redhat.com/en/blog/upgrading-rhel-7-rhel-8-leapp-and-boom[Upgrading from RHEL 7 to RHEL 8 with Leapp and BOOM - Victor Hernando]
+
+[discrete]
+== End of Unit
+
+ifdef::env-github[]
+link:../RHEL8-Workshop.adoc#toc[Return to TOC]
+endif::[]
+
+////
+Always end files with a blank line to avoid include problems.
+////

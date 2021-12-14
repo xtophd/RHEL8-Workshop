@@ -11,7 +11,7 @@ fi
 
 echo "# Determining UUID"
 
-UUID=`lsblk -n -o uuid /stratis/summitpool/summitfs`
+UUID=`lsblk -n -o uuid /dev/stratis/summitpool/summitfs`
 
 echo "# Adding to fstab: UUID=${UUID} /summitdir xfs defaults 0 0"
 

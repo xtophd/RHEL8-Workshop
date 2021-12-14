@@ -1,0 +1,76 @@
+---
+- hosts: myBastion
+  become: true
+  tasks:
+
+#    - name: "rhel8-unit-imagebuilder : yum install packages"
+#      yum: name=osbuild-composer,composer-cli,cockpit-composer state=installed
+#      register: result
+#      retries: 10
+#      until: result is succeeded
+#      delay: 5
+
+    - name: "rhel8-unit-imagebuilder : yum install packages"
+      yum: 
+        name:    "lorax-composer,composer-cli"
+        state:   "installed"
+        exclude: "osbuild,osbuild-composer,osbuild-composer-core,osbuild-composer-worker,osbuild-ostree,osbuild-selinux"
+      register: result
+      retries: 10
+      until: result is succeeded
+      delay: 5
+
+#    - name: "rhel8-unit-imagebuilder : create osbuild local config directiry"
+#      file:
+#        path: "/etc/osbuild-composer/repositories"
+#        mode: "0755"
+#        owner: "root"
+#        group: "root"
+#        state: directory
+
+    - name: "rhel8-unit-imagebuilder : workshop script installs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0744
+      with_items:
+        - {src: 'workshop-checkhost.j2',       dest: '/usr/local/bin/workshop-imagebuilder-checkhost.sh'}
+        - {src: 'workshop-osbuild-toml.j2',    dest: '/usr/local/etc/imagebuilder-sample.toml'}
+        - {src: 'workshop-osbuild-html.j2',    dest: '/usr/local/etc/index.html'}
+#        - {src: 'workshop-osbuild-config.j2',  dest: '/etc/osbuild-composer/repositories/rhel-8.json'}
+
+    - name: "rhel8-unit-imagebuilder : service stop"
+      service: 
+        name: "lorax-composer.socket" 
+        enabled: yes
+        state: stopped
+
+    - name: "rhel8-unit-imagebuilder : service enable and start"
+      service: 
+        name: "lorax-composer.socket" 
+        enabled: yes
+        state: started
+
+#    - name: "rhel8-unit-imagebuilder : service stop"
+#      service: 
+#        name: "osbuild-composer.socket" 
+#        enabled: yes
+#        state: stopped
+
+#    - name: "rhel8-unit-imagebuilder : service workers stop"
+#      service: 
+#        name: "{{ item }}"
+#        state: stopped
+#      with_items:
+#        - "osbuild-worker@.service.d"
+#        - "osbuild-worker@1.service"
+#        - "osbuild-composer.service"
+
+#    - name: "rhel8-unit-imagebuilder : service enable and start"
+#      service: 
+#        name: "osbuild-composer.socket" 
+#        enabled: yes
+#        state: started
+

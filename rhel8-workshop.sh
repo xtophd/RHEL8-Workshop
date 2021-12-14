@@ -5,15 +5,23 @@
 ##     CWD =  ~root/RHEL8-Workshop
 
 myInventory="./config/master-config.yml"
+myCredentials="./config/credentials.yml"
 
 if [ ! -e "${myInventory}" ] ; then
     echo "ERROR: Are you in the right directory? Can not find ${myInventory}" ; exit
     exit
 fi
+
+if [ -e "${myCredentials}" ] ; then
+    askVaultPass="--ask-vault-pass"
+else
+    askVaultPass=""
+fi
+    
     
 case "$1" in
     "all")
-        time  ansible-playbook -i ${myInventory} -f 10  ./playbooks/rhel8-workshop.yml
+        time  ansible-playbook ${askVaultPass} -i ${myInventory} -f 10  ./playbooks/rhel8-workshop.yml
         ;;
 
     "appstream"   | \
@@ -29,12 +37,13 @@ case "$1" in
     "systemd"     | \
     "tlog"        | \
     "virt"        | \
+    "osbuild"     | \
     "vdo"         | \
     "wayland"     | \
     "webconsole"  | \
     "kpatch")
 
-        time  ansible-playbook -i ${myInventory} -f 10 --tags $1 ./playbooks/rhel8-workshop.yml
+        time  ansible-playbook  ${askVaultPass} -i ${myInventory} -f 10 --tags $1 ./playbooks/rhel8-workshop.yml
         ;;
 
     *)

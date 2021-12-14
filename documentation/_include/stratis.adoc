@@ -8,6 +8,21 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
+:disk0: /dev/sda
+:disk1: /dev/sdb
+:disk2: /dev/sdc
+:disk3: /dev/sdd
+:disk4: /dev/sde
+:disk_glob: /dev/sd{b..e}
+ifeval::["%cloud_provider%" == "ec2"]
+:disk0: /dev/nvme0n1
+:disk1: /dev/nvme1n1
+:disk2: /dev/nvme2n1
+:disk3: /dev/nvme3n1
+:disk4: /dev/nvme4n1
+:disk_glob: /dev/nvme{1..4}n1
+endif::[]
+
 
 
 :toc:
@@ -66,7 +81,7 @@ Next we need to enable the `stratisd` service
 # *systemctl enable --now stratisd*
 ----
 
-NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
+TIP: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
 
 Finally check the service status.
 
@@ -89,28 +104,57 @@ Apr 27 18:41:52 node2.example.com systemd[1]: Started A daemon that manages a po
 
 == Create Storage Pool
 
-WARNING: /dev/vda is the system disk, DO NOT use it in any of the stratis commands or the vm will become unusable.
+WARNING: {disk0} is the system disk, DO NOT use it in any of the stratis commands or the vm will become unusable.
 
-Next, see what disks/block devices are present, create a pool, create a filesystem in the pool, and mount the filesystem.
+
+=== Clean Up Devices
+
+Since we will be reusing the same resources for many exercises, we will begin by wiping everything clean.  Don't worry if you get an error message.
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *umount /mnt/lab**
+
+# *umount /summitdir*
+
+# *vgremove -ff vg_lab*
+
+# *pvremove {disk_glob}*
+
+# *wipefs -a {disk_glob}*
+
+# *partprobe*
+----
+
+
+=== Identify Available Block Devices
+
+See what disks/block devices are present.  Remeber that {disk0} is used by the operating system and should NOT be specified for any of these exercises.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *sfdisk -s*
 
-/dev/vda:  31457280
-/dev/vdb:   5242880
-/dev/vdc:   5242880
-/dev/vdd:   5242880
-/dev/vde:   5242880
+{disk0}:  31457280
+{disk1}:   5242880
+{disk2}:   5242880
+{disk3}:   5242880
+{disk4}:   5242880
 total: 52428800 blocks
 ----
 
-WARNING: REMEMBER - DON'T USE /dev/vda!!!
+=== Create the Pool
+
+WARNING: REMEMBER - DON'T USE {disk0}!!!
+
+Create a storage pool using a pair of the available disks.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *stratis pool create summitpool /dev/vdb /dev/vdc*
+# *stratis pool create summitpool {disk1} {disk2}*
 ----
+
+Verify your work and confirm the existence of the new storage pool with the combined available capacity.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -127,8 +171,8 @@ Check the status of the block devices
 # *stratis blockdev list*
 
 Pool Name   Device Node     Physical Size   State  Tier
-summitpool  /dev/vdb                5 GiB  In-use  Data
-summitpool  /dev/vdc                5 GiB  In-use  Data
+summitpool  {disk1}                 5 GiB  In-use  Data
+summitpool  {disk2}                 5 GiB  In-use  Data
 ----
 
 == Create Filesystem
@@ -145,14 +189,14 @@ Now create a filesystem, a directory mount point, and mount the filesystem:
 ----
 # *stratis fs list*
 
-Pool Name   Name      Used     Created            Device                        UUID
-summitpool  summitfs  546 MiB  Apr 18 2020 09:15  /stratis/summitpool/summitfs  095fb4891a5743d0a589217071ff71dc
+Pool Name   Name      Used     Created            Device                            UUID
+summitpool  summitfs  546 MiB  Apr 18 2020 09:15  /dev/stratis/summitpool/summitfs  095fb4891a5743d0a589217071ff71dc
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 # *mkdir /summitdir*
-# *mount /stratis/summitpool/summitfs /summitdir*
+# *mount /dev/stratis/summitpool/summitfs /summitdir*
 # *df -h*
 
 Filesystem                                 Size  Used Avail Use% Mounted on
@@ -169,15 +213,7 @@ The actual space used by a filesystem can be shown using the `stratis fs list` c
 
 == Create Mount Point
 
-Now make sure the filesystem will mount at boot time by adding the following line to the end of the /etc/fstab file:
-
-INFO: If you are comfortable with an editor, you can type it in or cut and paste using the UUID from the output of “stratis fs”.   If not, you can use a workshop-script we prepared for you.
-
-./etc/fstab
-[source,options="nowrap",subs="{markup-in-source}"]
-----
-UUID=<the-uuid-unique-to-the-new-filesystem>  /summitdir  xfs  defaults  0  0
-----
+Now make sure the filesystem will mount at boot time by adjusting the systems fstab.  You've been provided a simple script to perform this edit, but the maunal steps are also outlined below in the 'Native command(s)' note.
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
@@ -188,7 +224,7 @@ workshop-stratis-fstab.sh
 ====
 _Native command(s) to amend /etc/fstab_
 ----
-UUID=`lsblk -n -o uuid /stratis/summitpool/summitfs`
+UUID=`lsblk -n -o uuid /dev/stratis/summitpool/summitfs`
 echo "UUID=${UUID} /summitdir xfs defaults 0 0" >> /etc/fstab
 ----
 ====
@@ -211,32 +247,13 @@ tmpfs                                      379M     0  379M   0% /run/user/1000
 /dev/mapper/stratis-1-3e8e[_truncated_]71dc  1.0T  7.2G 1017G   1% /summitdir
 ----
 
-== Add Cache Device
-
-Stratis also makes it easy to add cache devices.  For example, say the filesystem we just created runs into some I/O performance issues.  You bought an SSD (solid state disk) and need to configure it into the system to act as a high speed cache.  Use the following commands to add the drive (/dev/vdd) and check its status:
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *stratis pool add-cache summitpool  /dev/vdd*
-----
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *stratis blockdev*
-
-Pool Name	Device Node    Physical Size   State   Tier
-summitpool   /dev/vdb                5 GiB  In-use   Data
-summitpool   /dev/vdc                5 GiB  In-use   Data
-summitpool   /dev/vdd                5 GiB  In-use  Cache
-----
-
 == Grow Storage Pool
 
 Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summitfs” filesystem is growing close to the physical space in “summitpool”, adding an additional disk/block device is done using:
 
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
-# *stratis pool add-data summitpool /dev/vde*
+# *stratis pool add-data summitpool {disk4}*
 ----
 
 [bash,options="nowrap",subs="{markup-in-source}"]
@@ -244,10 +261,10 @@ Finally, Stratis also makes it easy to add space to a pool.  Suppose the “summ
 # *stratis blockdev*
 
 Pool Name    Device Node    Physical Size   State   Tier
-summitpool   /dev/vdb               5 GiB  In-use   Data
-summitpool   /dev/vdc               5 GiB  In-use   Data
-summitpool   /dev/vdd               5 GiB  In-use  Cache
-summitpool   /dev/vde               5 GiB  In-use   Data
+summitpool   {disk1}                5 GiB  In-use   Data
+summitpool   {disk2}                5 GiB  In-use   Data
+summitpool   {disk3}                5 GiB  In-use  Cache
+summitpool   {disk4}                5 GiB  In-use   Data
 ----
 
 Verify that the pool shows the additional space, and that the amount used is now in a safe range.
@@ -258,6 +275,25 @@ Verify that the pool shows the additional space, and that the amount used is now
 
 Name          Total Physical Size   Total Physical Used
 summitpool                 15 GiB               606 MiB
+----
+
+== Add Cache Device
+
+Stratis also makes it easy to add cache devices.  For example, say the filesystem we just created runs into some I/O performance issues.  You bought an SSD (solid state disk) and need to configure it into the system to act as a high speed cache.  Use the following commands to add the drive (/dev/vdd) and check its status:
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *stratis pool init-cache summitpool  {disk3}*
+----
+
+[bash,options="nowrap",subs="{markup-in-source}"]
+----
+# *stratis blockdev*
+
+Pool Name	Device Node    Physical Size   State   Tier
+summitpool   {disk1}                 5 GiB  In-use   Data
+summitpool   {disk2}                 5 GiB  In-use   Data
+summitpool   {disk3}                 5 GiB  In-use  Cache
 ----
 
 == Additional Resources

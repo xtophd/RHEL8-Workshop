@@ -30,21 +30,21 @@ For these exercises, you will be using the host `bastion` as user `root`.
 
 Use `sudo` to elevate your priviledges.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *sudo -i*
+*sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *workshop-virt-checkhost.sh*
+*workshop-virt-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
 
-=== Requirements
+== Requirements
 
 First we need to ensure the system being used supports either:
 
@@ -55,10 +55,13 @@ This is done with the following simple commands.
 
 You can start by examining the CPU flags (capabilities) advertised by your system.
 
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*grep -E 'svm|vmx' /proc/cpuinfo*
+----
+
 [source,options="nowrap",subs="{markup-in-source}"]
 ----
-# *grep -E 'svm|vmx' /proc/cpuinfo*
-
 flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 
 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good
 nopl xtopology cpuid tsc_known_freq pni pclmulqdq *vmx* ssse3 fma cx16 pcid sse4_1 sse4_2 
@@ -71,30 +74,35 @@ pke avx512_vnni md_clear arch_capabilities
 
 You are looking for either the Intel flag (vmx) or the AMD flag (svm).  A more sophisticated command makes it a little easier to determine.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "WARNING!! Virt NOT Supported"; fi*
+*if grep -qE 'svm|vmx' /proc/cpuinfo ; then echo "Virt Supported" ; else echo "WARNING!! Virt NOT Supported"; fi*
+----
 
+[source,options="nowrap",subs="{markup-in-source}"]
+----
 Virt Supported
 ----
 
 After you install all the required software, there are some additional tools to provide more detailed reporting on system capabilities.
 
-=== Installation
+== Installation and Configuration
 
-NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material.
+NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material only.
 
 System needs to be configure with access to the following repos:
 
   * rhel-8-baseos-rpms
   * rhel-8-appstream-rpms
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+Install the required packages.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools cockpit-machines lorax-composer composer-cli cockpit-composer*
+*yum install -y qemu-kvm libvirt virt-install libvirt-client libguestfs-tools cockpit-machines*
 ----
 
-=== Enable System Services
+Next we need to enable the various services.
 
 NOTE: Please note that all software has been pre-installed and configured.  These steps are provided as reference material.
 
@@ -102,21 +110,31 @@ If for some reason the webconsole is not enabled, please visit that unit for ins
 
 To enable the necessary services for this unit:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl enable lorax-composer libvirtd*
+*systemctl enable --now libvirtd*
+----
 
-# *systemctl start lorax-composer libvirtd*
+NOTE: The "enable --now" syntax is new in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
+
+Finally check the service status.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*systemctl status libvirtd*
 ----
 
 === Verify Virtualization Host Status
 
 One simple command checks various hardware and software configurations for support of virtualization.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *virt-host-validate*
+*virt-host-validate*
+----
 
+[source,options="nowrap",subs="{markup-in-source}"]
+----
   QEMU: Checking for hardware virtualization                                 : PASS
   QEMU: Checking if device /dev/kvm exists                                   : PASS
   QEMU: Checking if device /dev/kvm is accessible                            : PASS
@@ -131,113 +149,57 @@ One simple command checks various hardware and software configurations for suppo
   QEMU: Checking for device assignment IOMMU support                         : WARN (No ACPI IVRS table found, IOMMU either disabled in BIOS or not supported by this hardware platform)
 ----
 
-== Image Builder
-
-=== Overview
-
-Red Hat provides pre-made images of RHEL for use as virtual machines.  This come in a QCOW2 format.
-
-However, in order to access them for download one needs to have an active Red Hat Enterprise Linux entitlement.  An obvious alternative to downloading an image is to make one.  There are 2 solutions to creating a VM image from scratch:
-
-  * Provision one (via bootable ISO or PXE)
-  * Magically build an image using the Lorax `Image Builder`
-
-`Image Builder` is a set of tools to create custom RHEL images in a variety of formats for compatibility with major cloud providers and virtualization technologies available.  Meaning, you can specify the target platfrom for you vm and create an appropriate image for VMWare, AWS, Openstack, KVM, etc...
-
-We are only going to leverage an existing blueprint, but please note that blueprints are easy to create, extend and customize for your unique requirements.
-
-=== List Blueprints
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *composer-cli blueprints list*
-
-example-atlas
-example-development
-example-http-server
-----
-
-A nice quick way to determine if the local `Image Builder` can resolve all dependencies for the blueprint is to run  it thorugh a `depsolve`.  Here you can also see a full list of rpms that will be installed on the image.
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *composer-cli blueprints depsolve example-http-server*
-
-blueprint: example-http-server v0.0.1
-    acl-2.2.53-1.el8.x86_64
-    apr-1.6.3-9.el8.x86_64
-    apr-util-1.6.1-6.el8.x86_64
-    audit-libs-3.0-0.13.20190507gitf58ec40.el8.x86_64
-    basesystem-11-5.el8.noarch
-    bash-4.4.19-10.el8.x86_64
-    brotli-1.0.6-1.el8.x86_64
-    bzip2-libs-1.0.6-26.el8.x86_64
-    ca-certificates-2018.2.24-6.el8.noarch
-    chkconfig-1.11-1.el8.x86_64
-    coreutils-8.30-6.el8.x86_64
-...SNIP...
-----
-
-
-=== Compose a Blueprint
-
-We are going to leverage the `example-http-server` for our purposes.
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *composer-cli compose start example-http-server qcow2*
-
-Compose 812019dd-20e5-4528-a99b-09fbe47ca2d8 added to the queue
-----
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *composer-cli compose status*
-----
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *composer-cli compose list*
-
-812019dd-20e5-4528-a99b-09fbe47ca2d8 *FINISHED* example-http-server 0.0.1 qcow2
-----
-
-It may take a few minutes, but eventually you should see a "FINISHED" status
-
-
 == Deploy A Virtual-Machine with 'virt-install'
 
-Now you are ready to leverage the example-http-server and deploy the VM with Red Hat Enterprise Linux.
+Red Hat provides pre-made generic images of RHEL for use as virtual machines in a QCOW2 format.
 
-=== Retrieve a QCOW Image
+However, in order to access them for download one needs to have an active Red Hat Enterprise Linux entitlement.  An alternative to downloading a qcow image is to make one.  
 
-First we need to grab a copy of the image and put it in the right place for our platform.
+Fortunately, that's precisely what you did in the previous unit with Image Builder.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+=== Locate your QCOW Image
+
+In the previous exercise, you built a custom QCOW2 image using Image Builder.  The result of that work should be a vm image named vmguest.qcow2 
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *cd /var/lib/libvirt/images*
-
-# *composer-cli compose image 812019dd-20e5-4528-a99b-09fbe47ca2d8*
-
-# *mv *.qcow2 vmguest.qcow2*
-----
-
-=== Modify the QCOW Image
-
-Now you need to set a root password in the image
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *virt-customize -a vmguest.qcow2 --root-password password:redhat --uninstall cloud-init*
+*ls /var/lib/libvirt/images*
 ----
 
-=== Deploy the QCOW Image
-
-Finally it's time to launch the VM
-
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap"]
 ----
-# *virt-install \
+vmguest.qcow2
+----
+
+== Customize your QCOW Image
+
+Now you need to do a few more things to your image:
+
+    * set a hostname
+    * set a root password
+    * copy a simple HTML file
+    * selinux relabel files in the guest
+    * remove the cloud-init package
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*virt-customize \
+    -a /var/lib/libvirt/images/vmguest.qcow2 \
+    --hostname vmguest \
+    --root-password password:redhat \
+    --copy-in /usr/local/etc/index.html:/var/www/html \
+    --selinux-relabel \
+    --uninstall cloud-init*
+----
+
+
+=== VM Deployment
+
+It is now time to launch the VM
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*virt-install \
    --import \
    --name vmguest \
    --memory 2048 \
@@ -245,51 +207,141 @@ Finally it's time to launch the VM
    --disk /var/lib/libvirt/images/vmguest.qcow2 \
    --graphics vnc \
    --noautoconsole\
-   --os-variant rhel8.1*
+   --os-variant rhel8.4*
 ----
 
-=== Additional CLI Commands
+Give the VM a few moments to boot.
+
+== Virtual Machine Connectivity
+
+To determine what IP address was assigned to the new host, we can using some options to the virsh utility
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*virsh net-dhcp-leases default*
+----
+
+The output will show us the clients MAC address and the IP address it was assigned via the libvirt integrated dnsmasq service.
+
+[bash,options="nowrap"]
+----
+ Expiry Time           MAC address         Protocol   IP address          Hostname   Client ID or DUID
+-----------------------------------------------------------------------------------------------------------
+ 2021-11-13 11:19:33   52:54:00:63:85:76   ipv4       192.168.122.62/24   -          01:52:54:00:63:85:76
+----
+
+Another mechanism determine the ip address of the client is to use the 'domifaddr' option.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*virsh domifaddr vmguest*
+----
+
+[bash,options="nowrap"]
+----
+ Name       MAC address          Protocol     Address
+-------------------------------------------------------------------------------
+ vnet0      52:54:00:63:85:76    ipv4         192.168.122.62/24
+----
+
+If the above command results in empty data, it is just an indication that the virtual machine has 
+not completed it's bootstrap.  Just give it a few more moments and try again.
+
+Once we can see the network information, now it is time to connect to the host so 
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*export VM_IP=$(virsh domifaddr vmguest | sed -e '1,2d' -e '$d' | awk '{ split($4,a,/\//) ; print a[1] }')*
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*curl $VM_IP*
+----
+
+== Virtual Machine Inspection
+
+Now it is time to connect to the host and check out some it's characteristics.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*export VM_IP=$(virsh domifaddr vmguest | sed -e '1,2d' -e '$d' | awk '{ split($4,a,/\//) ; print a[1] }')*
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*ssh $VM_IP*
+----
+
+The password was set in the previous exercise with virt-customize command and is probably just 'redhat'
+
+The virtual machine is on a private network and not accessbile from the internet.  You will only 
+be able to access it from the bastion via ssh, or from the webconsole.
+
+Verify that the httpd daemon is running.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*systemctl status httpd*
+----
+
+Verifiy that the index.html is installed.
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*ls /var/www/html/index.html*
+----
+
+Exit back to the host
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*exit*
+----
+
+== Additional CLI Commands
 
 Some additional simple virtual machine management commands
 
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *virsh list*
-# *virsh list --all*
-
-# *virsh start vmguest*
-# *virsh shutdown vmguest*
-----
+  * *virsh list* lists running virtual machines
+  * *virsh list --all* lists all virtual machines regardless of state
+  * *virsh start <vm-name>* starts a virtual machine named 
+  * *virsh shutdown <vm-name>* performs a soft shutdown of the virtual machine
+  * *virsh destroy <vm-name>* performs distructive cold stop the virtual machine
 
 == Explore VM Management with 'Web-Console'
 
-From the menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary when compared the Red Hat Virtualization Manager (RHVM) , but one critical feature is available: the console!
+From the menu, select the Machines tab.  You will notice that the interface is still pretty rudimentary when compared with the Red Hat Virtualization Manager (RHVM), but one critical feature is available: the console!
 
 Take some time to explore the capabilities of the Web-Console Machines webui.
 
-Log in to your client (user:root password:redhat) and poke around.  The VM is on a private network and not accessbile from the internet.  You will only be able to access from the webconsole.
+== Virtual Machine Shutdown
 
-== Shutdown Virtual Machines
-
-WARN: It is IMPORTANT to stop or delete the deployed VMs
+WARN: It is IMPORTANT to shutdown the deployed VMs.  Leaving any VM running in this workshop environment can adversely impact other exercises.
 
 Using either the CLI (or the Web-Console), be sure to shutdown the VM(s) you deployed to ensure additional workshop exercises perform reasonably.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *virsh list --all*
-# *virsh shutdown vmguest*
+*virsh list --all*
+----
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*virsh shutdown vmguest*
 ----
 
 == Additional Resources
 
-https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bridging
-
-http://blog.leifmadsen.com/blog/2016/12/01/create-network-bridge-with-nmcli-for-libvirt/
-
 Cockpit Project Page
 
     * link:http://cockpit-project.org/blog/category/release.html[Cockpit Project]
+
+Network Related Topics
+
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_network_bridging[Configure Network Bridging]
+
+    * link:http://blog.leifmadsen.com/blog/2016/12/01/create-network-bridge-with-nmcli-for-libvirt/[Create Network Bridge with nmcli]
 
 [discrete]
 == End of Unit

@@ -2,8 +2,25 @@
 - hosts: myBastion,myNodes
   become: true
   tasks:
-  
-  - name: "rhel8-prep: rhel8-prep : TEMPLATE /etc/motd"
+
+  ##
+  ##    Try loading the credentials.yml file
+  ##    if workshopuser_username is not defined
+  ##
+
+
+
+  - name: "rhel8-prep : loading credentials"
+    include_vars:
+      file: "../config/credentials.yml"
+    when: 
+      - workshop_vars.set_student_password 
+      - workshop_vars.student_password is undefined
+      - rhel8workshop_student_password is undefined
+ 
+
+ 
+  - name: "rhel8-prep : TEMPLATE /etc/motd"
     template:
       src: motd-generic.j2
       dest: /etc/motd
@@ -45,32 +62,36 @@
         sed -i 's/enabled=1/enabled=0/g' /etc/yum/pluginconf.d/product-id.conf
                   
   - name: "rhel8-prep : create and/or reset admin user"
+    vars:
+      t_passwd: "{{ workshop_vars.admin_password | default(rhel8workshop_admin_password) }}" 
     user: 
-      name:     "{{ workshop_vars.adminName  }}" 
-      password: "{{ workshop_vars.adminPassword | password_hash('sha512') }}"
+      name:     "{{ workshop_vars.admin_name  }}" 
+      password: "{{ t_passwd | password_hash('sha512') }}"
       state:    present
     when:
-      - workshop_vars.set_adminPassword
+      - workshop_vars.set_admin_password
 
   - name: "rhel8-prep : create and/or reset student user"
+    vars:
+      t_passwd: "{{ workshop_vars.student_password | default(rhel8workshop_student_password) }}" 
     user: 
-      name:     "{{ workshop_vars.studentName  }}" 
-      password: "{{ workshop_vars.studentPassword | password_hash('sha512') }}"
+      name:     "{{ workshop_vars.student_name  }}" 
+      password: "{{ t_passwd | password_hash('sha512') }}"
       state:    present
     when:
-      - workshop_vars.set_studentPassword
+      - workshop_vars.set_student_password
 
   - name: "rhel8-prep : create student group"
     group: 
-      name:     "{{ workshop_vars.studentName  }}" 
+      name:     "{{ workshop_vars.student_name  }}" 
       state:    present
 
   - name: "rhel8-prep : USER modification"
-    user: name="{{ workshop_vars.studentName }}" groups="wheel"
+    user: name="{{ workshop_vars.student_name }}" groups="wheel"
 
   - name: "rhel8-prep : Sudo Configuration"
     vars:
-      t_studentName: "{{ workshop_vars.studentName }}"
+      t_studentName: "{{ workshop_vars.student_name }}"
     template:
       src: "{{ item.src }}"
       dest: "{{ item.dest }}"
@@ -79,7 +100,7 @@
       mode: 0600
     with_items:
       - {src: 'sudoers.j2', dest: '/etc/sudoers.d/rhel8-workshop'}
-      - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ workshop_vars.studentName }}'}
+      - {src: 'sudoers-student.j2', dest: '/etc/sudoers.d/{{ workshop_vars.student_name }}'}
 
   - name: "rhel8-prep : check ssh directory permissions"
     file:
@@ -90,7 +111,7 @@
       state: directory
     with_items:
       - "root"
-      - "{{ workshop_vars.studentName }}"
+      - "{{ workshop_vars.student_name }}"
 
   - name: "rhel8-prep : check ssh known_hosts  permissions"
     file:
@@ -101,7 +122,7 @@
       state: touch
     with_items:
       - "root"
-      - "{{ workshop_vars.studentName }}"
+      - "{{ workshop_vars.student_name }}"
 
   - name: "rhel8-prep : clean up known_hosts for root"
     vars:
@@ -127,9 +148,9 @@
       - "{{ groups['myNodes'] }}"
     ignore_errors: yes
 
-  - name: "rhel8-prep : clean up known_hosts for {{ workshop_vars.studentName }}"
+  - name: "rhel8-prep : clean up known_hosts for {{ workshop_vars.student_name }}"
     vars:
-      p_file: "~{{ workshop_vars.studentName }}/.ssh/known_hosts"
+      p_file: "~{{ workshop_vars.student_name }}/.ssh/known_hosts"
     shell:
       cmd: |
         ssh-keygen -f {{ p_file }} -R {{ hostvars[item]['inventory_hostname_short'] }}
@@ -139,11 +160,11 @@
       - "{{ groups['myNodes'] }}"
     ignore_errors: yes
     become: yes
-    become_user: "{{ workshop_vars.studentName }}"
+    become_user: "{{ workshop_vars.student_name }}"
 
-  - name: "rhel8-prep: scan and add ssh keys to known_hosts for {{ workshop_vars.studentName }}"
+  - name: "rhel8-prep: scan and add ssh keys to known_hosts for {{ workshop_vars.student_name }}"
     vars:
-      p_file: "~{{ workshop_vars.studentName }}/.ssh/known_hosts"
+      p_file: "~{{ workshop_vars.student_name }}/.ssh/known_hosts"
     shell:
       cmd: |
         ssh-keyscan {{ hostvars[item]['inventory_hostname_short'] }} >> {{ p_file }}
@@ -153,7 +174,7 @@
       - "{{ groups['myNodes'] }}"
     ignore_errors: yes
     become: yes
-    become_user: "{{ workshop_vars.studentName }}"
+    become_user: "{{ workshop_vars.student_name }}"
 
 
 
@@ -174,18 +195,18 @@
       content="{{ rootkey_result.public_key }}" 
       dest="../config/root_sshkey.temp"
 
-  - name: "rhel8-prep : create ssh key for {{ workshop_vars.studentName }}"
+  - name: "rhel8-prep : create ssh key for {{ workshop_vars.student_name }}"
     openssh_keypair:
-      path:  ~{{ workshop_vars.studentName }}/.ssh/id_rsa
-      owner: "{{ workshop_vars.studentName }}"
-      group: "{{ workshop_vars.studentName }}"
+      path:  ~{{ workshop_vars.student_name }}/.ssh/id_rsa
+      owner: "{{ workshop_vars.student_name }}"
+      group: "{{ workshop_vars.student_name }}"
     register: studentkey_result
 
-  - name: "rhel8-prep : save temp copy of {{ workshop_vars.studentName }} ssh key"
+  - name: "rhel8-prep : save temp copy of {{ workshop_vars.student_name }} ssh key"
     delegate_to: localhost
     copy:
       content="{{ studentkey_result.public_key }}" 
-      dest="../config/{{workshop_vars.studentName}}_sshkey.temp"
+      dest="../config/{{workshop_vars.student_name}}_sshkey.temp"
 
 
 
@@ -203,14 +224,14 @@
       manage_dir: yes
     with_items:
       - "root"
-      - "{{ workshop_vars.studentName }}"
+      - "{{ workshop_vars.student_name }}"
 
   - name: "rhel8-prep : remove local temp copy of ssh key"
     delegate_to: localhost
     file: path="../config/{{ item }}_sshkey.temp" state=absent
     with_items:
       - "root"
-      - "{{ workshop_vars.studentName }}"
+      - "{{ workshop_vars.student_name }}"
 
 
 
