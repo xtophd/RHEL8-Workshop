@@ -30,19 +30,21 @@ xtoph_config_platform:
   
           description:     "default libvirt network parameters"
           network_name:    "virbr_{{ workshop_vars.clustername }}"
+
+          undeploy:        true
           fwd_type:        "nat"
 
-          ip:                "{{ h_pubIP                          }}"
-          mac:               "{{ g_pubMAC | default('')           }}"
-          basedomain:        "{{ workshop_vars.network_basedomain }}"
-          network:           "{{ workshop_vars.network_network    }}"
-          netmask:           "{{ workshop_vars.network_netmask    }}"
-          broadcast:         "{{ workshop_vars.network_broadcast  }}"
-          prefix:            "{{ workshop_vars.network_prefix     }}"
-          gateway:           "{{ workshop_vars.network_gateway    }}"
-          nameserver:        "{{ workshop_vars.network_nameserver }}"
-          timeserver:        "{{ workshop_vars.network_timeserver }}"
-          fqdn:              "{{ workshop_vars.network_fqdn       }}"
+          ip:              "{{ h_pubIP                          }}"
+          mac:             "{{ g_pubMAC | default('')           }}"
+          basedomain:      "{{ workshop_vars.network_basedomain }}"
+          network:         "{{ workshop_vars.network_network    }}"
+          netmask:         "{{ workshop_vars.network_netmask    }}"
+          broadcast:       "{{ workshop_vars.network_broadcast  }}"
+          prefix:          "{{ workshop_vars.network_prefix     }}"
+          gateway:         "{{ workshop_vars.network_gateway    }}"
+          nameserver:      "{{ workshop_vars.network_nameserver }}"
+          timeserver:      "{{ workshop_vars.network_timeserver }}"
+          fqdn:            "{{ workshop_vars.network_fqdn       }}"
   
       storage:
         default:
