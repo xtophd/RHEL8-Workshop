@@ -62,7 +62,7 @@ all:
         imagebuilder:       True
         virtualization:     True
         vdo:                True
-        wayland:            False
+        wayland:            True
         webconsole:         True
 
 
