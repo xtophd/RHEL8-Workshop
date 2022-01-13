@@ -18,6 +18,18 @@ fi
 ##
 ##
 
+if [[ $2 != "" ]]; then
+
+    echo "Ansible limit set to: $2"
+
+    myLimits="-l $2"
+
+else
+
+    myLimits=""
+
+fi
+
 case "$1" in
 
     "deploy"     | \
@@ -27,7 +39,7 @@ case "$1" in
     "setup+"     | \
     "setup")
 
-        time  ansible-playbook --ask-vault-pass -i ${myInventory} -f 10 -e xtoph_deploy_cmd=${1} xtoph-deploy.yml
+        time  ansible-playbook --ask-vault-pass -i ${myInventory} -f 10 -e xtoph_deploy_cmd=${1} ${myLimits} xtoph-deploy.yml
         ;;
 
     "git-updates")
