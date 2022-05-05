@@ -285,7 +285,7 @@ image::slide15.png[Cockpit Services]
 
 == Remote Node Management
 
-As of RHEL 8.4, the "Web Console Dashboard" plug-in has been deplricated.  The core functionality of being able to manage multiple nodes from a single interface has been intergrated into the webconsole base.  Now adding additional nodes and selecting one to manage is simple and intuitive.
+As of RHEL 8.4, the "Web Console Dashboard" plug-in has been deprecated.  The core functionality of being able to manage multiple nodes from a single interface has been intergrated into the webconsole base.  Now adding additional nodes and selecting one to manage is simple and intuitive.
 
 We begin by selecting the pull-down in the top-left corner.
 
