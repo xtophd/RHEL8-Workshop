@@ -300,11 +300,11 @@ summitpool   {disk3}                 5 GiB  In-use  Cache
 
 Red Hat Documentation
 
-    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_file_systems/managing-layered-local-storage-with-stratis_managing-file-systems[Managing Layered Local Storage with Stratis]
+    * link:https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_file_systems/setting-up-stratis-file-systems_managing-file-systems[Managing Filesystems: Chapter 39. Setting Up Stratis File Systems]
 
 [discrete]
 == End of Unit
-
+p
 ifdef::env-github[]
 link:../RHEL8-Workshop.adoc#toc[Return to TOC]
 endif::[]
