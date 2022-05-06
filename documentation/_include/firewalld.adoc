@@ -624,7 +624,7 @@ First, have a look at the configuration file which has already been prepared for
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-cat /usr/local/etc/firewalld-customname.xml
+*cat /usr/local/etc/firewalld-customname.xml*
 ----
 
 ./usr/local/etc/firewalld-customname.xml
