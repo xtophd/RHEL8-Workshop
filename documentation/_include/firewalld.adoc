@@ -92,8 +92,13 @@ Each zone is similar to a complete firewall and there is a single zone selection
 
 Let us examine a couple of the system's default zone files in */usr/lib/firewalld/zones*
 
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*cat /usr/lib/firewalld/zones/public.xml*
+----
+
 .public.xml
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 <?xml version="1.0" encoding="utf-8"?>
 <zone>
@@ -105,8 +110,13 @@ Let us examine a couple of the system's default zone files in */usr/lib/firewall
 </zone>
 ----
 
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*cat /usr/lib/firewalld/zones/drop.xml*
+----
+
 .drop.xml
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap""]
 ----
 <?xml version="1.0" encoding="utf-8"?>
 <zone target="DROP">
@@ -121,8 +131,13 @@ There are nearly 50 built-in services files shipped with firewalld. Services fil
 
 Here are a couple common configs for services defined in */usr/lib/firewalld/services*
 
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*cat /usr/lib/firewalld/dervices/ssh.xml*
+----
+
 .ssh.xml
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 <?xml version="1.0" encoding="utf-8"?>
 <service>
@@ -132,8 +147,13 @@ Here are a couple common configs for services defined in */usr/lib/firewalld/ser
 </service>
 ----
 
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*cat /usr/lib/firewalld/dervices/http.xml*
+----
+
 .http.xml
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 <?xml version="1.0" encoding="utf-8"?>
 <service>
@@ -152,7 +172,7 @@ Determine current state of the firewalld service.
 *firewall-cmd --state*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[bash,options="nowrap"]
 ----
 running
 ----
@@ -164,7 +184,7 @@ Get a list of currently configured and active "zones".
 *firewall-cmd --get-active-zones*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}",role="copy"]
+[bash,options="nowrap"]
 ----
 libvirt
   interfaces: virbr0
@@ -186,7 +206,7 @@ We had this information from the previous command, but to be more specific let's
 *firewall-cmd --zone=public --list-interfaces*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 eth0
 ----
@@ -198,7 +218,7 @@ Get a list of services configured on the public zone.
 *firewall-cmd --zone=public --list-services*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 cockpit dhcpv6-client ssh
 ----
@@ -212,7 +232,7 @@ Now let's get some specific data points on the web console service (cockpit).
 *firewall-cmd --info-service=cockpit*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 cockpit
   ports: 9090/tcp
@@ -231,7 +251,7 @@ Finally, let's just list everything about the public zone.
 *firewall-cmd --zone=public --list-all*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 public (active)
   target: default
@@ -273,7 +293,7 @@ Here we will take a moment to enable the http and https service ports.
 *firewall-cmd --zone=public --list-all*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 public (active)
   target: default
@@ -295,7 +315,7 @@ public (active)
 *firewall-cmd --zone=public --list-all --permanent*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 public
   target: default
@@ -325,7 +345,7 @@ NOTE: you could have also passed the *--permanent* flag to the original command 
 *firewall-cmd --zone=public --list-all --permanent*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 public
   target: default
@@ -362,7 +382,7 @@ Take a look at the active services now and you should find dhcp6-client absent.
 *firewall-cmd --list-services*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 cockpit http https ssh
 ----
@@ -387,7 +407,7 @@ Thus, there is one more step.  Save our current active configuration to the perm
 *firewall-cmd --zone=public --list-all --permanent*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 public
   target: default
@@ -431,7 +451,7 @@ And to make the rules permanent, save the current active configuration.
 *firewall-cmd --zone=public --list-all --permanent*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 public
   target: default
@@ -467,7 +487,7 @@ As much fun as that was, ad-hoc was quick and easy, but not ideal.  We really de
 *firewall-cmd --zone=public --list-all --permanent*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 public
   target: default
@@ -497,8 +517,13 @@ Two configuration files were just created */etc/firewalld/services*
 
 They are identical to the system default ones except that our additional ports (8080 and 8443) were added the the definition.
 
-.Config File /etc/firewalld/services/http.xml
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*cat /etc/firewalld/services/http.xml*
+----
+
+./etc/firewalld/services/http.xml
+[bash,options="nowrap"]
 ----
 <?xml version="1.0" encoding="utf-8"?>
 <service>
@@ -509,7 +534,12 @@ They are identical to the system default ones except that our additional ports (
 </service>
 ----
 
-.Config File /etc/firewalld/services/https.xml
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*cat /etc/firewalld/services/https.xml*
+----
+
+./etc/firewalld/services/https.xml
 [bash,options="nowrap",subs="{markup-in-source}"]
 ----
 <?xml version="1.0" encoding="utf-8"?>
@@ -537,7 +567,7 @@ Since the httpd service is already active, all we really need to do is reload fi
 *firewall-cmd --info-service=http*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 http
   ports: 80/tcp 8080/tcp
@@ -552,7 +582,7 @@ http
 *firewall-cmd --info-service=https*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 https
   ports: 443/tcp 8443/tcp
@@ -567,7 +597,7 @@ https
 *firewall-cmd --zone=public --list-all --permanent*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 public
   target: default
@@ -597,7 +627,8 @@ First, have a look at the configuration file which has already been prepared for
 cat /usr/local/etc/firewalld-customname.xml
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+./usr/local/etc/firewalld-customname.xml
+[bash,options="nowrap"]
 ----
 <?xml version="1.0" encoding="utf-8"?>
 <service>
