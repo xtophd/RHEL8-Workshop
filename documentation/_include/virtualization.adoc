@@ -133,7 +133,7 @@ One simple command checks various hardware and software configurations for suppo
 *virt-host-validate*
 ----
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
   QEMU: Checking for hardware virtualization                                 : PASS
   QEMU: Checking if device /dev/kvm exists                                   : PASS
@@ -166,7 +166,7 @@ In the previous exercise, you built a custom QCOW2 image using Image Builder.  T
 *ls /var/lib/libvirt/images*
 ----
 
-[source,options="nowrap"]
+[bash,options="nowrap"]
 ----
 vmguest.qcow2
 ----

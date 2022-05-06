@@ -31,23 +31,23 @@ For these exercises, you will be using the host `node1` as user `root`.
 
 From host `bastion`, ssh to `node1`.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *ssh node1*
+*ssh node1*
 ----
 
 Use `sudo` to elevate your priviledges.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *sudo -i*
+*sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *workshop-systemd-checkhost.sh*
+*workshop-systemd-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -56,18 +56,24 @@ You are now ready to proceed with these exercises.
 
 Let's collect some initial data about the boot process
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemd-analyze*
+*systemd-analyze*
+----
 
+[source,options="nowrap",subs="{markup-in-source}"]
+----
 Startup finished in 3.783s (kernel) + 6.526s (initrd) + 14.723s (userspace) = 25.033s
 multi-user.target reached after 10.540s in userspace
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemd-analyze blame*
+*systemd-analyze blame*
+----
 
+[source,options="nowrap",subs="{markup-in-source}"]
+----
           4.205s kdump.service
           3.308s firewalld.service
           3.108s dnf-makecache.service
@@ -77,7 +83,7 @@ multi-user.target reached after 10.540s in userspace
           ...<output truncated>...
 ----
 
-This command prints a list of all running units, ordered by the time they took to initialize.  To streamline the boot process for something like a cloud image, this helps to learn the “cost” of some of the default services.  Unnecessary services could potentially be removed or disabled to speed boot time.
+This command prints a list of all running units, ordered by the time they took to initialize.  To streamline the boot process for something like a cloud image, this helps to learn the “cost” of some of the default services.  Unnecessary services could potentially be removed or disabled to speed up boot time.
 
 == Core Concepts
 
@@ -100,20 +106,26 @@ systemd has a concept similar to SysV init runlevels, called targets.  systemd w
 
 Let's view the current default target.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl get-default*
+*systemctl get-default*
+----
 
+[bash,options="nowrap"]
+----
 multi-user.target
 ----
 
 === Services
 As mentioned above, systemd has another concept called a service.  A service is a type of unit which defines the traditional daemon or process.  Now let us look at what services are running on the system:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl -t service*
+*systemctl -t service*
+----
 
+[bash,options="nowrap"]
+----
 UNIT                               LOAD   ACTIVE SUB     DESCRIPTION                     
 auditd.service                     loaded active running Security Auditing Service       
 chronyd.service                    loaded active running NTP client/server               
@@ -126,10 +138,13 @@ firewalld.service                  loaded active running firewalld - dynamic fir
 
 Next let's view all of the services available (ie: everything installed, running or not) on the system. The following command is similar to the older chkconfig --list as it will show both enabled and disabled services:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl list-unit-files -t service*
+*systemctl list-unit-files -t service*
+----
 
+[bash,options="nowrap"]
+----
 UNIT FILE                                   STATE   
 arp-ethers.service                          disabled
 auditd.service                              enabled 
@@ -151,10 +166,13 @@ Now that we have a good idea of what’s installed on our system, let’s get a 
 
 Let us install some packages.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum install -y httpd mariadb-server mariadb*
+*yum install -y httpd mariadb-server mariadb*
+----
 
+[bash,options="nowrap"]
+----
 ...snip ...
 Package httpd-2.4.37-16.module+el8.1.0+4134+e6bad0ed.x86_64 is already installed.
 Package mariadb-server-3:10.3.17-1.module+el8.1.0+3974+90eded84.x86_64 is already installe
@@ -169,12 +187,15 @@ Complete!
 
 Now it's time to enable the relevant system services.
 
-NOTE: The "enable --now" syntax was introduced in a recent release of RHEL 7 and of course now in RHEL 8.  It allows for permanently enabling as well as immediately starting services in a single command.
+NOTE: The "enable --now" syntax was introduced in a recent release of RHEL 7 and of course is now availbale in RHEL 8.  The option permanently enables AND immediately starts the specified services in a single command.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl enable --now httpd mariadb*
+*systemctl enable --now httpd mariadb*
+----
 
+[bash,options="nowrap"]
+----
 Created symlink /etc/systemd/system/multi-user.target.wants/httpd.service → /usr/lib/systemd/system/httpd.service.
 Created symlink /etc/systemd/system/mysql.service → /usr/lib/systemd/system/mariadb.service.
 Created symlink /etc/systemd/system/mysqld.service → /usr/lib/systemd/system/mariadb.service.
@@ -183,10 +204,13 @@ Created symlink /etc/systemd/system/multi-user.target.wants/mariadb.service → 
 
 Now let's check the status.  You should see two separate sections in the output, one for httpd and one for mariadb.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl status httpd mariadb*
+*systemctl status httpd mariadb*
+----
 
+[bash,options="nowrap"]
+----
 ● httpd.service - The Apache HTTP Server
    Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
    Active: active (running) since Wed 2019-05-01 21:37:54 EDT; 12s ago
@@ -205,18 +229,21 @@ Now let's check the status.  You should see two separate sections in the output,
 
 Last but not least, you need to enable a firewall port.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *firewall-cmd --add-service=http*
+*firewall-cmd --add-service=http*
+----
 
+[bash,options="nowrap"]
+----
 success
 ----
 
 So as promised, here is a workshop script that performs all of the above steps.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *workshop-systemd-lamp.sh*
+*workshop-systemd-lamp.sh*
 ----
 
 === Customize Services
@@ -235,10 +262,13 @@ Create a drop-in configuration file to extend the default httpd.service unit
 
 ==== Modify httpd
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *workshop-systemd-httpdconfig.sh*
+*workshop-systemd-httpdconfig.sh*
+----
 
+[bash,options="nowrap"]
+----
 Contents of /etc/systemd/system/httpd.service.d/50-httpd.conf
 [Service]
 Restart=always
@@ -249,9 +279,9 @@ OOMScoreAdjust is used by the Kernel's Out Of Memory killer and is an  integer b
 
 Notify systemd of the changes.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl daemon-reload*
+*systemctl daemon-reload*
 ----
 
 ==== Modify mariadb
@@ -263,13 +293,13 @@ This time we'll use systemctl to create the drop-in and notify systemd of the ch
 `systemctl edit` allows inserting the content for the drop-in and also handles the `systemctl daemon-reload` automatically.
 
 .[root@node1]#
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 # *systemctl edit mariadb*
 ----
 
 .Type the following using the editor:
-[source,bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 [Service]
 Restart=always
@@ -279,10 +309,13 @@ Save and quit the editor, and view the unit
 
 `systemctl cat` is a quick and easy way to view the contents of a unit & and it's drop-ins.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl cat mariadb*
+*systemctl cat mariadb*
+----
 
+[bash,options="nowrap"]
+----
 ...snip...
 # Restart crashed server only, on-failure would also restart, for example, when
 # my.cnf contains unknown option
@@ -304,10 +337,13 @@ Restart=always
 
 === Verify
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl status httpd*
+*systemctl status httpd*
+----
 
+[bash,options="nowrap"]
+----
 ● httpd.service - The Apache HTTP Server
    Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
   Drop-In: /etc/systemd/system/httpd.service.d
@@ -326,10 +362,13 @@ Restart=always
 Notice that systemctl status displays that the unit has been extended with a drop-in file.
 
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl status mariadb*
+*systemctl status mariadb*
+----
 
+[bash,options="nowrap"]
+----
 ● mariadb.service - MariaDB 10.3 database server
    Loaded: loaded (/usr/lib/systemd/system/mariadb.service; enabled; vendor preset: disab>
   Drop-In: /etc/systemd/system/mariadb.service.d
