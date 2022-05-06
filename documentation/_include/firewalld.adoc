@@ -133,7 +133,7 @@ Here are a couple common configs for services defined in */usr/lib/firewalld/ser
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-*cat /usr/lib/firewalld/dervices/ssh.xml*
+*cat /usr/lib/firewalld/services/ssh.xml*
 ----
 
 .ssh.xml
