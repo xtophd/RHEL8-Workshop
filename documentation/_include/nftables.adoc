@@ -31,23 +31,23 @@ For these exercises, you will be using the host `node2` as user `root`.
 
 From host `bastion`, ssh to `node2`.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *ssh node2*
+*ssh node2*
 ----
 
 Use `sudo` to elevate your priviledges.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *sudo -i*
+*sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *workshop-nftables-checkhost.sh*
+*workshop-nftables-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -56,10 +56,13 @@ You are now ready to proceed with these exercises.
 
 Using nft, show the current state of the network tables.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft list tables*
+*nft list tables*
+----
 
+[bash,options="nowrap"]
+----
 table ip filter
 table ip6 filter
 table bridge filter
@@ -79,10 +82,13 @@ table ip6 firewalld
 
 Using nft, show the current state of the network chains.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 # *nft list chains*
+----
 
+[bash,options="nowrap"]
+----
 table ip filter {
         chain INPUT {
                 type filter hook input priority 0; policy accept;
@@ -101,17 +107,20 @@ NOTE: The output for this can be VERY long.  You can optionally use `nft list ch
 
 == Add Single Rule
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft insert rule ip filter INPUT tcp dport http accept*
+*nft insert rule ip filter INPUT tcp dport http accept*
 ----
 
 Verify the rule change.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft -n -a list table ip filter*
+*nft -n -a list table ip filter*
+----
 
+[bash,options="nowrap"]
+----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy accept;
@@ -132,17 +141,20 @@ Remember the rule handle, we will use it next to delete the rule
 
 == Delete Single Rule
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft delete rule filter INPUT handle 4*
+*nft delete rule filter INPUT handle 4*
 ----
 
 Verify the rule change.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft -n -a list table ip filter*
+*nft -n -a list table ip filter*
+----
 
+[bash,options="nowrap"]
+----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy accept;
@@ -161,17 +173,20 @@ table ip filter { # handle 1
 
 == Add Multiple Rules at Once
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft insert rule ip filter INPUT tcp dport { ssh, http, https, 8181 } accept*
+*nft insert rule ip filter INPUT tcp dport { ssh, http, https, 8181 } accept*
 ----
 
 Verify the new rules.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft -n -a list table ip filter*
+*nft -n -a list table ip filter*
+----
 
+[bash,options="nowrap"]
+----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy accept;
@@ -194,17 +209,20 @@ WARNING: DO NOT do this step unless you successfully completed "Add Multiple Rul
 
 Set the INPUT chain default policy to drop all traffic not specifically accepted.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft add chain ip filter INPUT { type filter hook input priority 0\; policy drop\; }*
+*nft add chain ip filter INPUT { type filter hook input priority 0\; policy drop\; }*
 ----
 
 Verify Increased Security
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft -n -a list table ip filter*
+*nft -n -a list table ip filter*
+----
 
+[bash,options="nowrap"]
+----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy drop;
@@ -225,17 +243,20 @@ table ip filter { # handle 1
 
 Remove rules added during this exercise.  We begin by setting the INPUT chain default policy to accept all traffic.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft add chain ip filter INPUT { type filter hook input priority 0\; policy accept\; }*
+*nft add chain ip filter INPUT { type filter hook input priority 0\; policy accept\; }*
 ----
 
 Now find the handle and remove the rule currently allowing access for SSH, HTTP, HTTPS, and 8181
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft -n -a list table ip filter*
+*nft -n -a list table ip filter*
+----
 
+[bash,options="nowrap"]
+----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy accept;
@@ -254,19 +275,22 @@ table ip filter { # handle 1
 
 In the output above, we determine the handle for our rule is '6'.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft delete rule filter INPUT handle 6*
+*nft delete rule filter INPUT handle 6*
 ----
 
 NOTE: You can also use the 'flush' option to clear an entire table: `nft flush table ip filter`
 
 Verify that everything is back to normal
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *nft -n -a list table ip filter*
+*nft -n -a list table ip filter*
+----
 
+[bash,options="nowrap"]
+----
 table ip filter { # handle 1
         chain INPUT { # handle 1
                 type filter hook input priority 0; policy accept;
