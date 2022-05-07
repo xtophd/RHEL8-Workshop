@@ -32,23 +32,23 @@ TIP: Now is a great time to use the multi session capability of *tmux*.  Use `Ct
 
 From host `bastion`, ssh to `node2`.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *ssh node2*
+*ssh node2*
 ----
 
 Use `sudo` to elevate your priviledges.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *sudo -i*
+*sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *workshop-ebpf-checkhost.sh*
+*workshop-ebpf-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -57,9 +57,9 @@ You are now ready to proceed with these exercises.
 
 Start by installing the *BPF Compiler Collection* (bcc-tools) and kernel-devel packages for the installed kernel:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum install bcc-tools kernel-devel-$(uname -r) -y*
+*yum install bcc-tools kernel-devel-$(uname -r) -y*
 ----
 
 Now, we have a lot of interesting tools installed in /usr/share/bcc/tools along with accompanying man pages.
@@ -77,10 +77,13 @@ The `tcplife` tool monitors tcp connections on the system and measures the amoun
 
 To run this tool, execute the following and give it a couple of seconds to get set up:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# */usr/share/bcc/tools/tcplife*
+*/usr/share/bcc/tools/tcplife*
+----
 
+[bash,options="nowrap"]
+----
 PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 ----
 
@@ -92,9 +95,9 @@ In your second terminal, establish yourself as described below and then run the 
   * host: *bastion*
   * user: *root*
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *ssh node2 "sudo workshop-ebpf-rootkit.sh"*
+*ssh node2 "sudo workshop-ebpf-rootkit.sh"*
 ----
 
 This command should run for about 10 seconds and then exit.  
@@ -104,7 +107,7 @@ This command should run for about 10 seconds and then exit.
 
 In the `tcplife` terminal, you should now see output similar to:
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 PID   COMM       LADDR           LPORT RADDR           RPORT TX_KB RX_KB MS
 28478 sshd       10.0.0.12       22    10.0.0.10       33514    14     2 9091.95
@@ -127,10 +130,13 @@ The `execsnoop` script monitors all calls to execve() and catches all processes 
 
 Continuing on host `node2`, to run `execsnoop` as follows:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# */usr/share/bcc/tools/execsnoop*
+*/usr/share/bcc/tools/execsnoop*
+----
 
+[bash,options="nowrap"]
+----
 PCOMM            PID    PPID   RET ARGS
 ----
 
@@ -142,9 +148,9 @@ In your second terminal, establish yourself as described below and then run the 
   * host: *bastion*
   * user: *root*
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *ssh node2 "sudo workshop-ebpf-rootkit.sh"*
+*ssh node2 "sudo workshop-ebpf-rootkit.sh"*
 ----
 
 [discrete]
@@ -152,7 +158,7 @@ In your second terminal, establish yourself as described below and then run the 
 
 In the `execsnoop` terminal, you should see output similar to:
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 PCOMM            PID    PPID   RET ARGS
 sshd             28512  749      0 /usr/sbin/sshd -D -oCiphers=aes256-gcm@openssh.com,chacha20-poly1305@openssh.com,aes256-ctr,aes256-cbc,aes128-gcm@openssh.com,aes128-ctr,aes128-cb -oMACs=hmac-sha2-256-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2- -oGSSAPIKexAlgorithms=gss-gex-sha1-,gss-group14-sha1- -oKexAlgorithms=curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-excha -oHostKeyAlgorithms=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha2-nis -oPubkeyAcceptedKeyTypes=rsa-sha2-256,ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha -R
