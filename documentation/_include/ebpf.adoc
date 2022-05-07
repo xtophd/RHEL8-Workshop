@@ -207,10 +207,13 @@ Similar in nature to `execsnoop`, `mountsnoop` traces the mount() and umount() s
 
 To run this tool, execute the following and give it a couple of seconds to get set up:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# */usr/share/bcc/tools/mountsnoop*
+*/usr/share/bcc/tools/mountsnoop*
+----
 
+[bash,options="nowrap"]
+----
 COMM             PID     TID     MNT_NS      CALL
 ----
 
@@ -226,10 +229,13 @@ In your second terminal, establish yourself as described below and then run the 
 
 Let's try to unmount a mount that we know cannot be unmounted. For this, we'll pick the root filesystem '/'.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *umount /*
+*umount /*
+----
 
+[bash,options="nowrap"]
+----
 umount: /: target is busy.
 ----
 
@@ -238,7 +244,7 @@ umount: /: target is busy.
 
 Taking a look at the terminal running `mountsnoop`, we see:
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 umount           20001   20001   4026531840  umount("/", 0x0) = -EBUSY
 ----
@@ -250,18 +256,21 @@ This shows us that the mount is busy and cannot be unmounted.
 
 Now let's try to unmount a filesystem that we should be able to unmount.  But before doing so, look at the mount options to ensure we can restore it correctly.  On `node2` run the following:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *grep /dev/shm /proc/mounts*
+*grep /dev/shm /proc/mounts*
+----
 
+[bash,options="nowrap"]
+----
 tmpfs /dev/shm tmpfs *rw,seclabel,nosuid,nodev,relatime* 0 0
 ----
 
 Now proceed to umount `/dev/shm` on `node2`
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *umount /dev/shm*
+*umount /dev/shm*
 ----
 
 [discrete]
@@ -269,7 +278,7 @@ Now proceed to umount `/dev/shm` on `node2`
 
 Back to the `mountsnoop` terminal and you should see the following:
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 umount           20003   20003   4026531840  umount("/dev/shm", 0x0) = 0
 ----
@@ -281,9 +290,9 @@ The umount command succeeded.
 
 Proceed to restore the /dev/shm mount as follows:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *mount -t tmpfs -o rw,nosuid,nodev,relatime,seclabel tmpfs /dev/shm*
+*mount -t tmpfs -o rw,nosuid,nodev,relatime,seclabel tmpfs /dev/shm*
 ----
 
 [discrete]
@@ -291,7 +300,7 @@ Proceed to restore the /dev/shm mount as follows:
 
 Finally, back to the `mountsnoop` terminal and you should see the following:
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 mount            20004   20004   4026531840  mount("tmpfs", "/dev/shm", "tmpfs", MS_NOSUID|MS_NODEV|MS_NOEXEC|MS_SYNCHRONOUS|MS_DIRSYNC|MS_NOATIME|MS_NODIRATIME|MS_MOVE|MS_REC|MS_UNBINDABLE|MS_SLAVE|MS_SHARED|MS_I_VERSION|MS_STRICTATIME|MS_LAZYTIME|MS_NOUSER|0x7f2b30000000, "") = 0
 ----
@@ -317,10 +326,13 @@ The purpose of the `xfsslower` tool (also `ext4slower` and `nfsslower`) is to sh
 
 To run this tool, execute the following and give it a couple of seconds to get set up:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# */usr/share/bcc/tools/xfsslower*
+*/usr/share/bcc/tools/xfsslower*
+----
 
+[bash,options="nowrap"]
+----
 Tracing xfs operations slower than 10 ms
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 ----
@@ -333,18 +345,18 @@ In your second terminal, establish yourself as described below and then run the 
   * host: *node2*
   * user: *root*
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *dd if=/dev/urandom of=bigfile bs=1024 count=20000*
+*dd if=/dev/urandom of=bigfile bs=1024 count=20000*
 ----
 
 This writes out a 20M file called bigfile and should not register on your `xfsslower` window.
 
 Now, let's execute the above command in a for loop so that we get more I/O going in parallel:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done*
+*for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done*
 ----
 
 [discrete]
@@ -352,7 +364,7 @@ Now, let's execute the above command in a for loop so that we get more I/O going
 
 Now you should see similar output in your `xfsslower` window:
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 TIME     COMM           PID    T BYTES   OFF_KB   LAT(ms) FILENAME
 20:44:43 b'dd'          32446  W 1024    778        44.11 b'bigfile1'
@@ -410,10 +422,13 @@ The `cachestat` tool traces kernel page cache functions and prints every five se
 
 To run this tool, execute the following and give it a couple of seconds to get set up:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# */usr/share/bcc/tools/cachestat*
+*/usr/share/bcc/tools/cachestat*
+----
 
+[bash,options="nowrap"]
+----
    TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
 ----
 
@@ -425,10 +440,10 @@ In your second terminal, establish yourself as described below and then run the 
   * host: *node2*
   * user: *root*
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *echo 3 > /proc/sys/vm/drop_caches*
-# *for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done*
+*echo 3 > /proc/sys/vm/drop_caches*
+*for i in $(seq 1 10); do dd if=/dev/urandom of=bigfile$i bs=1024 count=20000 & done*
 ----
 
 This flushes the cache and then runs a series of `dd` commands to create some I/O.
@@ -438,7 +453,7 @@ This flushes the cache and then runs a series of `dd` commands to create some I/
 
 In the `cachestat` window, you should output similar to:
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
    TOTAL   MISSES     HITS  DIRTIES   BUFFERS_MB  CACHED_MB
        0        0        0        0            0        154
@@ -457,9 +472,9 @@ In the `cachestat` terminal, issue a Ctrl-C and this will return you to a prompt
 
 This tool is a swiss army knife allowing you to specify functions to trace and messages to be printed when certain conditions are met. You can read more about this by running:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *man 8 trace*
+*man 8 trace*
 ----
 
 Let's do a simple trace in which we will dynamically trace the do_sys_open() kernel function and print the names of the files opened. 
@@ -469,10 +484,13 @@ Let's do a simple trace in which we will dynamically trace the do_sys_open() ker
 
 To run this tool, execute the following and give it a couple of seconds to get set up:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# */usr/share/bcc/tools/trace 'p::do_sys_open "%s", arg2'*
+*/usr/share/bcc/tools/trace 'p::do_sys_open "%s", arg2'*
+----
 
+[bash,options="nowrap"]
+----
 PID     TID     COMM            FUNC             -
 ----
 
@@ -484,9 +502,9 @@ In your second terminal, establish yourself as described below and then run the 
   * host: *node2*
   * user: *root*
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *cat /etc/fstab*
+*cat /etc/fstab*
 ----
 
 [discrete]
@@ -494,7 +512,7 @@ In your second terminal, establish yourself as described below and then run the 
 
 In the `trace` terminal, you will see something similar to:
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 32559   32559   cat             do_sys_open      b'/etc/ld.so.cache'
 32559   32559   cat             do_sys_open      b'/lib64/libc.so.6'
@@ -531,18 +549,21 @@ In the `trace` terminal, you will see something similar to:
 
 Go ahead and Ctrl-C `trace` and then let's do one more trace, this time, tracing the return values out of `trace`:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# */usr/share/bcc/tools/trace 'r::do_sys_open "ret: %d", retval'*
+*/usr/share/bcc/tools/trace 'r::do_sys_open "ret: %d", retval'*
 ----
 
 [discrete]
 ==== Secondary Terminal
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *cat /etc/fstab*
+*cat /etc/fstab*
+----
 
+[bash,options="nowrap"]
+----
 PID     TID     COMM            FUNC             -
 ----
 
@@ -551,7 +572,7 @@ PID     TID     COMM            FUNC             -
 
 In the `trace` terminal, you will see something similar to:
 
-[source,options="nowrap",subs="{markup-in-source}"]
+[bash,options="nowrap"]
 ----
 PID     TID     COMM            FUNC             -
 32576   32576   cat             do_sys_open      ret: 3
