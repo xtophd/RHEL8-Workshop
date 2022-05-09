@@ -428,22 +428,22 @@ This time, we are going to use all four disks to create a mirrored set of stripe
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *vdo create --name=lab2 --device=/dev/vg_lab/lv_raid10 --vdoLogicalSize=30G*
+*vdo create --name=lab2 --device=/dev/vg_lab/lv_raid10 --vdoLogicalSize=30G*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *mkfs.xfs -K /dev/mapper/lab2*
+*mkfs.xfs -K /dev/mapper/lab2*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *mkdir /mnt/lab2*
+*mkdir /mnt/lab2*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *mount /dev/mapper/lab2 /mnt/lab2*
+*mount /dev/mapper/lab2 /mnt/lab2*
 ----
 
 NOTE: To make the mount persistent across reboots, you would still need to either add a systemd unit to mount the filesystem, or add an entry to /etc/fstab.
@@ -463,7 +463,7 @@ NOTE: This could take a few minutes.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-for i in /mnt/lab2/* ; do echo "${i}" ; cp -rf /usr/share/locale $i ; done
+*for i in /mnt/lab2/* ; do echo "${i}" ; cp -rf /usr/share/locale $i ; done*
 ----
 
 The prevoius command should have copied approximately 100MB in 100 folders yielding about 10G of traditional fielsystem consumption.
@@ -474,17 +474,17 @@ Let us now check some statistics.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *du -sh /mnt/lab2*
+*du -sh /mnt/lab2*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *df /mnt/lab2*
+*df /mnt/lab2*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *vdostats --human-readable*
+*vdostats --human-readable*
 ----
 
 So in summary, we built a 30GB filesystem that only has 10GB of actual physical disk capacity.  We then copied 10GB of data into the filesystem, but after deduplication `vdostats --human-readable` should reflect something near 4GB of available plysical space.
