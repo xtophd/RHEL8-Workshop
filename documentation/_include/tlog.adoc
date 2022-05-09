@@ -232,8 +232,8 @@ And lastly, reload systemd and restart the sssd service.
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-systemctl daemon-reload
-systemctl restart sssd
+*systemctl daemon-reload*
+*systemctl restart sssd*
 ----
 
 == Additional Resources
