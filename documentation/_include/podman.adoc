@@ -24,23 +24,23 @@ For these exercises, you will be using the host `node3` as user `root`.
 
 From host `bastion`, ssh to `node3`.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *ssh node3*
+*ssh node3*
 ----
 
 Use `sudo` to elevate your priviledges.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *sudo -i*
+*sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *workshop-podman-checkhost.sh*
+*workshop-podman-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -51,10 +51,13 @@ You are now ready to proceed with these exercises.
 
 Now have a look at the general container information.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman info*
+*podman info*
+----
 
+[bash,options="nowrap"]
+----
 host:
   BuildahVersion: 1.9.0
   Conmon:
@@ -110,9 +113,9 @@ store:
 
 Now have a look at the general container information.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman images*
+*podman images*
 ----
 
 Your results should have come back empty and that's because we have not imported, loaded or pulled any containers on to our platform.  
@@ -121,10 +124,13 @@ Your results should have come back empty and that's because we have not imported
 
 Time to pull a container from our local repository.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman pull ubi8/ubi*
+*podman pull ubi8/ubi*
+----
 
+[bash,options="nowrap"]
+----
 Trying to pull registry.access.redhat.com/ubi8/ubi...Getting image source signatures
 Copying blob ee2244abc66f done
 Copying blob befb03b11956 done
@@ -136,10 +142,13 @@ Storing signatures
 
 Have a looks at the image list now.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman images*
+*podman images*
+----
 
+[bash,options="nowrap"]
+----
 REPOSITORY                            TAG      IMAGE ID       CREATED       SIZE
 registry.access.redhat.com/ubi8/ubi   latest   8121a9f5303b   11 days ago   240 MB
 ----
@@ -148,17 +157,19 @@ NOTE: if you are a subscriber to Red Hat Enterprise Linux, you can pull authenti
 
 Pull a few more container images.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman pull ubi8/ubi-minimal*
-
-# *podman pull ubi8/ubi-init*
+*podman pull ubi8/ubi-minimal*
+*podman pull ubi8/ubi-init*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman images*
+*podman images*
+----
 
+[bash,options="nowrap"]
+----
 REPOSITORY                                    TAG      IMAGE ID       CREATED       SIZE
 registry.access.redhat.com/ubi8/ubi-init      latest   0f5485af5398   11 days ago   256 MB
 registry.access.redhat.com/ubi8/ubi           latest   8121a9f5303b   11 days ago   240 MB
@@ -170,15 +181,18 @@ registry.access.redhat.com/ubi8/ubi-minimal   latest   91d23a64fdf2   11 days ag
 Container images can also be tagged with convenient (ie:custom names).  This could make it more intuitive to understand what they 
 contain, especially after an image has been customized.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman tag registry.access.redhat.com/ubi8/ubi myfavorite*
+*podman tag registry.access.redhat.com/ubi8/ubi myfavorite*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman images*
+*podman images*
+----
 
+[bash,options="nowrap"]
+----
 REPOSITORY                                    TAG      IMAGE ID       CREATED       SIZE
 registry.access.redhat.com/ubi8/ubi-init      latest   0f5485af5398   11 days ago   256 MB
 registry.access.redhat.com/ubi8/ubi           latest   8121a9f5303b   11 days ago   240 MB
@@ -192,20 +206,23 @@ NOTE: The link:https://access.redhat.com/containers[Red Hat Container Catalog] (
 
 ==== How to Remove Images
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman images*
-----
-
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *podman rmi ubi-init*
+*podman images*
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman images*
+*podman rmi ubi-init*
+----
 
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*podman images*
+----
+
+[bash,options="nowrap"]
+----
 REPOSITORY                                    TAG      IMAGE ID       CREATED       SIZE
 registry.access.redhat.com/ubi8/ubi           latest   8121a9f5303b   11 days ago   240 MB
 localhost/myfavorite                          latest   8121a9f5303b   11 days ago   240 MB
@@ -232,10 +249,13 @@ Here is a list of the fundamental podman commands and their purpose:
 
 === Hello World
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 # *podman run ubi echo "hello world"*
+----
 
+[bash,options="nowrap"]
+----
 hello world
 ----
 
@@ -251,29 +271,38 @@ Well that was really boring!! What did we learn from this?  For starters, you sh
 
 Let us run a few more commands to see what else we can glean.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman ps -a*
+*podman ps -a*
+----
 
+[bash,options="nowrap"]
+----
 CONTAINER ID  IMAGE                             COMMAND           CREATED         STATUS                     PORTS  NAMES
 249de20ebdb0  core.example.com:5000/ubi:latest  echo hello world  18 seconds ago  Exited (0) 17 seconds ago         objective_kepler
 ----
 
 Now let us run the exact same command as before to print "hello world".
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman run ubi echo "hello world"*
+*podman run ubi echo "hello world"*
+----
 
+[bash,options="nowrap"]
+----
 hello world
 ----
 
 Check out 'podman info' one more time and you should notice a few changes.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman info*
+*podman info*
+----
 
+[bash,options="nowrap"]
+----
 host:
   BuildahVersion: 1.9.0
   Conmon:
@@ -329,10 +358,13 @@ You should notice that the number of containers (ContainerStore) has incremented
 
 Run 'podman ps -a' to the IDs of the exited containers.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman ps -a*
+*podman ps -a*
+----
 
+[bash,options="nowrap"]
+----
 CONTAINER ID  IMAGE                             COMMAND           CREATED         STATUS                     PORTS  NAMES
 e3f139ef0942  core.example.com:5000/ubi:latest  echo hello world  35 seconds ago  Exited (0) 34 seconds ago         cocky_golick
 249de20ebdb0  core.example.com:5000/ubi:latest  echo hello world  2 minutes ago   Exited (0) 2 minutes ago          objective_kepler
@@ -340,38 +372,44 @@ e3f139ef0942  core.example.com:5000/ubi:latest  echo hello world  35 seconds ago
 
 Using the container UIDs from the above output, you can now clean up the 'exited' containers.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman rm <CONTAINER-ID> <CONTAINER-ID>*
+*podman rm <CONTAINER-ID> <CONTAINER-ID>*
 ----
 
 NOTE: if you are lazy, you can also cleanup up the containers with `podman rm --all`
 
 Now you should be able to run 'podman ps -a' again, and the results should come back empty.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman ps -a*
+*podman ps -a*
 ----
 
 == Exploring Container Namespaces
 
 === UTS / Hostname
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman run ubi cat /proc/sys/kernel/hostname*
+*podman run ubi cat /proc/sys/kernel/hostname*
+----
 
+[bash,options="nowrap"]
+----
 d8736f5cbd35
 ----
 
 So what we have learned here is that the hostname in the container's namespace is NOT the same as the host platform (node3.example.com).  It is unique and is by default identical to the container's ID.  You can verify this with 'podman ps -a'.
 
-.[root@node3 ~]#
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman ps -a*
+*podman ps -a*
+----
 
+[bash,options="nowrap"]
+----
 CONTAINER ID  IMAGE                                       COMMAND               CREATED         STATUS                     PORTS  NAMES
 d8736f5cbd35  registry.access.redhat.com/ubi8/ubi:latest  cat /proc/sys/ker...  30 seconds ago  Exited (0) 30 seconds ago         dazzling_mendeleev
 ----
@@ -380,10 +418,14 @@ d8736f5cbd35  registry.access.redhat.com/ubi8/ubi:latest  cat /proc/sys/ker...  
 
 Let us have a look at the process table from with-in the container's namespace.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
-----
-# *podman run ubi ps -ef*
 
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*podman run ubi ps -ef*
+----
+
+[bash,options="nowrap"]
+----
 Error: container_linux.go:345: starting container process caused "exec: \"ps\": executable file not found in $PATH"
 : OCI runtime error
 ----
@@ -396,10 +438,13 @@ So for this exercise, we leverage something called a 'bind mount' to effectively
 
 NOTE: Using bind mounts is generally suitable for debugging, but not a good practice as a design decision for enterprise container strategies.  After all, creating dependencies between applications and host operating systems is what we are trying to get away from.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman run -v /usr/bin:/usr/bin -v /usr/lib64:/usr/lib64 ubi /bin/ps -ef*
+*podman run -v /usr/bin:/usr/bin -v /usr/lib64:/usr/lib64 ubi /bin/ps -ef*
+----
 
+[bash,options="nowrap"]
+----
 UID        PID  PPID  C STIME TTY          TIME CMD
 root         1     0  0 20:33 ?        00:00:00 /bin/ps -ef
 ----
@@ -410,10 +455,13 @@ Notice that all the process belonging to host itself are absent.  The programs r
 
 Now let us run a command to report the network configuration from within the a container's namespace.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman run -v /usr/sbin:/usr/sbin -v /usr/lib64:/usr/lib64  ubi /usr/sbin/ip addr show eth0*
+*podman run -v /usr/sbin:/usr/sbin -v /usr/lib64:/usr/lib64  ubi /usr/sbin/ip addr show eth0*
+----
 
+[bash,options="nowrap"]
+----
 3: eth0@if10: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
     link/ether 8a:ce:7f:ea:c7:9a brd ff:ff:ff:ff:ff:ff link-netnsid 0
     inet 10.88.0.8/16 scope global eth0
@@ -428,10 +476,13 @@ Let us begin by examining the '/etc/hosts' file.
 
 NOTE: Note that we introduce the '--rm' flag to our podman command.  This tells podman to automatically cleanup after the container exists
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman run --rm ubi cat /etc/hosts*
+*podman run --rm ubi cat /etc/hosts*
+----
 
+[bash,options="nowrap"]
+----
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 10.88.0.9       aa2204f3cd29
@@ -439,10 +490,13 @@ NOTE: Note that we introduce the '--rm' flag to our podman command.  This tells 
 
 How does the container resolve hostnames (ie: DNS)?
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman run --rm ubi cat /etc/resolv.conf*
+*podman run --rm ubi cat /etc/resolv.conf*
+----
 
+[bash,options="nowrap"]
+----
 search example.com
 nameserver 10.0.0.2
 ----
@@ -450,10 +504,13 @@ nameserver 10.0.0.2
 Take a look at the routing table.
 Pay attention now, the route command is in '/usr/sbin'.  Take a look at the routing table for the container namespace.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman run -v /usr/sbin:/usr/sbin --rm ubi route -n*
+*podman run -v /usr/sbin:/usr/sbin --rm ubi route -n*
+----
 
+[bash,options="nowrap"]
+----
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 0.0.0.0         10.88.0.1       0.0.0.0         UG    0      0        0 eth0
@@ -465,10 +522,13 @@ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 
 Finally, look at the filesystem(S) in the container's namespace.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman run ubi df -h*
+*podman run ubi df -h*
+----
 
+[bash,options="nowrap"]
+----
 Filesystem      Size  Used Avail Use% Mounted on
 overlay         8.0G  1.9G  6.2G  24% /
 tmpfs            64M     0   64M   0% /dev
@@ -482,10 +542,13 @@ tmpfs           1.9G     0  1.9G   0% /sys/firmware
 
 You were introduced to Bind-Mounts in the previous section.  Let us examine what the filesystems looks like with an active Bind-Mount.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman run -v /usr/bin:/usr/bin ubi df -h*
+*podman run -v /usr/bin:/usr/bin ubi df -h*
+----
 
+[bash,options="nowrap"]
+----
 Filesystem             Size  Used Avail Use% Mounted on
 overlay                8.0G  1.9G  6.2G  24% /
 tmpfs                   64M     0   64M   0% /dev
@@ -502,11 +565,10 @@ Notice above how there is now a dedicated mount point for /usr/bin.  Bind-Mounts
 
 Let us clean up your environment before proceeding
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman kill --all*
-
-# *podman rm --all*
+*podman kill --all*
+*podman rm --all*
 ----
 
 == Your First Containerized Application
@@ -515,8 +577,12 @@ Let us clean up your environment before proceeding
 
 A configuration file for a podman build has already been supplied for your system.  Have a look at the contents of that config.
 
-./root/custom_image.OCIFile
-[source,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*cat /root/custom_image.OCIFile*
+----
+
+[bash,options="nowrap"]
 ----
 FROM ubi8/ubi
 
@@ -542,17 +608,20 @@ Notice a few things about the configuration:
 
 Now it's time to build the new container image.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman build -t custom_image --file custom_image.OCIFile*
+*podman build -t custom_image --file custom_image.OCIFile*
 ----
 
 Once this completes, run:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman images*
+*podman images*
+----
 
+[bash,options="nowrap"]
+----
 REPOSITORY                                    TAG      IMAGE ID       CREATED          SIZE
 localhost/custom_image                        latest   8544c2e4a901   10 minutes ago   273 MB
 localhost/myfavorite                          latest   8121a9f5303b   12 days ago      240 MB
@@ -568,25 +637,25 @@ Time to deploy the image.  A few things to note here:
   * we are connecting localhost port 8080 to port 80 of the deployed container
   * the deployment is using 'detached' mode
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman run -d --name="webserver" -p 8080:80 custom_image*
+*podman run -d --name="webserver" -p 8080:80 custom_image*
 ----
 
 === Inspect
 
 To view some facts about the running container, you use 'podman inspect'.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman inspect webserver*
+*podman inspect webserver*
 ----
 
 This reveals quite a bit of information which you can drill in to using additional format arguments.  For example, let us locate the IP address for the container.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman inspect --format '{{ .NetworkSettings.IPAddress }}' webserver*
+*podman inspect --format '{{ .NetworkSettings.IPAddress }}' webserver*
 ----
 
 You can see the IP address that was assigned to the container.
@@ -595,19 +664,25 @@ We can apply the same filter to any value in the json output. Try a few differen
 
 === Validation
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *curl http://localhost:8080/*
+*curl http://localhost:8080/*
+----
 
+[bash,options="nowrap"]
+----
 The Web Server is Running
 ----
 
 Let us look at the processes running on the host.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *pgrep -laf httpd*
+*pgrep -laf httpd*
+----
 
+[bash,options="nowrap"]
+----
 8662 httpd -D FOREGROUND
 8703 httpd -D FOREGROUND
 8704 httpd -D FOREGROUND
@@ -618,21 +693,26 @@ Let us look at the processes running on the host.
 
 And finally let's look at some networking info.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *netstat -utlpn | grep 8080*
+*netstat -utlpn | grep 8080*
+----
 
+[bash,options="nowrap"]
+----
 tcp        0      0 0.0.0.0:8080            0.0.0.0:*               LISTEN      28298/conmon
 ----
 
 
 Now let's introduce a commandline utility 'lsns' to check out the namespaces.
 
-.[root@node3 ~]#
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *lsns*
+*lsns*
+----
 
+[bash,options="nowrap"]
+----
         NS TYPE   NPROCS   PID USER   COMMAND
 4026531835 cgroup    104     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
 4026531836 pid        99     1 root   /usr/lib/systemd/systemd --switched-root --system --deserialize 18
@@ -657,10 +737,13 @@ We see that the httpd processes running are using the mnt uts ipc pid and net na
 
 Since we explored namespaces earlier, we may as well have a look at the control-groups aligned with our process.  
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemd-cgls*
+*systemd-cgls*
+----
 
+[bash,options="nowrap"]
+----
 ... SNIP ...
 └─machine.slice
   ├─libpod-conmon-c726b2422ba73c0eb904c283a50a66e6e47cb42c3b633075e39f40d268026c6c.scope
@@ -677,17 +760,13 @@ What we can tell is that our container is bound by a cgroup called "machine.slic
 
 === Cleanup
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *podman stop webserver*
-
-# *podman rm webserver*
-
-# *podman kill --all*
-
-# *podman rm --all*
-
-# *podman rmi --all --force*
+*podman stop webserver*
+*podman rm webserver*
+*podman kill --all*
+*podman rm --all*
+*podman rmi --all --force*
 ----
 
 [discrete]

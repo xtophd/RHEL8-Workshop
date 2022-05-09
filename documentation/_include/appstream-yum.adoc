@@ -41,23 +41,23 @@ For these exercises, you will be using the host `node1` as user `root`.
 
 From host `bastion`, ssh to `node1`.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *ssh node1*
+*ssh node1*
 ----
 
 Use `sudo` to elevate your priviledges.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *sudo -i*
+*sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *workshop-appstream-checkhost.sh*
+*workshop-appstream-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -66,10 +66,13 @@ You are now ready to proceed with these exercises.
 
 Determine what modules are available.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum module list | grep postgresql*
+*yum module list | grep postgresql*
+----
 
+[bash,options="nowrap"]
+----
 postgresql           9.6         client, server [d]                       PostgreSQL server and client module
 postgresql           10 [d]      client, server [d]                       PostgreSQL server and client module
 postgresql           12          client, server                           PostgreSQL server and client module
@@ -82,10 +85,13 @@ control with userspace than any previous version of RHEL.
 
 On your new RHEL 8 system, if you do:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum install -y postgresql-server*
+*yum install -y postgresql-server*
+----
 
+[bash,options="nowrap"]
+----
 ...<SNIP>...
   Installing       : postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64            3/3
   Running scriptlet: postgresql-server-10.6-1.module+el8+2469+5ecd5aae.x86_64            3/3
@@ -110,18 +116,18 @@ want to move to RHEL 8. With the app stream, we can do this. Let's do this next 
 
 Then:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *ssh node3*
+*ssh node3*
 ----
 
 INFO: You may need to `sudo -i` to elevate your priviledges.  Just make sure you're the `root` user.
 
 On node3, let’s now run:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum module install -y postgresql:9.6/server*
+*yum module install -y postgresql:9.6/server*
 ----
 
 The above command tells yum to install the server profile for postgresql
@@ -129,10 +135,13 @@ in the 9.6 version.
 
 Once we’ve installed that, we will see:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum module list | grep postgresql*
+*yum module list | grep postgresql*
+----
 
+[bash,options="nowrap"]
+----
 postgresql           9.6 [e]      client, server [d] [i]                   PostgreSQL server and client module
 postgresql           10 [d]       client, server [d]                       PostgreSQL server and client module
 postgresql           12           client, server                           PostgreSQL server and client module     
@@ -152,20 +161,19 @@ wanted the client, we could remove the server profile:
 
 and install only the client:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum module install -y postgresql:9.6/client*
+*yum module install -y postgresql:9.6/client*
 ----
 
 Now let's inspect what yum tells us about the postgresql modules:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum module list | grep postgresql*
+*yum module list | grep postgresql*
 ----
 
-.Command Output
-[source,indent=4]
+[bash,options="nowrap"]
 ----
 postgresql           9.6 [e]      client [i], server [d]                   PostgreSQL server and client module                                         
 postgresql           10 [d]       client, server [d]                       PostgreSQL server and client module                                         
@@ -182,27 +190,33 @@ just installed postgresql. We don’t want to have another database on the
 same machine and we see app stream profiles for mysql and mariadb. Let’s
 disable these:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum module disable mariadb mysql -y*
+*yum module disable mariadb mysql -y*
 ----
 
 Now when we do yum module list, we will see:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 # *yum module list | grep -e mariadb -e mysql*
+----
 
+[bash,options="nowrap"]
+----
 mariadb                  10.3 [d][x]     client, server [d], galera                   MariaDB Module
 mysql                    8.0 [d][x]      client, server [d]                           MySQL Module
 ----
 
 The [x] stands for disabled. When we run:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum install mariadb -y*
+*yum install mariadb -y*
+----
 
+[bash,options="nowrap"]
+----
 No match for argument: mariadb
 Error: Unable to find a match
 ----
@@ -210,16 +224,16 @@ Error: Unable to find a match
 To re-enable these app streams and allow the packages to be installed,
 the command is:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *yum module enable mariadb mysql -y*
+*yum module enable mariadb mysql -y*
 ----
 
 You may now switch back to the bastion:
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *exit*
+*exit*
 ----
 
 == Summary
