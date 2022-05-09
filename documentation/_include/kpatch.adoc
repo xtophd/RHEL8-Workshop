@@ -14,6 +14,9 @@ endif::[]
 
 = Kernel Live Patching - Plan your reboots!
 
+WARNING: This unit requires an active entitlement for RHEL and registration with the Red Hat CDN (subscription-manager).
+
+
 == Overview
 
 Red Hat Enterprise Linux offers kernel live patching, a solution to patch your running kernel without rebooting or restarting any processes. In this lab, we'll explore this solution, which ships in the form of "kpatches" that can be managed with the "kpatch" tool.
