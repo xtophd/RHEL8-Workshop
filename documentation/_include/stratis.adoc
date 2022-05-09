@@ -225,17 +225,17 @@ summitpool  summitfs  546 MiB  Apr 18 2020 09:15  /dev/stratis/summitpool/summit
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *mkdir /summitdir*
+*mkdir /summitdir*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *mount /dev/stratis/summitpool/summitfs /summitdir*
+*mount /dev/stratis/summitpool/summitfs /summitdir*
 ----
 
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *df -h*
+*df -h*
 ----
 
 [bash,options="nowrap"]
