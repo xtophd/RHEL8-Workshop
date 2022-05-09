@@ -14,7 +14,7 @@ endif::[]
 
 = Kernel Live Patching - Plan your reboots!
 
-WARNING: This unit requires an active entitlement for RHEL and registration with the Red Hat CDN (subscription-manager).
+WARNING: This unit requires an active entitlement for RHEL and registration with the Red Hat CDN (subscription-manager).  If connected to a Red Hat Satellite server, the Satellite must also have synchronized content to match the release of RHEL used for this workshop.  So, besides overall functionality being impacted ... some variations in the output can also be expected.
 
 
 == Overview
