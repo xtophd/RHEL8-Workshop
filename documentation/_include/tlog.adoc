@@ -26,23 +26,23 @@ For these exercises, you will be using the host `node1` as user `root`.
 
 From host `bastion`, ssh to `node1`.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *ssh node1*
+*ssh node1*
 ----
 
 Use `sudo` to elevate your priviledges.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *sudo -i*
+*sudo -i*
 ----
 
 Verify that you are on the right host for these exercises.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *workshop-tlog-checkhost.sh*
+*workshop-tlog-checkhost.sh*
 ----
 
 You are now ready to proceed with these exercises.
@@ -53,10 +53,13 @@ The system has been configured with an additional non-priviledged user called `o
 
 NOTE: The command is 'su' + 'dash' + 'other-user'.  Don't forget the dash!
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *su - other-user*
+*su - other-user*
+----
 
+[bash,options="nowrap"]
+----
 ATTENTION! Your session is being recorded!
 ----
 
@@ -64,10 +67,13 @@ You should have gotten a message when switching to `other-user` that the session
 
 Now to do a few activities worth logging.  You can check out a directory listing, look at the host's _passwd_ and _shadow_ files.  
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *ls -l /etc*
+*ls -l /etc*
+----
 
+[bash,options="nowrap"]
+----
 -rw-r--r--.  1 root root       68 Apr 17 22:19 shells
 drwxr-xr-x.  2 root root     4096 Apr 17 21:54 skel
 -rw-r--r--.  1 root root      138 Sep 12  2019 sos.conf
@@ -83,10 +89,13 @@ drwx------.  4 sssd sssd     4096 Apr 17 21:55 sssd
 ...SNIP...
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *cat /etc/passwd*
+*cat /etc/passwd*
+----
 
+[bash,options="nowrap"]
+----
 root:x:0:0:root:/root:/bin/bash
 bin:x:1:1:bin:/bin:/sbin/nologin
 daemon:x:2:2:daemon:/sbin:/sbin/nologin
@@ -102,19 +111,25 @@ ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
 ...SNIP...
 ----
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *cat /etc/shadow*
+*cat /etc/shadow*
+----
 
+[bash,options="nowrap"]
+----
 cat: /etc/shadow: Permission denied
 ----
 
 Oh wait, you need root priviledges to see the contents of _/etc/shadow_.  You can use sudo for that!
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *sudo cat /etc/shadow*
+*sudo cat /etc/shadow*
+----
 
+[bash,options="nowrap"]
+----
 root:$6$9Jk5EGiB2aBl95kj$RIdiSqNdKt95zqddStFUY/zVKIUujWfGWJkLM5KQ.7zY88Kxxa0qm78qLMFRAqDO2qOrp.qZBaQAKcUFm1Is70:18370:0:99999:7:::
 bin:*:17988:0:99999:7:::
 daemon:*:17988:0:99999:7:::
@@ -132,19 +147,22 @@ ftp:*:17988:0:99999:7:::
 
 We are done with our limited nafarious activities, so proceed to `exit`
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-$ *exit*
+*exit*
 ----
 
 == Session Play Back
 
 Session logs are configured to record in the system journal by default.  A distinct advantage to this approach is that session recordings are also augmented with meta data which includes: user, session-id, host-id and a log-message-id.  Let's have a look.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *journalctl -o verbose  --output-fields=TLOG_USER,TLOG_REC TLOG_USER=other-user*
+*journalctl -o verbose  --output-fields=TLOG_USER,TLOG_REC TLOG_USER=other-user*
+----
 
+[bash,options="nowrap"]
+----
 Sat 2019-04-27 21:21:27.852913 EDT [s=bcde42e4c96048c3908657177414e202;i=700;b=b2333248c22a4c5f912a>
     TLOG_USER=other-user
     TLOG_REC=b2333248c22a4c5f912a245f6266582e-3cb9-e9bf9
@@ -166,9 +184,9 @@ Each one of those entries makes up a chunk of a session recording.  It is by way
 
 We have taken the liberty of scripting this "search" to playback the last session log from the user cloud-user.
 
-[bash,options="nowrap",subs="{markup-in-source}"]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *workshop-tlog-playback.sh*
+*workshop-tlog-playback.sh*
 ----
 
 Once you hit enter on the above command, you will see a note that "Playback Started..." and again when "Playback Finished...".  Be patient until it completes and your root prompt returns.
@@ -187,14 +205,19 @@ tlog-play -r journal -M ${myTLOG}
 
 Clearly we have taken the liberty to pre-configure TLOG for this lab.  But, it was not very difficult.  TLOG requires a couple of packages, a configuration file and simple restart of the sssd service.
 
-.[root@node1]#
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 yum install tlog cockpit-session-recording
 ----
 
 Here is what the config file looks like _/etc/sssd/conf.d/sssd-session-recording.conf_
 
-[source,indent=4]
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
+----
+*cat /etc/sssd/conf.d/sssd-session-recording.conf*
+----
+
+[bash,options="nowrap"]
 ----
 # This file deployed by Ansible playbook
 # /etc/sssd/conf.d/sssd-session-recording.conf
@@ -207,7 +230,7 @@ groups = other-user
 
 And lastly, reload systemd and restart the sssd service.
 
-.[root@node1]#
+[source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
 systemctl daemon-reload
 systemctl restart sssd
