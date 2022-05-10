@@ -24,20 +24,21 @@ case "$1" in
         time  ansible-playbook ${askVaultPass} -i ${myInventory} -f 10  ./playbooks/rhel8-workshop.yml
         ;;
 
+    "prep"        | \
+    "finish"      | \
     "appstream"   | \
     "boom"        | \
     "buildah"     | \
     "ebpf"        | \
     "firewalld"   | \
     "nftables"    | \
-    "prep"        | \
+    "osbuild"     | \
     "podman"      | \
     "settings"    | \
     "stratis"     | \
     "systemd"     | \
     "tlog"        | \
     "virt"        | \
-    "osbuild"     | \
     "vdo"         | \
     "wayland"     | \
     "webconsole"  | \
@@ -47,7 +48,7 @@ case "$1" in
         ;;
 
     *)
-        echo "USAGE: bastion-setup.sh [ all | prep | appstream | boom | buildah | ebpf | firewalld | nftables | podman | settings | stratis | systemd | tlog | virt | vdo | wayland | webconsole | kpatch ]"
+        echo "USAGE: bastion-setup.sh [ all | prep | finish | appstream | boom | buildah | ebpf | firewalld | nftables | osbuild |  podman | settings | stratis | systemd | tlog | virt | vdo | wayland | webconsole | kpatch ]"
         ;;
 
 esac

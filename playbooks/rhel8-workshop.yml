@@ -66,6 +66,9 @@
   when: workshop_vars.enable_unit.kpatch
   tags: kpatch
 
+- import_playbook: rhel8-finish.yml
+  tags: finish
+
 ## Save the webconsole for last since it will discconect webconsole session on service restart
 - import_playbook: rhel8-unit-webconsole.yml
   when: workshop_vars.enable_unit.webconsole

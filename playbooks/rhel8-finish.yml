@@ -1,0 +1,13 @@
+---
+- hosts: myBastion
+  become: true
+  tasks:
+
+  - name: "rhel8-prep : TEMPLATE /etc/motd (complete)"
+    template:
+      src: motd-complete.j2
+      dest: /etc/motd
+      owner: root
+      group: root
+      mode: 0644  
+

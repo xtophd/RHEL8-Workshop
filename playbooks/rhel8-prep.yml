@@ -1,5 +1,5 @@
 ---
-- hosts: myBastion,myNodes
+- hosts: all
   become: true
   tasks:
 
@@ -7,8 +7,6 @@
   ##    Try loading the credentials.yml file
   ##    if workshopuser_username is not defined
   ##
-
-
 
   - name: "rhel8-prep : loading credentials"
     include_vars:
@@ -19,14 +17,83 @@
       - rhel8workshop_student_password is undefined
  
 
- 
+
+- hosts: myBastion
+  become: true
+  tasks:
+
+  - name: "rhel8-prep : TEMPLATE /etc/motd (incomplete)"
+    template:
+      src: motd-incomplete.j2
+      dest: /etc/motd
+      owner: root
+      group: root
+      mode: 0644  
+
+  - name: "rhel8-prep : create ssh key for root"
+    openssh_keypair:
+      path:  "~root/.ssh/id_rsa"
+      owner: "root"
+      group: "root"
+    register: rootkey_result
+
+  - name: "rhel8-prep : save temp copy of root ssh key"
+    delegate_to: localhost
+    copy:
+      content="{{ rootkey_result.public_key }}"
+      dest="../config/root_sshkey.temp"
+
+  - name: "rhel8-prep : create ssh key for {{ workshop_vars.student_name }}"
+    openssh_keypair:
+      path:  ~{{ workshop_vars.student_name }}/.ssh/id_rsa
+      owner: "{{ workshop_vars.student_name }}"
+      group: "{{ workshop_vars.student_name }}"
+    register: studentkey_result
+
+  - name: "rhel8-prep : save temp copy of {{ workshop_vars.student_name }} ssh key"
+    delegate_to: localhost
+    copy:
+      content="{{ studentkey_result.public_key }}"
+      dest="../config/{{workshop_vars.student_name}}_sshkey.temp"
+
+
+
+
+- hosts: myNodes
+  become: true
+  tasks:
+
+  - name: "rhel8-prep : install authorized_key to nodes"
+    authorized_key:
+      user: "{{ item }}"
+      state: present
+      key: "{{ lookup('file','../config/{{ item }}_sshkey.temp') }}"
+      manage_dir: yes
+    with_items:
+      - "root"
+      - "{{ workshop_vars.student_name }}"
+
+  - name: "rhel8-prep : remove local temp copy of ssh key"
+    delegate_to: localhost
+    file: path="../config/{{ item }}_sshkey.temp" state=absent
+    with_items:
+      - "root"
+      - "{{ workshop_vars.student_name }}"
+
   - name: "rhel8-prep : TEMPLATE /etc/motd"
     template:
       src: motd-generic.j2
       dest: /etc/motd
       owner: root
       group: root
-      mode: 0644  
+      mode: 0644
+
+
+
+
+- hosts: myBastion,myNodes
+  become: true
+  tasks:
 
   - name: "rhel8-prep : YUM remove UN-WANTED packages"
     yum: name=insights-client state=absent
@@ -175,65 +242,4 @@
     ignore_errors: yes
     become: yes
     become_user: "{{ workshop_vars.student_name }}"
-
-
-
-- hosts: myBastion
-  become: true
-  tasks:
-
-  - name: "rhel8-prep : create ssh key for root"
-    openssh_keypair:
-      path:  "~root/.ssh/id_rsa"
-      owner: "root"
-      group: "root"
-    register: rootkey_result
-
-  - name: "rhel8-prep : save temp copy of root ssh key"
-    delegate_to: localhost
-    copy:
-      content="{{ rootkey_result.public_key }}" 
-      dest="../config/root_sshkey.temp"
-
-  - name: "rhel8-prep : create ssh key for {{ workshop_vars.student_name }}"
-    openssh_keypair:
-      path:  ~{{ workshop_vars.student_name }}/.ssh/id_rsa
-      owner: "{{ workshop_vars.student_name }}"
-      group: "{{ workshop_vars.student_name }}"
-    register: studentkey_result
-
-  - name: "rhel8-prep : save temp copy of {{ workshop_vars.student_name }} ssh key"
-    delegate_to: localhost
-    copy:
-      content="{{ studentkey_result.public_key }}" 
-      dest="../config/{{workshop_vars.student_name}}_sshkey.temp"
-
-
-
-
-
-- hosts: myNodes
-  become: true
-  tasks:
-  
-  - name: "rhel8-prep : install authorized_key to nodes"
-    authorized_key:
-      user: "{{ item }}"
-      state: present
-      key: "{{ lookup('file','../config/{{ item }}_sshkey.temp') }}"
-      manage_dir: yes
-    with_items:
-      - "root"
-      - "{{ workshop_vars.student_name }}"
-
-  - name: "rhel8-prep : remove local temp copy of ssh key"
-    delegate_to: localhost
-    file: path="../config/{{ item }}_sshkey.temp" state=absent
-    with_items:
-      - "root"
-      - "{{ workshop_vars.student_name }}"
-
-
-
-
 
