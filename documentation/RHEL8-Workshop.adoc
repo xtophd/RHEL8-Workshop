@@ -109,8 +109,8 @@ For Windows desktops:
   . link:{includedir}/virtualization.adoc[*Virtualization* - Virtualization Management]
   . link:{includedir}/tlog.adoc[*TLog* - Session Logging]
   . link:{includedir}/lvm-vdo.adoc[*LVM and VDO* - Storage Management and Data Optimization]
-  . link:{includedir}/kpatch.adoc[*KPatch* - Kernel Live Patching]
   . link:{includedir}/stratis.adoc[*Stratis* - Simplified Storage Management]
+  . link:{includedir}/kpatch.adoc[*KPatch* - Kernel Live Patching]
   . link:{includedir}/boom-kernel-parms.adoc[*BOOM* - Boot Management]
   . link:{includedir}/wayland.adoc[*Wayland* - Desktop GUI ]
 
