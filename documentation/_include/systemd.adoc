@@ -297,7 +297,7 @@ This time we'll use systemctl to create the drop-in and notify systemd of the ch
 .[root@node1]#
 [source,options="nowrap",subs="{markup-in-source}",role="copy"]
 ----
-# *systemctl edit mariadb*
+*systemctl edit mariadb*
 ----
 
 .Type the following using the editor:
